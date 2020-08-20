@@ -54,6 +54,7 @@ usethis::use_package("plyr", min_version = TRUE)
 #' \item Stores the final state of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
 #' \cr (file name structure: 0_STD + SERIES_ID + YYY + evS_final.csv)
 #' }
+#' @export
 sweep_steady <- function(workdir,
                          SERIES_ID,
                          time_units,
@@ -768,6 +769,7 @@ sweep_steady <- function(workdir,
 #' \item Stores the final state of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run
 #' \cr (file name structure: 0_DYN + SERIES_ID + YYY + evS_final.csv)
 #' }
+#' @export
 sweep_dyn <- function(workdir,
                       SERIES_ID,
                       time_units,

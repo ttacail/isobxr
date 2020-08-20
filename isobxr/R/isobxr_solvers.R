@@ -29,6 +29,7 @@ usethis::use_package("deSolve", min_version = TRUE)
 #' \item evD data file storing the evolution with time of the delta values in all boxes.
 #' \cr (file name structure: RUN name + _N_3_evD.csv)
 #' }
+#' @export
 num_slvr <- function(input_path){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
   occ1 <- stringr::str_locate(input_path, "INPUT.xlsx")[[1]]
@@ -215,6 +216,7 @@ num_slvr <- function(input_path){
 #' \item evD data file of the evolution with time of the delta values in each boxes.
 #' \cr (file name structure: RUN name + _A_3_evD.csv)
 #' }
+#' @export
 ana_slvr <- function(input_path){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
   occ1 <- stringr::str_locate(input_path, "INPUT.xlsx")[[1]]

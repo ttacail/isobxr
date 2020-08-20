@@ -63,6 +63,7 @@ usethis::use_package("ggrepel", min_version = TRUE)
 #' \cr (file name structure: 0_CPS + SERIES_ID + YYY + pf_evS.pdf)
 #' }
 #' @seealso Documentation on \code{\link{run_isobxr}}
+#' @export
 compose_isobxr <- function(workdir,
                            SERIES_ID,
                            time_units, # WARNING, so far it only works from "days" (inherited by the units of the fluxes values) to "minutes", "hours", "days", "hours"

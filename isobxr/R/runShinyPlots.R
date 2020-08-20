@@ -13,6 +13,7 @@ usethis::use_package("qgraph", min_version = TRUE)
 #************************************** LOCAL FUNCTIONS
 #' Call isobxr plot shiny app
 #' @description A function to call the isobxr plot shiny app
+#' @export
 runShinyPlots <- function() {
   appDir <- system.file("shiny-examples", "plot_isobxr", package = "isobxr")
   if (appDir == "") {
