@@ -10,6 +10,8 @@ Description: A set of functions to run simple and composite box-models to descri
     parameters in both static and dynamic conditions. It also comes 
     with a post-run plotting interface built under shiny.
 License: GPL-3
+URL: https://github.com/ttacail/isobxr
+BugReports: https://github.com/ttacail/isobxr/issues
 Encoding: UTF-8
 LazyData: true
 Imports: 
