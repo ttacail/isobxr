@@ -72,7 +72,6 @@ DF_verticalizer <- function(df_hor,      # dataframe
   return(df_vert)
 }
 
-
 # Multiple plot function  ############################################################
 #' Collate multiple ggplot object into a grid format
 #' @description Takes a list of ggplot objects and returns a single object with a grid of the ggplot objects.
