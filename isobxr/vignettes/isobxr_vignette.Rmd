@@ -43,9 +43,6 @@ It would typically be (although probably depending on your environment).
 # install bundle package
 install.packages("~/isobxr_0.1.0.tar.gz", repos = NULL, type = "source")
 
-# or install binary
-devtools::install("isobxr_0.1.0.tgz")
-
 # load isobxr installed package
 library(isobxr)
 
