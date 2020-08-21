@@ -37,10 +37,11 @@ as well as sweep the space of parameters in both static and dynamic modes.
 # Install and use isobxr
 
 As for now, you will need install the **isobxr** using it's *bundle* version (zipped file typically named *isobxr_0.1.0.tar.gz*) or it's binary version (zipped file typically named *isobxr_0.1.0.tgz*).
+It would typically be (although probably depending on your environment).
 
 ```{r eval=FALSE}
 # install bundle package
-devtools::install("isobxr_0.1.0.tar.gz")
+install.packages("~/isobxr_0.1.0.tar.gz", repos = NULL, type = "source")
 
 # or install binary
 devtools::install("isobxr_0.1.0.tgz")
@@ -51,11 +52,14 @@ library(isobxr)
 # or call isobxr functions by it's namespace using the "::" operator
 # For instance for the run_isobxr function:
 isobxr::run_isobxr()
-
 ```
 
+Another way will be to use the Rstudio package install button and select the .tar.gz or .tgz file of the package.
+
 It will soon be possible to install **isobxr** from github. 
+
 The command will then be:
+
 ```{r eval=FALSE}
 devtools::install_github("ttacail/isobxr/isobxr")
 ```
