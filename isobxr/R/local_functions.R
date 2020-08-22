@@ -8,6 +8,7 @@ usethis::use_package("devtools", min_version = TRUE)
 #' clears the lost levels of factor type columns and resets the rown numbering.
 #' @param dataset Previously subsetted data frame
 #' @return The cleared data frame.
+#' @export
 clear_subset <- function(dataset){
   dataset <- droplevels(dataset)
   rownames(dataset) <- NULL
