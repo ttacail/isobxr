@@ -20,30 +20,35 @@ clear_subset <- function(dataset){
 #' @description Takes a numerical value and returns a print with 0 decimal figures.
 #' @param x Numerical value
 #' @return A print (string of character) with 0 decimal figure.
+#' @export
 dec_0 <- function(x) sprintf("%.0f", x)
 
 #' Print a number with 1 decimal figures
 #' @description Takes a numerical value and returns a print with 1 decimal figures.
 #' @param x Numerical value
 #' @return A print (string of character) with 1 decimal figure.
+#' @export
 dec_1 <- function(x) sprintf("%.1f", x)
 
 #' Print a number with 2 decimal figures
 #' @description Takes a numerical value and returns a print with 2 decimal figures.
 #' @param x Numerical value
 #' @return A print (string of character) with 2 decimal figure.
+#' @export
 dec_2 <- function(x) sprintf("%.2f", x)
 
 #' Print a number with 3 decimal figures
 #' @description Takes a numerical value and returns a print with 3 decimal figures.
 #' @param x Numerical value
 #' @return A print (string of character) with 3 decimal figure.
+#' @export
 dec_3 <- function(x) sprintf("%.3f", x)
 
 #' Print a number with 4 decimal figures
 #' @description Takes a numerical value and returns a print with 4 decimal figures.
 #' @param x Numerical value
 #' @return A print (string of character) with 4 decimal figure.
+#' @export
 dec_4 <- function(x) sprintf("%.4f", x)
 
 # verticalize a dataframe for a given set of columns  ############################################################
@@ -54,6 +59,7 @@ dec_4 <- function(x) sprintf("%.4f", x)
 #' @param df_hor Horizontal data frame
 #' @param vert_col Vector of string of characters containing the names of the columns of numerical variables to be verticalized
 #' @return A vertical data frame containing the variables to be verticalized (column "VAR") and the name of the variable (column "VAR_TYPE").
+#' @export
 DF_verticalizer <- function(df_hor,      # dataframe
                             vert_col     # columns of numerical variables to be verticalized
 ){
@@ -88,6 +94,7 @@ DF_verticalizer <- function(df_hor,      # dataframe
 #' @param file file
 #' @param cols number of columns for the facetting
 #' @param layout user defined matrix layout (numeric matrix). default is NULL.
+#' @export
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
@@ -143,6 +150,7 @@ calculation_gauge <- function(i, len){
 #' @param by_col Name of column from which NaN values should be removed
 #' @param resetrows Logical value to reset the row numbering or not.
 #' @return Data frame without the rows in which there previously were NaN values in column by_col
+#' @export
 del_NaN_rows <- function(dataframe, by_col, resetrows){
   dataframe <- subset(dataframe,!(is.na(dataframe[by_col])))
   if(resetrows == TRUE){rownames(dataframe) <- NULL}
@@ -178,6 +186,7 @@ ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenv
 #' @param conv_timecolname name of the column once time units converted. Can be identical to time_colname
 #' @param former_unit former time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")
 #' @param new_unit new time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")
+#' @export
 time_converter <- function(dataframe,
                            time_colname,
                            conv_timecolname,
