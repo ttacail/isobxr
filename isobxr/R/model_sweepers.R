@@ -575,10 +575,15 @@ sweep_steady <- function(workdir,
       INIT_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "INITIAL"))
       SIZE_INIT_i <- INIT_i[,c("BOXES_ID", "SIZE_INIT")]
       DELTA_INIT_i <- INIT_i[,c("BOXES_ID", "DELTA_INIT")]
-      FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES")) ## FIND ANOTHER WAY - too slow
-      COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS")) ## FIND ANOTHER WAY - too slow
+      FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES"))
+      COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS"))
+      if (i > 1){
+        unlink(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+      }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
+        OUT_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_1_OUT.csv" , sep = "")
+        ODE_SOLNs_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_2_ODE_SOLNs.csv" , sep = "")
         evD_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_3_evD.csv" , sep = "")
         evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T)
         SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
@@ -590,12 +595,19 @@ sweep_steady <- function(workdir,
           evS_i[,BOXES_IDs[j]] <- SIZE_INIT_i_hor[1, BOXES_IDs[j]]
           j <- j + 1
         }
+        if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+          unlink(c(evD_address, OUT_address, ODE_SOLNs_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
+        }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
+          OUT_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_1_OUT.csv" , sep = "")
           evD_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_3_evD.csv" , sep = "")
           evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T, sep = ",")
           evS_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_2_evS.csv" , sep = "")
           evS_i <- data.table::fread(evS_address, data.table = F, stringsAsFactors = T, sep = ",")
+          if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+            unlink(c(evD_address, evS_address, OUT_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
+          }
         }
       }
 
@@ -1356,10 +1368,15 @@ sweep_dyn <- function(workdir,
       INIT_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "INITIAL"))
       SIZE_INIT_i <- INIT_i[,c("BOXES_ID", "SIZE_INIT")]
       DELTA_INIT_i <- INIT_i[,c("BOXES_ID", "DELTA_INIT")]
-      FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES")) ## FIND ANOTHER WAY - too slow
-      COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS")) ## FIND ANOTHER WAY - too slow
+      FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES"))
+      COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS"))
+      # if (i > 1){
+      #   unlink(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+      # }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
+        OUT_address <- paste(path_outdir_i, "OUT/", as.character(SERIES_RUN_ID_i), "_A_1_OUT.csv" , sep = "")
+        ODE_SOLNs_address <- paste(path_outdir_i, "OUT/", as.character(SERIES_RUN_ID_i), "_A_2_ODE_SOLNs.csv" , sep = "")
         evD_address <- paste(path_outdir_i, "OUT/", as.character(SERIES_RUN_ID_i), "_A_3_evD.csv" , sep = "")
         evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T)
         SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
@@ -1371,12 +1388,19 @@ sweep_dyn <- function(workdir,
           evS_i[,BOXES_IDs[j]] <- SIZE_INIT_i_hor[1, BOXES_IDs[j]]
           j <- j + 1
         }
+        # if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+        #   unlink(c(evD_address, OUT_address, ODE_SOLNs_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
+        # }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
+          OUT_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_1_OUT.csv" , sep = "")
           evD_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_3_evD.csv" , sep = "")
           evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T, sep = ",")
           evS_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_2_evS.csv" , sep = "")
           evS_i <- data.table::fread(evS_address, data.table = F, stringsAsFactors = T, sep = ",")
+          # if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+          #   unlink(c(evD_address, evS_address, OUT_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
+          # }
         }
       }
 
