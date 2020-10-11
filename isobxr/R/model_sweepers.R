@@ -1,13 +1,9 @@
 usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("metR", min_version = TRUE)
 usethis::use_package("beepr", min_version = TRUE)
-# usethis::use_package("mefa", min_version = TRUE)
 usethis::use_package("iotools", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
-usethis::use_package("svDialogs", min_version = TRUE)
 usethis::use_package("plyr", min_version = TRUE)
-
-
 
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters at the final state of a run
@@ -369,15 +365,17 @@ sweep_steady <- function(workdir,
 
   #************************************** CALCULATE TOTAL NUMBER OF RUNS #----
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
-  STOP_GO <- svDialogs::dlgInput(message = cat("\n The EXPLO run will require ***", as.character(tot_run), "*** iterations. Do you wish to carry on ? \n"), default = "Yes", gui = .GUI)
-  STOP_GO <- STOP_GO$res
+
+  STOP_GO <- FALSE
+  STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
-  if (STOP_GO != "Yes"){
+  if (STOP_GO == FALSE){
     cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
   } else {
     cat("\n *** COMPUTE *** \n ")
-    calculation_gauge(0, tot_run)
+    # calculation_gauge(0, tot_run)
+    pb_cpt <- txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP RUN 2/2 in [1:n] #----
     clock <- 1
     k <- 1
@@ -445,33 +443,35 @@ sweep_steady <- function(workdir,
         }
 
         #************************************** RUN #----
-        run_isobxr(workdir = LOC_workdir,
-                   SERIES_ID = SERIES_ID,
-                   flux_list_name = fx,
-                   coeff_list_name = a,
-                   t_lim = LOC_t_lim,
-                   nb_steps = LOC_nb_steps,
-                   time_units,
-                   FORCING_RAYLEIGH <- LOC_RAYLEIGH,
-                   FORCING_SIZE <- LOC_SIZE_INIT,
-                   FORCING_DELTA <- LOC_DELTA_INIT,
-                   FORCING_ALPHA <-  FORCING_ALPHA_loc,
-                   COMPOSITE = FALSE,
-                   COMPO_SERIES_n = NaN,
-                   COMPO_SERIES_FAMILY = NaN,
-                   EXPLORER = TRUE,
-                   EXPLO_SERIES_n = EXPLO_SERIES_n,
-                   EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
-                   HIDE_PRINTS = TRUE,
-                   PLOT_DIAGRAMS = FALSE,
-                   PLOT_evD = FALSE)
+        quiet(run_isobxr(workdir = LOC_workdir,
+                         SERIES_ID = SERIES_ID,
+                         flux_list_name = fx,
+                         coeff_list_name = a,
+                         t_lim = LOC_t_lim,
+                         nb_steps = LOC_nb_steps,
+                         time_units,
+                         FORCING_RAYLEIGH <- LOC_RAYLEIGH,
+                         FORCING_SIZE <- LOC_SIZE_INIT,
+                         FORCING_DELTA <- LOC_DELTA_INIT,
+                         FORCING_ALPHA <-  FORCING_ALPHA_loc,
+                         COMPOSITE = FALSE,
+                         COMPO_SERIES_n = NaN,
+                         COMPO_SERIES_FAMILY = NaN,
+                         EXPLORER = TRUE,
+                         EXPLO_SERIES_n = EXPLO_SERIES_n,
+                         EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
+                         HIDE_PRINTS = TRUE,
+                         PLOT_DIAGRAMS = FALSE,
+                         PLOT_evD = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
-        calculation_gauge(clock, tot_run)
+        # calculation_gauge(clock, tot_run)
+        setTxtProgressBar(pb_cpt, clock)
         clock <- clock + 1
         l <- l + 1
       }
       k <- k + 1
     }
+    close(pb_cpt)
 
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SUMMARY of EXPLOR SPACE #----
     if (EXPLO_AXIS_1_type %in% c("EXPLO_n_ALPHA_MATRICES", "EXPLO_n_FLUX_MATRICES")){
@@ -563,8 +563,8 @@ sweep_steady <- function(workdir,
     BOXES_IDs <- as.data.frame(readxl::read_excel(path_to_input_1, "INITIAL"))[,c("BOXES_ID")]
 
     #************************************** READ/BUILD/MERGE evS/evD for ANA/NUM WHOLE COMPOSITE RUN #----
-    cat("\n *** PREPARE RESULTS *** \n \n ")
-    calculation_gauge(0, (tot_run+1))
+    cat("\n *** PREPARE RESULTS *** \n ")
+    pb_prep <- txtProgressBar(min = 1, max = tot_run+1, style = 3, width = 60)
 
     i <- 1
     for (i in 1:(tot_run+1)){
@@ -684,9 +684,11 @@ sweep_steady <- function(workdir,
         evD <- rbind(evD, evD_i[1:nrow(evD_i),])
         evS <- rbind(evS, evS_i[1:nrow(evS_i),])
       }
-      calculation_gauge(i, (tot_run+1))
+      setTxtProgressBar(pb_prep, i)
+      # calculation_gauge(i, (tot_run+1))
       i <- i + 1
     }
+    close(pb_prep)
 
     colnames_to_drop_check <- meta_RUN_i[meta_RUN_i$VAR_TYPE == "FLUX", "VARIABLE"]
     flux_cols_to_drop <- NULL
@@ -713,7 +715,7 @@ sweep_steady <- function(workdir,
     evS_final <- evS[evS$Time == t_lim_list[2],]
 
     #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-    cat("\n *** WRITE OUTPUTS *** \n \n ")
+    cat("\n *** WRITE OUTPUTS *** \n ")
 
     path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_", SERIES_ID, sep = "")
     data.table::fwrite(LOG_SERIES, file = paste(path_out_EXPLO, "_LOG.csv", sep = ""), row.names = F, quote = F)
@@ -965,13 +967,18 @@ sweep_dyn <- function(workdir,
 
   #**************************************  CALCULATE TOTAL NUMBER OF RUNS #----
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
-  STOP_GO <- svDialogs::dlgInput(message = cat("\n The EXPLO run will require ***", as.character(tot_run), "*** iterations. Do you wish to carry on ? \n"), default = "Yes", gui = .GUI)
+
+  STOP_GO <- FALSE
+  STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
-  if (STOP_GO$res != "Yes"){
+  if (!isTRUE(STOP_GO)){
     cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
   } else {
     cat("\n *** COMPUTING *** \n ")
-    calculation_gauge(0, tot_run)
+    pb_cpt <- txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
+
+    # calculation_gauge(0, tot_run)
     clock <- 1
     k <- 1
     for (k in 1:EXPLO_AXIS_1_leng){
@@ -1091,27 +1098,27 @@ sweep_dyn <- function(workdir,
           }
         }
         #************************************** RUN  #----
-        run_isobxr(workdir = LOC_workdir,
-                   SERIES_ID = SERIES_ID,
-                   flux_list_name = fx,
-                   coeff_list_name = a,
-                   t_lim = LOC_t_lim,
-                   nb_steps = LOC_nb_steps,
-                   time_units,
-                   FORCING_RAYLEIGH <- LOC_RAYLEIGH,
-                   FORCING_SIZE = FORCING_SIZE_loc,
-                   FORCING_DELTA = DELTA_FORCING_loc,
-                   FORCING_ALPHA = FORCING_ALPHA_loc,
-                   COMPOSITE = FALSE,
-                   COMPO_SERIES_n = NaN,
-                   COMPO_SERIES_FAMILY = NaN,
-                   EXPLORER = TRUE,
-                   EXPLO_SERIES_n = EXPLO_SERIES_n,
-                   EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
-                   HIDE_PRINTS = TRUE,
-                   PLOT_DIAGRAMS = FALSE,
-                   PLOT_evD = FALSE
-        )
+        quiet(run_isobxr(workdir = LOC_workdir,
+                         SERIES_ID = SERIES_ID,
+                         flux_list_name = fx,
+                         coeff_list_name = a,
+                         t_lim = LOC_t_lim,
+                         nb_steps = LOC_nb_steps,
+                         time_units,
+                         FORCING_RAYLEIGH <- LOC_RAYLEIGH,
+                         FORCING_SIZE = FORCING_SIZE_loc,
+                         FORCING_DELTA = DELTA_FORCING_loc,
+                         FORCING_ALPHA = FORCING_ALPHA_loc,
+                         COMPOSITE = FALSE,
+                         COMPO_SERIES_n = NaN,
+                         COMPO_SERIES_FAMILY = NaN,
+                         EXPLORER = TRUE,
+                         EXPLO_SERIES_n = EXPLO_SERIES_n,
+                         EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
+                         HIDE_PRINTS = TRUE,
+                         PLOT_DIAGRAMS = FALSE,
+                         PLOT_evD = FALSE
+        ))
 
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN 2/2, i in [1:n] #----
         i <- 2
@@ -1238,33 +1245,36 @@ sweep_dyn <- function(workdir,
         }
 
         #************************************** RUN #----
-        run_isobxr(workdir = LOC_workdir,
-                   SERIES_ID = SERIES_ID,
-                   flux_list_name = fx,
-                   coeff_list_name = a,
-                   t_lim = LOC_t_lim,
-                   nb_steps = LOC_nb_steps,
-                   time_units,
-                   FORCING_RAYLEIGH <- LOC_RAYLEIGH,
-                   FORCING_SIZE <- LOC_SIZE_INIT,
-                   FORCING_DELTA <- LOC_DELTA_INIT,
-                   FORCING_ALPHA <-  FORCING_ALPHA_loc,
-                   COMPOSITE = FALSE,
-                   COMPO_SERIES_n = NaN,
-                   COMPO_SERIES_FAMILY = NaN,
-                   EXPLORER = TRUE,
-                   EXPLO_SERIES_n = EXPLO_SERIES_n,
-                   EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
-                   HIDE_PRINTS = TRUE,
-                   PLOT_DIAGRAMS = FALSE,
-                   PLOT_evD = FALSE)
+        quiet(run_isobxr(workdir = LOC_workdir,
+                         SERIES_ID = SERIES_ID,
+                         flux_list_name = fx,
+                         coeff_list_name = a,
+                         t_lim = LOC_t_lim,
+                         nb_steps = LOC_nb_steps,
+                         time_units,
+                         FORCING_RAYLEIGH <- LOC_RAYLEIGH,
+                         FORCING_SIZE <- LOC_SIZE_INIT,
+                         FORCING_DELTA <- LOC_DELTA_INIT,
+                         FORCING_ALPHA <-  FORCING_ALPHA_loc,
+                         COMPOSITE = FALSE,
+                         COMPO_SERIES_n = NaN,
+                         COMPO_SERIES_FAMILY = NaN,
+                         EXPLORER = TRUE,
+                         EXPLO_SERIES_n = EXPLO_SERIES_n,
+                         EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
+                         HIDE_PRINTS = TRUE,
+                         PLOT_DIAGRAMS = FALSE,
+                         PLOT_evD = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
-        calculation_gauge(clock, tot_run)
+        # calculation_gauge(clock, tot_run)
+        setTxtProgressBar(pb_cpt, clock)
+
         clock <- clock + 1
         l <- l + 1
       }
       k <- k + 1
     }
+    close(pb_cpt)
 
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SUMMARY of EXPLOR SPACE #----
     if (EXPLO_AXIS_1_type %in% c("EXPLO_n_ALPHA_MATRICES", "EXPLO_n_FLUX_MATRICES")){
@@ -1356,8 +1366,10 @@ sweep_dyn <- function(workdir,
     BOXES_IDs <- as.data.frame(readxl::read_excel(path_to_input_1, "INITIAL"))[,c("BOXES_ID")]
 
     #************************************** READ/BUILD/MERGE evS/D and evS/D final for ANA/NUM WHOLE COMPOSITE RUN #----
-    cat("\n *** PREPARE RESULTS *** \n \n ")
-    calculation_gauge(0, (tot_run))
+    cat("\n *** PREPARE RESULTS *** \n ")
+    pb_prep <- txtProgressBar(min = 1, max = 2*tot_run, style = 3, width = 60)
+
+    # calculation_gauge(0, (tot_run))
 
     i <- 2
     for (k in 1:(tot_run)){
@@ -1477,9 +1489,12 @@ sweep_dyn <- function(workdir,
         evD <- rbind(evD, evD_i[1:nrow(evD_i),])
         evS <- rbind(evS, evS_i[1:nrow(evS_i),])
       }
-      calculation_gauge(i, (2*tot_run))
+      # calculation_gauge(i, (2*tot_run))
+      setTxtProgressBar(pb_prep, i)
+
       i <- i + 2
     }
+    close(pb_prep)
 
     colnames_to_drop_check <- meta_RUN_i[meta_RUN_i$VAR_TYPE == "FLUX", "VARIABLE"]
     flux_cols_to_drop <- NULL

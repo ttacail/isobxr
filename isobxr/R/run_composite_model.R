@@ -198,6 +198,7 @@ compose_isobxr <- function(workdir,
              PLOT_DIAGRAMS = TRUE,
              PLOT_evD = TRUE
   )
+
   calculation_gauge(0, length(t_lim_list))
   calculation_gauge(i, length(t_lim_list))
 

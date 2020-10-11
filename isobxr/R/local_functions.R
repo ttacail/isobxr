@@ -212,3 +212,12 @@ time_converter <- function(dataframe,
   return(dataframe)
 }
 
+# A function to prevent any console prints (for sweepers only) ############################################################
+#' Preventing any console prints (for sweepers only)
+#' @description Preventing any console prints (for sweepers only)
+#' @param x function to quiet
+quiet <- function(x) {
+  sink(tempfile())
+  on.exit(sink())
+  invisible(force(x))
+}

@@ -638,11 +638,9 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   input_path <- paste(LOG_loc$path_outdir, "INPUT.xlsx", sep = "")
   if (LOG_loc$NUM_ANA == "ANA"){
     ana_slvr(input_path)
-
   } else {
     if (LOG_loc$NUM_ANA == "NUM"){
       num_slvr(input_path)
-
     }
   }
 
@@ -735,6 +733,5 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     pdf(pdf_path, width = 10, height = 7, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
     suppressWarnings(print(evD_plot))
     graphics.off()
-
   }
 }
