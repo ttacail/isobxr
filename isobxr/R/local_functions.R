@@ -1,5 +1,5 @@
 usethis::use_package("grid", min_version = TRUE)
-usethis::use_package("devtools", min_version = TRUE)
+usethis::use_package("devtools")
 
 
 # clear a subset #######################################################################################################

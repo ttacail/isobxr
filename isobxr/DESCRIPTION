@@ -30,13 +30,12 @@ Imports:
     grid (>= 3.5.2),
     beepr (>= 1.3),
     metR (>= 0.7.0),
-    mefa (>= 3.2.7),
     svDialogs (>= 1.0.0),
     shiny (>= 1.4.0.2),
     shinyFiles (>= 0.8.0),
     shinythemes (>= 1.1.2),
     DT (>= 0.13),
-    devtools (>= 2.3.1),
+    devtools,
     shinyjs (>= 1.1)
 RoxygenNote: 7.1.1
 Suggests: 

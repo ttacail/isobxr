@@ -1,7 +1,7 @@
 usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("metR", min_version = TRUE)
 usethis::use_package("beepr", min_version = TRUE)
-usethis::use_package("mefa", min_version = TRUE)
+# usethis::use_package("mefa", min_version = TRUE)
 usethis::use_package("iotools", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("svDialogs", min_version = TRUE)
