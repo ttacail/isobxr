@@ -58,7 +58,7 @@ It will soon be possible to install **isobxr** from github.
 The command will then be:
 
 ```{r eval=FALSE}
-devtools::install_github("ttacail/isobxr/isobxr")
+devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE)
 ```
 
 Here is the package description of the current version.
