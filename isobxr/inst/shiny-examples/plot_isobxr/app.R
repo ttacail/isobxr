@@ -20,7 +20,7 @@ ui <- fluidPage(theme = shinythemes::shinytheme("darkly"),
                 shinyjs::extendShinyjs(text = "shinyjs.closeWindow = function() { window.close(); }", functions = c("closeWindow")),
                 actionButton("close", "Close window"),
 
-                titlePanel("Plotting isobxr composite and sweep runs", windowTitle = "shinobxr"),
+                titlePanel("Welcome to the isobxr plot editor", windowTitle = "shinobxr"),
 
                 # fluidRow(
                 #   column(width = 5,
@@ -249,13 +249,14 @@ server <- function(input, output) {
     }
   })
 
-  reactive({
-    if (SERIES_TYPE()[1] != "CPS"){
-      hideTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
-    } else {
-      showTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
-    }
-  })
+  # ONGOING DEV TO SHOW/HIDE TABS of COMPL INFORMATION
+  # test <- reactive({
+  #   if (SERIES_TYPE()[1] != "CPS"){
+  #     shiny::hideTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
+  #   } else {
+  #     shiny::showTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
+  #   }
+  # })
 
   #************************************** LOAD and PREPARE DATA
   SERIES_RUN_ID <- reactive({
