@@ -4,6 +4,7 @@ usethis::use_package("beepr", min_version = TRUE)
 usethis::use_package("iotools", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("plyr", min_version = TRUE)
+usethis::use_package("dplyr", min_version = TRUE)
 
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters at the final state of a run
@@ -674,8 +675,11 @@ sweep_steady <- function(workdir,
       evS_i$LEGEND_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "LEGEND_EXPLO_2"]
       evS_i$VAR_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "VAR_EXPLO_2"]
 
-      evD_i <- cbind(evD_i, rep(meta_RUN_i_horiz, each = nrow(evD_i)))
-      evS_i <- cbind(evS_i, rep(meta_RUN_i_horiz, each = nrow(evS_i)))
+      meta_RUN_i_evD_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evD_i))))
+      meta_RUN_i_evS_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evS_i))))
+
+      evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
+      evS_i <- cbind(evS_i, meta_RUN_i_evS_df)
 
       if (i == 1){
         evD <- evD_i
@@ -685,7 +689,6 @@ sweep_steady <- function(workdir,
         evS <- rbind(evS, evS_i[1:nrow(evS_i),])
       }
       setTxtProgressBar(pb_prep, i)
-      # calculation_gauge(i, (tot_run+1))
       i <- i + 1
     }
     close(pb_prep)
@@ -1479,8 +1482,11 @@ sweep_dyn <- function(workdir,
       evS_i$LEGEND_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "LEGEND_EXPLO_2"]
       evS_i$VAR_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "VAR_EXPLO_2"]
 
-      evD_i <- cbind(evD_i, rep(meta_RUN_i_horiz, each = nrow(evD_i)))
-      evS_i <- cbind(evS_i, rep(meta_RUN_i_horiz, each = nrow(evS_i)))
+      meta_RUN_i_evD_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evD_i))))
+      meta_RUN_i_evS_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evS_i))))
+
+      evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
+      evS_i <- cbind(evS_i, meta_RUN_i_evS_df)
 
       if (i == 2){
         evD <- evD_i
