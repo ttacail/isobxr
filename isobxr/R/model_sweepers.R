@@ -675,8 +675,8 @@ sweep_steady <- function(workdir,
       evS_i$LEGEND_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "LEGEND_EXPLO_2"]
       evS_i$VAR_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "VAR_EXPLO_2"]
 
-      meta_RUN_i_evD_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evD_i))))
-      meta_RUN_i_evS_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evS_i))))
+      meta_RUN_i_evD_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evD_i))))
+      meta_RUN_i_evS_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evS_i))))
 
       evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
       evS_i <- cbind(evS_i, meta_RUN_i_evS_df)
@@ -1482,8 +1482,8 @@ sweep_dyn <- function(workdir,
       evS_i$LEGEND_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "LEGEND_EXPLO_2"]
       evS_i$VAR_EXPLO_2 <- LOG_SERIES[LOG_SERIES$SERIES_RUN_ID == SERIES_RUN_ID_i, "VAR_EXPLO_2"]
 
-      meta_RUN_i_evD_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evD_i))))
-      meta_RUN_i_evS_df <- as.data.frame(meta_RUN_i_horiz %>% dplyr::slice(rep(1:dplyr::n(), each = nrow(evS_i))))
+      meta_RUN_i_evD_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evD_i))))
+      meta_RUN_i_evS_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evS_i))))
 
       evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
       evS_i <- cbind(evS_i, meta_RUN_i_evS_df)
