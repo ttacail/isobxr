@@ -485,7 +485,8 @@ compose_isobxr <- function(workdir,
 
   #### export evD facets pdf
   pdf_path <- paste(path_out_COMPO, "_pf_evD.pdf", sep = "")
-  pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding="MacRoman")
+  # pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding="MacRoman")
+  pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
   print(evD_plot_facet)
   dev.off()
 
@@ -576,7 +577,8 @@ compose_isobxr <- function(workdir,
   #### edit pdf of evD/evS multiplot
   pdf_path <- paste(path_out_COMPO, "_p_evDS.pdf", sep = "")
   dev.new()
-  pdf(pdf_path, width = 15, height = 15, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+  # pdf(pdf_path, width = 15, height = 15, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+  pdf(pdf_path, width = 15, height = 15, pointsize = 1, useDingbats=FALSE)
   multiplot(evD_plot, evS_plot, cols = 1)
   graphics.off()
 
@@ -603,7 +605,8 @@ compose_isobxr <- function(workdir,
   #### export evS facets pdf
   pdf_path <- paste(path_out_COMPO, "_pf_evS.pdf", sep = "")
   dev.new()
-  pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding="MacRoman")
+  # pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding="MacRoman")
+  pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
   suppressWarnings(print(evS_plot_facet))
   graphics.off()
 

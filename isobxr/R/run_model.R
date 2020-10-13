@@ -588,7 +588,8 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   if (PLOT_DIAGRAMS == T){
     #### EDIT NETWORK DIAGRAM PDF
     pdf_path <- paste(folder_outdir, "DIAGf_", flux_list_name, ".pdf", sep = "")
-    pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+    # pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+    pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
     NET_FLUXES <- qgraph::qgraph(FLUXES_adj,
                                  title = NET_FLUXES_title,
                                  layout = matrix_layout,
@@ -607,7 +608,8 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     dev.off()
 
     pdf_path <- paste(folder_outdir, "DIAGa_", coeff_list_name_outdir, ".pdf", sep = "")
-    pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+    # pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+    pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
     NET_COEFFS <- qgraph::qgraph(COEFFS_adj,
                                  title = NET_COEFFS_title,
                                  title.cex = 0.25,
@@ -730,7 +732,8 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     #### EXPORT PLOT
     pdf_path <- paste(folder_outdir, "OUT/", SERIES_ID, "_", as.character(LOG_loc$RUN_ID), "_plot_evD.pdf", sep = "")
     dev.new()
-    pdf(pdf_path, width = 10, height = 7, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+    # pdf(pdf_path, width = 10, height = 7, pointsize = 1, useDingbats=FALSE, encoding="MacRoman")
+    pdf(pdf_path, width = 10, height = 7, pointsize = 1, useDingbats=FALSE)
     suppressWarnings(print(evD_plot))
     graphics.off()
   }
