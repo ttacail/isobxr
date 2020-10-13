@@ -182,6 +182,7 @@ server <- function(input, output) {
 
   #************************************** DEFINE SERIES DIRECTORY
   output$CurrentDir <- renderText(expr = paste("Current series: ", SERIES_RUN_FILE_ID(), sep = ""))
+
   output$SeriesType <- renderText({
     if (is.null(SERIES_TYPE())){
       expr = "No Series folder identified yet."
@@ -594,7 +595,7 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN"){
-      checkboxInput(inputId = "DISPLAY_DRIFT", label = "Display drift", value = T)
+      checkboxInput(inputId = "DISPLAY_DRIFT", label = "Display drift", value = F)
     } else {
       return(NULL)
     }
@@ -758,7 +759,6 @@ server <- function(input, output) {
         evD_vert <- clear_subset(evD_vert)
       }
 
-
       #### set limits of plot
       Ymin <- round(min(evD_vert$VAR), 0)-1
       Ymax <- round(max(evD_vert$VAR), 0)+1
@@ -858,21 +858,21 @@ server <- function(input, output) {
       DF <- evD_final_vert
 
       if (levels(DF$LEGEND_EXPLO_1) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-        EXPLO_subtitle_1 <- paste(paste("VAR EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
       } else {
-        EXPLO_subtitle_1 <- paste(paste("VAR EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1))), collapse = ", "), sep = "")
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1)), collapse = " to "), collapse = ", "), sep = "")
       }
 
       if (levels(DF$LEGEND_EXPLO_2) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-        EXPLO_subtitle_2 <- paste(paste("VAR EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
       } else {
-        EXPLO_subtitle_2 <- paste(paste("VAR EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
       }
 
-      EXPLO_subtitle_0 = paste("SWEEP ID:", SERIES_RUN_ID(),
+      EXPLO_subtitle_0 = paste(SERIES_RUN_ID(),
                                " (", min(LOG_SERIES()$RUN_n),
                                "-", max(LOG_SERIES()$RUN_n),
-                               ") - Initial hidden: ",
+                               ") \n", "Hidden initial run: ",
                                paste(LOG_SERIES()[1, "COEFF_FLUX"], collapse = " / "),
                                sep = "")
 
@@ -1130,23 +1130,23 @@ server <- function(input, output) {
 
       #### DEFINE TITLES
 
-      EXPLO_subtitle_0 = paste("SWEEP ID:", SERIES_RUN_ID(),
+      EXPLO_subtitle_0 = paste(SERIES_RUN_ID(),
                                " (", min(LOG_SERIES()$RUN_n),
                                "-", max(LOG_SERIES()$RUN_n),
-                               ") - Initial hidden: ",
+                               ") \n", "Hidden initial run: ",
                                paste(LOG_SERIES()[1, "COEFF_FLUX"], collapse = " / "),
                                sep = "")
 
       if (levels(DF$LEGEND_EXPLO_1) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-        EXPLO_subtitle_1 <- paste(paste("EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
       } else {
-        EXPLO_subtitle_1 <- paste(paste("EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1))), collapse = ", "), sep = "")
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1)), collapse = " to "), collapse = ", "), sep = "")
       }
 
       if (levels(DF$LEGEND_EXPLO_2) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-        EXPLO_subtitle_2 <- paste(paste("EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
       } else {
-        EXPLO_subtitle_2 <- paste(paste("EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
       }
 
 
@@ -1282,7 +1282,6 @@ server <- function(input, output) {
 
       if (SERIES_TYPE()[1] == "CPS"){
         dir_PLOT <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
-        # pdf(dir_PLOT, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
         pdf(dir_PLOT, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(PLOT_CPS())
         dev.off()
@@ -1312,21 +1311,21 @@ server <- function(input, output) {
         DF <- evD_final_vert
 
         if (levels(DF$LEGEND_EXPLO_1) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-          EXPLO_subtitle_1 <- paste(paste("VAR EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
+          EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
         } else {
-          EXPLO_subtitle_1 <- paste(paste("VAR EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1))), collapse = ", "), sep = "")
+          EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1)), collapse = " to "), collapse = ", "), sep = "")
         }
 
         if (levels(DF$LEGEND_EXPLO_2) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-          EXPLO_subtitle_2 <- paste(paste("VAR EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
+          EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
         } else {
-          EXPLO_subtitle_2 <- paste(paste("VAR EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
+          EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
         }
 
-        EXPLO_subtitle_0 = paste("SWEEP ID:", SERIES_RUN_ID(),
+        EXPLO_subtitle_0 = paste(SERIES_RUN_ID(),
                                  " (", min(LOG_SERIES()$RUN_n),
                                  "-", max(LOG_SERIES()$RUN_n),
-                                 ") - Initial hidden: ",
+                                 ") \n", "Hidden initial run: ",
                                  paste(LOG_SERIES()[1, "COEFF_FLUX"], collapse = " / "),
                                  sep = "")
 
@@ -1336,9 +1335,9 @@ server <- function(input, output) {
 
 
         if (input$PICK_BOX_STD_DYN_SUB != "0"){
-          EXPLO_title <- paste("\u0394", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", \u2030", ") - [", loc_BOX, "-", input$PICK_BOX_STD_DYN_SUB, "]", sep = "")
+          EXPLO_title <- paste("DELTA.", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", permil", ") - [", loc_BOX, "-", input$PICK_BOX_STD_DYN_SUB, "]", sep = "")
         } else {
-          EXPLO_title <- paste("\u03B4", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", \u2030", ") - [", loc_BOX, "]", sep = "")
+          EXPLO_title <- paste("delta.", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", permil", ") - [", loc_BOX, "]", sep = "")
         }
 
         ################################################ PLOT VAR_EXPLO_2 vs VAR_EXPLO_1
@@ -1447,12 +1446,10 @@ server <- function(input, output) {
         dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
         dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
 
-        # pdf(dir_PLOT_1, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
         pdf(dir_PLOT_1, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_1)
         dev.off()
 
-        # pdf(dir_PLOT_2, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
         pdf(dir_PLOT_2, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_2)
         dev.off()
@@ -1483,29 +1480,6 @@ server <- function(input, output) {
         if (input$TIME_MAP_DYN < 100){
           time_of_mapping <- time_list[time_list >= time_of_mapping][1]
         }
-
-        # if (time_of_mapping >= max_time){
-        #   time_list <- sort(unique(evD[evD$Time <= max_time, "Time"]))
-        #   time_of_mapping <- tail(time_list[time_list >= time_of_mapping], n = 1)
-        # }
-
-
-        # input$PICK_X
-        # input$PICK_X_norm
-        # input$PICK_Y
-        # input$PICK_Y_norm
-
-
-        # if (is.null(HIDE_VALUES_VAR_EXPLO_1) == F){
-        #   evD <- clear_subset(evD[-which(as.character(evD$VAR_EXPLO_1) %in% as.character(HIDE_VALUES_VAR_EXPLO_1)),])
-        # }
-        #
-        # if (is.null(HIDE_VALUES_VAR_EXPLO_2) == F){
-        #   evD <- clear_subset(evD[-which(as.character(evD$VAR_EXPLO_2) %in% as.character(HIDE_VALUES_VAR_EXPLO_2)),])
-        # }
-
-
-
 
         if (loc_BOX_sub != "0"){
           Z_ID <- paste("\u0394", ELEMENT(), " [", loc_BOX, "-", loc_BOX_sub,"]", sep = "")
@@ -1612,23 +1586,23 @@ server <- function(input, output) {
 
         #### DEFINE TITLES
 
-        EXPLO_subtitle_0 = paste("SWEEP ID:", SERIES_RUN_ID(),
+        EXPLO_subtitle_0 = paste(SERIES_RUN_ID(),
                                  " (", min(LOG_SERIES()$RUN_n),
                                  "-", max(LOG_SERIES()$RUN_n),
-                                 ") - Initial hidden: ",
+                                 ") \n", "Hidden initial run: ",
                                  paste(LOG_SERIES()[1, "COEFF_FLUX"], collapse = " / "),
                                  sep = "")
 
         if (levels(DF$LEGEND_EXPLO_1) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-          EXPLO_subtitle_1 <- paste(paste("EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
+          EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
         } else {
-          EXPLO_subtitle_1 <- paste(paste("EXPLO #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1))), collapse = ", "), sep = "")
+          EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1)), collapse = " to "), collapse = ", "), sep = "")
         }
 
         if (levels(DF$LEGEND_EXPLO_2) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
-          EXPLO_subtitle_2 <- paste(paste("EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
+          EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
         } else {
-          EXPLO_subtitle_2 <- paste(paste("EXPLO #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
+          EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
         }
 
 
@@ -1639,9 +1613,9 @@ server <- function(input, output) {
 
 
         if (input$PICK_BOX_STD_DYN_SUB != "0"){
-          EXPLO_title <- paste("\u0394", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", \u2030", ") - [", loc_BOX, "-", input$PICK_BOX_STD_DYN_SUB, "]", sep = "")
+          EXPLO_title <- paste("DELTA.", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", permil", ") - [", loc_BOX, "-", input$PICK_BOX_STD_DYN_SUB, "]", sep = "")
         } else {
-          EXPLO_title <- paste("\u03B4", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", \u2030", ") - [", loc_BOX, "]", sep = "")
+          EXPLO_title <- paste("delta.", ELEMENT(), " (", ISO_NUMERATOR(), "/", ISO_DENOMINATOR(),", permil", ") - [", loc_BOX, "]", sep = "")
         }
 
         if (DISPLAY_DRIFT == T){
@@ -1725,12 +1699,10 @@ server <- function(input, output) {
         dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
         dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
 
-        # pdf(dir_PLOT_1, width = 20, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
         pdf(dir_PLOT_1, width = 20, height = 10, pointsize = 1, useDingbats = FALSE)
         print(evD_plot)
         dev.off()
 
-        # pdf(dir_PLOT_2, width = 10, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
         pdf(dir_PLOT_2, width = 10, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_2)
         dev.off()
@@ -2182,7 +2154,6 @@ server <- function(input, output) {
       return(NULL)
     } else {
       dir_PLOT <- paste(SERIES_RUN_dir(), "/", "00_CPS_REPORT_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
-      # pdf(dir_PLOT, width = 15, height = 20, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
       pdf(dir_PLOT, width = 15, height = 20, pointsize = 1, useDingbats = FALSE)
       show(CPS_PLOT_REPORT())
       dev.off()
