@@ -223,7 +223,7 @@ quiet <- function(x) {
 }
 
 # A function to collect local platform/session/versions data for portability (for DEV only) ############################################################
-#' collect local platform/session/versions data for portability (for DEV only)
+#' collect local portability data (for DEV only)
 #' @description collect local platform/session/versions data for portability (for DEV only), saves Rdata
 #' @param workdir directory where Rdata local summary will be exported
 #' @export
