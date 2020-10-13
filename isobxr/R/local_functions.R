@@ -232,7 +232,5 @@ get_portability_data <- function(workdir){
   loc_version <- version
   loc_sessionInfo <- sessionInfo()
   loc_installed_packages <- installed.packages()
-  list(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages)
   save(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages, file = paste(workdir, "portability_data_", gsub(":","",gsub(" ", "_", date())), ".RData", sep = ""))
 }
-
