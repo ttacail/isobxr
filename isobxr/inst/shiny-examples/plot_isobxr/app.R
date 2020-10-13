@@ -16,7 +16,7 @@ LOC_workdir <- workdir
 
 ui <- fluidPage(theme = shinythemes::shinytheme("darkly"),
 
-                shinyjs::useShinyjs(),
+                shinyjs::useShinyjs(debug = FALSE),
                 shinyjs::extendShinyjs(text = "shinyjs.closeWindow = function() { window.close(); }", functions = c("closeWindow")),
                 actionButton("close", "Close window"),
 
@@ -68,30 +68,30 @@ ui <- fluidPage(theme = shinythemes::shinytheme("darkly"),
 
                 hr(),
 
-                tabsetPanel(
-                  tabPanel("Plot",
-                           br(),
-                           plotOutput("PLOT", height = 600),
-                           actionButton("downloadPLOT", "Download pdf")
-                  ),
-                  tabPanel("Settings summary",
-                           fluidRow(
-                             column(width = 4,
-                                    uiOutput("DIAG_RUN_loc"), # CPS,
-                                    br(),
-                                    plotOutput("DIAGRAM_F", height = 400, width = 400),
-                                    br(),
-                                    plotOutput("DIAGRAM_A", height = 400, width = 400)
-                             ),
-                             column(width = 8,
-                                    br(),
-                                    plotOutput("CPS_PLOT_REPORT", width = 800, height = 900),
-                                    actionButton("download_CPS_REPORT_PLOT", "Download pdf")
-                             )
-                           ),
-                           br(),
-                           DT::dataTableOutput("summary_table",  width = 600) # CPS
-                  )
+                tabsetPanel(id = "tabs",
+                            tabPanel("Plots", value = 1,
+                                     br(),
+                                     plotOutput("PLOT", height = 600),
+                                     actionButton("downloadPLOT", "Download pdf")
+                            ),
+                            tabPanel("Composite model summary", value = 2,
+                                     fluidRow(
+                                       column(width = 4,
+                                              uiOutput("DIAG_RUN_loc"), # CPS,
+                                              br(),
+                                              plotOutput("DIAGRAM_F", height = 400, width = 400),
+                                              br(),
+                                              plotOutput("DIAGRAM_A", height = 400, width = 400)
+                                       ),
+                                       column(width = 8,
+                                              br(),
+                                              plotOutput("CPS_PLOT_REPORT", width = 800, height = 900),
+                                              actionButton("download_CPS_REPORT_PLOT", "Download pdf")
+                                       )
+                                     ),
+                                     br(),
+                                     DT::dataTableOutput("summary_table",  width = 600) # CPS
+                            )
                 ),
 
                 hr(),
@@ -245,6 +245,14 @@ server <- function(input, output) {
       return(SERIES_TYPE)
     } else {
       return(NULL)
+    }
+  })
+
+  reactive({
+    if (SERIES_TYPE()[1] != "CPS"){
+      hideTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
+    } else {
+      showTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
     }
   })
 
@@ -1274,7 +1282,8 @@ server <- function(input, output) {
 
       if (SERIES_TYPE()[1] == "CPS"){
         dir_PLOT <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
-        pdf(dir_PLOT, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        # pdf(dir_PLOT, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        pdf(dir_PLOT, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(PLOT_CPS())
         dev.off()
       } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD"){
@@ -1438,11 +1447,13 @@ server <- function(input, output) {
         dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
         dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
 
-        pdf(dir_PLOT_1, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        # pdf(dir_PLOT_1, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        pdf(dir_PLOT_1, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_1)
         dev.off()
 
-        pdf(dir_PLOT_2, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        # pdf(dir_PLOT_2, width = 15, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        pdf(dir_PLOT_2, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_2)
         dev.off()
 
@@ -1714,11 +1725,13 @@ server <- function(input, output) {
         dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
         dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
 
-        pdf(dir_PLOT_1, width = 20, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        # pdf(dir_PLOT_1, width = 20, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        pdf(dir_PLOT_1, width = 20, height = 10, pointsize = 1, useDingbats = FALSE)
         print(evD_plot)
         dev.off()
 
-        pdf(dir_PLOT_2, width = 10, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        # pdf(dir_PLOT_2, width = 10, height = 10, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+        pdf(dir_PLOT_2, width = 10, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_2)
         dev.off()
       }
@@ -1820,7 +1833,7 @@ server <- function(input, output) {
   })
 
   output$summary_table = DT::renderDataTable({
-    if (SERIES_TYPE() == "CPS"){
+    if (SERIES_TYPE()[1] == "CPS"){
       data_table <- LOG_SERIES()
       data_table$Displayed <- "."
       data_table[input$DIAG_RUN_loc, "Displayed"] <- "***"
@@ -2169,15 +2182,13 @@ server <- function(input, output) {
       return(NULL)
     } else {
       dir_PLOT <- paste(SERIES_RUN_dir(), "/", "00_CPS_REPORT_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
-      pdf(dir_PLOT, width = 15, height = 20, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+      # pdf(dir_PLOT, width = 15, height = 20, pointsize = 1, useDingbats = FALSE, encoding = "MacRoman")
+      pdf(dir_PLOT, width = 15, height = 20, pointsize = 1, useDingbats = FALSE)
       show(CPS_PLOT_REPORT())
       dev.off()
     }
   })
-
-
-
 }
 
 #----#----#----#---- build the application #----#----#----#----#----#----#----#----
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list("quiet", shiny::shinyOptions(shiny.trace = FALSE, shiny.fullstacktrace = FALSE, shiny.reactlog = FALSE)))
