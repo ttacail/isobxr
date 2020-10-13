@@ -221,3 +221,18 @@ quiet <- function(x) {
   on.exit(sink())
   invisible(force(x))
 }
+
+# A function to collect local platform/session/versions data for portability (for DEV only) ############################################################
+#' collect local platform/session/versions data for portability (for DEV only)
+#' @description collect local platform/session/versions data for portability (for DEV only), saves Rdata
+#' @param workdir directory where Rdata local summary will be exported
+#' @export
+get_portability_data <- function(workdir){
+  loc_wd <- getwd()
+  loc_version <- version
+  loc_sessionInfo <- sessionInfo()
+  loc_installed_packages <- installed.packages()
+  list(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages)
+  save(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages, file = paste(workdir, "portability_data_", gsub(":","",gsub(" ", "_", date())), ".RData", sep = ""))
+}
+
