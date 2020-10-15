@@ -131,7 +131,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 # CALCULATION GAUGE ############################################################
-#' Gauge of calucation
+#' Gauge of calcucation
 #' @description Prints a gauge of the calculation progress
 #' @param i Calculating step number
 #' @param len Total calculation steps
