@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 The **isobxr** package is a set of R tools designed to perform and explore stable isotope box
 modeling of open or closed systems.
-The aim of this code is to provide a ready-to-use tool allowing users to 
+It provide a ready-to-use tool allowing users to 
 develop and test isotopic box models of their system of interest. 
 It allows the user to explore the behavior of these systems
 in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, 

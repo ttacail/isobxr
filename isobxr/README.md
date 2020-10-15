@@ -20,7 +20,7 @@ You can install the released version of isobxr from [GitHub](https://github.com/
 devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE)
 ```
 
-## Princple and use
+## Principle and use
 
 All principles and functions are described in the package vignette.
 
