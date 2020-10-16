@@ -36,34 +36,46 @@ as well as sweep the space of parameters in both static and dynamic modes.
 
 # Install and use isobxr
 
-As for now, you will need install the **isobxr** using it's *bundle* version (zipped file typically named *isobxr_0.1.0.tar.gz*) or it's binary version (zipped file typically named *isobxr_0.1.0.tgz*).
-It would typically be (although probably depending on your environment).
 
-```{r eval=FALSE}
-# install bundle package
-install.packages("~/isobxr_0.1.0.tar.gz", repos = NULL, type = "source")
+The **isobxr** is available as a source package from [GitHub](https://github.com/).
 
-# load isobxr installed package
+1. Download and install/update [R](https://cran.r-project.org/).
+
+2. Download and install package **devtools**
+
+```{r eval = FALSE}
+install.packages("devtools")
+```
+
+3. Download and install **isobxr** source package.
+
+```{r eval = FALSE}
+devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
+```
+
+The **isobxr** package is working under R 3.5.2 to 4.0.3 versions.
+
+It's portability has been proof checked for the following Platforms: 
+
+1. Mac OS 10.12.6 & 10.13.6
+
+2. Linux (Ubuntu 20.04.1 LTS)
+
+3. Windows 10
+
+You can load the **isobxr** package as follows:
+```{r eval = FALSE}
 library(isobxr)
-
-# or call isobxr functions by it's namespace using the "::" operator
-# For instance for the run_isobxr function:
-isobxr::run_isobxr()
 ```
 
-Another way will be to use the Rstudio package install button and select the .tar.gz or .tgz file of the package.
-
-It will soon be possible to install **isobxr** from github. 
-
-The command will then be:
-
-```{r eval=FALSE}
-devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE)
-```
-
-Here is the package description of the current version.
+Here is the package description of the current version, where you can find the required minimal versions of dependencies:
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 packageDescription("isobxr")
+```
+
+You can locally browse the vignette as follows:
+```{r eval = FALSE}
+browseVignettes("isobxr")
 ```
 
 ----
@@ -700,7 +712,7 @@ For this run we use the *a1* fractionation coefficients list.
 We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/sz18642/isobxr_demo/DEMO_ABCD", # isobxr master file work. dir.
+run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
            SERIES_ID = "ABC_balanced_closed", # series ID of the set of runs
            flux_list_name = "Fx1_ABC_bal", # which flux list from FLUXES sheet
            coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
@@ -747,7 +759,7 @@ For this run we use the *a1* fractionation coefficients list.
 We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/sz18642/isobxr_demo/DEMO_ABCD", # isobxr master file work. dir.
+run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
            SERIES_ID = "ABC_unbalanced_closed", # series ID of the set of runs
            flux_list_name = "Fx2_ABC_unbal", # which flux list from FLUXES sheet
            coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
@@ -971,7 +983,7 @@ The function call would be the following for a run of 25000 days, with one calcu
 We use the *Fx6_ABC_open_bal* flux list and the *a1* coefficient list.
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/sz18642/isobxr_demo/DEMO_ABCD", # isobxr master file work. dir.
+run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
            SERIES_ID = "ABC_balanced_open", # series ID of the set of runs
            flux_list_name = "Fx6_ABC_open_bal", # which flux list from FLUXES sheet
            coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
@@ -1173,7 +1185,7 @@ Here, we start with the previous example: a set of 3 finite boxes (A, B, C) cons
 We call the function as follows:
 
 ```{r eval=FALSE}
-workdir <- "/Users/sz18642/isobxr_demo/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_balance" # series ID of the set of compo runs
 time_units <- c("days", "days") # time units for run (days) and for plots (years)
 COMPO_MASTER <- "0_COMPO_MASTER_balance_change.xlsx" # compo master file name
@@ -1233,7 +1245,7 @@ knitr::include_graphics('./34_FORCING_DELTA_ABC.png')
 We call the function as follows:
 
 ```{r eval=FALSE}
-workdir <- "/Users/sz18642/isobxr_demo/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_source" # series ID of the set of compo runs
 time_units <- c("days", "days") # time units for run (days) and for plots (years)
 COMPO_MASTER <- "0_COMPO_MASTER_source_change.xlsx" # compo master file name
@@ -1556,7 +1568,7 @@ No forcings are applied.
 To do so, the `sweep_steady` function can be used as follows: 
 
 ```{r eval=FALSE, include=TRUE}
-workdir <- "/Users/sz18642/isobxr_demo/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_sweep_steady_demo1" # series ID of the set of compo runs
 time_units <- c("days", "days") # time units for run (days) and for plots (years)
 EXPLO_MASTER <- "0_EXPLO_STEADY_MASTER_demo1.xlsx" # compo master file name
@@ -1903,7 +1915,7 @@ No forcings other than the FORCING_DELTA on the SOURCE box are applied.
 To do so, the `sweep_steady` function can be used as follows: 
 
 ```{r eval=FALSE, include=TRUE}
-workdir <- "/Users/sz18642/isobxr_demo/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_source_sweep_dyn_demo1" # series ID of the set of compo runs
 time_units <- c("days", "days") # time units for run (days) and for plots (years)
 EXPLO_MASTER <- "0_EXPLO_DYN_MASTER_demo1.xlsx" # compo master file name
@@ -1944,7 +1956,7 @@ This app also allows to export a pdf version of the plot.
 # define workdir in which the SERIES directories are found 
 # (SERIES directories start with 3_CPS, 4_STD or 4_DYN) 
 # for instance:
-workdir <- "/Users/sz18642/isobxr_demo/DEMO_ABCD"
+workdir <- "~/DEMO_ABCD"
 
 # Launch the shiny app
 runShinyPlots()

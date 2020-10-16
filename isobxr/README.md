@@ -4,29 +4,52 @@
 <!-- badges: end -->
 
 The **isobxr** package is a set of R tools designed to perform and explore stable isotope box
-modeling of open or closed systems.
-It provides a ready-to-use tool allowing users to 
-develop and test isotopic box models of their system of interest. 
-It allows the user to explore the behavior of these systems
+modelling of open or closed systems.
+It allows users to develop and test isotopic box models of their system of interest, explore the behavior of these systems
 in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, 
 as well as sweep the space of parameters in both static and dynamic modes.
 
+To get an overview of the abilities and 
+
 ## Installation
 
-You can install the released version of isobxr from [GitHub](https://github.com/) with:
+The **isobxr** is available as a source package from [GitHub](https://github.com/).
+
+1. Download and install/update [R](https://cran.r-project.org/).
+
+2. Download and install package **devtools**
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE)
+install.packages("devtools")
 ```
+
+3. Download and install **isobxr** source package.
+
+``` r
+devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
+```
+
+The **isobxr** package is working under R 3.5.2 to 4.0.3 versions.
+
+It's portability has been proof checked for the following Platforms: 
+
+1. Mac OS 10.12.6 & 10.13.6
+
+2. Linux (Ubuntu 20.04.1 LTS)
+
+3. Windows 10
 
 ## Principle and use
 
-All principles and functions are described in the package vignette.
+We strongly advise user to go through the vignette (at least up to "Running isobxr" or even "Compose isobxr scenarios").
+
+``` r
+library(isobxr)
+browseVignettes("isobxr")
+```
 
 ## Example
-
-This is a basic example which shows you how to run a simple box model. 
+This is a basic example which shows you how to run a simple box model, using the demo_ABCD models, available on demand.
 
 ``` r
 library(isobxr)
