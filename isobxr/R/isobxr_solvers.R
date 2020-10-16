@@ -32,63 +32,19 @@ usethis::use_package("deSolve", min_version = TRUE)
 #' @export
 num_slvr <- function(input_path){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
-  occ1 <- stringr::str_locate(input_path, "INPUT.xlsx")[[1]]
-  if (is.na(occ1[1]) == "FALSE"){
-    namefile = input_path
-    if (.Platform$OS.type == "unix"){
-      if (stringr::str_detect(input_path, "/") == TRUE){
-        occ2 = max(stringr::str_locate_all(input_path, "/")[[1]][,1]) # for Unix
-      } else {
-        occ2 = 0
-      }
-    }
-    if (.Platform$OS.type == "nt"){
-      if (stringr::str_detect(input_path, "\\") == TRUE){
-        occ2 = max(stringr::str_locate_all(input_path, "\\")[[1]][,1]) # for Windows
-      }
-      else {
-        occ2 = 0
-      }
-    }
-
-    prefix = stringr::str_sub(namefile, start = occ2+1, end = occ1-1)
-    if (occ2 != 0){
-      outdir = stringr::str_sub(namefile, start = 0, end = occ2-1)
-    } else {
-      outdir = NaN
-    }
+  input_path <- normalizePath(input_path, winslash = "/")
+  if (stringr::str_detect(input_path, "INPUT.xlsx")){
+    namefile <- input_path
+    prefix <- stringr::str_remove(basename(input_path), pattern = "INPUT.xlsx")
+    cwd <- dirname(input_path)
   } else {
-    stop('\nWrong file or check file name\n')
+    stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
   }
 
   ############################## DEFINE outdir #####################
-  if (is.na(outdir)){
-    cwd = getwd()
-    run_dir = paste(prefix, "OUT", sep = "")
-    if (.Platform$OS.type == "unix"){
-      if (dir.exists(paste(cwd, "/", run_dir, "/", sep = "")) == FALSE){
-        dir.create(paste(cwd, "/", run_dir, "/", sep = ""))
-      }
-      outdir = paste(cwd, "/", run_dir, "/", sep = "")
-    }
-    if (.Platform$OS.type == "nt"){
-      dir.create(paste(cwd, "\\", run_dir, sep = ""), showWarnings = FALSE)
-      outdir = paste(cwd, "\\", run_dir, "\\", sep = "")
-    }
-  } else {
-    cwd = outdir
-    run_dir = paste(prefix, "OUT", sep = "")
-    if (.Platform$OS.type == "unix"){
-      if (dir.exists(paste(cwd, "/", run_dir, "/", sep = "")) == FALSE){
-        dir.create(paste(cwd, "/", run_dir, "/", sep = ""))
-      }
-      outdir = paste(cwd, "/", run_dir, "/", sep = "")
-    }
-    if (.Platform$OS.type == "nt"){
-      dir.create(paste(cwd, "\\", run_dir, sep = ""), showWarnings = FALSE)
-      outdir = paste(cwd, "\\", run_dir, "\\", sep = "")
-    }
-  }
+  run_dir <- paste(prefix, "OUT", sep = "")
+  outdir <- paste(cwd, "/", run_dir, "/", sep = "")
+  if (!dir.exists(outdir)){dir.create(outdir)}
 
   ############################## CONSTANTS ###################################
   consts_f = as.data.frame(readxl::read_excel(namefile, "CONSTS"))
@@ -219,63 +175,19 @@ num_slvr <- function(input_path){
 #' @export
 ana_slvr <- function(input_path){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
-  occ1 <- stringr::str_locate(input_path, "INPUT.xlsx")[[1]]
-  if (is.na(occ1[1]) == "FALSE"){
-    namefile = input_path
-    if (.Platform$OS.type == "unix"){
-      if (stringr::str_detect(input_path, "/") == TRUE){
-        occ2 = max(stringr::str_locate_all(input_path, "/")[[1]][,1]) # for Unix
-      } else {
-        occ2 = 0
-      }
-    }
-    if (.Platform$OS.type == "nt"){
-      if (stringr::str_detect(input_path, "\\") == TRUE){
-        occ2 = max(stringr::str_locate_all(input_path, "\\")[[1]][,1]) # for Windows
-      }
-      else {
-        occ2 = 0
-      }
-    }
-
-    prefix = stringr::str_sub(namefile, start = occ2+1, end = occ1-1)
-    if (occ2 != 0){
-      outdir = stringr::str_sub(namefile, start = 0, end = occ2-1)
-    } else {
-      outdir = NaN
-    }
+  input_path <- normalizePath(input_path, winslash = "/")
+  if (stringr::str_detect(input_path, "INPUT.xlsx")){
+    namefile <- input_path
+    prefix <- stringr::str_remove(basename(input_path), pattern = "INPUT.xlsx")
+    cwd <- dirname(input_path)
   } else {
-    stop('\nWrong file or check file name\n')
+    stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
   }
 
   ############################## DEFINE outdir #####################
-  if (is.na(outdir)){
-    cwd = getwd()
-    run_dir = paste(prefix, "OUT", sep = "")
-    if (.Platform$OS.type == "unix"){
-      if (dir.exists(paste(cwd, "/", run_dir, "/", sep = "")) == FALSE){
-        dir.create(paste(cwd, "/", run_dir, "/", sep = ""))
-      }
-      outdir = paste(cwd, "/", run_dir, "/", sep = "")
-    }
-    if (.Platform$OS.type == "nt"){
-      dir.create(paste(cwd, "\\", run_dir, sep = ""), showWarnings = FALSE)
-      outdir = paste(cwd, "\\", run_dir, "\\", sep = "")
-    }
-  } else {
-    cwd = outdir
-    run_dir = paste(prefix, "OUT", sep = "")
-    if (.Platform$OS.type == "unix"){
-      if (dir.exists(paste(cwd, "/", run_dir, "/", sep = "")) == FALSE){
-        dir.create(paste(cwd, "/", run_dir, "/", sep = ""))
-      }
-      outdir = paste(cwd, "/", run_dir, "/", sep = "")
-    }
-    if (.Platform$OS.type == "nt"){
-      dir.create(paste(cwd, "\\", run_dir, sep = ""), showWarnings = FALSE)
-      outdir = paste(cwd, "\\", run_dir, "\\", sep = "")
-    }
-  }
+  run_dir <- paste(prefix, "OUT", sep = "")
+  outdir <- paste(cwd, "/", run_dir, "/", sep = "")
+  if (!dir.exists(outdir)){dir.create(outdir)}
 
   ############################## CONSTANTS ###################################
   consts_f = as.data.frame(readxl::read_excel(namefile, "CONSTS"))
