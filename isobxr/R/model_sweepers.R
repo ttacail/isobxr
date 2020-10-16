@@ -368,7 +368,7 @@ sweep_steady <- function(workdir,
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
 
   STOP_GO <- FALSE
-  STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
+  STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (STOP_GO == FALSE){
@@ -972,7 +972,7 @@ sweep_dyn <- function(workdir,
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
 
   STOP_GO <- FALSE
-  STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+  STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (!isTRUE(STOP_GO)){
