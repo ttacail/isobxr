@@ -159,6 +159,7 @@ sweep_steady <- function(workdir,
 
   COMPOSITE <- TRUE
 
+  cat("\n *** COMPUTE RUN #1 (Initial relaxation) *** \n ")
   run_isobxr(workdir = LOC_workdir,
              SERIES_ID = SERIES_ID,
              flux_list_name = fx,
@@ -368,13 +369,18 @@ sweep_steady <- function(workdir,
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
 
   STOP_GO <- FALSE
-  STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
+
+  if (.Platform$OS.type == "windows"){
+    STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
+  } else {
+    STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+  }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (STOP_GO == FALSE){
     cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
   } else {
-    cat("\n *** COMPUTE *** \n ")
+    cat("\n *** COMPUTE SWEEP OF RUN #2 *** \n ")
     # calculation_gauge(0, tot_run)
     pb_cpt <- txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP RUN 2/2 in [1:n] #----
@@ -597,7 +603,7 @@ sweep_steady <- function(workdir,
           j <- j + 1
         }
         if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-          unlink(c(evD_address, OUT_address, ODE_SOLNs_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
+          unlink(c(evD_address, OUT_address, ODE_SOLNs_address, paste(path_outdir_i, "OUT", sep = "")), recursive = T)
         }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
@@ -607,7 +613,7 @@ sweep_steady <- function(workdir,
           evS_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_2_evS.csv" , sep = "")
           evS_i <- data.table::fread(evS_address, data.table = F, stringsAsFactors = T, sep = ",")
           if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-            unlink(c(evD_address, evS_address, OUT_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
+            unlink(c(evD_address, evS_address, OUT_address, paste(path_outdir_i, "OUT", sep = "")), recursive = T)
           }
         }
       }
@@ -972,13 +978,18 @@ sweep_dyn <- function(workdir,
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
 
   STOP_GO <- FALSE
-  STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+
+  if (.Platform$OS.type == "windows"){
+    STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+  } else {
+    STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+  }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (!isTRUE(STOP_GO)){
     cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
   } else {
-    cat("\n *** COMPUTING *** \n ")
+    cat("\n *** COMPUTING SWEEPING of RUN #1 & #2 *** \n ")
     pb_cpt <- txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
 
     # calculation_gauge(0, tot_run)
