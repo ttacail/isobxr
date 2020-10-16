@@ -137,9 +137,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 #' @param len Total calculation steps
 #' @return A print summarizing the progress of calculation
 calculation_gauge <- function(i, len){
-  stars <- paste(rep("*", round(i*100/len, 0)), collapse = "")
-  straights <- paste(rep("-", 100-round(i*100/len, 0)), collapse = "")
-  perc <- paste(" (", round(i*100/len,0), "% of ", as.character(len), ")", sep = "")
+  stars <- paste(rep("*", round(i*50/len, 0)), collapse = "")
+  straights <- paste(rep("-", 50-round(i*50/len, 0)), collapse = "")
+  perc <- paste(" (", round(i*50/len,0), "% of ", as.character(len), ")", sep = "")
   print(paste(stars, straights, perc, sep = ""), quote = F)
 }
 
