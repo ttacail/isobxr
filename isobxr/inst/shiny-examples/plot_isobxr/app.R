@@ -185,6 +185,7 @@ server <- function(input, output) {
 
   output$SeriesType <- renderText({
     if (is.null(SERIES_TYPE())){
+      shiny::hideTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
       expr = "No Series folder identified yet."
     } else {
       expr = paste("Series Type: ", paste(SERIES_TYPE(), collapse = ", "), sep = "")
@@ -194,11 +195,11 @@ server <- function(input, output) {
   shinyFiles::shinyDirChoose(
     input,
     'dir',
-    roots = c(home = LOC_workdir),
+    roots = c(home = normalizePath(LOC_workdir, winslash = "/")),
     filetypes = c('', 'txt', 'bigWig', "tsv", "csv", "bw")
   )
 
-  global <- reactiveValues(datapath = getwd())
+  global <- reactiveValues(datapath = normalizePath(getwd(), winslash = "/"))
 
   dir <- reactive(input$dir)
 
@@ -215,7 +216,8 @@ server <- function(input, output) {
                  if (!"path" %in% names(dir())) return()
                  home <- normalizePath("~")
                  global$datapath <-
-                   file.path(LOC_workdir, paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
+                   # file.path(normalizePath(LOC_workdir, winslash = "/"), paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
+                   file.path(normalizePath(LOC_workdir, winslash = "/"), paste(unlist(dir()$path[-1]), collapse = "/"))
                })
 
   SERIES_RUN_dir <- reactive({global$datapath})
@@ -249,14 +251,16 @@ server <- function(input, output) {
     }
   })
 
-  # ONGOING DEV TO SHOW/HIDE TABS of COMPL INFORMATION
-  # test <- reactive({
-  #   if (SERIES_TYPE()[1] != "CPS"){
-  #     shiny::hideTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
-  #   } else {
-  #     shiny::showTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
-  #   }
-  # })
+  # SHOW/HIDE TABS of COMPL INFORMATION
+  observeEvent(eventExpr = {SERIES_TYPE()},
+               handlerExpr = {
+                 if (SERIES_TYPE()[1] == "CPS"){
+                   shiny::showTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
+                 } else {
+                   shiny::hideTab(inputId = "tabs", target = "2", session = getDefaultReactiveDomain())
+                 }
+               })
+
 
   #************************************** LOAD and PREPARE DATA
   SERIES_RUN_ID <- reactive({
