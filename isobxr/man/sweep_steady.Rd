@@ -46,9 +46,7 @@ in a SERIES directory located in working directory, automatically numbered.
 \item Calculates the number of runs the sweeping will require depending on the sweeped parameters.
 The function then asks the user confirmation to run sweep_steady,
 as the run calculation time depends on the number of successive sweeping runs.
-\item Creates the set of inputs and outputs for each successive \emph{n} runs, numbered from to 1 to \emph{n} in an XXXX format (see \code{\link{run_isobxr}} documentation).
-\cr Single run plots normally edited by \code{\link{run_isobxr}} are here not edited.
-\cr Named with the following format: STD + SERIES_ID + YYY + XXXX
+\item Creates the set of inputs and outputs for the first run only (see \code{\link{run_isobxr}} documentation). All sweep runs outputs are hidden and summarized in following \code{\link{sweep_steady}} outputs.
 \item Archives the steady sweep master file.
 \cr (file name structure: 0_STD + SERIES_ID + YYY + EXPLO_STEADY_MASTER.xlsx)
 \item Archives the local LOG for the given steady sweep run.
