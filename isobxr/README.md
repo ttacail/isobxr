@@ -9,8 +9,6 @@ It allows users to develop and test isotopic box models of their system of inter
 in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, 
 as well as sweep the space of parameters in both static and dynamic modes.
 
-To get an overview of the abilities and 
-
 ## Installation
 
 The **isobxr** is available as a source package from [GitHub](https://github.com/).
