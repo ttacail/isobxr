@@ -1991,33 +1991,3 @@ knitr::include_graphics('./39_shiny_5.png')
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./39_shiny_4.png')
 ```
-
-
-
-
- 
-******************************************************
-# Miscellaneous
-
-* do not manually modify LOG  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
