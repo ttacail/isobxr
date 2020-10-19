@@ -148,6 +148,13 @@ num_slvr <- function(input_path){
   df$DELTA_FINAL <- Delta[length(Delta[,1]),1:length(boxes_id)+1]
   df <- plyr::join(initial_f, df, by = "BOXES_ID")
   data.table::fwrite(df, file = paste(outdir, prefix, "N_1_OUT.csv", sep = ""), row.names = F, quote = F, sep = ",")
+
+  # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
+  # N_evD <- Delta_as_df
+  # N_evS <- Boxes_size_as_df
+  # N_OUT <- df
+  # save(N_OUT, N_evD, N_evS, file = paste(outdir, prefix, "N.Rdata", sep = ""))
+
 }
 
 #  #_________________________________________________________________________80char
@@ -195,7 +202,6 @@ ana_slvr <- function(input_path){
   time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
   nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"]))
   time = seq(0, time_max, length = nb_steps)
-
 
   ############################## INITIAL ###################################
   initial_f = as.data.frame(readxl::read_excel(namefile, "INITIAL"))
@@ -285,4 +291,10 @@ ana_slvr <- function(input_path){
   }
 
   data.table::fwrite(d_t_all, file = paste(outdir, prefix, "A_3_evD.csv", sep = ""), row.names = F, quote = F)
+
+  # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
+  # A_evD <- d_t_all
+  # A_ODE_SOLNs <- ODE_SOLNs
+  # A_OUT <- results
+  # save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(outdir, prefix, "A.Rdata", sep = ""))
 }

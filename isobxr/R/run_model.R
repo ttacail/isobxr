@@ -379,6 +379,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
 
   #************************************** INITIATE LOG FILE DATA FRAME #----
   dir_LOG <- "1_LOG.csv"
+  # dir_LOG_rds <- "1_LOG.rds"
 
   LOG_loc <- data.frame(RUN_n = NaN,
                         RUN_ID = NaN,
@@ -470,6 +471,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
   } else {
     LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    # LOG <- readRDS(dir_LOG_rds)
     if (SERIES_ID %in% levels(LOG$SERIES_ID)){
       LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
     } else {
@@ -630,8 +632,11 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   #************************************** UPDATE LOG DATA FRAME, EDIT CSV #----
   if (file.exists(dir_LOG) == FALSE){
     data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F)
+    # saveRDS(object = LOG_loc, file = dir_LOG_rds)
   } else {
     data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F, append = T)
+    # saveRDS(object = rbind(readRDS(file = dir_LOG_rds), LOG_loc),
+            # file = dir_LOG_rds)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN ISOBOXr #----
