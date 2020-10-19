@@ -42,54 +42,6 @@ ui <- fluidPage(tags$style("
 
                 tabsetPanel(id = "tabs",
                             tabPanel("Plots", value = 1,
-                                     br(),
-                                     conditionalPanel(condition = 'output.identified_series == "NO"',
-                                                      h3("Welcome to the isobxr plot editor for composite and sweep runs"),
-                                                      p("This app will allow you to interactively display and export the output plots of the",
-                                                        strong("isobxr"),
-                                                        "package."),
-                                                      p("Here, you need to select the composite or sweep output directory you want to plot. It's name should to start with of these prefixes: "),
-                                                      strong("** 3_CPS **"), em(" for composite_isobxr runs"), br(),
-                                                      strong("** 4_STD **"), em(" for sweep_steady runs"), br(),
-                                                      strong("** 4_DYN **"), em(" for sweep_dyn runs"), br(),
-                                                      br(),
-                                                      br(),
-
-                                                      p("Selecting a",
-                                                        strong("composite run", style = "color:grey"),
-                                                        "output will allow you to plot the evolution of isotope compositions of one or several boxes of your choice.
-                                                        You will also have the possility to zoom in the time frame of your choice.
-                                                        By default, the first (relaxation) run is not shown."),
-                                                      br(),
-                                                      br(),
-                                                      p("Selecting a",
-                                                        strong("sweep steady run", style = "color:grey"),
-                                                        "output will allow you to map the isotope composition of a given box at the final state of the sweep_steady run,
-                                                        in the 2D-space of the two sweeped parameters (left plot). You can also chose a custom space of parameters (or ratios of numerical parameters)
-                                                        that might be dependent with the sweep parameters (right plot). Finally, you can fine tune a series of parameters (map the difference between isotope compositions of two distinct boxes, add contours to the maps, ...)."),
-                                                      br(),
-                                                      br(),
-
-                                                      p("Selecting a",
-                                                        strong("sweep dynamic run", style = "color:grey"),
-                                                        "output will allow you to plot the isotope composition of a given box at in reaction to a perturbation (with time),
-                                                        in the 2D-space of the two sweeped parameters (left plot).
-                                                        This is either shown in raw values or as the drift from the initial value.
-                                                        You can also see (on the right side) the map of isotope compositions of this box in the 2D space of sweep parameters."),
-                                                      br(),
-                                                      br(),
-
-                                                      p("You can use the ",
-                                                        strong("Download pdf", style = "color:grey"),
-                                                        "button to export the graph with the display parameters you like. This pdf will be exported direclty to the selected output directory, and it's name will start with",
-                                                        strong("00_")),
-                                                      br(),
-                                                      br(),
-
-                                                      em("NOTE: This app does not allow to plot single runs (starting with '2_RUN').", style = "color:grey"),
-                                                      br(),
-                                                      br()
-                                     ),
                                      conditionalPanel(condition = 'output.identified_series == "YES"',
                                                       plotOutput("PLOT", height = 600),
                                                       actionButton("downloadPLOT", "Download pdf")
@@ -159,6 +111,55 @@ ui <- fluidPage(tags$style("
                          uiOutput("BINWIDTH_CONTOUR"),            # STD
                          uiOutput("TIME_MAP_DYN")
                   )
+                ),
+                hr(),
+                fluidRow(
+                  br(),
+                  h3("Welcome to the isobxr plot editor for composite and sweep runs"),
+                  p("This app will allow you to interactively display and export the output plots of the",
+                    strong("isobxr"),
+                    "package."),
+                  p("Here, you need to select the composite or sweep output directory you want to plot. It's name should to start with of these prefixes: "),
+                  strong("[3_CPS]"), em(" for composite_isobxr runs"), br(),
+                  strong("[4_STD]"), em(" for sweep_steady runs"), br(),
+                  strong("[4_DYN]"), em(" for sweep_dyn runs"), br(),
+                  br(),
+                  br(),
+
+                  p("Selecting a",
+                    strong("composite run", style = "color:grey"),
+                    "output will allow you to plot the evolution of isotope compositions of one or several boxes of your choice.
+                                     You will also have the possility to zoom in the time frame of your choice.
+                                     By default, the first (relaxation) run is not shown."),
+                  br(),
+                  br(),
+                  p("Selecting a",
+                    strong("sweep steady run", style = "color:grey"),
+                    "output will allow you to map the isotope composition of a given box at the final state of the sweep_steady run,
+                                     in the 2D-space of the two sweeped parameters (left plot). You can also chose a custom space of parameters (or ratios of numerical parameters)
+                                     that might be dependent with the sweep parameters (right plot). Finally, you can fine tune a series of parameters (map the difference between isotope compositions of two distinct boxes, add contours to the maps, ...)."),
+                  br(),
+                  br(),
+
+                  p("Selecting a",
+                    strong("sweep dynamic run", style = "color:grey"),
+                    "output will allow you to plot the isotope composition of a given box at in reaction to a perturbation (with time),
+                                     in the 2D-space of the two sweeped parameters (left plot).
+                                     This is either shown in raw values or as the drift from the initial value.
+                                     You can also see (on the right side) the map of isotope compositions of this box in the 2D space of sweep parameters."),
+                  br(),
+                  br(),
+
+                  p("You can use the ",
+                    strong("[Download pdf]", style = "color:grey"),
+                    "button to export the graph with the display parameters you like. This pdf will be exported direclty to the selected output directory, and it's name will start with",
+                    strong("[00_]"), "."),
+                  br(),
+                  br(),
+
+                  em("NOTE: This app does not allow to plot single runs (starting with '2_RUN').", style = "color:grey"),
+                  br(),
+                  br()
                 ),
                 hr(),
                 fluidRow(
