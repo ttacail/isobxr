@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{ANA_delta_t_Calculator}
 \alias{ANA_delta_t_Calculator}
-\title{Calulcate delta values at t with ODE solutions from \code{\link{ana_slvr}}}
+\title{Calculate delta values at t with ODE solutions from \code{\link{ana_slvr}}}
 \usage{
 ANA_delta_t_Calculator(
   t,

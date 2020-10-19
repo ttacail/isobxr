@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{time_converter}
 \alias{time_converter}
-\title{convert time units in a data frame column}
+\title{Convert time units in a data frame column}
 \usage{
 time_converter(
   dataframe,

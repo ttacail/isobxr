@@ -158,7 +158,7 @@ del_NaN_rows <- function(dataframe, by_col, resetrows){
 }
 
 # calculate delta values at time = t using ODE analytical solutions ############################################################
-#' Calulcate delta values at t with ODE solutions from \code{\link{ana_slvr}}
+#' Calculate delta values at t with ODE solutions from \code{\link{ana_slvr}}
 #' @description Calucate the delta values at time t using the ODE analytical solutions of the isotopic box model.
 #' @param t Time at which the delta values are to be calculated
 #' @param ODE_Constants Constants as determined by the analytical solver for the system of ordinary differential equations (single column data frame).
@@ -179,7 +179,7 @@ ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenv
 }
 
 # Convert the time units in plots ############################################################
-#' convert time units in a data frame column
+#' Convert time units in a data frame column
 #' @description Convert the time units in plots
 #' @param dataframe data frame for which a column with numerical time values should be converted to another unit
 #' @param time_colname column with time values that need to be converted to a different time unit
@@ -223,7 +223,7 @@ quiet <- function(x) {
 }
 
 # A function to collect local platform/session/versions data for portability (for DEV only) ############################################################
-#' collect local portability data (for DEV only)
+#' Collect local portability data (for DEV only)
 #' @description collect local platform/session/versions data for portability (for DEV only)
 #' @param workdir directory where Rdata local summary will be exported
 #' @return a Rdata file with loc wd, version, sessionInfo, installed packages

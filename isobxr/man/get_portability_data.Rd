@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{get_portability_data}
 \alias{get_portability_data}
-\title{collect local portability data (for DEV only)}
+\title{Collect local portability data (for DEV only)}
 \usage{
 get_portability_data(workdir)
 }
