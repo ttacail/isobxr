@@ -14,83 +14,115 @@ LOC_workdir <- workdir
 #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#
 
 
-ui <- fluidPage(theme = shinythemes::shinytheme("darkly"),
+ui <- fluidPage(tags$style("
+              body {
+    -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+    zoom: 0.9; /* Other non-webkit browsers */
+    zoom: 90%; /* Webkit browsers */
+}
+              "),
+                theme = shinythemes::shinytheme("darkly"),
 
                 shinyjs::useShinyjs(debug = FALSE),
                 shinyjs::extendShinyjs(text = "shinyjs.closeWindow = function() { window.close(); }", functions = c("closeWindow")),
-                actionButton("close", "Close window"),
-
-                titlePanel("Welcome to the isobxr plot editor", windowTitle = "shinobxr"),
-
-                # fluidRow(
-                #   column(width = 5,
-                #          h5("LOAD and DISPLAY data"), # ALL
-                #          shinyDirButton("dir", "Select Series directory", "Upload"), # ALL
-                #          # br(),
-                #          # br(),
-                #          # em(textOutput(outputId = "CurrentDir")),
-                #          # br(),
-                #          em(textOutput(outputId = "SeriesType")), # ALL
-                #          # h4("Display options"),
-                #          uiOutput("HIDE_BOX_CPS"), # CPS
-                #          uiOutput("SHOW_RUNS"),    # CPS
-                #          fluidRow(
-                #            column(width = 2, offset = 1,
-                #                   uiOutput("PICK_BOX_STD_DYN"),          # STD DYN
-                #                   uiOutput("TIME_UNIT_in"),              # DYN or CPS
-                #                   uiOutput("PICK_X"),                    # DYN or STD
-                #                   uiOutput("PICK_Y"),                     # DYN or STD
-                #                   uiOutput("DISPLAY_CONTOUR"),           # STD
-                #                   uiOutput("HIDE_VALUES_VAR_EXPLO_1"),   # DYN
-                #                   uiOutput("DISPLAY_DRIFT"),             # DYN
-                #                   uiOutput("TIME_ZOOM")                  # DYN
-                #            ),
-                #
-                #            column(width = 2,
-                #                   uiOutput("PICK_BOX_STD_DYN_SUB"),      # STD DYN
-                #                   uiOutput("TIME_UNIT_out"),             # DYN or CPS,
-                #                   uiOutput("PICK_X_norm"),               # DYN or STD,
-                #                   uiOutput("PICK_Y_norm"),                # DYN or STD,
-                #                   uiOutput("BINWIDTH_CONTOUR"),          # STD
-                #                   uiOutput("HIDE_VALUES_VAR_EXPLO_2")    # DYN
-                #            )
-                #          )
-                #   ),
-                #
-                #   column(width = 7,
-                #          tabsetPanel(
-                #            tabPanel("Plot",
-                #                     br(),
-                #                     plotOutput("PLOT"))
-                #          )
-                #   )
-                # )
+                fluidRow(
+                  column(width = 2,
+                         shinyFiles::shinyDirButton("dir", "Select Series directory", "Upload"), # ALL
+                         em(textOutput(outputId = "SeriesType")) # ALL
+                  ),
+                  column(width = 8,
+                         titlePanel(h1("Shinobxr: isobxr plot editor", align = "center"), windowTitle = "shinobxr")),
+                  column(width = 2,
+                         align = "right",
+                         actionButton("close", "Quit app")
+                  )
+                ),
 
                 hr(),
 
                 tabsetPanel(id = "tabs",
                             tabPanel("Plots", value = 1,
                                      br(),
-                                     plotOutput("PLOT", height = 600),
-                                     actionButton("downloadPLOT", "Download pdf")
+                                     conditionalPanel(condition = 'output.identified_series == "NO"',
+                                                      h3("Welcome to the isobxr plot editor for composite and sweep runs"),
+                                                      p("This app will allow you to interactively display and export the output plots of the",
+                                                        strong("isobxr"),
+                                                        "package."),
+                                                      p("Here, you need to select the composite or sweep output directory you want to plot. It's name should to start with of these prefixes: "),
+                                                      strong("** 3_CPS **"), em(" for composite_isobxr runs"), br(),
+                                                      strong("** 4_STD **"), em(" for sweep_steady runs"), br(),
+                                                      strong("** 4_DYN **"), em(" for sweep_dyn runs"), br(),
+                                                      br(),
+                                                      br(),
+
+                                                      p("Selecting a",
+                                                        strong("composite run", style = "color:grey"),
+                                                        "output will allow you to plot the evolution of isotope compositions of one or several boxes of your choice.
+                                                        You will also have the possility to zoom in the time frame of your choice.
+                                                        By default, the first (relaxation) run is not shown."),
+                                                      br(),
+                                                      br(),
+                                                      p("Selecting a",
+                                                        strong("sweep steady run", style = "color:grey"),
+                                                        "output will allow you to map the isotope composition of a given box at the final state of the sweep_steady run,
+                                                        in the 2D-space of the two sweeped parameters (left plot). You can also chose a custom space of parameters (or ratios of numerical parameters)
+                                                        that might be dependent with the sweep parameters (right plot). Finally, you can fine tune a series of parameters (map the difference between isotope compositions of two distinct boxes, add contours to the maps, ...)."),
+                                                      br(),
+                                                      br(),
+
+                                                      p("Selecting a",
+                                                        strong("sweep dynamic run", style = "color:grey"),
+                                                        "output will allow you to plot the isotope composition of a given box at in reaction to a perturbation (with time),
+                                                        in the 2D-space of the two sweeped parameters (left plot).
+                                                        This is either shown in raw values or as the drift from the initial value.
+                                                        You can also see (on the right side) the map of isotope compositions of this box in the 2D space of sweep parameters."),
+                                                      br(),
+                                                      br(),
+
+                                                      p("You can use the ",
+                                                        strong("Download pdf", style = "color:grey"),
+                                                        "button to export the graph with the display parameters you like. This pdf will be exported direclty to the selected output directory, and it's name will start with",
+                                                        strong("00_")),
+                                                      br(),
+                                                      br(),
+
+                                                      em("NOTE: This app does not allow to plot single runs (starting with '2_RUN').", style = "color:grey"),
+                                                      br(),
+                                                      br()
+                                     ),
+                                     conditionalPanel(condition = 'output.identified_series == "YES"',
+                                                      plotOutput("PLOT", height = 600),
+                                                      actionButton("downloadPLOT", "Download pdf")
+                                     )
                             ),
                             tabPanel("Composite model summary", value = 2,
                                      fluidRow(
-                                       column(width = 4,
-                                              uiOutput("DIAG_RUN_loc"), # CPS,
-                                              br(),
-                                              plotOutput("DIAGRAM_F", height = 400, width = 400),
-                                              br(),
-                                              plotOutput("DIAGRAM_A", height = 400, width = 400)
-                                       ),
-                                       column(width = 8,
-                                              br(),
-                                              plotOutput("CPS_PLOT_REPORT", width = 800, height = 900),
-                                              actionButton("download_CPS_REPORT_PLOT", "Download pdf")
+                                       h3("Summary table of composite scenario", align = 'center'),
+                                       br(),
+                                       column(width = 12, align = "center",
+                                              DT::dataTableOutput("summary_table",  width = 1200)
+                                       )),
+                                     hr(),
+                                     fluidRow(
+                                       h3("Model diagrams of fluxes and isotope fractionation coefficients", align = 'center'),
+                                       br(),
+                                       uiOutput("DIAG_RUN_loc"), # CPS,
+                                       br(),
+                                       column(width = 6, plotOutput("DIAGRAM_F", height = 400, width = 400), align = "center"),
+                                       column(width = 6, plotOutput("DIAGRAM_A", height = 400, width = 400), align = "center")),
+                                     hr(),
+                                     fluidRow(
+                                       br(),
+                                       column(width = 12, align = "center",
+                                              conditionalPanel(condition = 'output.CPS_PLOT_REPORT_yn == "YES"',
+                                                               h3("Flux intensities and masses of element X as a function of time (varying values only)", align = "center"),
+                                                               plotOutput("CPS_PLOT_REPORT", width = 1200),
+                                                               actionButton("download_CPS_REPORT_PLOT", "Download pdf")),
+                                              conditionalPanel(condition = 'output.CPS_PLOT_REPORT_yn == "NO"',
+                                                               h3("This composite scenario does not involve any changing box sizes and/or flux intensities.
+                                                           There is thus no plot of flux and masses as a function of time.", style = "color:grey"))
                                        )
-                                     ),
-                                     br(),
-                                     DT::dataTableOutput("summary_table",  width = 600) # CPS
+                                     )
                             )
                 ),
 
@@ -98,14 +130,6 @@ ui <- fluidPage(theme = shinythemes::shinytheme("darkly"),
 
                 fluidRow(
                   column(width = 3,
-                         # h5("LOAD and DISPLAY data"), # ALL
-                         shinyFiles::shinyDirButton("dir", "Select Series directory", "Upload"), # ALL
-                         # br(),
-                         # br(),
-                         # em(textOutput(outputId = "CurrentDir")),
-                         # br(),
-                         em(textOutput(outputId = "SeriesType")), # ALL
-                         # h4("Display options"),
                          uiOutput("HIDE_BOX_CPS"), # CPS
                          uiOutput("SHOW_RUNS"),    # CPS
                          uiOutput("PICK_BOX_STD_DYN"),          # STD DYN
@@ -135,40 +159,18 @@ ui <- fluidPage(theme = shinythemes::shinytheme("darkly"),
                          uiOutput("BINWIDTH_CONTOUR"),            # STD
                          uiOutput("TIME_MAP_DYN")
                   )
+                ),
+                hr(),
+                fluidRow(
+                  p("This shiny app was developed for the",
+                    a("isobxr", href = "https://github.com/ttacail/isobxr"),
+                    "package by Théo Tacail (",
+                    a("ttacail/github.io", href = "https://ttacail.github.io/"),
+                    ").", br(),
+                    "This app is offline, locally run on your computer. It therefore does not share any of your data with online servers.",
+                    style = "color:grey")
                 )
 )
-
-# sidebarLayout(
-#   sidebarPanel(
-#     shinyDirButton("dir", "Select Series directory", "Upload"),
-#     em(textOutput(outputId = "SeriesType")),
-#     uiOutput("HIDE_BOX_CPS"), # CPS
-#     uiOutput("SHOW_RUNS"),    # CPS
-#     uiOutput("PICK_BOX_STD_DYN"),
-#     uiOutput("PICK_BOX_STD_DYN_SUB"),
-#     uiOutput("TIME_UNIT_in"), # DYN or CPS,
-#     uiOutput("TIME_UNIT_out"),# DYN or CPS,
-#     uiOutput("PICK_X"),        # STD
-#     uiOutput("PICK_X_norm"),        # STD
-#     uiOutput("PICK_Y"),        # DYN or CPS,
-#     uiOutput("PICK_Y_norm"),        # DYN or CPS,
-#     uiOutput("DISPLAY_CONTOUR"), # STD
-#     uiOutput("BINWIDTH_CONTOUR"), # STD
-#     uiOutput("DISPLAY_DRIFT"),
-#     uiOutput("HIDE_VALUES_VAR_EXPLO_1"),
-#     uiOutput("HIDE_VALUES_VAR_EXPLO_2"),
-#     uiOutput("TIME_ZOOM")
-#   ),
-#   mainPanel(
-#     tabsetPanel(
-#       tabPanel("Plot",
-#                br(),
-#                plotOutput("PLOT"))
-#     )
-#   )
-# )
-
-
 
 #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#
 #----#----#----#---- SERVER - SERVER - SERVER - SERVER - SERVER - SERVER - SERVER - SERVER - SERVER - SERVER - SERVER -
@@ -226,6 +228,18 @@ server <- function(input, output) {
 
   #************************************** DEFINE SERIES TYPE
   SERIES_RUN_FILE_ID_decomp <- reactive({ strsplit(SERIES_RUN_FILE_ID(), split = "_")[[1]] })
+
+  output$identified_series <- reactive({
+    if (is.null(SERIES_TYPE())){
+      identified_series <- "NO"
+      return("NO")
+    } else {
+      identified_series <- "YES"
+      return("YES")
+    }
+  })
+
+  outputOptions(output, "identified_series", suspendWhenHidden = FALSE)
 
   SERIES_TYPE <- reactive({
     if (SERIES_RUN_FILE_ID_decomp()[1] == "2"){
@@ -473,7 +487,7 @@ server <- function(input, output) {
       selectInput(inputId = "PICK_X",
                   label = "X numerator",
                   choices = c(colnames),
-                  selected = 1,# colnames[length(colnames)],
+                  selected = c(colnames)[1],# colnames[length(colnames)],
                   multiple = F)
     } else {
       return(NULL)
@@ -503,7 +517,7 @@ server <- function(input, output) {
       selectInput(inputId = "PICK_Y",
                   label = "Y numerator",
                   choices = c(colnames),
-                  selected = 1, # colnames[length(colnames)-1],
+                  selected = c(colnames)[2], # colnames[length(colnames)-1],
                   multiple = F)
     } else {
       return(NULL)
@@ -533,7 +547,7 @@ server <- function(input, output) {
       selectInput(inputId = "PICK_X_norm",
                   label = "divided by:",
                   choices = c(colnames),
-                  selected = 1,
+                  selected = c(colnames)[1],
                   multiple = F)
     } else {
       return(NULL)
@@ -563,7 +577,7 @@ server <- function(input, output) {
       selectInput(inputId = "PICK_Y_norm",
                   label = "divided by:",
                   choices = c(colnames),
-                  selected = 2,
+                  selected = c(colnames)[1],
                   multiple = F)
     } else {
       return(NULL)
@@ -622,7 +636,7 @@ server <- function(input, output) {
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN"){
       choices_var_explo_1 <-  as.character(sort(unique(evD()[,"VAR_EXPLO_1"])))
       selectInput(inputId = "HIDE_VALUES_VAR_EXPLO_1",
-                  label = "Hide EXPLO #1 values: ",
+                  label = "Hide SWEEP #1 values: ",
                   multiple = T,
                   choices = choices_var_explo_1)
     } else {
@@ -636,7 +650,7 @@ server <- function(input, output) {
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN"){
       choices_var_explo_1 <- as.character(sort(unique(evD()[,"VAR_EXPLO_2"])))
       selectInput(inputId = "HIDE_VALUES_VAR_EXPLO_2",
-                  label = "Hide EXPLO #2 values: ",
+                  label = "Hide SWEEP #2 values: ",
                   multiple = T,
                   choices = choices_var_explo_1)
     } else {
@@ -664,7 +678,7 @@ server <- function(input, output) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN") {
       sliderInput(inputId = "TIME_MAP_DYN",
-                  label = "Time at mapping",
+                  label = "Time at mapping (%)",
                   value = 100,
                   min = 0,
                   max = 100,
@@ -1270,7 +1284,7 @@ server <- function(input, output) {
 
   output$PLOT <- renderPlot({
     if (is.null(SERIES_TYPE())){
-      return()
+      return("In order to plot")
     } else if (SERIES_TYPE()[1] == "CPS"){
       print(PLOT_CPS())
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD"){
@@ -2120,7 +2134,7 @@ server <- function(input, output) {
         ggplot2::theme(strip.text = ggplot2::element_text(size = 12, colour = "white", face = "bold"),
                        strip.background = ggplot2::element_rect(fill = "black"),
                        legend.position = "none")+
-        ggplot2::facet_wrap(TYPE ~ GROUP, scales = "free_y", ncol = 2)#+
+        ggplot2::facet_wrap(TYPE ~ GROUP, scales = "free_y", ncol = 3)#+
 
       i <- 1
       for (i in 1:nrow(COMPO_MASTER_RUN_LIST)){
@@ -2153,6 +2167,18 @@ server <- function(input, output) {
     print(CPS_PLOT_REPORT())
   }
   )
+
+  output$CPS_PLOT_REPORT_yn <- reactive({
+    if (!is.null(CPS_PLOT_REPORT())){
+      CPS_PLOT_REPORT_yn <- "YES"
+      return("YES")
+    } else {
+      CPS_PLOT_REPORT_yn <- "NO"
+      return("NO")
+    }
+  })
+
+  outputOptions(output, "CPS_PLOT_REPORT_yn", suspendWhenHidden = FALSE)
 
   observeEvent(input$download_CPS_REPORT_PLOT,{
     if (is.null(SERIES_TYPE())){
