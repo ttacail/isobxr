@@ -2,6 +2,8 @@ pandoc: 1.19.2.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  Demo_ABCD: Demo_ABCD.html
+  Demo_ABCD_composite: Demo_ABCD_composite.html
   isobxr_vignette: isobxr_vignette.html
-last_built: 2020-10-20T09:36Z
+last_built: 2020-10-20T13:53Z
 

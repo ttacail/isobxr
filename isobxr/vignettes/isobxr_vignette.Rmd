@@ -217,6 +217,9 @@ You can also refer to the documentation for these two functions by typing the fo
 
 The *input file* is the (xlsx) document containing all input data allowing both `ana_slvr` and `num_slvr` to run. Its format and name are standardized and should not be altered. Its direct modification by user is not required because *input files* are edited by the broader and user-friendly `run_isobxr` function, described in another section of this vignette.
 
+**Note**: Templates for all input and master excel files described in this vignette are available for 
+[download here](https://ttacail.github.io/source/demos/0_excel_templates.zip).
+
 #### **Input file name**
 
 * The *input file* is an xlsx file.  
@@ -684,7 +687,7 @@ All box sizes are here set at 2000 mg.
 knitr::include_graphics('./12_ABCD_FLUXES.png')
 ```
 
-The **COEFFS** sheet describes 5 flux lists:  
+The **COEFFS** sheet describes 5 lists of fractionation coefficients:
 
 * *a0* describes no isotope fractionation (all $\alpha_{i \to j}$ being equal to one)  
 * *a1* describes a system with 1 fractionation coefficient being different from 1:   
@@ -709,7 +712,7 @@ knitr::include_graphics('./13_ABCD_COEFFS.png')
 
 We consider here the case a balanced closed system of 3 finite boxes (flux list *Fx1_ABC_bal*).  
 For this run we use the *a1* fractionation coefficients list.  
-We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
+We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
 run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
@@ -754,9 +757,9 @@ This display effect would be smoothed out by a higher run resolution (nb_steps =
 
 ### Unbalanced 3-boxes closed system model
 
-We consider here the case an unbalanced closed system of 3 finite boxes (flux list *Fx2_ABC_unbal*).  
+We consider here the case of an unbalanced closed system of 3 finite boxes (flux list *Fx2_ABC_unbal*).  
 For this run we use the *a1* fractionation coefficients list.  
-We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
+We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
 run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
@@ -782,7 +785,7 @@ In the case of this run we can see the following messages:
 "*** UPDATED TOTAL RUN TIME *** < Total run time has been changed from 2500 to 2000 (limiting box: C) > "
 ```
 
-The first message is expected since no INFINITE box has been declared
+The first message is expected since no INFINITE box has been declared.
 
 The second and third lines point out the fact that boxes A and C are out of balance: A accumulates calcium while C loses calcium. 
 

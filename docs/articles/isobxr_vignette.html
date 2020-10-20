@@ -54,6 +54,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Demo_ABCD.html">Getting started 1: single runs</a>
+    </li>
+    <li>
+      <a href="../articles/Demo_ABCD_composite.html">Getting started 2: composite runs</a>
+    </li>
+    <li>
       <a href="../articles/isobxr_vignette.html">Using isobxr</a>
     </li>
   </ul>
@@ -151,9 +157,9 @@
 <span class="co">#&gt; VignetteBuilder: knitr</span>
 <span class="co">#&gt; Author: Theo Tacail [aut, cre]</span>
 <span class="co">#&gt; Maintainer: Theo Tacail &lt;theo.tacail@gmail.com&gt;</span>
-<span class="co">#&gt; Built: R 4.0.3; ; 2020-10-20 09:36:39 UTC; unix</span>
+<span class="co">#&gt; Built: R 4.0.3; ; 2020-10-20 13:53:08 UTC; unix</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; -- File: /private/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T/Rtmpn0c6sS/temp_libpath5e53302e3dfc/isobxr/Meta/package.rds</span></pre></div>
+<span class="co">#&gt; -- File: /private/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T/Rtmpn0c6sS/temp_libpath5e5325c3b265/isobxr/Meta/package.rds</span></pre></div>
 <p>You can locally browse the vignette as follows:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
@@ -258,6 +264,7 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <a href="#structure-and-format-required-for-the-input-files" class="anchor"></a>Structure and format required for the <em>input files</em>
 </h2>
 <p>The <em>input file</em> is the (xlsx) document containing all input data allowing both <code>ana_slvr</code> and <code>num_slvr</code> to run. Its format and name are standardized and should not be altered. Its direct modification by user is not required because <em>input files</em> are edited by the broader and user-friendly <code>run_isobxr</code> function, described in another section of this vignette.</p>
+<p><strong>Note</strong>: Templates for all input and master excel files described in this vignette are available for <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">download here</a>.</p>
 <div id="input-file-name" class="section level4">
 <h4 class="hasAnchor">
 <a href="#input-file-name" class="anchor"></a><strong>Input file name</strong>
@@ -792,7 +799,7 @@ Non described box pairs will have their fractionation coefficient set to 1 (or t
 </ol>
 <p>All box sizes are here set at 2000 mg.</p>
 <p><img src="12_ABCD_FLUXES.png" width="100%"></p>
-<p>The <strong>COEFFS</strong> sheet describes 5 flux lists:</p>
+<p>The <strong>COEFFS</strong> sheet describes 5 lists of fractionation coefficients:</p>
 <ul>
 <li>
 <em>a0</em> describes no isotope fractionation (all <span class="math inline">\(\alpha_{i \to j}\)</span> being equal to one)<br>
@@ -821,7 +828,7 @@ Non described box pairs will have their fractionation coefficient set to 1 (or t
 <a href="#balanced-3-boxes-closed-system-model" class="anchor"></a>Balanced 3-boxes closed system model</h3>
 <p>We consider here the case a balanced closed system of 3 finite boxes (flux list <em>Fx1_ABC_bal</em>).<br>
 For this run we use the <em>a1</em> fractionation coefficients list.<br>
-We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).</p>
+We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"~/DEMO_ABCD"</span>, <span class="co"># isobxr master file work. dir.</span>
            SERIES_ID <span class="op">=</span> <span class="st">"ABC_balanced_closed"</span>, <span class="co"># series ID of the set of runs</span>
@@ -846,9 +853,9 @@ We will run this model for total time of 2500 days with a resolution of 1 calcul
 <div id="unbalanced-3-boxes-closed-system-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#unbalanced-3-boxes-closed-system-model" class="anchor"></a>Unbalanced 3-boxes closed system model</h3>
-<p>We consider here the case an unbalanced closed system of 3 finite boxes (flux list <em>Fx2_ABC_unbal</em>).<br>
+<p>We consider here the case of an unbalanced closed system of 3 finite boxes (flux list <em>Fx2_ABC_unbal</em>).<br>
 For this run we use the <em>a1</em> fractionation coefficients list.<br>
-We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).</p>
+We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"~/DEMO_ABCD"</span>, <span class="co"># isobxr master file work. dir.</span>
            SERIES_ID <span class="op">=</span> <span class="st">"ABC_unbalanced_closed"</span>, <span class="co"># series ID of the set of runs</span>
@@ -865,7 +872,7 @@ We will run this model for total time of 2500 days with a resolution of 1 calcul
 #&gt; [1] "&lt; C IN-OUT BALANCE is neg (max run: 2000 t units) &gt;"
 #&gt; [1] "&lt; Running num_slvr (UNBALANCED FINITE BOXES) &gt;"
 #&gt; [1] "*** UPDATED TOTAL RUN TIME *** &lt; Total run time has been changed from 2500 to 2000 (limiting box: C) &gt; "</code></pre>
-<p>The first message is expected since no INFINITE box has been declared</p>
+<p>The first message is expected since no INFINITE box has been declared.</p>
 <p>The second and third lines point out the fact that boxes A and C are out of balance: A accumulates calcium while C loses calcium.</p>
 <p>The function also tells us that it will take in total 2000 days for the box C to be totally emptied. This is expected since C has a size of 2000 mg and, as can be seen on the flux diagram below, C loses 1 mg of Ca per day.</p>
 <p>The <code>run_isobxr</code> function therefore choses to run the numerical solver (<code>num_slvr</code>).</p>
