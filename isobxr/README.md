@@ -43,9 +43,9 @@ The documentation about underlying theory and isobxr utilization is made fully a
 
 The vignettes can be found online: 
 
-1. [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html)
-
-The user is notably invited to go through the [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) vignette up to the [Running isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#running-isobxr-box-models-with-run-isobxr) section for single box model runs and then if desired to the [Compose isobxr scenarios](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#compose-isobxr-scenarios-with-compose-isobxr) section.
+1. [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) general exhaustive vignette
+2. [Getting started 1: single runs](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html)
+3. [Getting started 2: composite runs](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html)
 
 The vignettes can also be locally loaded on R or Rstudio after the package installation as follows:
 ``` r
