@@ -55,7 +55,7 @@ devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALS
 
 The **isobxr** package is working under R 3.5.2 to 4.0.3 versions.
 
-It's portability has been proof checked for the following Platforms: 
+It's portability has been proof checked for the following platforms: 
 
 1. Mac OS 10.12.6 & 10.13.6
 
