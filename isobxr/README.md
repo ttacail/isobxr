@@ -3,7 +3,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The **isobxr** package is a set of R tools designed to perform and explore stable isotope box
+The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools designed to perform and explore stable isotope box
 modelling of open or closed systems.
 It allows users to develop and test isotopic box models of their system of interest, explore the behavior of these systems
 in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, 
@@ -39,12 +39,20 @@ It's portability has been proof checked for the following platforms:
 
 ## Principle and use
 
-We strongly advise user to go through the vignette (at least up to "Running isobxr" or even "Compose isobxr scenarios").
+We strongly advise user to go through the isobxr vignettes.
 
+The vignettes can be either loaded on R or Rstudio as follows:
 ``` r
 library(isobxr)
 browseVignettes("isobxr")
 ```
+
+They can also be found online: 
+
+1. [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html)
+
+The user is notably invited to go through the [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) vignette up to the [Running isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#running-isobxr-box-models-with-run-isobxr) section for single box model runs and then if desired to the [Compose isobxr scenarios](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#compose-isobxr-scenarios-with-compose-isobxr) section.
+
 
 ## Example
 This is a basic example which shows you how to run a simple box model, using the demo_ABCD models, available on demand.
