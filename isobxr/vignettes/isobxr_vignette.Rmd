@@ -53,6 +53,8 @@ install.packages("devtools")
 devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
 ```
 
+The user is also invited to [download the reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip) for all input and master excel files described in this vignette, as well as [download input and master excel files](https://ttacail.github.io/source/demos/1_ABCD.zip) used for the demonstrations in this vignette and in the getting started vignette (see [Getting started 1](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html) and [Getting started 2](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html)).
+
 The **isobxr** package is working under R 3.5.2 to 4.0.3 versions.
 
 It's portability has been proof checked for the following platforms: 
@@ -216,9 +218,6 @@ You can also refer to the documentation for these two functions by typing the fo
 ## Structure and format required for the *input files*
 
 The *input file* is the (xlsx) document containing all input data allowing both `ana_slvr` and `num_slvr` to run. Its format and name are standardized and should not be altered. Its direct modification by user is not required because *input files* are edited by the broader and user-friendly `run_isobxr` function, described in another section of this vignette.
-
-**Note**: Templates for all input and master excel files described in this vignette are available for 
-[download here](https://ttacail.github.io/source/demos/0_excel_templates.zip).
 
 #### **Input file name**
 
