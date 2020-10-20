@@ -34,7 +34,7 @@ as well as sweep the space of parameters in both static and dynamic modes.
 
 ----
 
-# Install and use isobxr
+# Installation
 
 
 The **isobxr** is available as a source package from [GitHub](https://github.com/).

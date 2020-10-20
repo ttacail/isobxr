@@ -39,20 +39,19 @@ It's portability has been proof checked for the following platforms:
 
 ## Principle and use
 
-We strongly advise user to go through the isobxr vignettes.
+The documentation about underlying theory and isobxr utilization is made fully available to user in the package vignettes.
 
-The vignettes can be either loaded on R or Rstudio as follows:
-``` r
-library(isobxr)
-browseVignettes("isobxr")
-```
-
-They can also be found online: 
+The vignettes can be found online: 
 
 1. [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html)
 
 The user is notably invited to go through the [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) vignette up to the [Running isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#running-isobxr-box-models-with-run-isobxr) section for single box model runs and then if desired to the [Compose isobxr scenarios](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#compose-isobxr-scenarios-with-compose-isobxr) section.
 
+The vignettes can also be locally loaded on R or Rstudio after the package installation as follows:
+``` r
+library(isobxr)
+browseVignettes("isobxr")
+```
 
 ## Example
 This is a basic example which shows you how to run a simple box model, using the demo_ABCD models, available on demand.
