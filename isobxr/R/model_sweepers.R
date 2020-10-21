@@ -369,9 +369,9 @@ sweep_steady <- function(workdir,
   STOP_GO <- FALSE
 
   if (.Platform$OS.type == "windows"){
-    STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
+    STOP_GO <- utils::askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
   } else {
-    STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+    STOP_GO <- utils::askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
@@ -380,7 +380,7 @@ sweep_steady <- function(workdir,
   } else {
     cat("\n *** COMPUTE SWEEP OF RUN #2 *** \n ")
     # calculation_gauge(0, tot_run)
-    pb_cpt <- txtProgressBar(min = 1, max = tot_run, style = 3, width = 50)
+    pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 50)
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP RUN 2/2 in [1:n] #----
     clock <- 1
     k <- 1
@@ -470,7 +470,7 @@ sweep_steady <- function(workdir,
                          PLOT_evD = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         # calculation_gauge(clock, tot_run)
-        setTxtProgressBar(pb_cpt, clock)
+        utils::setTxtProgressBar(pb_cpt, clock)
         clock <- clock + 1
         l <- l + 1
       }
@@ -569,7 +569,7 @@ sweep_steady <- function(workdir,
 
     #************************************** READ/BUILD/MERGE evS/evD for ANA/NUM WHOLE COMPOSITE RUN #----
     cat("\n *** PREPARE RESULTS *** \n ")
-    pb_prep <- txtProgressBar(min = 1, max = tot_run+1, style = 3, width = 50)
+    pb_prep <- utils::txtProgressBar(min = 1, max = tot_run+1, style = 3, width = 50)
 
     i <- 1
     for (i in 1:(tot_run+1)){
@@ -692,7 +692,7 @@ sweep_steady <- function(workdir,
         evD <- rbind(evD, evD_i[1:nrow(evD_i),])
         evS <- rbind(evS, evS_i[1:nrow(evS_i),])
       }
-      setTxtProgressBar(pb_prep, i)
+      utils::setTxtProgressBar(pb_prep, i)
       i <- i + 1
     }
     close(pb_prep)
@@ -978,9 +978,9 @@ sweep_dyn <- function(workdir,
   STOP_GO <- FALSE
 
   if (.Platform$OS.type == "windows"){
-    STOP_GO <- askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+    STOP_GO <- utils::askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
   } else {
-    STOP_GO <- askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+    STOP_GO <- utils::askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
@@ -988,7 +988,7 @@ sweep_dyn <- function(workdir,
     cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
   } else {
     cat("\n *** COMPUTING SWEEPING of RUN #1 & #2 *** \n ")
-    pb_cpt <- txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
+    pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
 
     # calculation_gauge(0, tot_run)
     clock <- 1
@@ -1279,7 +1279,7 @@ sweep_dyn <- function(workdir,
                          PLOT_evD = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         # calculation_gauge(clock, tot_run)
-        setTxtProgressBar(pb_cpt, clock)
+        utils::setTxtProgressBar(pb_cpt, clock)
 
         clock <- clock + 1
         l <- l + 1
@@ -1379,7 +1379,7 @@ sweep_dyn <- function(workdir,
 
     #************************************** READ/BUILD/MERGE evS/D and evS/D final for ANA/NUM WHOLE COMPOSITE RUN #----
     cat("\n *** PREPARE RESULTS *** \n ")
-    pb_prep <- txtProgressBar(min = 1, max = 2*tot_run, style = 3, width = 60)
+    pb_prep <- utils::txtProgressBar(min = 1, max = 2*tot_run, style = 3, width = 60)
 
     # calculation_gauge(0, (tot_run))
 
@@ -1505,7 +1505,7 @@ sweep_dyn <- function(workdir,
         evS <- rbind(evS, evS_i[1:nrow(evS_i),])
       }
       # calculation_gauge(i, (2*tot_run))
-      setTxtProgressBar(pb_prep, i)
+      utils::setTxtProgressBar(pb_prep, i)
 
       i <- i + 2
     }
