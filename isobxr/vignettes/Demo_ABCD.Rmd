@@ -43,7 +43,7 @@ Note
 :    Templates for all input and master excel files described in this vignette are available for 
      [download here](https://ttacail.github.io/source/demos/0_excel_templates.zip).
 
-4. Unzip the ABCD demo file and place it in the working directory of your choice.
+4. Unzip the ABCD demo file and place it in the working directory of your choice. It is strongly advised to avoid using a working directory linked to an online backup server (such as OneDrive) since it could cause some issues with adressing of output files. If done so, users are then advised to turn the backup server software offline during the use of isobxr functions.
 
 5. Take note of the path to this folder, for instance:
 
