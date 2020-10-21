@@ -233,5 +233,11 @@ get_portability_data <- function(workdir){
   loc_version <- version
   loc_sessionInfo <- utils::sessionInfo()
   loc_installed_packages <- utils::installed.packages()
+  workdir <- normalizePath(workdir, winslash = "/")
+  if (stringr::str_ends(workdir, pattern = "/")){
+    workdir <- paste(workdir, "/", sep = "")
+  } else {
+    workdir <- workdir
+  }
   save(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages, file = paste(workdir, "portability_data_", gsub(":","",gsub(" ", "_", date())), ".RData", sep = ""))
 }
