@@ -82,12 +82,14 @@ browseVignettes("isobxr")
 
 ----
 # Theory of box modeling and formalism
-## Principles of stable isotopes box modeling
 
 The theory and formalism shown in this section is derived from the chapter 7 (*Dynamic systems*) of
 
 :    Albarède, F., 1995. Introduction to Geochemical Modeling. Cambridge University Press, Cambridge.    
      https://doi.org/10.1017/CBO9780511622960
+
+## Principles of stable isotopes box modeling
+
 
 We consider a system consisting of $n$ boxes $j$, exchanging an element **X** that has at least 
 two stable isotopes $M$ and $N$. Any box $i$ is defined by: 
