@@ -1951,7 +1951,7 @@ sweep_dyn(workdir,
 ```
 
 ************************************************
-# Plotting with the **isobxr** Shiny app
+# Plotting with the isobxr plot editor app
 ## Calling the Shiny app
 The `runShinyPlots` function calls an **isobxr Shiny app** plotting interface (html interface accessible with any type of internet browser).
 
@@ -1980,13 +1980,12 @@ runShinyPlots()
 knitr::include_graphics('./39_shiny_1.png')
 ```
 
-
-### Plotting `compose_isobxr` outputs
+### Selecting a series directory
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./39_shiny_2.png')
 ```
 
-### Summary of `compose_isobxr` outputs
+### Plotting `compose_isobxr` outputs
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./39_shiny_3.png')
 ```
