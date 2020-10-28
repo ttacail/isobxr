@@ -605,6 +605,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                                  edge.label.cex = 2.5,
                                  edge.label.margin = 0.02,
                                  asize = 8,
+                                 curve = 0.7, curveAll = F,
                                  vsize = 16*exp(-nrow(BOXES_master_loc)/80)+1)
     dev.off()
 
@@ -625,6 +626,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                                  edge.label.cex = 2.5,
                                  edge.label.margin = 0.02,
                                  asize = 8,
+                                 curve = 0.7, curveAll = F,
                                  vsize = 16*exp(-nrow(BOXES_master_loc)/80)+1)
     dev.off()
   }

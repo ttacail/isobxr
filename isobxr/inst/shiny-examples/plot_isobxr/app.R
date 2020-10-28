@@ -1768,6 +1768,7 @@ server <- function(input, output) {
                                    color = rainbow(length(levels(DIAG_GROUPS)), s = 0.25),
                                    legend = F,
                                    edge.color = "black",
+                                   curve = 0.7, curveAll = F,
                                    # edge.label.cex = 2.5,
                                    edge.label.margin = 0.02)#,
       # asize = 8,
@@ -1815,6 +1816,7 @@ server <- function(input, output) {
                                    color = rainbow(length(levels(DIAG_GROUPS)), s = 0.25),
                                    legend = F,
                                    edge.color = "brown4",
+                                   curve = 0.7, curveAll = F,
                                    # edge.label.cex = 2.5,
                                    edge.label.margin = 0.02)#,
 
