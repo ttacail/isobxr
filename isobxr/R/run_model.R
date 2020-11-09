@@ -176,6 +176,14 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     INFINITE_BOXES <- NaN
   }
 
+  # WARNING # warning for n > 2 inf bxes / for connected bxes only
+  if ((all(!is.na(INFINITE_BOXES))) & length(INFINITE_BOXES) > 2){
+    warning("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
+            "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
+            "The numerical outputs will be accurrate. \n",
+            "This type of design is however currently not supported by the plot editing shiny app.", call. = F)
+  }
+
   #************************************** EXTRACT AND PREPARE LOCAL RUN INPUTS #----
   #### EXTRACT LIST OF COEFF and FLUXES LIST names
   list_COEFFS_master <- colnames(COEFFS_master[, -which(colnames(COEFFS_master) %in% c("FROM", "TO"))])
@@ -183,9 +191,36 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   list_BOXES_master <- as.character(BOXES_master$BOXES_ID)
   n_BOXES <- length(list_BOXES_master)
 
+  # ERROR # CHECK BOXES NAMES ARE SPECIAL CHARACTER FREE
+  misnamed_boxes <- list_BOXES_master[stringr::str_detect(list_BOXES_master, pattern = "[ !@#$%^&*()_+}{\';|:/.,?><}]")]
+  if (length(misnamed_boxes) > 0){
+    stop(paste("Box names (defined in ", as.character(ISOPY_MASTER_file), ") must not include any special characters. \n",
+               "The following box names do not match the required format: \n",
+               "[", paste(misnamed_boxes, collapse = ", "), "]",
+               sep = ""),
+         call. = FALSE)
+  }
+  remove(misnamed_boxes)
+
   #### EXTRACT LOCAL FLUX / ALPHA LISTS
   flux_list_loc <- FLUXES_master[FLUXES_master$STATUS == "FLUX", c("FROM", "TO", "STATUS", flux_list_name)]
   coeff_list_loc <- COEFFS_master[, c("FROM", "TO", coeff_list_name)]
+
+  # ERROR # CHECK BOX NAMES CALLED IN FLUX AND COEFF LISTS are ALL DEFINED IN BOX LIST MASTER
+  all_flux_coeff_levels <- c(levels(FLUXES_master$FROM),
+                             levels(FLUXES_master$TO),
+                             levels(FLUXES_master$ID),
+                             levels(COEFFS_master$FROM),
+                             levels(COEFFS_master$TO))
+  if (!(all(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN)))){
+    stop(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
+               "(in ", as.character(ISOPY_MASTER_file), "). \n",
+               "The following boxes are not defined in the list of boxes: \n",
+               "[", paste(all_flux_coeff_levels[!(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN))], collapse = ", "), "]",
+               sep = ""),
+         call. = FALSE)
+  }
+  remove(all_flux_coeff_levels)
 
   #### SET INITIAL - SIZES and DELTAs
   SIZE_INITIAL <- FLUXES_master[FLUXES_master$STATUS == "SIZE", c("ID", flux_list_name)]
