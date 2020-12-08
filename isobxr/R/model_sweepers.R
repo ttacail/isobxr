@@ -3,8 +3,8 @@ usethis::use_package("metR", min_version = TRUE)
 usethis::use_package("beepr", min_version = TRUE)
 usethis::use_package("iotools", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
-usethis::use_package("plyr", min_version = TRUE)
 usethis::use_package("dplyr", min_version = TRUE)
+usethis::use_package("rlang", min_version = TRUE)
 
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters at the final state of a run
@@ -561,7 +561,7 @@ sweep_steady <- function(workdir,
     LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
     LOG_SERIES <- LOG[LOG$SERIES_ID == SERIES_ID,]
     remove(LOG)
-    LOG_SERIES <- plyr::join(LOG_SERIES, EXPLOG, by = "RUN_n") ##### pck plyr (retired) or dplyr (active) ?
+    LOG_SERIES <- dplyr::full_join(LOG_SERIES, EXPLOG, by = "RUN_n")
     LOG_SERIES <- clear_subset(LOG_SERIES)
     SERIES_RUN_ID_1 <- LOG_SERIES[1, "SERIES_RUN_ID"]
     path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "INPUT.xlsx", sep = "")
@@ -1372,7 +1372,7 @@ sweep_dyn <- function(workdir,
     LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
     LOG_SERIES <- LOG[LOG$SERIES_ID == SERIES_ID,]
     remove(LOG)
-    LOG_SERIES <- plyr::join(LOG_SERIES, EXPLOG, by = "RUN_n") # plyr (retired) or dplyr (active) ?
+    LOG_SERIES <- dplyr::full_join(LOG_SERIES, EXPLOG, by = "RUN_n")
     LOG_SERIES <- clear_subset(LOG_SERIES)
     path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "INPUT.xlsx", sep = "")
     BOXES_IDs <- as.data.frame(readxl::read_excel(path_to_input_1, "INITIAL"))[,c("BOXES_ID")]

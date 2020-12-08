@@ -1,12 +1,9 @@
-# library(devtools)
-# library(usthis)
-
-
 usethis::use_package("stringr", min_version = TRUE)
 usethis::use_package("readxl", min_version = TRUE)
-usethis::use_package("plyr", min_version = TRUE)
+usethis::use_package("dplyr", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("deSolve", min_version = TRUE)
+usethis::use_package("rlang", min_version = TRUE)
 #  #_________________________________________________________________________80char
 #' Numerically solve stable isotope box models
 #' @description  A numerical solver of the system of ordinary differential
@@ -32,13 +29,14 @@ usethis::use_package("deSolve", min_version = TRUE)
 #' @export
 num_slvr <- function(input_path){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
-  input_path <- normalizePath(input_path, winslash = "/")
   if (stringr::str_detect(input_path, "INPUT.xlsx")){
+    input_path <- normalizePath(input_path, winslash = "/")
     namefile <- input_path
     prefix <- stringr::str_remove(basename(input_path), pattern = "INPUT.xlsx")
     cwd <- dirname(input_path)
   } else {
-    stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
+    rlang::abort('num_slvr \n Wrong file or file name. Path should end with ** INPUT.xlsx **')
+    # stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
   }
 
   ############################## DEFINE outdir #####################
@@ -146,7 +144,7 @@ num_slvr <- function(input_path){
   colnames(df) <- c("BOXES_ID", "SIZE_FINAL", "DELTA_FINAL")
   df$SIZE_FINAL <- Boxes_size[length(Boxes_size[,1]),1:length(boxes_id)+1]
   df$DELTA_FINAL <- Delta[length(Delta[,1]),1:length(boxes_id)+1]
-  df <- plyr::join(initial_f, df, by = "BOXES_ID")
+  df <- dplyr::full_join(initial_f, df, by = "BOXES_ID")
   data.table::fwrite(df, file = paste(outdir, prefix, "N_1_OUT.csv", sep = ""), row.names = F, quote = F, sep = ",")
 
   # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
@@ -182,13 +180,14 @@ num_slvr <- function(input_path){
 #' @export
 ana_slvr <- function(input_path){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
-  input_path <- normalizePath(input_path, winslash = "/")
   if (stringr::str_detect(input_path, "INPUT.xlsx")){
+    input_path <- normalizePath(input_path, winslash = "/")
     namefile <- input_path
     prefix <- stringr::str_remove(basename(input_path), pattern = "INPUT.xlsx")
     cwd <- dirname(input_path)
   } else {
-    stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
+    rlang::abort('num_slvr \n Wrong file or file name. Path should end with ** INPUT.xlsx **')
+    # stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
   }
 
   ############################## DEFINE outdir #####################

@@ -1,6 +1,6 @@
 usethis::use_package("grid", min_version = TRUE)
-usethis::use_package("devtools")
-
+usethis::use_package("devtools", "Suggests")
+usethis::use_package("rlang", min_version = TRUE)
 
 # clear a subset #######################################################################################################
 #' Clear a subset
@@ -13,7 +13,6 @@ clear_subset <- function(dataset){
   dataset <- droplevels(dataset)
   rownames(dataset) <- NULL
   return(dataset)}
-
 
 # display a number as a character with two decimals only ############################################################
 #' Print a number with 0 decimal figures

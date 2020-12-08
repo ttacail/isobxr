@@ -7,14 +7,13 @@ NULL
 usethis::use_package("qgraph", min_version = TRUE)
 usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("writexl", min_version = TRUE)
-usethis::use_package("openxlsx", min_version = TRUE)
 usethis::use_package("stringr", min_version = TRUE)
-usethis::use_package("plyr", min_version = TRUE)
 usethis::use_package("dplyr", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
-usethis::use_package("writexl", min_version = TRUE)
 usethis::use_package("ggplot2", min_version = TRUE)
 usethis::use_package("ggrepel", min_version = TRUE)
+usethis::use_package("rlang", min_version = TRUE)
+
 
 #  #_________________________________________________________________________80char
 #' Run isobxr stable isotope box model
@@ -178,10 +177,14 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
 
   # WARNING # warning for n > 2 inf bxes / for connected bxes only
   if ((all(!is.na(INFINITE_BOXES))) & length(INFINITE_BOXES) > 2){
-    warning("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
-            "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
-            "The numerical outputs will be accurrate. \n",
-            "This type of design is however currently not supported by the plot editing shiny app.", call. = F)
+    rlang::warn(paste("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
+                      "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
+                      "The numerical outputs will be accurrate. ",
+                      "This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
+    # warning("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
+    #         "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
+    #         "The numerical outputs will be accurrate. \n",
+    #         "This type of design is however currently not supported by the plot editing shiny app.", call. = F)
   }
 
   #************************************** EXTRACT AND PREPARE LOCAL RUN INPUTS #----
@@ -189,16 +192,26 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   list_COEFFS_master <- colnames(COEFFS_master[, -which(colnames(COEFFS_master) %in% c("FROM", "TO"))])
   list_FLUXES_master <- colnames(FLUXES_master[, -which(colnames(FLUXES_master) %in% c("FROM", "TO", "ID", "STATUT"))])
   list_BOXES_master <- as.character(BOXES_master$BOXES_ID)
+  all_flux_coeff_levels <- c(levels(FLUXES_master$FROM),
+                             levels(FLUXES_master$TO),
+                             levels(FLUXES_master$ID),
+                             levels(COEFFS_master$FROM),
+                             levels(COEFFS_master$TO))
+  list_all_boxes <- c(list_BOXES_master, all_flux_coeff_levels)
   n_BOXES <- length(list_BOXES_master)
 
   # ERROR # CHECK BOXES NAMES ARE SPECIAL CHARACTER FREE
-  misnamed_boxes <- list_BOXES_master[stringr::str_detect(list_BOXES_master, pattern = "[ !@#$%^&*()_+}{\';|:/.,?><}]")]
+  misnamed_boxes <- list_all_boxes[stringr::str_detect(list_all_boxes, pattern = "[ !@#$%^&*()_+}{\';|:/.,?><}]")]
   if (length(misnamed_boxes) > 0){
-    stop(paste("Box names (defined in ", as.character(ISOPY_MASTER_file), ") must not include any special characters. \n",
-               "The following box names do not match the required format: \n",
-               "[", paste(misnamed_boxes, collapse = ", "), "]",
-               sep = ""),
-         call. = FALSE)
+    rlang::abort(paste("Box names (defined in ", as.character(ISOPY_MASTER_file), ") must not include any special characters. \n",
+                       "The following box names do not match the required format: \n",
+                       "[", paste(misnamed_boxes, collapse = ", "), "]",
+                       sep = ""))
+    # stop(paste("Box names (defined in ", as.character(ISOPY_MASTER_file), ") must not include any special characters. \n",
+    #            "The following box names do not match the required format: \n",
+    #            "[", paste(misnamed_boxes, collapse = ", "), "]",
+    #            sep = ""),
+    #      call. = FALSE)
   }
   remove(misnamed_boxes)
 
@@ -207,18 +220,19 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   coeff_list_loc <- COEFFS_master[, c("FROM", "TO", coeff_list_name)]
 
   # ERROR # CHECK BOX NAMES CALLED IN FLUX AND COEFF LISTS are ALL DEFINED IN BOX LIST MASTER
-  all_flux_coeff_levels <- c(levels(FLUXES_master$FROM),
-                             levels(FLUXES_master$TO),
-                             levels(FLUXES_master$ID),
-                             levels(COEFFS_master$FROM),
-                             levels(COEFFS_master$TO))
+
   if (!(all(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN)))){
-    stop(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
+    rlang::abort(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
                "(in ", as.character(ISOPY_MASTER_file), "). \n",
                "The following boxes are not defined in the list of boxes: \n",
                "[", paste(all_flux_coeff_levels[!(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN))], collapse = ", "), "]",
-               sep = ""),
-         call. = FALSE)
+               sep = ""))
+    # stop(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
+    #            "(in ", as.character(ISOPY_MASTER_file), "). \n",
+    #            "The following boxes are not defined in the list of boxes: \n",
+    #            "[", paste(all_flux_coeff_levels[!(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN))], collapse = ", "), "]",
+    #            sep = ""),
+    #      call. = FALSE)
   }
   remove(all_flux_coeff_levels)
 
@@ -240,7 +254,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   }
 
   if (is.null(FORCING_DELTA) == FALSE){    # SET DELTA_INIT
-    INITIAL <- plyr::join(INITIAL, FORCING_DELTA, by = "BOXES_ID")
+    INITIAL <- dplyr::full_join(INITIAL, FORCING_DELTA, by = "BOXES_ID")
     INITIAL[is.na(INITIAL)] = 0
   } else {
     INITIAL$DELTA_INIT <- 0

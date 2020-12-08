@@ -4,6 +4,7 @@ usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("iotools", min_version = TRUE)
 usethis::use_package("ggplot2", min_version = TRUE)
 usethis::use_package("ggrepel", min_version = TRUE)
+usethis::use_package("rlang", min_version = TRUE)
 
 #  #_________________________________________________________________________80char
 #' Compose a stable isotope box model scenario
