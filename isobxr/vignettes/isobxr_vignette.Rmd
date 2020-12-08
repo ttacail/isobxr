@@ -541,12 +541,12 @@ All *black text* has to be strictly the same as shown.
 
 All *blue text* of the column *BOXES_ID* corresponds to litteral names of the *n* boxes defined by the user.
 
-* These names should be coherent with all other references to box names (as in **FLUXES** or **COEFFS** sheet).  
-* All boxes refered to everywhere else (such as **FLUXES** or **COEFFS** sheet or called within a function) should be in this list.
+* These names must be coherent with all other references to box names (as in **FLUXES** or **COEFFS** sheet).  
+* All boxes refered to everywhere else (such as **FLUXES** or **COEFFS** sheet or called within a function) must be defined in this list.
 * Two or more boxes can not have the exact same name.
+* The user must not use any special characters in the box names [ .!@#$%^&*()_+}{\';|:/,?><}].
 * The user should avoid the use of numerical values in the box names.
-* The user should avoid the use of spaces or special characters, with the exception of the underscore "_".
-* The user should chose abbvreviated names (preferabily 3 characters, for the sake of clarity in diagrams and plots). 
+* The user is advised to chose abbvreviated names (preferabily up to 3 characters, for the sake of clarity in diagrams and plots). 
 
 * Example of lists of box names:
     + OCEAN, MTLE, C_CRUST, O_CRUST, RVR for ocean, mantle, continental crust, oceanic crust and river boxes respectively
