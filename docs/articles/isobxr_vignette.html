@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Using isobxr</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2020-10-22</h4>
+            <h4 class="date">2020-12-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/isobxr_vignette.Rmd"><code>vignettes/isobxr_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>isobxr_vignette.Rmd</code></div>
@@ -141,26 +141,27 @@
 <span class="co">#&gt;         sweeping of many parameters in both static and dynamic</span>
 <span class="co">#&gt;         conditions. It also comes with a post-run plotting interface</span>
 <span class="co">#&gt;         built under shiny.</span>
+<span class="co">#&gt; Depends: R (&gt;= 3.5.0)</span>
 <span class="co">#&gt; License: GPL-3</span>
 <span class="co">#&gt; URL: https://github.com/ttacail/isobxr</span>
 <span class="co">#&gt; BugReports: https://github.com/ttacail/isobxr/issues</span>
 <span class="co">#&gt; Encoding: UTF-8</span>
 <span class="co">#&gt; LazyData: true</span>
-<span class="co">#&gt; Imports: stringr (&gt;= 1.4.0), readxl (&gt;= 1.3.1), data.table (&gt;= 1.13.0),</span>
-<span class="co">#&gt;         deSolve (&gt;= 1.28), writexl (&gt;= 1.3.1), qgraph (&gt;= 1.6.5),</span>
-<span class="co">#&gt;         openxlsx (&gt;= 4.2.2), plyr (&gt;= 1.8.6), dplyr (&gt;= 1.0.2), iotools</span>
-<span class="co">#&gt;         (&gt;= 0.3.1), ggplot2 (&gt;= 3.3.2), ggrepel (&gt;= 0.8.2), beepr (&gt;=</span>
-<span class="co">#&gt;         1.3), metR (&gt;= 0.7.0), shiny (&gt;= 1.5.0), shinyFiles (&gt;= 0.8.0),</span>
-<span class="co">#&gt;         shinythemes (&gt;= 1.1.2), DT (&gt;= 0.16), devtools, shinyjs (&gt;=</span>
-<span class="co">#&gt;         2.0.0), grid (&gt;= 4.0.3)</span>
+<span class="co">#&gt; Imports: stringr (&gt;= 1.4.0), readxl (&gt;= 1.3.1), dplyr (&gt;= 1.0.2),</span>
+<span class="co">#&gt;         data.table (&gt;= 1.13.2), deSolve (&gt;= 1.28), rlang (&gt;= 0.4.8),</span>
+<span class="co">#&gt;         grid (&gt;= 4.0.3), metR (&gt;= 0.7.0), beepr (&gt;= 1.3), iotools (&gt;=</span>
+<span class="co">#&gt;         0.3.1), shiny (&gt;= 1.5.0), shinyFiles (&gt;= 0.8.0), shinythemes</span>
+<span class="co">#&gt;         (&gt;= 1.1.2), shinyjs (&gt;= 2.0.0), DT (&gt;= 0.16), ggplot2 (&gt;=</span>
+<span class="co">#&gt;         3.3.2), ggrepel (&gt;= 0.8.2), qgraph (&gt;= 1.6.5), writexl (&gt;=</span>
+<span class="co">#&gt;         1.3.1)</span>
 <span class="co">#&gt; RoxygenNote: 7.1.1</span>
-<span class="co">#&gt; Suggests: knitr, rmarkdown</span>
+<span class="co">#&gt; Suggests: knitr, rmarkdown, devtools</span>
 <span class="co">#&gt; VignetteBuilder: knitr</span>
 <span class="co">#&gt; Author: Theo Tacail [aut, cre]</span>
 <span class="co">#&gt; Maintainer: Theo Tacail &lt;theo.tacail@gmail.com&gt;</span>
-<span class="co">#&gt; Built: R 4.0.3; ; 2020-10-22 12:45:06 UTC; unix</span>
+<span class="co">#&gt; Built: R 4.0.3; ; 2020-12-08 08:11:21 UTC; unix</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; -- File: /private/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T/Rtmp52Hwhd/temp_libpath16e91b5fe9f0/isobxr/Meta/package.rds</span></pre></div>
+<span class="co">#&gt; -- File: /private/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T/Rtmp2N7sU2/temp_libpath336c356280a4/isobxr/Meta/package.rds</span></pre></div>
 <p>You can locally browse the vignette as follows:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
@@ -630,13 +631,13 @@ The derivative of box sizes will be non null in at least one case (<span class="
 <p>All <em>black text</em> has to be strictly the same as shown.</p>
 <p>All <em>blue text</em> of the column <em>BOXES_ID</em> corresponds to litteral names of the <em>n</em> boxes defined by the user.</p>
 <ul>
-<li>These names should be coherent with all other references to box names (as in <strong>FLUXES</strong> or <strong>COEFFS</strong> sheet).<br>
+<li>These names must be coherent with all other references to box names (as in <strong>FLUXES</strong> or <strong>COEFFS</strong> sheet).<br>
 </li>
-<li>All boxes refered to everywhere else (such as <strong>FLUXES</strong> or <strong>COEFFS</strong> sheet or called within a function) should be in this list.</li>
+<li>All boxes refered to everywhere else (such as <strong>FLUXES</strong> or <strong>COEFFS</strong> sheet or called within a function) must be defined in this list.</li>
 <li>Two or more boxes can not have the exact same name.</li>
+<li>The user must not use any special characters in the box names [ .!@#$%^&amp;*()_+}{';|:/,?&gt;&lt;}].</li>
 <li>The user should avoid the use of numerical values in the box names.</li>
-<li>The user should avoid the use of spaces or special characters, with the exception of the underscore "_".</li>
-<li><p>The user should chose abbvreviated names (preferabily 3 characters, for the sake of clarity in diagrams and plots).</p></li>
+<li><p>The user is advised to chose abbvreviated names (preferabily up to 3 characters, for the sake of clarity in diagrams and plots).</p></li>
 <li>Example of lists of box names:
 <ul>
 <li>OCEAN, MTLE, C_CRUST, O_CRUST, RVR for ocean, mantle, continental crust, oceanic crust and river boxes respectively</li>
