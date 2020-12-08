@@ -1,7 +1,6 @@
 usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("metR", min_version = TRUE)
 usethis::use_package("beepr", min_version = TRUE)
-usethis::use_package("iotools", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("dplyr", min_version = TRUE)
 usethis::use_package("rlang", min_version = TRUE)
@@ -200,13 +199,15 @@ sweep_steady <- function(workdir,
 
   if (LOG_last$NUM_ANA == "ANA"){
     path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_A_1_OUT.csv", sep = "")
-    OUT_last_final <- iotools::read.csv.raw(path_to_OUT_last_final)
+    OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
+
     OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
     OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
     names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
   } else {
     path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_N_1_OUT.csv", sep = "")
-    OUT_last_final <- iotools::read.csv.raw(path_to_OUT_last_final)
+        OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
+
     OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
     names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
     OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
@@ -1152,13 +1153,15 @@ sweep_dyn <- function(workdir,
 
         if (LOG_last$NUM_ANA == "ANA"){
           path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_A_1_OUT.csv", sep = "")
-          OUT_last_final <- iotools::read.csv.raw(path_to_OUT_last_final)
+          OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
+
           OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
           OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
           names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
         } else {
           path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_N_1_OUT.csv", sep = "")
-          OUT_last_final <- iotools::read.csv.raw(path_to_OUT_last_final)
+          OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
+
           OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
           names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
           OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
