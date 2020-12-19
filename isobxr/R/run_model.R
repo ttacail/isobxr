@@ -120,7 +120,25 @@ usethis::use_package("rlang", min_version = TRUE)
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export
-run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_lim, nb_steps, time_units, FORCING_RAYLEIGH = NULL, FORCING_SIZE = NULL, FORCING_DELTA = NULL, FORCING_ALPHA = NULL, COMPOSITE = FALSE, COMPO_SERIES_n = NaN, COMPO_SERIES_FAMILY = NaN, EXPLORER = FALSE, EXPLO_SERIES_n = NaN, EXPLO_SERIES_FAMILY = NaN, HIDE_PRINTS = FALSE, PLOT_DIAGRAMS = TRUE, PLOT_evD = FALSE){
+run_isobxr <- function(workdir,
+                       SERIES_ID,
+                       flux_list_name,
+                       coeff_list_name,
+                       t_lim, nb_steps,
+                       time_units,
+                       FORCING_RAYLEIGH = NULL,
+                       FORCING_SIZE = NULL,
+                       FORCING_DELTA = NULL,
+                       FORCING_ALPHA = NULL,
+                       COMPOSITE = FALSE,
+                       COMPO_SERIES_n = NaN,
+                       COMPO_SERIES_FAMILY = NaN,
+                       EXPLORER = FALSE,
+                       EXPLO_SERIES_n = NaN,
+                       EXPLO_SERIES_FAMILY = NaN,
+                       HIDE_PRINTS = FALSE,
+                       PLOT_DIAGRAMS = TRUE,
+                       PLOT_evD = FALSE){
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()
