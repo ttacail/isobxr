@@ -147,12 +147,11 @@ num_slvr <- function(input_path){
   df <- dplyr::full_join(initial_f, df, by = "BOXES_ID")
   data.table::fwrite(df, file = paste(outdir, prefix, "N_1_OUT.csv", sep = ""), row.names = F, quote = F, sep = ",")
 
-  # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
+  # # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
   # N_evD <- Delta_as_df
   # N_evS <- Boxes_size_as_df
   # N_OUT <- df
-  # save(N_OUT, N_evD, N_evS, file = paste(outdir, prefix, "N.Rdata", sep = ""))
-
+  # save(N_OUT, N_evD, N_evS, file = paste(cwd, "/", prefix, "OUT_N.Rda", sep = ""))
 }
 
 #  #_________________________________________________________________________80char
@@ -291,9 +290,9 @@ ana_slvr <- function(input_path){
 
   data.table::fwrite(d_t_all, file = paste(outdir, prefix, "A_3_evD.csv", sep = ""), row.names = F, quote = F)
 
-  # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
+  # # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
   # A_evD <- d_t_all
   # A_ODE_SOLNs <- ODE_SOLNs
   # A_OUT <- results
-  # save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(outdir, prefix, "A.Rdata", sep = ""))
+  # save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(cwd, "/", prefix, "OUT_A.Rda", sep = ""))
 }

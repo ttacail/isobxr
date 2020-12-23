@@ -120,7 +120,25 @@ usethis::use_package("rlang", min_version = TRUE)
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export
-run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_lim, nb_steps, time_units, FORCING_RAYLEIGH = NULL, FORCING_SIZE = NULL, FORCING_DELTA = NULL, FORCING_ALPHA = NULL, COMPOSITE = FALSE, COMPO_SERIES_n = NaN, COMPO_SERIES_FAMILY = NaN, EXPLORER = FALSE, EXPLO_SERIES_n = NaN, EXPLO_SERIES_FAMILY = NaN, HIDE_PRINTS = FALSE, PLOT_DIAGRAMS = TRUE, PLOT_evD = FALSE){
+run_isobxr <- function(workdir,
+                       SERIES_ID,
+                       flux_list_name,
+                       coeff_list_name,
+                       t_lim, nb_steps,
+                       time_units,
+                       FORCING_RAYLEIGH = NULL,
+                       FORCING_SIZE = NULL,
+                       FORCING_DELTA = NULL,
+                       FORCING_ALPHA = NULL,
+                       COMPOSITE = FALSE,
+                       COMPO_SERIES_n = NaN,
+                       COMPO_SERIES_FAMILY = NaN,
+                       EXPLORER = FALSE,
+                       EXPLO_SERIES_n = NaN,
+                       EXPLO_SERIES_FAMILY = NaN,
+                       HIDE_PRINTS = FALSE,
+                       PLOT_DIAGRAMS = TRUE,
+                       PLOT_evD = FALSE){
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()
@@ -327,9 +345,11 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
 
   if (HIDE_PRINTS == F){
     if (is.na(INFINITE_BOXES[1]) == F){
-      cat( paste("\n < The INFINITE boxes are ", paste(INFINITE_BOXES, collapse = ", "), " >", sep = ""))
+      # cat( paste("\n < The INFINITE boxes are ", paste(INFINITE_BOXES, collapse = ", "), " >", sep = ""))
+      rlang::inform(message = paste("The INFINITE boxes are: ", paste(INFINITE_BOXES,  collapse = ", "), sep = ""))
     } else {
-      cat( paste("\n < All boxes are FINITE >", sep = ""))
+      # cat( paste("\n < All boxes are FINITE >", sep = ""))
+      rlang::inform(message = paste("All boxes are FINITE", sep = ""))
     }
   }
 
@@ -369,15 +389,20 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   for (i in 1:nrow(INITIAL)){
     if (INITIAL[i,"BOXES_ID"] %in% FINITE_BOXES & INITIAL[i,"FLUX_BALANCE"] != 0){
       NUM_ANA = "NUM"
-      if (HIDE_PRINTS == F){
-        cat( paste("\n < ", INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ", sep = ""))
-      }
+      # if (HIDE_PRINTS == F){
+      #   # cat( paste("\n < ", INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ", sep = ""))
+      #   rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ", sep = ""))
+      # }
       UNBAL_FINITE_BOXES <- c(UNBAL_FINITE_BOXES, as.character(INITIAL[i,"BOXES_ID"]))
       if (HIDE_PRINTS == F){
         if (INITIAL[i, "FLUX_BALANCE"] < 0){
-          cat( paste("is neg (max run: ", - INITIAL[i,"SIZE_INIT"]/INITIAL[i,"FLUX_BALANCE"], " t units) > ", sep = ""))
+          # cat( paste("is neg (max run: ", - INITIAL[i,"SIZE_INIT"]/INITIAL[i,"FLUX_BALANCE"], " t units) > ", sep = ""))
+          rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
+                                        "is negative (max run: ", - INITIAL[i,"SIZE_INIT"]/INITIAL[i,"FLUX_BALANCE"], " t units)", sep = ""))
         } else {
-          cat(paste("is pos > ", sep = ""))
+          # cat(paste("is pos > ", sep = ""))
+          rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
+                                        "is positive", sep = ""))
         }
       }
     }
@@ -386,12 +411,13 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
 
   if (HIDE_PRINTS == F){
     if (NUM_ANA == "NUM"){
-      cat( paste("\n < Running num_slvr (UNBALANCED FINITE BOXES) > \n", sep = ""))
+      # cat( paste("\n < Running num_slvr (UNBALANCED FINITE BOXES) > \n", sep = ""))
+      rlang::inform(message = paste("Running num_slvr (unbalanced finite boxes)", sep = ""))
     } else {
-      cat( paste("\n < Running ana_slvr (BALANCED FINITE BOXES) >  \n", sep = ""))
+      # cat( paste("\n < Running ana_slvr (BALANCED FINITE BOXES) >  \n", sep = ""))
+      rlang::inform(message = paste("Running ana_slvr (balanced finite boxes)", sep = ""))
     }
   }
-
 
   #### BUILD BOX_META to XLSX with ALL RESIDENCE TIME AND BALANCE INFORMATION
   BOX_META_to_xls <- INITIAL
@@ -520,7 +546,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
   } else {
     LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
-    # LOG <- readRDS(dir_LOG_rds)
+    # LOG <- readRDS(dir_LOG_rds) # DOES NOT WORK
     if (SERIES_ID %in% levels(LOG$SERIES_ID)){
       LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
     } else {
@@ -546,7 +572,8 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
 
   if (t_lim > MIN_POS_t_lim_run){
     CONSTS[CONSTS$CONSTS_ID == "time", "CONSTS"] <- as.character(MIN_POS_t_lim_run)
-    cat( paste("*** UPDATED TOTAL RUN TIME *** < Total run time has been changed from ", as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run), " (limiting box: ", MIN_POS_t_lim_run_BOX, ") > \n " , sep = ""))
+    # cat( paste("*** UPDATED TOTAL RUN TIME *** < Total run time has been changed from ", as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run), " (limiting box: ", MIN_POS_t_lim_run_BOX, ") > \n " , sep = ""))
+    rlang::warn(message = paste("Updated total run duration. Total run time has been changed from ", as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run), " (limiting box: ", MIN_POS_t_lim_run_BOX, ")" , sep = ""))
     LOG_loc$T_LIM <- MIN_POS_t_lim_run
     CONSTS_trad <- CONSTS
   }
@@ -560,6 +587,20 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                            COEFFS = COEFFS_trad,
                            BOX_META = BOX_META_to_xls),
                       trad_excel_path)
+
+  # CONSTS_IN <- CONSTS_trad
+  # INITIAL_IN <- INITIAL_trad
+  # FLUXES_IN <- FLUXES_trad
+  # COEFFS_IN <- COEFFS_trad
+  # BOX_META_IN <- BOX_META_to_xls
+  #
+  # trad_rda_path <-  paste(folder_outdir, "IN.Rda", sep = "")
+  # save(CONSTS_IN,
+  #      INITIAL_IN,
+  #      FLUXES_IN,
+  #      COEFFS_IN,
+  #      BOX_META_IN,
+  #      file = trad_rda_path)
 
   #************************************** NETWORK DIAGRAM OUTPUT #----
   #### REMOVE ISOLATED BOXES FOR NETWORK DIAGRAM
@@ -686,8 +727,8 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     # saveRDS(object = LOG_loc, file = dir_LOG_rds)
   } else {
     data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F, append = T)
-    # saveRDS(object = rbind(readRDS(file = dir_LOG_rds), LOG_loc),
-            # file = dir_LOG_rds)
+    # saveRDS(object = dplyr::bind_rows(readRDS(file = dir_LOG_rds), LOG_loc),
+    #         file = dir_LOG_rds)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN ISOBOXr #----
