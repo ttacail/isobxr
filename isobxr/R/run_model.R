@@ -199,10 +199,6 @@ run_isobxr <- function(workdir,
                       "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
                       "The numerical outputs will be accurrate. ",
                       "This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
-    # warning("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
-    #         "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
-    #         "The numerical outputs will be accurrate. \n",
-    #         "This type of design is however currently not supported by the plot editing shiny app.", call. = F)
   }
 
   #************************************** EXTRACT AND PREPARE LOCAL RUN INPUTS #----
@@ -225,11 +221,6 @@ run_isobxr <- function(workdir,
                        "The following box names do not match the required format: \n",
                        "[", paste(misnamed_boxes, collapse = ", "), "]",
                        sep = ""))
-    # stop(paste("Box names (defined in ", as.character(ISOPY_MASTER_file), ") must not include any special characters. \n",
-    #            "The following box names do not match the required format: \n",
-    #            "[", paste(misnamed_boxes, collapse = ", "), "]",
-    #            sep = ""),
-    #      call. = FALSE)
   }
   remove(misnamed_boxes)
 
@@ -245,12 +236,6 @@ run_isobxr <- function(workdir,
                "The following boxes are not defined in the list of boxes: \n",
                "[", paste(all_flux_coeff_levels[!(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN))], collapse = ", "), "]",
                sep = ""))
-    # stop(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
-    #            "(in ", as.character(ISOPY_MASTER_file), "). \n",
-    #            "The following boxes are not defined in the list of boxes: \n",
-    #            "[", paste(all_flux_coeff_levels[!(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN))], collapse = ", "), "]",
-    #            sep = ""),
-    #      call. = FALSE)
   }
   remove(all_flux_coeff_levels)
 
@@ -345,10 +330,8 @@ run_isobxr <- function(workdir,
 
   if (HIDE_PRINTS == F){
     if (is.na(INFINITE_BOXES[1]) == F){
-      # cat( paste("\n < The INFINITE boxes are ", paste(INFINITE_BOXES, collapse = ", "), " >", sep = ""))
       rlang::inform(message = paste("The INFINITE boxes are: ", paste(INFINITE_BOXES,  collapse = ", "), sep = ""))
     } else {
-      # cat( paste("\n < All boxes are FINITE >", sep = ""))
       rlang::inform(message = paste("All boxes are FINITE", sep = ""))
     }
   }
@@ -389,18 +372,12 @@ run_isobxr <- function(workdir,
   for (i in 1:nrow(INITIAL)){
     if (INITIAL[i,"BOXES_ID"] %in% FINITE_BOXES & INITIAL[i,"FLUX_BALANCE"] != 0){
       NUM_ANA = "NUM"
-      # if (HIDE_PRINTS == F){
-      #   # cat( paste("\n < ", INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ", sep = ""))
-      #   rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ", sep = ""))
-      # }
       UNBAL_FINITE_BOXES <- c(UNBAL_FINITE_BOXES, as.character(INITIAL[i,"BOXES_ID"]))
       if (HIDE_PRINTS == F){
         if (INITIAL[i, "FLUX_BALANCE"] < 0){
-          # cat( paste("is neg (max run: ", - INITIAL[i,"SIZE_INIT"]/INITIAL[i,"FLUX_BALANCE"], " t units) > ", sep = ""))
           rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
                                         "is negative (max run: ", - INITIAL[i,"SIZE_INIT"]/INITIAL[i,"FLUX_BALANCE"], " t units)", sep = ""))
         } else {
-          # cat(paste("is pos > ", sep = ""))
           rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
                                         "is positive", sep = ""))
         }
@@ -411,10 +388,8 @@ run_isobxr <- function(workdir,
 
   if (HIDE_PRINTS == F){
     if (NUM_ANA == "NUM"){
-      # cat( paste("\n < Running num_slvr (UNBALANCED FINITE BOXES) > \n", sep = ""))
       rlang::inform(message = paste("Running num_slvr (unbalanced finite boxes)", sep = ""))
     } else {
-      # cat( paste("\n < Running ana_slvr (BALANCED FINITE BOXES) >  \n", sep = ""))
       rlang::inform(message = paste("Running ana_slvr (balanced finite boxes)", sep = ""))
     }
   }
@@ -572,7 +547,6 @@ run_isobxr <- function(workdir,
 
   if (t_lim > MIN_POS_t_lim_run){
     CONSTS[CONSTS$CONSTS_ID == "time", "CONSTS"] <- as.character(MIN_POS_t_lim_run)
-    # cat( paste("*** UPDATED TOTAL RUN TIME *** < Total run time has been changed from ", as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run), " (limiting box: ", MIN_POS_t_lim_run_BOX, ") > \n " , sep = ""))
     rlang::warn(message = paste("Updated total run duration. Total run time has been changed from ", as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run), " (limiting box: ", MIN_POS_t_lim_run_BOX, ")" , sep = ""))
     LOG_loc$T_LIM <- MIN_POS_t_lim_run
     CONSTS_trad <- CONSTS
