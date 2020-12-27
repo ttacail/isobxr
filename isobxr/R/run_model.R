@@ -96,7 +96,8 @@ usethis::use_package("rlang", min_version = TRUE)
 #' \item Automatically sets a XXXX run number between 0001 and 9999. The outputs do not overwrite possible identical previously performed runs.
 #' \item Stores all outputs in a file with the Rda format. This file stores all data produced by the function.
 #' \cr (file name structure: SERIES_ID + XXXX + _OUT.Rda)
-#' \item \emph{OPTIONAL}
+#' }
+#' @section Optional outputs
 #' \enumerate{
 #' \item Creates an INPUT xlsx file with all run conditions and parameters. File created in located in DIGEST directory.
 #' \cr (file name structure: in_0_INPUTS + SERIES_ID + XXXX + .xlsx)
@@ -121,7 +122,6 @@ usethis::use_package("rlang", min_version = TRUE)
 #'
 #' \item Creates or updates the general log file, located in general working directory.
 #' \cr (file name: 1_LOG.csv)
-#' }
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export
