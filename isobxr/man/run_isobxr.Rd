@@ -126,32 +126,6 @@ the fonction creates and stores all outputs in a SERIES directory located in wor
 \item Automatically sets a XXXX run number between 0001 and 9999. The outputs do not overwrite possible identical previously performed runs.
 \item Stores all outputs in a file with the Rda format. This file stores all data produced by the function.
 \cr (file name structure: SERIES_ID + XXXX + _OUT.Rda)
-\item \emph{OPTIONAL}
-\enumerate{
-\item Creates an INPUT xlsx file with all run conditions and parameters. File created in located in DIGEST directory.
-\cr (file name structure: in_0_INPUTS + SERIES_ID + XXXX + .xlsx)
-\cr (created if to_DIGEST_CSV_XLS = TRUE)
-
-\item Edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
-between all boxes. File created in located in DIGEST directory.
-\cr (file name structure: in_1_DIAG_FLUX + SERIES_ID + XXXX + .pdf)
-\cr (created if to_DIGEST_DIAGRAMS = TRUE)
-
-\item Edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
-between all boxes. File created in located in DIGEST directory.
-\cr (file name structure: in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf)
-\cr (created if to_DIGEST_DIAGRAMS = TRUE)
-
-\item Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale.
-\cr (file name structure: out_0_PLOT_evD + SERIES_ID + XXXX + .pdf)
-\cr (created if to_DIGEST_evD_PLOT = TRUE)
-
-\item Stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in DIGEST directory.
-\cr (created if to_DIGEST_CSV_XLS = TRUE)
-
-\item Creates or updates the general log file, located in general working directory.
-\cr (file name: 1_LOG.csv)
-}
 }
 }
 \description{

@@ -38,32 +38,26 @@ defining the dynamic sweep run scenario.
 
 \item{EXPLO_AXIS_2}{Set of values of sweeping parameter 2}
 
-\item{to_DYN_DIGEST_CSVs}{Export all global csv outputs (full evD and full evS).}
+\item{to_DYN_DIGEST_CSVs}{Export all global csv outputs (full evD and full evS) or not to the DYN DIGEST folder.
+\cr Logical value, default is FALSE.}
 }
 \value{
-If non existing, the fonction creates and stores all outputs
-in a SERIES directory located in working directory, automatically numbered.
+Creates and stores all outputs in a SERIES directory
+located in working directory, automatically numbered.
 \cr Directory name structure: 4_DYN + SERIES_ID + YYY, YYY being an automically set dynamic sweep run number between 001 and 999.
 \cr No overwriting of previous dynamic sweep runs is possible.
 \enumerate{
 \item Calculates the number of runs the sweeping will require depending on the sweeped parameters.
-The function then asks the user confirmation to run sweep_dyn,
+\item Asks the user confirmation to run sweep_dyn,
 as the run calculation time depends on the number of successive sweeping runs.
-\item Creates the set of inputs and outputs for each successive \emph{n} runs, numbered from to 1 to \emph{n} in an XXXX format (see \code{\link{run_isobxr}} documentation).
-\cr Single run plots normally edited by \code{\link{run_isobxr}} are here not edited.
-\cr Named with the following format: DYN + SERIES_ID + YYY + XXXX
-\item Archives the dynamic sweep master file.
-\cr (file name structure: 0_DYN + SERIES_ID + YYY + 0_EXPLO_DYN_MASTER.xlsx)
-\item Archives the local LOG for the given dynamic sweep run.
-\cr (file name structure: 0_DYN + SERIES_ID + YYY + LOG.csv)
-\item Stores the evolution of delta values with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run.
-\cr (file name structure: 0_DYN + SERIES_ID + YYY + evD.csv)
-\item Stores the evolution of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run
-\cr (file name structure: 0_DYN + SERIES_ID + YYY + evS.csv)
-\item Stores the final state of delta values with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run.
-\cr (file name structure: 0_DYN + SERIES_ID + YYY + evD_final.csv)
-\item Stores the final state of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run
-\cr (file name structure: 0_DYN + SERIES_ID + YYY + evS_final.csv)
+\item Creates  all input (IN.RDA) and output (OUT.RDA) files for all successive \emph{n} runs, numbered from to 1 to \emph{n} in an XXXX format (see \code{\link{run_isobxr}} documentation).
+\item Summarizes results in the DIGEST folder as follows :
+\enumerate{
+\item Archive of local LOG file (LOG.csv) for all runs of the steady sweeping.
+\item Archive of steady sweep master file (.xlsx).
+\item Evolution of delta values (evD.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+\item Evolution of box sizes (masses of element X, evS.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+}
 }
 }
 \description{

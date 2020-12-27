@@ -38,30 +38,28 @@ defining the steady sweep run scenario.
 
 \item{EXPLO_AXIS_2}{Set of values of sweeping parameter 2}
 
-\item{to_STD_DIGEST_CSVs}{Export all global csv outputs (full evD and full evS).}
+\item{to_STD_DIGEST_CSVs}{Export all global csv outputs (full evD and full evS) or not to the STD DIGEST folder.
+\cr Logical value, default is FALSE.}
 }
 \value{
-If non existing, the fonction creates and stores all outputs
-in a SERIES directory located in working directory, automatically numbered.
+The fonction creates and stores all outputs in a SERIES directory
+located in working directory, automatically numbered.
 \cr Directory name structure: 4_STD + SERIES_ID + YYY, YYY being an automically set steady sweep run number between 001 and 999.
 \cr No overwriting of previous steady sweep runs is possible.
 \enumerate{
 \item Calculates the number of runs the sweeping will require depending on the sweeped parameters.
-The function then asks the user confirmation to run sweep_steady,
+\item Asks the user confirmation to run sweep_steady,
 as the run calculation time depends on the number of successive sweeping runs.
-\item Creates the set of inputs and outputs for the first run only (see \code{\link{run_isobxr}} documentation). All sweep runs outputs are hidden and summarized in following \code{\link{sweep_steady}} outputs.
-\item Archives the steady sweep master file.
-\cr (file name structure: 0_STD + SERIES_ID + YYY + EXPLO_STEADY_MASTER.xlsx)
-\item Archives the local LOG for the given steady sweep run.
-\cr (file name structure: 0_STD + SERIES_ID + YYY + LOG.csv)
-\item Stores the evolution of delta values with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
-\cr (file name structure: 0_STD + SERIES_ID + YYY + evD.csv)
-\item Stores the evolution of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
-\cr (file name structure: 0_STD + SERIES_ID + YYY + evS.csv)
-\item Stores the final state of delta values with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
-\cr (file name structure: 0_STD + SERIES_ID + YYY + evD_final.csv)
-\item Stores the final state of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
-\cr (file name structure: 0_STD + SERIES_ID + YYY + evS_final.csv)
+\item Creates the set of inputs and outputs for the single initial run only (see \code{\link{run_isobxr}} documentation).
+\item Summarizes results in the DIGEST folder as follows :
+\enumerate{
+\item Archive of local LOG file (LOG.csv) for all runs of the steady sweeping.
+\item Archive of steady sweep master file (.xlsx).
+\item Evolution of delta values (evD.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+\item Evolution of box sizes (masses of element X, evS.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
+\item Final state of delta values (evD_final.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+\item Final state of box sizes (masses of element X, evS_final.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+}
 }
 }
 \description{
