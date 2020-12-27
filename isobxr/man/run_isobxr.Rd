@@ -23,8 +23,9 @@ run_isobxr(
   EXPLO_SERIES_n = NaN,
   EXPLO_SERIES_FAMILY = NaN,
   HIDE_PRINTS = FALSE,
-  PLOT_DIAGRAMS = TRUE,
-  PLOT_evD = FALSE
+  to_DIGEST_DIAGRAMS = TRUE,
+  to_DIGEST_evD_PLOT = TRUE,
+  to_DIGEST_CSV_XLS = FALSE
 )
 }
 \arguments{
@@ -107,44 +108,50 @@ This parameter will not hide the warnings regarding the automatic update of
 the run duration in case of the emptying of a box.
 \cr Default is FALSE.}
 
-\item{PLOT_DIAGRAMS}{\emph{OPTIONAL} Logical value to edit pdf of box model diagram or not.
+\item{to_DIGEST_DIAGRAMS}{\emph{OPTIONAL} Logical value to edit pdf of box model diagram or not in RUN DIGEST folder.
 \cr Default is TRUE.}
 
-\item{PLOT_evD}{\emph{OPTIONAL} Logical value to edit pdf of delta time evolution plot or not.
+\item{to_DIGEST_evD_PLOT}{\emph{OPTIONAL} Logical value to edit pdf of delta time evolution plot or not in RUN DIGEST folder.
 \cr Default is TRUE.}
+
+\item{to_DIGEST_CSV_XLS}{\emph{OPTIONAL} Logical value to edit Rda input file (ending with _IN.Rda) and CSV output files in RUN DIGEST folder.
+\cr Default is FALSE.}
 }
 \value{
-If function is run independently and if the directory is non existing,
-the fonction creates and stores all outputs
-in a SERIES directory located in working directory.
+If the function is run independently and if the directory is non existing,
+the fonction creates and stores all outputs in a SERIES directory located in working directory.
 \cr Directory name structure: 2_RUN + SERIES_ID
 
 \enumerate{
 \item Automatically sets a XXXX run number between 0001 and 9999. The outputs do not overwrite possible identical previously performed runs.
-
-\item Creates an INPUT file with all run conditions, located in SERIES directory.
-\cr (file name structure: SERIES_ID + XXXX + _INPUT.xlsx)
-
-\item Edits a Box model diagram of flux (DIAGf pdf) of element X (mass per time unit)
-between all boxes. (Optional, depends on parameter PLOT_DIAGRAM), located in SERIES directory.
-\cr (file name structure: SERIES_ID + XXXX + DIAGf + _flux_list_name.pdf)
-
-\item Edits a Box model diagram of isotope fractionation coefficients (alphas, DIAGa pdf)
-between all boxes (optional, depends on parameter PLOT_DIAGRAM), located in SERIES directory.
-\cr (file name structure: SERIES_ID + XXXX + DIAGf + _flux_list_name.pdf)
-
-\item Creates a subdirectory for numerical outputs.
-\cr (directory name structure: SERIES_ID + XXXX + _OUT)
-
+\item Stores all outputs in a file with the Rda format. This file stores all data produced by the function.
+\cr (file name structure: SERIES_ID + XXXX + _OUT.Rda)
+\item \emph{OPTIONAL}
 \enumerate{
-\item Stores \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in subdirectory.
+\item Creates an INPUT xlsx file with all run conditions and parameters. File created in located in DIGEST directory.
+\cr (file name structure: in_0_INPUTS + SERIES_ID + XXXX + .xlsx)
+\cr (created if to_DIGEST_CSV_XLS = TRUE)
 
-\item Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale (optional).
-\cr (file name structure: SERIES_ID + XXXX + _plot_evD.pdf)
-}
+\item Edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
+between all boxes. File created in located in DIGEST directory.
+\cr (file name structure: in_1_DIAG_FLUX + SERIES_ID + XXXX + .pdf)
+\cr (created if to_DIGEST_DIAGRAMS = TRUE)
+
+\item Edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
+between all boxes. File created in located in DIGEST directory.
+\cr (file name structure: in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf)
+\cr (created if to_DIGEST_DIAGRAMS = TRUE)
+
+\item Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale.
+\cr (file name structure: out_0_PLOT_evD + SERIES_ID + XXXX + .pdf)
+\cr (created if to_DIGEST_evD_PLOT = TRUE)
+
+\item Stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in DIGEST directory.
+\cr (created if to_DIGEST_CSV_XLS = TRUE)
 
 \item Creates or updates the general log file, located in general working directory.
 \cr (file name: 1_LOG.csv)
+}
 }
 }
 \description{
