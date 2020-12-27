@@ -26,29 +26,30 @@ usethis::use_package("rlang", min_version = TRUE)
 #' \cr (string of characters)
 #' @param EXPLO_AXIS_1 Set of values of sweeping parameter 1
 #' @param EXPLO_AXIS_2 Set of values of sweeping parameter 2
-#' @param to_STD_DIGEST_CSVs Export all global csv outputs (full evD and full evS).
-#' @return If non existing, the fonction creates and stores all outputs
-#' in a SERIES directory located in working directory, automatically numbered.
+#' @param to_STD_DIGEST_CSVs Export all global csv outputs (full evD and full evS) or not to the STD DIGEST folder.
+#' \cr Logical value, default is FALSE.
+#' @return The fonction creates and stores all outputs in a SERIES directory
+#' located in working directory, automatically numbered.
 #' \cr Directory name structure: 4_STD + SERIES_ID + YYY, YYY being an automically set steady sweep run number between 001 and 999.
 #' \cr No overwriting of previous steady sweep runs is possible.
 #' \enumerate{
 #' \item Calculates the number of runs the sweeping will require depending on the sweeped parameters.
-#' The function then asks the user confirmation to run sweep_steady,
+#' \item Asks the user confirmation to run sweep_steady,
 #' as the run calculation time depends on the number of successive sweeping runs.
-#' \item Creates the set of inputs and outputs for the first run only (see \code{\link{run_isobxr}} documentation). All sweep runs outputs are hidden and summarized in following \code{\link{sweep_steady}} outputs.
-#' \item Archives the steady sweep master file.
-#' \cr (file name structure: 0_STD + SERIES_ID + YYY + EXPLO_STEADY_MASTER.xlsx)
-#' \item Archives the local LOG for the given steady sweep run.
-#' \cr (file name structure: 0_STD + SERIES_ID + YYY + LOG.csv)
-#' \item Stores the evolution of delta values with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
-#' \cr (file name structure: 0_STD + SERIES_ID + YYY + evD.csv)
-#' \item Stores the evolution of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
-#' \cr (file name structure: 0_STD + SERIES_ID + YYY + evS.csv)
-#' \item Stores the final state of delta values with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
-#' \cr (file name structure: 0_STD + SERIES_ID + YYY + evD_final.csv)
-#' \item Stores the final state of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
-#' \cr (file name structure: 0_STD + SERIES_ID + YYY + evS_final.csv)
+#' \item Creates the set of inputs and outputs for the single initial run only (see \code{\link{run_isobxr}} documentation).
+#' \item Summarizes results in the DIGEST folder as follows :
+#' \enumerate{
+#' \item Archive of local LOG file (LOG.csv) for all runs of the steady sweeping.
+#' \item Archive of steady sweep master file (.xlsx).
+#' \item Evolution of delta values (evD.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+#' \item Evolution of box sizes (masses of element X, evS.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run
+#' \item Final state of delta values (evD_final.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+#' \item Final state of box sizes (masses of element X, evS_final.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
 #' }
+#' }
+#' @section Optional output to DIGEST
+#' When to_STD_DIGEST_CSVs is set to TRUE,
+#' the sweep_steady function edits the DIGEST output data as csv files, identical to the RDS files listed earlier.
 #' @export
 sweep_steady <- function(workdir,
                          SERIES_ID,
@@ -778,31 +779,28 @@ sweep_steady <- function(workdir,
 #' \cr (string of characters)
 #' @param EXPLO_AXIS_1 Set of values of sweeping parameter 1
 #' @param EXPLO_AXIS_2 Set of values of sweeping parameter 2
-#' @param to_DYN_DIGEST_CSVs Export all global csv outputs (full evD and full evS).
-#' @return If non existing, the fonction creates and stores all outputs
-#' in a SERIES directory located in working directory, automatically numbered.
+#' @param to_DYN_DIGEST_CSVs Export all global csv outputs (full evD and full evS) or not to the DYN DIGEST folder.
+#' \cr Logical value, default is FALSE.
+#' @return Creates and stores all outputs in a SERIES directory
+#' located in working directory, automatically numbered.
 #' \cr Directory name structure: 4_DYN + SERIES_ID + YYY, YYY being an automically set dynamic sweep run number between 001 and 999.
 #' \cr No overwriting of previous dynamic sweep runs is possible.
 #' \enumerate{
 #' \item Calculates the number of runs the sweeping will require depending on the sweeped parameters.
-#' The function then asks the user confirmation to run sweep_dyn,
+#' \item Asks the user confirmation to run sweep_dyn,
 #' as the run calculation time depends on the number of successive sweeping runs.
-#' \item Creates the set of inputs and outputs for each successive \emph{n} runs, numbered from to 1 to \emph{n} in an XXXX format (see \code{\link{run_isobxr}} documentation).
-#' \cr Single run plots normally edited by \code{\link{run_isobxr}} are here not edited.
-#' \cr Named with the following format: DYN + SERIES_ID + YYY + XXXX
-#' \item Archives the dynamic sweep master file.
-#' \cr (file name structure: 0_DYN + SERIES_ID + YYY + 0_EXPLO_DYN_MASTER.xlsx)
-#' \item Archives the local LOG for the given dynamic sweep run.
-#' \cr (file name structure: 0_DYN + SERIES_ID + YYY + LOG.csv)
-#' \item Stores the evolution of delta values with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run.
-#' \cr (file name structure: 0_DYN + SERIES_ID + YYY + evD.csv)
-#' \item Stores the evolution of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run
-#' \cr (file name structure: 0_DYN + SERIES_ID + YYY + evS.csv)
-#' \item Stores the final state of delta values with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run.
-#' \cr (file name structure: 0_DYN + SERIES_ID + YYY + evD_final.csv)
-#' \item Stores the final state of box sizes (masses of element X) with time in all boxes over the \emph{n} runs that constitute the dynamic sweep run
-#' \cr (file name structure: 0_DYN + SERIES_ID + YYY + evS_final.csv)
+#' \item Creates  all input (IN.RDA) and output (OUT.RDA) files for all successive \emph{n} runs, numbered from to 1 to \emph{n} in an XXXX format (see \code{\link{run_isobxr}} documentation).
+#' \item Summarizes results in the DIGEST folder as follows :
+#' \enumerate{
+#' \item Archive of local LOG file (LOG.csv) for all runs of the steady sweeping.
+#' \item Archive of steady sweep master file (.xlsx).
+#' \item Evolution of delta values (evD.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
+#' \item Evolution of box sizes (masses of element X, evS.Rds) with time in all boxes over the \emph{n} runs that constitute the steady sweep run.
 #' }
+#' }
+#' @section Optional output to DIGEST
+#' When to_DYN_DIGEST_CSVs is set to TRUE,
+#' the sweep_dyn function edits the DIGEST output data as csv files, identical to the RDS files listed earlier.
 #' @export
 sweep_dyn <- function(workdir,
                       SERIES_ID,
@@ -1539,8 +1537,8 @@ sweep_dyn <- function(workdir,
     evD <- evD[, -which(names(evD) %in% c(flux_cols_to_drop, alpha_cols_to_drop))]
     evS <- evS[, -which(names(evS) %in% c(flux_cols_to_drop, alpha_cols_to_drop))]
 
-    evD_final <- evD[evD$Time == t_lim_list[2],]
-    evS_final <- evS[evS$Time == t_lim_list[2],]
+    # evD_final <- evD[evD$Time == t_lim_list[2],]
+    # evS_final <- evS[evS$Time == t_lim_list[2],]
 
     #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
     rlang::inform("* WRITING DIGEST *")
@@ -1554,14 +1552,14 @@ sweep_dyn <- function(workdir,
 
     saveRDS(object = evD, file = paste(path_out_EXPLO, "_evD.RDS", sep = ""))
     saveRDS(object = evS, file = paste(path_out_EXPLO, "_evS.RDS", sep = ""))
-    saveRDS(object = evD_final, file = paste(path_out_EXPLO, "_evD_final.RDS", sep = ""))
-    saveRDS(object = evS_final, file = paste(path_out_EXPLO, "_evS_final.RDS", sep = ""))
+    # saveRDS(object = evD_final, file = paste(path_out_EXPLO, "_evD_final.RDS", sep = ""))
+    # saveRDS(object = evS_final, file = paste(path_out_EXPLO, "_evS_final.RDS", sep = ""))
 
     if (isTRUE(to_DYN_DIGEST_CSVs)){
       data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
       data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
-      data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
-      data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
+      # data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
+      # data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
     }
 
     explo_master_excel_path <-  paste(path_out_EXPLO, EXPLO_MASTER, sep = "")
