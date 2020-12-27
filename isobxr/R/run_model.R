@@ -81,42 +81,47 @@ usethis::use_package("rlang", min_version = TRUE)
 #' This parameter will not hide the warnings regarding the automatic update of
 #' the run duration in case of the emptying of a box.
 #' \cr Default is FALSE.
-#' @param PLOT_DIAGRAMS \emph{OPTIONAL} Logical value to edit pdf of box model diagram or not.
+#' @param to_DIGEST_DIAGRAMS \emph{OPTIONAL} Logical value to edit pdf of box model diagram or not in RUN DIGEST folder.
 #' \cr Default is TRUE.
-#' @param PLOT_evD \emph{OPTIONAL} Logical value to edit pdf of delta time evolution plot or not.
+#' @param to_DIGEST_evD_PLOT \emph{OPTIONAL} Logical value to edit pdf of delta time evolution plot or not in RUN DIGEST folder.
 #' \cr Default is TRUE.
+#' @param to_DIGEST_CSV_XLS \emph{OPTIONAL} Logical value to edit Rda input file (ending with _IN.Rda) and CSV output files in RUN DIGEST folder.
+#' \cr Default is FALSE.
 #'
-#' @return If function is run independently and if the directory is non existing,
-#' the fonction creates and stores all outputs
-#' in a SERIES directory located in working directory.
+#' @return If the function is run independently and if the directory is non existing,
+#' the fonction creates and stores all outputs in a SERIES directory located in working directory.
 #' \cr Directory name structure: 2_RUN + SERIES_ID
 #'
 #' \enumerate{
 #' \item Automatically sets a XXXX run number between 0001 and 9999. The outputs do not overwrite possible identical previously performed runs.
-#'
-#' \item Creates an INPUT file with all run conditions, located in SERIES directory.
-#' \cr (file name structure: SERIES_ID + XXXX + _INPUT.xlsx)
-#'
-#' \item Edits a Box model diagram of flux (DIAGf pdf) of element X (mass per time unit)
-#' between all boxes. (Optional, depends on parameter PLOT_DIAGRAM), located in SERIES directory.
-#' \cr (file name structure: SERIES_ID + XXXX + DIAGf + _flux_list_name.pdf)
-#'
-#' \item Edits a Box model diagram of isotope fractionation coefficients (alphas, DIAGa pdf)
-#' between all boxes (optional, depends on parameter PLOT_DIAGRAM), located in SERIES directory.
-#' \cr (file name structure: SERIES_ID + XXXX + DIAGf + _flux_list_name.pdf)
-#'
-#' \item Creates a subdirectory for numerical outputs.
-#' \cr (directory name structure: SERIES_ID + XXXX + _OUT)
-#'
+#' \item Stores all outputs in a file with the Rda format. This file stores all data produced by the function.
+#' \cr (file name structure: SERIES_ID + XXXX + _OUT.Rda)
+#' \item \emph{OPTIONAL}
 #' \enumerate{
-#' \item Stores \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in subdirectory.
+#' \item Creates an INPUT xlsx file with all run conditions and parameters. File created in located in DIGEST directory.
+#' \cr (file name structure: in_0_INPUTS + SERIES_ID + XXXX + .xlsx)
+#' \cr (created if to_DIGEST_CSV_XLS = TRUE)
 #'
-#' \item Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale (optional).
-#' \cr (file name structure: SERIES_ID + XXXX + _plot_evD.pdf)
-#' }
+#' \item Edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
+#' between all boxes. File created in located in DIGEST directory.
+#' \cr (file name structure: in_1_DIAG_FLUX + SERIES_ID + XXXX + .pdf)
+#' \cr (created if to_DIGEST_DIAGRAMS = TRUE)
+#'
+#' \item Edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
+#' between all boxes. File created in located in DIGEST directory.
+#' \cr (file name structure: in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf)
+#' \cr (created if to_DIGEST_DIAGRAMS = TRUE)
+#'
+#' \item Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale.
+#' \cr (file name structure: out_0_PLOT_evD + SERIES_ID + XXXX + .pdf)
+#' \cr (created if to_DIGEST_evD_PLOT = TRUE)
+#'
+#' \item Stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in DIGEST directory.
+#' \cr (created if to_DIGEST_CSV_XLS = TRUE)
 #'
 #' \item Creates or updates the general log file, located in general working directory.
 #' \cr (file name: 1_LOG.csv)
+#' }
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export
@@ -124,7 +129,8 @@ run_isobxr <- function(workdir,
                        SERIES_ID,
                        flux_list_name,
                        coeff_list_name,
-                       t_lim, nb_steps,
+                       t_lim,
+                       nb_steps,
                        time_units,
                        FORCING_RAYLEIGH = NULL,
                        FORCING_SIZE = NULL,
@@ -137,8 +143,9 @@ run_isobxr <- function(workdir,
                        EXPLO_SERIES_n = NaN,
                        EXPLO_SERIES_FAMILY = NaN,
                        HIDE_PRINTS = FALSE,
-                       PLOT_DIAGRAMS = TRUE,
-                       PLOT_evD = FALSE){
+                       to_DIGEST_DIAGRAMS = TRUE,
+                       to_DIGEST_evD_PLOT = TRUE,
+                       to_DIGEST_CSV_XLS = FALSE){
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()
@@ -229,7 +236,6 @@ run_isobxr <- function(workdir,
   coeff_list_loc <- COEFFS_master[, c("FROM", "TO", coeff_list_name)]
 
   # ERROR # CHECK BOX NAMES CALLED IN FLUX AND COEFF LISTS are ALL DEFINED IN BOX LIST MASTER
-
   if (!(all(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN)))){
     rlang::abort(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
                "(in ", as.character(ISOPY_MASTER_file), "). \n",
@@ -429,7 +435,6 @@ run_isobxr <- function(workdir,
 
   #************************************** INITIATE LOG FILE DATA FRAME #----
   dir_LOG <- "1_LOG.csv"
-  # dir_LOG_rds <- "1_LOG.rds"
 
   LOG_loc <- data.frame(RUN_n = NaN,
                         RUN_ID = NaN,
@@ -521,7 +526,6 @@ run_isobxr <- function(workdir,
     LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
   } else {
     LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
-    # LOG <- readRDS(dir_LOG_rds) # DOES NOT WORK
     if (SERIES_ID %in% levels(LOG$SERIES_ID)){
       LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
     } else {
@@ -534,7 +538,15 @@ run_isobxr <- function(workdir,
 
   #### CREATE A FILE WITH RUN ID FOR EACH RUN placed in SERIES FOLDER
   folder_outdir <- paste(outdir, SERIES_ID, "_", as.character(LOG_loc$RUN_ID), "_", sep = "")
+  SERIES_ID_RUN_ID <- paste(SERIES_ID, "_", as.character(LOG_loc$RUN_ID), sep = "")
   LOG_loc$path_outdir = folder_outdir
+
+  # CREATE folder OUTPUT directory for xlsx, csv, and pdf ouputs if necessary
+  if (any(isTRUE(to_DIGEST_CSV_XLS), isTRUE(to_DIGEST_DIAGRAMS), isTRUE(to_DIGEST_evD_PLOT))){
+    if (!dir.exists(paste(folder_outdir, "DIGEST/", sep = ""))){
+      dir.create(paste(folder_outdir, "DIGEST/", sep = ""))
+    }
+  }
 
 
   #************************************** UPDATE TOTAL RUN TIME DEPENDING ON MOST UNBALANCED BOX (incl. "INFINITE") #----
@@ -553,28 +565,31 @@ run_isobxr <- function(workdir,
   }
 
   #************************************** EDIT EXCEL INPUT FILE FOR CURRENT RUN #----
-  trad_excel_path <-  paste(folder_outdir, "INPUT.xlsx", sep = "")
 
-  writexl::write_xlsx(list(CONSTS = CONSTS_trad,
-                           INITIAL = INITIAL_trad,
-                           FLUXES = FLUXES_trad,
-                           COEFFS = COEFFS_trad,
-                           BOX_META = BOX_META_to_xls),
-                      trad_excel_path)
+  if (isTRUE(to_DIGEST_CSV_XLS)){
+    trad_excel_path <-  paste(folder_outdir, "DIGEST/", "in_0_INPUTS_", SERIES_ID_RUN_ID, ".xlsx", sep = "")
+    writexl::write_xlsx(list(CONSTS = CONSTS_trad,
+                             INITIAL = INITIAL_trad,
+                             FLUXES = FLUXES_trad,
+                             COEFFS = COEFFS_trad,
+                             BOX_META = BOX_META_to_xls),
+                        trad_excel_path)
+  }
 
-  # CONSTS_IN <- CONSTS_trad
-  # INITIAL_IN <- INITIAL_trad
-  # FLUXES_IN <- FLUXES_trad
-  # COEFFS_IN <- COEFFS_trad
-  # BOX_META_IN <- BOX_META_to_xls
-  #
-  # trad_rda_path <-  paste(folder_outdir, "IN.Rda", sep = "")
-  # save(CONSTS_IN,
-  #      INITIAL_IN,
-  #      FLUXES_IN,
-  #      COEFFS_IN,
-  #      BOX_META_IN,
-  #      file = trad_rda_path)
+
+  CONSTS_IN <- CONSTS_trad
+  INITIAL_IN <- INITIAL_trad
+  FLUXES_IN <- FLUXES_trad
+  COEFFS_IN <- COEFFS_trad
+  BOX_META_IN <- BOX_META_to_xls
+
+  trad_rda_path <-  paste(folder_outdir, "IN.Rda", sep = "")
+  save(CONSTS_IN,
+       INITIAL_IN,
+       FLUXES_IN,
+       COEFFS_IN,
+       BOX_META_IN,
+       file = trad_rda_path)
 
   #************************************** NETWORK DIAGRAM OUTPUT #----
   #### REMOVE ISOLATED BOXES FOR NETWORK DIAGRAM
@@ -651,9 +666,9 @@ run_isobxr <- function(workdir,
     NET_COEFFS_title <- paste(NET_COEFFS_title, " // Alpha forcing: ", LOG_loc$FORCING_ALPHA, sep = "")
   }
 
-  if (PLOT_DIAGRAMS == T){
+  if (to_DIGEST_DIAGRAMS == T){
     #### EDIT NETWORK DIAGRAM PDF
-    pdf_path <- paste(folder_outdir, "DIAGf_", flux_list_name, ".pdf", sep = "")
+    pdf_path <- paste(folder_outdir, "DIGEST/", "in_1_DIAG_FLUX_", SERIES_ID_RUN_ID, ".pdf", sep = "")
     pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
     NET_FLUXES <- qgraph::qgraph(FLUXES_adj,
                                  title = NET_FLUXES_title,
@@ -673,7 +688,7 @@ run_isobxr <- function(workdir,
                                  vsize = 16*exp(-nrow(BOXES_master_loc)/80)+1)
     dev.off()
 
-    pdf_path <- paste(folder_outdir, "DIAGa_", coeff_list_name_outdir, ".pdf", sep = "")
+    pdf_path <- paste(folder_outdir, "DIGEST/", "in_2_DIAG_COEFF_", SERIES_ID_RUN_ID, ".pdf", sep = "")
     pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
     NET_COEFFS <- qgraph::qgraph(COEFFS_adj,
                                  title = NET_COEFFS_title,
@@ -698,70 +713,76 @@ run_isobxr <- function(workdir,
   #************************************** UPDATE LOG DATA FRAME, EDIT CSV #----
   if (file.exists(dir_LOG) == FALSE){
     data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F)
-    # saveRDS(object = LOG_loc, file = dir_LOG_rds)
   } else {
     data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F, append = T)
-    # saveRDS(object = dplyr::bind_rows(readRDS(file = dir_LOG_rds), LOG_loc),
-    #         file = dir_LOG_rds)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN ISOBOXr #----
-  input_path <- paste(LOG_loc$path_outdir, "INPUT.xlsx", sep = "")
+  input_path <- paste(folder_outdir, "IN.Rda", sep = "")
+
+  if (isTRUE(to_DIGEST_CSV_XLS)){
+    to_DIGEST_csv = TRUE
+  } else {
+    to_DIGEST_csv = FALSE
+  }
+
   if (LOG_loc$NUM_ANA == "ANA"){
-    ana_slvr(input_path)
+    ana_slvr(input_path, to_DIGEST_csv = to_DIGEST_csv)
   } else {
     if (LOG_loc$NUM_ANA == "NUM"){
-      num_slvr(input_path)
+      num_slvr(input_path, to_DIGEST_csv = to_DIGEST_csv)
     }
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# POST-RUN OUTPUTS
-  #************************************** EXTRACT or COMPUTE TIME DEPENDENT EVOLUTION OF DELTA VALUES #----
-  if (LOG_loc$NUM_ANA == "ANA"){ #### OFFLINE CALCULATION of EV D for ANA using EigenVec/Vals/Coeffs
-    evD <- read.csv(paste(folder_outdir, "OUT/", as.character(LOG_loc$SERIES_RUN_ID), "_A_3_evD.csv", sep = ""), sep = ",")
-    t_lim <- LOG_loc$T_LIM
-    nb_steps <- LOG_loc$N_STEPS
-    ratio_standard <- CONSTANTS$RATIO_STANDARD
-    BOXES_IDs <- names(evD[,-which(names(evD) %in% c("Time"))])
+  #### CREATE PLOT (OPTION TO HIDE)
+  if (to_DIGEST_evD_PLOT == TRUE){
 
-  } else {
-    if (LOG_loc$NUM_ANA == "NUM"){ #### READ ISOPYBOX_NUM evD already Computed
-      ISO_OUT_loc <- read.csv(paste(folder_outdir, "OUT/", as.character(LOG_loc$SERIES_RUN_ID), "_N_3_evD.csv", sep = ""), sep = ",")
-      evD <- ISO_OUT_loc
-      t_lim = LOG_loc$T_LIM
-      nb_steps = LOG_loc$N_STEPS
+    load(paste(folder_outdir, "OUT.Rda", sep = ""))
+
+    #************************************** EXTRACT or COMPUTE TIME DEPENDENT EVOLUTION OF DELTA VALUES #----
+    if (LOG_loc$NUM_ANA == "ANA"){ #### OFFLINE CALCULATION of EV D for ANA using EigenVec/Vals/Coeffs
+      evD <- A_evD
+      t_lim <- LOG_loc$T_LIM
+      nb_steps <- LOG_loc$N_STEPS
       ratio_standard <- CONSTANTS$RATIO_STANDARD
-      BOXES_IDs = names(ISO_OUT_loc[,-which(names(ISO_OUT_loc) %in% c("Time"))])
-    }
-  }
-
-  #************************************** CREATE evD PLOTS #----
-  ##### LOCAL PLOT ARGUMENTS
-  initial_time_unit <- time_units[1]
-  display_time_unit <- time_units[2]
-
-  #### VERTICALIZE evD
-  evD_vert <- DF_verticalizer(df_hor = evD, vert_col = BOXES_IDs)
-
-  #### CHANGE TIME UNITS FROM FLUX IMPOSED UNIT TO WANTED DISPLAY UNIT
-  if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-    if (display_time_unit == "hours"){
-      evD_vert$Time <- evD_vert$Time*24
+      BOXES_IDs <- names(evD[,-which(names(evD) %in% c("Time"))])
     } else {
-      if (display_time_unit == "minutes"){
-        evD_vert$Time <- evD_vert$Time*24*60
+      if (LOG_loc$NUM_ANA == "NUM"){ #### READ ISOPYBOX_NUM evD already Computed
+        ISO_OUT_loc <- N_evD
+        evD <- ISO_OUT_loc
+        t_lim = LOG_loc$T_LIM
+        nb_steps = LOG_loc$N_STEPS
+        ratio_standard <- CONSTANTS$RATIO_STANDARD
+        BOXES_IDs = names(ISO_OUT_loc[,-which(names(ISO_OUT_loc) %in% c("Time"))])
+      }
+    }
+
+    #************************************** CREATE evD PLOTS #----
+    ##### LOCAL PLOT ARGUMENTS
+    initial_time_unit <- time_units[1]
+    display_time_unit <- time_units[2]
+
+    #### VERTICALIZE evD
+    evD_vert <- DF_verticalizer(df_hor = evD, vert_col = BOXES_IDs)
+
+    #### CHANGE TIME UNITS FROM FLUX IMPOSED UNIT TO WANTED DISPLAY UNIT
+    if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
+      if (display_time_unit == "hours"){
+        evD_vert$Time <- evD_vert$Time*24
       } else {
-        if (display_time_unit == "years"){
-          evD_vert$Time <- evD_vert$Time/365
+        if (display_time_unit == "minutes"){
+          evD_vert$Time <- evD_vert$Time*24*60
         } else {
-          display_time_unit = initial_time_unit
+          if (display_time_unit == "years"){
+            evD_vert$Time <- evD_vert$Time/365
+          } else {
+            display_time_unit = initial_time_unit
+          }
         }
       }
     }
-  }
 
-  #### CREATE PLOT (OPTION TO HIDE)
-  if (PLOT_evD == TRUE){
     Ymin <- round(min(evD_vert$VAR), 0)-1
     Ymax <- round(max(evD_vert$VAR), 0)+1
     Ymin_zoom <- min(evD_vert$VAR)
@@ -791,15 +812,15 @@ run_isobxr <- function(workdir,
       ggplot2::scale_y_continuous(limits=c(Ymin, Ymax), breaks=seq(Ymin, Ymax, by = Ybin), labels = dec_2)+
       ggplot2::coord_cartesian(ylim = c(Ymin_zoom, Ymax_zoom), xlim = c(Xmin, Xmax))+
       ggplot2::labs(y = paste("d", CONSTANTS$NUMERATOR, "/", CONSTANTS$DENOMINATOR, CONSTANTS$ELEMENT, sep = ""),
-           x = paste("Time in", display_time_unit, sep = " "),
-           title = paste(SERIES_ID, "-", LOG_loc$RUN_ID, ": ", LOG_loc$COEFF_FLUX, ", ", LOG_loc$NUM_ANA, sep = ""),
-           subtitle = NET_COEFFS_title)+
+                    x = paste("Time in", display_time_unit, sep = " "),
+                    title = paste(SERIES_ID, "-", LOG_loc$RUN_ID, ": ", LOG_loc$COEFF_FLUX, ", ", LOG_loc$NUM_ANA, sep = ""),
+                    subtitle = NET_COEFFS_title)+
       ggplot2::theme(plot.subtitle = ggplot2::element_text(size=7))+
       ggrepel::geom_text_repel(data = evD_final, ggplot2::aes(label = paste(VAR_TYPE, " (", dec_2(VAR), ")", sep = ""), color = VAR_TYPE), nudge_x = 0.05*max(evD_vert$Time),  hjust = 0)+
       ggplot2::scale_x_log10()
 
     #### EXPORT PLOT
-    pdf_path <- paste(folder_outdir, "OUT/", SERIES_ID, "_", as.character(LOG_loc$RUN_ID), "_plot_evD.pdf", sep = "")
+    pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
     dev.new()
     pdf(pdf_path, width = 10, height = 7, pointsize = 1, useDingbats=FALSE)
     suppressWarnings(print(evD_plot))

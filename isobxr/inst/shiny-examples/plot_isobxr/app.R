@@ -276,7 +276,6 @@ server <- function(input, output) {
                  }
                })
 
-
   #************************************** LOAD and PREPARE DATA
   SERIES_RUN_ID <- reactive({
     if (is.null(SERIES_TYPE())){
@@ -300,14 +299,14 @@ server <- function(input, output) {
       return(NULL)
     }
     if (SERIES_TYPE()[1] == "CPS"){
-      dir_LOG_SERIES <- paste(SERIES_RUN_dir(), "/", "0_CPS_", SERIES_RUN_ID(), "_LOG.csv", sep = "")
+      dir_LOG_SERIES <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_LOG.csv", sep = "")
       data.table::fread(dir_LOG_SERIES, data.table = F, stringsAsFactors = T)
     } else if (SERIES_TYPE()[1] == "SWEEP"){
       if (SERIES_TYPE()[2] == "STD"){
-        dir_LOG_SERIES <- paste(SERIES_RUN_dir(), "/", "0_STD_", SERIES_RUN_ID(), "_LOG.csv", sep = "")
+        dir_LOG_SERIES <- paste(SERIES_RUN_dir(), "/0_STD_DIGEST/", "STD_", SERIES_RUN_ID(), "_LOG.csv", sep = "")
         data.table::fread(dir_LOG_SERIES, data.table = F, stringsAsFactors = T)
       } else if (SERIES_TYPE()[2] == "DYN"){
-        dir_LOG_SERIES <- paste(SERIES_RUN_dir(), "/", "0_DYN_", SERIES_RUN_ID(), "_LOG.csv", sep = "")
+        dir_LOG_SERIES <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "DYN_", SERIES_RUN_ID(), "_LOG.csv", sep = "")
         data.table::fread(dir_LOG_SERIES, data.table = F, stringsAsFactors = T)
       }
     } else {
@@ -321,16 +320,18 @@ server <- function(input, output) {
       return(NULL)
     }
     if (SERIES_TYPE()[1] == "CPS"){
-      dir_evD_loc <- paste(SERIES_RUN_dir(), "/", "0_CPS_", SERIES_RUN_ID(), "_evD.csv", sep = "")
-      data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
+      dir_evD_loc <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_evD.RDS", sep = "")
+      # data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
+      readRDS(dir_evD_loc)
     } else if (SERIES_TYPE()[1] == "SWEEP"){
       if (SERIES_TYPE()[2] == "STD"){
         return(NULL)
         # dir_evD_loc <- paste(SERIES_RUN_dir(), "/", "0_STD_", SERIES_RUN_ID(), "_evD.csv", sep = "")
         # data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
       } else if (SERIES_TYPE()[2] == "DYN"){
-        dir_evD_loc <- paste(SERIES_RUN_dir(), "/", "0_DYN_", SERIES_RUN_ID(), "_evD.csv", sep = "")
-        data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
+        dir_evD_loc <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "DYN_", SERIES_RUN_ID(), "_evD.RDS", sep = "")
+        # data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
+        readRDS(dir_evD_loc)
       }
     } else {
       return(NULL)
@@ -341,13 +342,15 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD"){
-      dir_evD_final_loc <- paste(SERIES_RUN_dir(), "/", "0_STD_", SERIES_RUN_ID(), "_evD_final.csv", sep = "")
-      data.table::fread(dir_evD_final_loc, data.table = F, stringsAsFactors = T)
+      dir_evD_final_loc <- paste(SERIES_RUN_dir(), "/0_STD_DIGEST/", "STD_", SERIES_RUN_ID(), "_evD_final.RDS", sep = "")
+      # data.table::fread(dir_evD_final_loc, data.table = F, stringsAsFactors = T)
+      readRDS(dir_evD_final_loc)
       # print("evD_final loaded")
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN"){
       # return(NULL)
-      dir_evD_final_loc <- paste(SERIES_RUN_dir(), "/", "0_DYN_", SERIES_RUN_ID(), "_evD_final.csv", sep = "")
-      data.table::fread(dir_evD_final_loc, data.table = F, stringsAsFactors = T)
+      dir_evD_final_loc <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "DYN_", SERIES_RUN_ID(), "_evD_final.RDS", sep = "")
+      # data.table::fread(dir_evD_final_loc, data.table = F, stringsAsFactors = T)
+      readRDS(dir_evD_final_loc)
     } else {
       return(NULL)
     }
@@ -357,8 +360,9 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "CPS"){
-      dir_evS_loc <- paste(SERIES_RUN_dir(), "/", "0_CPS_", SERIES_RUN_ID(), "_evS.csv", sep = "")
-      data.table::fread(dir_evS_loc, data.table = F, stringsAsFactors = T)
+      dir_evS_loc <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_evS.RDS", sep = "")
+      # data.table::fread(dir_evS_loc, data.table = F, stringsAsFactors = T)
+      readRDS(dir_evS_loc)
     } else {
       return(NULL)
     }
@@ -690,8 +694,10 @@ server <- function(input, output) {
   })
 
   CONSTANTS <- reactive({
-    dir_INPUT_init <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[1,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
-    as.data.frame(readxl::read_excel(dir_INPUT_init, "CONSTS"))
+    dir_INPUT_init <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[1,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
+    # as.data.frame(readxl::read_excel(dir_INPUT_init, "CONSTS"))
+    load(dir_INPUT_init)
+    CONSTS_IN
   })
 
   ELEMENT <- reactive({
@@ -1135,8 +1141,6 @@ server <- function(input, output) {
       # CROP TIME
       DF_map <- evD
 
-
-
       if (is.null(HIDE_VALUES_VAR_EXPLO_1) == F){
         evD <- clear_subset(evD[-which(as.character(evD$VAR_EXPLO_1) %in% as.character(HIDE_VALUES_VAR_EXPLO_1)),])
       }
@@ -1146,10 +1150,7 @@ server <- function(input, output) {
       }
       DF <- clear_subset(evD[evD$Time >= min_time & evD$Time <= max_time,])
 
-
-
       #### DEFINE TITLES
-
       EXPLO_subtitle_0 = paste(SERIES_RUN_ID(),
                                " (", min(LOG_SERIES()$RUN_n),
                                "-", max(LOG_SERIES()$RUN_n),
@@ -1169,8 +1170,6 @@ server <- function(input, output) {
         EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
       }
 
-
-
       EXPLO_subtitle <- paste(EXPLO_subtitle_0, "\n",
                               EXPLO_subtitle_1, "\n",
                               EXPLO_subtitle_2, sep = "")
@@ -1185,8 +1184,6 @@ server <- function(input, output) {
       if (DISPLAY_DRIFT == T){
         EXPLO_title <- paste(EXPLO_title, " DRIFT from t0", sep = "")
       }
-
-
 
       DF <- DF[, c("Time", "X_ID", "X", "Y_ID", "Y", "Z_ID", "Z")]
 
@@ -1247,8 +1244,6 @@ server <- function(input, output) {
                                former_unit <- initial_time_unit, # "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
                                new_unit <- display_time_unit)
 
-
-
       EXPLO_title <- paste(EXPLO_title, " at time = ", dec_2(DF_map[1, "Time_plot"]), " ", display_time_unit, sep = "")
 
       map_2 <- ggplot2::ggplot(data = DF_map,  ggplot2::aes(x = as.numeric(X), y = as.numeric(Y), z = Z))+
@@ -1272,10 +1267,7 @@ server <- function(input, output) {
           metR::geom_label_contour(ggplot2::aes(z = Z), breaks = breaks_loc)
       }
 
-
       multiplot(evD_plot, map_2, layout = matrix(c(1,1,1,1,1,2,2,2), nrow=1, byrow=TRUE))
-
-
 
     } else {
       return()
@@ -1301,7 +1293,7 @@ server <- function(input, output) {
     } else {
 
       if (SERIES_TYPE()[1] == "CPS"){
-        dir_PLOT <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
+        dir_PLOT <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "00_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
         pdf(dir_PLOT, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(PLOT_CPS())
         dev.off()
@@ -1463,8 +1455,8 @@ server <- function(input, output) {
 
         # map_2
 
-        dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
-        dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
+        dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/0_STD_DIGEST/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
+        dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/0_STD_DIGEST/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
 
         pdf(dir_PLOT_1, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
         print(map_1)
@@ -1591,8 +1583,6 @@ server <- function(input, output) {
         # CROP TIME
         DF_map <- evD
 
-
-
         if (is.null(HIDE_VALUES_VAR_EXPLO_1) == F){
           evD <- clear_subset(evD[-which(as.character(evD$VAR_EXPLO_1) %in% as.character(HIDE_VALUES_VAR_EXPLO_1)),])
         }
@@ -1691,8 +1681,6 @@ server <- function(input, output) {
                                  former_unit <- initial_time_unit, # "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
                                  new_unit <- display_time_unit)
 
-
-
         EXPLO_title <- paste(EXPLO_title, " at time = ", dec_2(DF_map[1, "Time_plot"]), " ", display_time_unit, sep = "")
 
         map_2 <- ggplot2::ggplot(data = DF_map, ggplot2::aes(x = as.numeric(X), y = as.numeric(Y), z = Z))+
@@ -1716,8 +1704,8 @@ server <- function(input, output) {
             metR::geom_label_contour(ggplot2::aes(z = Z), breaks = breaks_loc)
         }
 
-        dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
-        dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
+        dir_PLOT_1 <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "00_PLOT_", SERIES_RUN_ID(), "_1.pdf", sep = "")
+        dir_PLOT_2 <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "00_PLOT_", SERIES_RUN_ID(), "_2.pdf", sep = "")
 
         pdf(dir_PLOT_1, width = 20, height = 10, pointsize = 1, useDingbats = FALSE)
         print(evD_plot)
@@ -1736,14 +1724,20 @@ server <- function(input, output) {
     } else {
       RUN_n_loc <- input$DIAG_RUN_loc
 
-      dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
-      BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
+      # dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
+      # BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
+
+      dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
+      load(dir_INPUT_loc)
+      BOX_META <- BOX_META_IN
+
       BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
       LAYOUT <- as.matrix(BOX_META[,c("LAYOUT_X", "LAYOUT_Y")])
       DIAG_GROUPS <- as.factor(BOX_META[,c("INFINITE")])
 
       NET_FLUXES_title <-  paste("RUN # :", as.character(RUN_n_loc) , " - Flux config: " , as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc, "FLUX_MASTER"]), sep = "")
-      FLUXES_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "FLUXES"))
+      # FLUXES_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "FLUXES"))
+      FLUXES_adj <- FLUXES_IN
 
       if (is.null(DISCONNECTED_BOXES()) == FALSE){
         FLUXES_adj <- FLUXES_adj[,-which(names(FLUXES_adj) %in% DISCONNECTED_BOXES())]
@@ -1785,14 +1779,20 @@ server <- function(input, output) {
     } else {
       RUN_n_loc <- input$DIAG_RUN_loc
 
-      dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
-      BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
+      # dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
+      # BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
+
+      dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
+      load(dir_INPUT_loc)
+      BOX_META <- BOX_META_IN
+
       BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
       LAYOUT <- as.matrix(BOX_META[,c("LAYOUT_X", "LAYOUT_Y")])
       DIAG_GROUPS <- as.factor(BOX_META[,c("INFINITE")])
 
       NET_COEFFS_title <-  paste("RUN # :", as.character(RUN_n_loc) , " - Coeff config: " , as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc, "COEFF_RUN"]), sep = "")
-      COEFFS_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "COEFFS"))
+      # COEFFS_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "COEFFS"))
+      COEFFS_adj <- COEFFS_IN
 
 
 
@@ -1866,7 +1866,7 @@ server <- function(input, output) {
       T_lim_list <- as.vector(LOG$T_LIM)
 
 
-      dir_COMPO_MASTER <- paste(SERIES_RUN_dir(), "/", "0_CPS_", SERIES_RUN_ID(), "_COMPO_MASTER.xlsx", sep = "")
+      dir_COMPO_MASTER <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_COMPO_MASTER.xlsx", sep = "")
       COMPO_MASTER_RUN_LIST <- as.data.frame(readxl::read_excel(dir_COMPO_MASTER, "RUN_LIST"))
       COMPO_MASTER_FORCING_RAYLEIGH <- as.data.frame(readxl::read_excel(dir_COMPO_MASTER, "FORCING_RAYLEIGH"))
       COMPO_MASTER_FORCING_SIZE <- as.data.frame(readxl::read_excel(dir_COMPO_MASTER, "FORCING_SIZE"))
@@ -1912,12 +1912,16 @@ server <- function(input, output) {
 
         DF_REPORT_empty <- DF_REPORT_loc
 
-        dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
+        # dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
+        dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
+        load(dir_INPUT_loc)
         # dir_INPUT_loc <- paste("/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ISOPY_PROJECT/DEMOS/DEMO_HUMAN_CBM/3_CPS_DIET_BL50100150_003", "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
         # BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
         # BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
-        FLUXES_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "FLUXES"))
-        COEFFS_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "COEFFS"))
+        # FLUXES_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "FLUXES"))
+        # COEFFS_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "COEFFS"))
+        FLUXES_adj <- FLUXES_IN
+        COEFFS_adj <- COEFFS_IN
         # if (is.null(DISCONNECTED_BOXES()) == FALSE){
         #   FLUXES_adj <- FLUXES_adj[,-which(names(FLUXES_adj) %in% DISCONNECTED_BOXES())]
         #   FLUXES_adj <- FLUXES_adj[-which(FLUXES_adj$BOXES_ID %in% DISCONNECTED_BOXES()),]
@@ -2003,8 +2007,6 @@ server <- function(input, output) {
 
       DF_REPORT_empty <- DF_REPORT_loc
 
-
-
       if (nrow(COMPO_MASTER_FORCING_RAYLEIGH) != 0){
         DF_REPORT_RAYLEIGH <- clear_subset(DF_REPORT_empty[rep(seq_len(nrow(DF_REPORT_empty)), each = nrow(COMPO_MASTER_FORCING_RAYLEIGH)), ])
         DF_REPORT_RAYLEIGH$RUN_n <- COMPO_MASTER_FORCING_RAYLEIGH$COMPO_RUN_n
@@ -2076,8 +2078,6 @@ server <- function(input, output) {
       DF_REPORT$TYPE <- as.factor(DF_REPORT$TYPE)
       DF_REPORT$GROUP <- as.factor(DF_REPORT$GROUP)
 
-
-
       DF_plot <- DF_REPORT
       TYPE_list <- levels(DF_plot$TYPE)[!levels(DF_plot$TYPE) %in% c("SIZE", "DELTA_FORCING")]
       i <- 1
@@ -2125,7 +2125,6 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())){
       return()
     } else if (SERIES_TYPE()[1] == "CPS"){
-
 
       DF_REPORT <- CPS_REPORT()[[1]]
       COMPO_MASTER_RUN_LIST <- CPS_REPORT()[[2]]
@@ -2187,7 +2186,7 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())){
       return(NULL)
     } else {
-      dir_PLOT <- paste(SERIES_RUN_dir(), "/", "00_CPS_REPORT_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
+      dir_PLOT <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "00_CPS_REPORT_PLOT_", SERIES_RUN_ID(), ".pdf", sep = "")
       pdf(dir_PLOT, width = 15, height = 20, pointsize = 1, useDingbats = FALSE)
       show(CPS_PLOT_REPORT())
       dev.off()

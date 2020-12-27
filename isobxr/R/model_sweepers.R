@@ -26,6 +26,7 @@ usethis::use_package("rlang", min_version = TRUE)
 #' \cr (string of characters)
 #' @param EXPLO_AXIS_1 Set of values of sweeping parameter 1
 #' @param EXPLO_AXIS_2 Set of values of sweeping parameter 2
+#' @param to_STD_DIGEST_CSVs Export all global csv outputs (full evD and full evS).
 #' @return If non existing, the fonction creates and stores all outputs
 #' in a SERIES directory located in working directory, automatically numbered.
 #' \cr Directory name structure: 4_STD + SERIES_ID + YYY, YYY being an automically set steady sweep run number between 001 and 999.
@@ -54,14 +55,17 @@ sweep_steady <- function(workdir,
                          time_units,
                          EXPLO_MASTER,
                          EXPLO_AXIS_1,
-                         EXPLO_AXIS_2){
+                         EXPLO_AXIS_2,
+                         to_STD_DIGEST_CSVs = FALSE){
+
+
 
   # Clear plots
   if(!is.null(dev.list())) dev.off()
   # Clear console
   # cat("\014")
   # Clean workspace
-  rm(list=ls())
+  # rm(list=ls())
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE #----
   #************************************** SET WORKING DIRECTORY #----
@@ -156,7 +160,7 @@ sweep_steady <- function(workdir,
 
   COMPOSITE <- TRUE
 
-  cat("\n *** COMPUTE RUN #1 (Initial relaxation) *** \n ")
+  rlang::inform("* COMPUTING RUN #1 (Initial relaxation) *")
   run_isobxr(workdir = LOC_workdir,
              SERIES_ID = SERIES_ID,
              flux_list_name = fx,
@@ -175,8 +179,8 @@ sweep_steady <- function(workdir,
              EXPLO_SERIES_n = EXPLO_SERIES_n,
              EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
              HIDE_PRINTS = FALSE,
-             PLOT_DIAGRAMS = TRUE,
-             PLOT_evD = TRUE)
+             to_DIGEST_DIAGRAMS = TRUE,
+             to_DIGEST_evD_PLOT = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE SWEEP OF RUN 2/2 #----
   #************************************** PREPARE INPUTS for ISOPY_RUN with EXPLO_MASTER as default #----
@@ -198,16 +202,14 @@ sweep_steady <- function(workdir,
   remove(LOG)
 
   if (LOG_last$NUM_ANA == "ANA"){
-    path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_A_1_OUT.csv", sep = "")
-    OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
-
+    load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+    OUT_last_final <- A_OUT
     OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
     OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
     names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
   } else {
-    path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_N_1_OUT.csv", sep = "")
-        OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
-
+    load(paste(LOG_last$path_outdir, "OUT.Rda"))
+    OUT_last_final <- N_OUT
     OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
     names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
     OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
@@ -370,17 +372,16 @@ sweep_steady <- function(workdir,
   STOP_GO <- FALSE
 
   if (.Platform$OS.type == "windows"){
-    STOP_GO <- utils::askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ?"), default = TRUE)
+    STOP_GO <- utils::askYesNo(paste("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ?"), default = TRUE)
   } else {
-    STOP_GO <- utils::askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+    STOP_GO <- utils::askYesNo(cat("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ? \n"), default = TRUE)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (STOP_GO == FALSE){
-    cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
+    rlang::warn("You probably want to reduce the number of iterations in each EXPLO axis.")
   } else {
-    cat("\n *** COMPUTE SWEEP OF RUN #2 *** \n ")
-    # calculation_gauge(0, tot_run)
+    rlang::inform("* COMPUTING SWEEP OF RUN #2 *")
     pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 50)
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP RUN 2/2 in [1:n] #----
     clock <- 1
@@ -467,8 +468,8 @@ sweep_steady <- function(workdir,
                          EXPLO_SERIES_n = EXPLO_SERIES_n,
                          EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
                          HIDE_PRINTS = TRUE,
-                         PLOT_DIAGRAMS = FALSE,
-                         PLOT_evD = FALSE))
+                         to_DIGEST_DIAGRAMS = FALSE,
+                         to_DIGEST_evD_PLOT = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         # calculation_gauge(clock, tot_run)
         utils::setTxtProgressBar(pb_cpt, clock)
@@ -565,11 +566,12 @@ sweep_steady <- function(workdir,
     LOG_SERIES <- dplyr::full_join(LOG_SERIES, EXPLOG, by = "RUN_n")
     LOG_SERIES <- clear_subset(LOG_SERIES)
     SERIES_RUN_ID_1 <- LOG_SERIES[1, "SERIES_RUN_ID"]
-    path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "INPUT.xlsx", sep = "")
-    BOXES_IDs <- as.data.frame(readxl::read_excel(path_to_input_1, "INITIAL"))[,c("BOXES_ID")]
+    path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "IN.Rda", sep = "")
+    load(path_to_input_1)
+    BOXES_IDs <- as.character(INITIAL_IN$BOXES_ID)
 
     #************************************** READ/BUILD/MERGE evS/evD for ANA/NUM WHOLE COMPOSITE RUN #----
-    cat("\n *** PREPARE RESULTS *** \n ")
+    rlang::inform("* PREPARING RESULTS *")
     pb_prep <- utils::txtProgressBar(min = 1, max = tot_run+1, style = 3, width = 50)
 
     i <- 1
@@ -577,21 +579,20 @@ sweep_steady <- function(workdir,
       SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
       RUN_n_i <- LOG_SERIES[i, "RUN_n"]
       path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
-      path_to_INPUT_i <- paste(path_outdir_i, "INPUT.xlsx", sep = "")
-      INIT_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "INITIAL"))
+      path_to_INPUT_i <- paste(path_outdir_i, "IN.Rda", sep = "")
+      load(path_to_INPUT_i)
+      INIT_i <- INITIAL_IN
       SIZE_INIT_i <- INIT_i[,c("BOXES_ID", "SIZE_INIT")]
       DELTA_INIT_i <- INIT_i[,c("BOXES_ID", "DELTA_INIT")]
-      FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES"))
-      COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS"))
+      FLUXES_i <- FLUXES_IN
+      COEFFS_i <- COEFFS_IN
       if (i > 1){
         unlink(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
       }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
-        OUT_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_1_OUT.csv" , sep = "")
-        ODE_SOLNs_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_2_ODE_SOLNs.csv" , sep = "")
-        evD_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_3_evD.csv" , sep = "")
-        evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T)
+        load(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = ""))
+        evD_i <- A_evD
         SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
         names(SIZE_INIT_i_hor) <- SIZE_INIT_i$BOXES_ID
         SIZE_INIT_i_hor$Time = NaN
@@ -602,17 +603,15 @@ sweep_steady <- function(workdir,
           j <- j + 1
         }
         if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-          unlink(c(evD_address, OUT_address, ODE_SOLNs_address, paste(path_outdir_i, "OUT", sep = "")), recursive = T)
+          unlink(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = ""), recursive = T)
         }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
-          OUT_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_1_OUT.csv" , sep = "")
-          evD_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_3_evD.csv" , sep = "")
-          evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T, sep = ",")
-          evS_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_2_evS.csv" , sep = "")
-          evS_i <- data.table::fread(evS_address, data.table = F, stringsAsFactors = T, sep = ",")
+          load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+          evD_i <- N_evD
+          evS_i <- N_evS
           if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-            unlink(c(evD_address, evS_address, OUT_address, paste(path_outdir_i, "OUT", sep = "")), recursive = T)
+            unlink(paste(path_outdir_i, "OUT.Rda", sep = ""), recursive = T)
           }
         }
       }
@@ -723,16 +722,26 @@ sweep_steady <- function(workdir,
     evS_final <- evS[evS$Time == t_lim_list[2],]
 
     #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-    cat("\n *** WRITE OUTPUTS *** \n ")
+    rlang::inform("* WRITING DIGEST *")
 
-    path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_", SERIES_ID, sep = "")
+    path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_STD_DIGEST/", sep = "")
+    if (!dir.exists(path_out_EXPLO)){dir.create(path_out_EXPLO)}
+    path_out_EXPLO <- paste(path_out_EXPLO, SERIES_ID, sep = "")
+
     data.table::fwrite(LOG_SERIES, file = paste(path_out_EXPLO, "_LOG.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
-    explo_master_excel_path <-  paste(path_out_EXPLO, EXPLO_MASTER, sep = "")
+    saveRDS(object = evD, file = paste(path_out_EXPLO, "_evD.RDS", sep = ""))
+    saveRDS(object = evS, file = paste(path_out_EXPLO, "_evS.RDS", sep = ""))
+    saveRDS(object = evD_final, file = paste(path_out_EXPLO, "_evD_final.RDS", sep = ""))
+    saveRDS(object = evS_final, file = paste(path_out_EXPLO, "_evS_final.RDS", sep = ""))
 
+    if (isTRUE(to_STD_DIGEST_CSVs)){
+      data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
+    }
+
+    explo_master_excel_path <-  paste(path_out_EXPLO, EXPLO_MASTER, sep = "")
     writexl::write_xlsx(list(RUN_LIST = RUN_LIST,
                              FORCING_RAYLEIGH = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_RAYLEIGH")),
                              FORCING_SIZE = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_SIZE")),
@@ -767,6 +776,7 @@ sweep_steady <- function(workdir,
 #' \cr (string of characters)
 #' @param EXPLO_AXIS_1 Set of values of sweeping parameter 1
 #' @param EXPLO_AXIS_2 Set of values of sweeping parameter 2
+#' @param to_DYN_DIGEST_CSVs Export all global csv outputs (full evD and full evS).
 #' @return If non existing, the fonction creates and stores all outputs
 #' in a SERIES directory located in working directory, automatically numbered.
 #' \cr Directory name structure: 4_DYN + SERIES_ID + YYY, YYY being an automically set dynamic sweep run number between 001 and 999.
@@ -797,14 +807,15 @@ sweep_dyn <- function(workdir,
                       time_units,
                       EXPLO_MASTER,
                       EXPLO_AXIS_1,
-                      EXPLO_AXIS_2){
+                      EXPLO_AXIS_2,
+                      to_DYN_DIGEST_CSVs = FALSE){
 
   # Clear plots
   if(!is.null(dev.list())) dev.off()
   # Clear console
   # cat("\014")
   # Clean workspace
-  rm(list=ls())
+  # rm(list=ls())
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY  #----
@@ -813,7 +824,7 @@ sweep_dyn <- function(workdir,
   on.exit(setwd(old), add = TRUE)
   setwd(LOC_workdir)
 
-  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE ISOPYBOX ARGUMENTS FROM EXPLO_MASTER  #----
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARING ISOPYBOX ARGUMENTS FROM EXPLO_MASTER  #----
   #************************************** DEFINE LOCAL FORCINGS AND CONSTANTS #----
   RUN_LIST <- as.data.frame(readxl::read_excel(EXPLO_MASTER, "RUN_LIST"))
   RAYLEIGH_LIST <- as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_RAYLEIGH"))
@@ -979,19 +990,17 @@ sweep_dyn <- function(workdir,
   STOP_GO <- FALSE
 
   if (.Platform$OS.type == "windows"){
-    STOP_GO <- utils::askYesNo(paste("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+    STOP_GO <- utils::askYesNo(paste("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ? \n"), default = TRUE)
   } else {
-    STOP_GO <- utils::askYesNo(cat("\n This sweep requires ***", as.character(tot_run), "*** independent runs. \n Do you wish to carry on ? \n"), default = TRUE)
+    STOP_GO <- utils::askYesNo(cat("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ? \n"), default = TRUE)
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (!isTRUE(STOP_GO)){
-    cat("\n *** You probably want to reduce the number of iterations in each EXPLO axis. *** \n")
+    rlang::inform("* You probably want to reduce the number of iterations in each EXPLO axis. *")
   } else {
-    cat("\n *** COMPUTING SWEEPING of RUN #1 & #2 *** \n ")
+    rlang::inform("* COMPUTING SWEEPING of RUN #1 & #2 *")
     pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
-
-    # calculation_gauge(0, tot_run)
     clock <- 1
     k <- 1
     for (k in 1:EXPLO_AXIS_1_leng){
@@ -1129,13 +1138,12 @@ sweep_dyn <- function(workdir,
                          EXPLO_SERIES_n = EXPLO_SERIES_n,
                          EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
                          HIDE_PRINTS = TRUE,
-                         PLOT_DIAGRAMS = FALSE,
-                         PLOT_evD = FALSE
-        ))
+                         to_DIGEST_DIAGRAMS = FALSE,
+                         to_DIGEST_evD_PLOT = FALSE))
 
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN 2/2, i in [1:n] #----
         i <- 2
-        #************************************** PREPARE INPUTS for ISOPY_RUN with EXPLO_MASTER as default and Taking final state of run 2/2 as initial #----
+        #************************************** PREPARING INPUTS for ISOPY_RUN with EXPLO_MASTER as default and Taking final state of run 2/2 as initial #----
         fx <- flux_list[i]
         a <- coeff_list[i]
         LOC_t_lim <- t_lim_list[i]
@@ -1152,15 +1160,15 @@ sweep_dyn <- function(workdir,
         remove(LOG)
 
         if (LOG_last$NUM_ANA == "ANA"){
-          path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_A_1_OUT.csv", sep = "")
-          OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
+          load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+          OUT_last_final <- A_OUT
 
           OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
           OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
           names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
         } else {
-          path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_N_1_OUT.csv", sep = "")
-          OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
+          load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+          OUT_last_final <- N_OUT
 
           OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
           names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
@@ -1278,10 +1286,10 @@ sweep_dyn <- function(workdir,
                          EXPLO_SERIES_n = EXPLO_SERIES_n,
                          EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
                          HIDE_PRINTS = TRUE,
-                         PLOT_DIAGRAMS = FALSE,
-                         PLOT_evD = FALSE))
+                         to_DIGEST_DIAGRAMS = FALSE,
+                         to_DIGEST_evD_PLOT = FALSE))
+
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
-        # calculation_gauge(clock, tot_run)
         utils::setTxtProgressBar(pb_cpt, clock)
 
         clock <- clock + 1
@@ -1377,11 +1385,12 @@ sweep_dyn <- function(workdir,
     remove(LOG)
     LOG_SERIES <- dplyr::full_join(LOG_SERIES, EXPLOG, by = "RUN_n")
     LOG_SERIES <- clear_subset(LOG_SERIES)
-    path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "INPUT.xlsx", sep = "")
-    BOXES_IDs <- as.data.frame(readxl::read_excel(path_to_input_1, "INITIAL"))[,c("BOXES_ID")]
+    path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "IN.Rda", sep = "")
+    load(path_to_input_1)
+    BOXES_IDs <- as.character(INITIAL_IN$BOXES_ID)
 
     #************************************** READ/BUILD/MERGE evS/D and evS/D final for ANA/NUM WHOLE COMPOSITE RUN #----
-    cat("\n *** PREPARE RESULTS *** \n ")
+    rlang::inform("* PREPARING RESULTS *")
     pb_prep <- utils::txtProgressBar(min = 1, max = 2*tot_run, style = 3, width = 60)
 
     # calculation_gauge(0, (tot_run))
@@ -1391,21 +1400,20 @@ sweep_dyn <- function(workdir,
       SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
       RUN_n_i <- LOG_SERIES[i, "RUN_n"]
       path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
-      path_to_INPUT_i <- paste(path_outdir_i, "INPUT.xlsx", sep = "")
-      INIT_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "INITIAL"))
+      path_to_INPUT_i <- paste(path_outdir_i, "IN.Rda", sep = "")
+      load(path_to_INPUT_i)
+      INIT_i <- INITIAL_IN
       SIZE_INIT_i <- INIT_i[,c("BOXES_ID", "SIZE_INIT")]
       DELTA_INIT_i <- INIT_i[,c("BOXES_ID", "DELTA_INIT")]
-      FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES"))
-      COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS"))
+      FLUXES_i <- FLUXES_IN
+      COEFFS_i <- COEFFS_IN
       # if (i > 1){
       #   unlink(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
       # }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
-        OUT_address <- paste(path_outdir_i, "OUT/", as.character(SERIES_RUN_ID_i), "_A_1_OUT.csv" , sep = "")
-        ODE_SOLNs_address <- paste(path_outdir_i, "OUT/", as.character(SERIES_RUN_ID_i), "_A_2_ODE_SOLNs.csv" , sep = "")
-        evD_address <- paste(path_outdir_i, "OUT/", as.character(SERIES_RUN_ID_i), "_A_3_evD.csv" , sep = "")
-        evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T)
+        load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+        evD_i <- A_evD
         SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
         names(SIZE_INIT_i_hor) <- SIZE_INIT_i$BOXES_ID
         SIZE_INIT_i_hor$Time = NaN
@@ -1415,19 +1423,11 @@ sweep_dyn <- function(workdir,
           evS_i[,BOXES_IDs[j]] <- SIZE_INIT_i_hor[1, BOXES_IDs[j]]
           j <- j + 1
         }
-        # if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-        #   unlink(c(evD_address, OUT_address, ODE_SOLNs_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
-        # }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
-          OUT_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_1_OUT.csv" , sep = "")
-          evD_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_3_evD.csv" , sep = "")
-          evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T, sep = ",")
-          evS_address <- paste(path_outdir_i, "OUT/", SERIES_RUN_ID_i, "_N_2_evS.csv" , sep = "")
-          evS_i <- data.table::fread(evS_address, data.table = F, stringsAsFactors = T, sep = ",")
-          # if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-          #   unlink(c(evD_address, evS_address, OUT_address, paste(path_outdir_i, "OUT/", sep = "")), recursive = T)
-          # }
+          load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+          evD_i <- N_evD
+          evS_i <- N_evS
         }
       }
 
@@ -1507,7 +1507,6 @@ sweep_dyn <- function(workdir,
         evD <- rbind(evD, evD_i[1:nrow(evD_i),])
         evS <- rbind(evS, evS_i[1:nrow(evS_i),])
       }
-      # calculation_gauge(i, (2*tot_run))
       utils::setTxtProgressBar(pb_prep, i)
 
       i <- i + 2
@@ -1539,16 +1538,28 @@ sweep_dyn <- function(workdir,
     evS_final <- evS[evS$Time == t_lim_list[2],]
 
     #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-    cat("\n *** WRITE OUTPUTS *** \n \n ")
+    rlang::inform("* WRITING DIGEST *")
 
-    path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_", SERIES_ID, sep = "")
+    path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_DYN_DIGEST/", sep = "")
+    if (!dir.exists(path_out_EXPLO)){dir.create(path_out_EXPLO)}
+    path_out_EXPLO <- paste(path_out_EXPLO, SERIES_ID, sep = "")
+
+
     data.table::fwrite(LOG_SERIES, file = paste(path_out_EXPLO, "_LOG.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
-    explo_master_excel_path <-  paste(path_out_EXPLO, EXPLO_MASTER, sep = "")
 
+    saveRDS(object = evD, file = paste(path_out_EXPLO, "_evD.RDS", sep = ""))
+    saveRDS(object = evS, file = paste(path_out_EXPLO, "_evS.RDS", sep = ""))
+    saveRDS(object = evD_final, file = paste(path_out_EXPLO, "_evD_final.RDS", sep = ""))
+    saveRDS(object = evS_final, file = paste(path_out_EXPLO, "_evS_final.RDS", sep = ""))
+
+    if (isTRUE(to_DYN_DIGEST_CSVs)){
+      data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
+    }
+
+    explo_master_excel_path <-  paste(path_out_EXPLO, EXPLO_MASTER, sep = "")
     writexl::write_xlsx(list(RUN_LIST = RUN_LIST,
                              FORCING_RAYLEIGH = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_RAYLEIGH")),
                              FORCING_SIZE = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_SIZE")),

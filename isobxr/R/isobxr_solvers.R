@@ -9,63 +9,68 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @description  A numerical solver of the system of ordinary differential
 #' equations (ODES) of stable isotope ratios of element X in all boxes of a system.
 #' The numerical solver uses the ode function of the deSolve package
-#' to integrate the stable isotopes ratios in each box. It allows the
+#' to integrate the stable isotopes ratios over time in each box. It allows the
 #' calculation of the evolution of stable isotope ratio even in the case of
 #' unbalanced outward and inward fluxes of element X in a given box
 #' resulting in the accumulation or loss of element X.
 #' @param input_path path to the INPUT file containing all commands for the run.
-#' \cr (file name structure: RUN name + _INPUT.xlsx)
+#' \cr (file name structure: RUN name + _IN.Rda)
+#' @param to_DIGEST_csv edit csv outputs or not (logical) to the RUN DIGEST folder. Default is FALSE.
 #' @return The function returns the numerically determined evolution of stable
 #' isotope compositions and mass of element X in all boxes over the run duration as
-#' specified in INPUT file. The function outputs are as follows:
+#' specified in INPUT file. The outputs of the run are stored in a Rda output file.
+#' \cr (file name structure: RUN name + _OUT.Rda)
+#' @section Optional csv outputs to the DIGEST folder are as follows:
 #' \enumerate{
 #' \item OUT data file storing initial and final size and delta values in all boxes.
-#' \cr (file name structure: RUN name + _N_1_OUT.csv)
+#' \cr (file name structure: out_1_N_OUT + RUN name + .csv)
 #' \item evS data file storing the evolution with time of the sizes (masses of element X) of all boxes.
-#' \cr (file name structure: RUN name + _N_2_evS.csv)
+#' \cr (file name structure: out_2_N_evS + RUN name + .csv)
 #' \item evD data file storing the evolution with time of the delta values in all boxes.
-#' \cr (file name structure: RUN name + _N_3_evD.csv)
+#' \cr (file name structure: out_3_N_evD + RUN name + .csv)
 #' }
 #' @export
-num_slvr <- function(input_path){
+num_slvr <- function(input_path,
+                     to_DIGEST_csv = FALSE){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
-  if (stringr::str_detect(input_path, "INPUT.xlsx")){
+  if (stringr::str_detect(input_path, "IN.Rda")){
     input_path <- normalizePath(input_path, winslash = "/")
     namefile <- input_path
-    prefix <- stringr::str_remove(basename(input_path), pattern = "INPUT.xlsx")
+    prefix <- stringr::str_remove(basename(input_path), pattern = "_IN.Rda")
     cwd <- dirname(input_path)
   } else {
-    rlang::abort('num_slvr \n Wrong file or file name. Path should end with ** INPUT.xlsx **')
-    # stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
+    rlang::abort('num_slvr \n Wrong file or file name. Path should end with ** IN.Rda **')
   }
 
   ############################## DEFINE outdir #####################
-  run_dir <- paste(prefix, "OUT", sep = "")
+  run_dir <- paste(prefix, "_DIGEST", sep = "")
   outdir <- paste(cwd, "/", run_dir, "/", sep = "")
-  if (!dir.exists(outdir)){dir.create(outdir)}
+
+  ############################## LOAD IN.Rda ###################################
+  load(namefile)
 
   ############################## CONSTANTS ###################################
-  consts_f = as.data.frame(readxl::read_excel(namefile, "CONSTS"))
+  consts_f <- CONSTS_IN
   ratio_standard = as.numeric(consts_f[consts_f$CONSTS_ID == "Ratio_Standard", "CONSTS"])
   time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
-  nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"]))
+  nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
   time = seq(0, time_max, length = nb_steps)
 
   ############################## INITIAL ###################################
-  initial_f = as.data.frame(readxl::read_excel(namefile, "INITIAL"))
+  initial_f <- INITIAL_IN
   boxes_id = as.character(initial_f$BOXES_ID)
   boxes_nb = length(boxes_id)
   boxes_size = as.numeric(initial_f$SIZE_INIT)
   delta = as.numeric(initial_f$DELTA_INIT)
 
   ############################## FLUXES ###################################
-  fluxes_f = as.data.frame(readxl::read_excel(namefile, "FLUXES"))
-  fluxes <- as.matrix(fluxes_f[,2:(boxes_nb+1)]) # potentially +1 if .xlsx with mac...
+  fluxes_f <- FLUXES_IN
+  fluxes <- as.matrix(fluxes_f[,2:(boxes_nb+1)])
   colnames(fluxes) <- NULL
 
   ############################## FRACTIONATION COEFFICIENTS ("ALPHAs") ###################################
-  coeffs_f = as.data.frame(readxl::read_excel(namefile, "COEFFS"))
-  coeffs <- as.matrix(coeffs_f[,2:(boxes_nb+1)]) # potentially +1 if .xlsx with mac...
+  coeffs_f <- COEFFS_IN
+  coeffs <- as.matrix(coeffs_f[,2:(boxes_nb+1)])
   colnames(coeffs) <- NULL
 
   ############################## DEFINE EVOL RATIO ##############################
@@ -119,7 +124,6 @@ num_slvr <- function(input_path){
   Delta_as_df <- as.data.frame(Delta)
   Delta_as_df$time <- time
   colnames(Delta_as_df) <- c("Time", boxes_id)
-  data.table::fwrite(Delta_as_df, file = paste(outdir, prefix, "N_3_evD.csv", sep = ""), row.names = F, quote = F, sep = ",")
 
   ############################## WRITING SIZE EVOLUTION #####################
   Boxes_size = matrix(0, nrow = length(time), ncol = length(boxes_size)+1)
@@ -137,7 +141,6 @@ num_slvr <- function(input_path){
   }
   Boxes_size_as_df <- as.data.frame(Boxes_size)
   colnames(Boxes_size_as_df) <- c("Time", boxes_id)
-  data.table::fwrite(Boxes_size_as_df, file = paste(outdir, prefix, "N_2_evS.csv", sep = ""), row.names = F, quote = F, sep = ",")
 
   ############################## WRITING FINAL STATE (IN NUM OUT csv) #####################
   df <- initial_f
@@ -145,13 +148,19 @@ num_slvr <- function(input_path){
   df$SIZE_FINAL <- Boxes_size[length(Boxes_size[,1]),1:length(boxes_id)+1]
   df$DELTA_FINAL <- Delta[length(Delta[,1]),1:length(boxes_id)+1]
   df <- dplyr::full_join(initial_f, df, by = "BOXES_ID")
-  data.table::fwrite(df, file = paste(outdir, prefix, "N_1_OUT.csv", sep = ""), row.names = F, quote = F, sep = ",")
 
-  # # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
-  # N_evD <- Delta_as_df
-  # N_evS <- Boxes_size_as_df
-  # N_OUT <- df
-  # save(N_OUT, N_evD, N_evS, file = paste(cwd, "/", prefix, "OUT_N.Rda", sep = ""))
+  ############################## save outputs ##############################
+  if (isTRUE(to_DIGEST_csv)){
+    if (!dir.exists(outdir)){dir.create(outdir)}
+    data.table::fwrite(Delta_as_df, file = paste(outdir,  "out_3_N_evD_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+    data.table::fwrite(Boxes_size_as_df, file = paste(outdir, "out_2_N_evS_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+    data.table::fwrite(df, file = paste(outdir, "out_1_N_OUT_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+  }
+
+  N_evD <- Delta_as_df
+  N_evS <- Boxes_size_as_df
+  N_OUT <- df
+  save(N_OUT, N_evD, N_evS, file = paste(cwd, "/", prefix, "_OUT.Rda", sep = ""))
 }
 
 #  #_________________________________________________________________________80char
@@ -159,63 +168,68 @@ num_slvr <- function(input_path){
 #' @description  An analytical solver of the system of ordinary differential
 #' equations (ODES) of stable isotope ratios of element X in all boxes.
 #' The analytical solver finds the eigenvalues and eigenvectors of the ODES.
-#' Given the initial conditions as specified in INPUT.xlsx file, it determines the
+#' Given the initial conditions as specified in IN.Rda file, it determines the
 #' set of analytical solutions that describes the evolution of isotope ratios
 #' in each box over time.
 #' @param input_path path to the INPUT file containing all commands for the run.
-#' \cr (file name structure: RUN name + _INPUT.xlsx)
+#' \cr (file name structure: RUN name + _IN.Rda)
+#' @param to_DIGEST_csv edit csv outputs or not (logical) to the RUN DIGEST folder. Default is FALSE.
 #' @return The function returns the analytically determined evolution of stable
 #' isotope compositions in all boxes over the run duration as specified in
-#' INPUT file. The function outputs are as follows:
+#' INPUT file. The outputs of the run are stored in a Rda output file.
+#' \cr (file name structure: RUN name + _OUT.Rda)
+#' @section Optional csv outputs to the DIGEST folder are as follows:
 #' \enumerate{
 #' \item OUT data file with initial and final size and delta values in each boxes.
-#' \cr (file name structure: RUN name + _A_1_OUT.csv)
+#' \cr (file name structure: out_1_A_OUT + RUN name + .csv)
 #' \item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES
 #' (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).
-#' \cr (file name structure: RUN name + _A_2_ODE_SOLNs.csv)
+#' \cr (file name structure: out_2_A_ODE_SOLNs + RUN name + .csv)
 #' \item evD data file of the evolution with time of the delta values in each boxes.
-#' \cr (file name structure: RUN name + _A_3_evD.csv)
+#' \cr (file name structure: out_3_A_evD + RUN name + .csv)
 #' }
 #' @export
-ana_slvr <- function(input_path){
+ana_slvr <- function(input_path,
+                     to_DIGEST_csv = FALSE){
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
-  if (stringr::str_detect(input_path, "INPUT.xlsx")){
+  if (stringr::str_detect(input_path, "IN.Rda")){
     input_path <- normalizePath(input_path, winslash = "/")
     namefile <- input_path
-    prefix <- stringr::str_remove(basename(input_path), pattern = "INPUT.xlsx")
+    prefix <- stringr::str_remove(basename(input_path), pattern = "_IN.Rda")
     cwd <- dirname(input_path)
   } else {
-    rlang::abort('num_slvr \n Wrong file or file name. Path should end with ** INPUT.xlsx **')
-    # stop('num_slvr \n Wrong file or file name \n Path should end with ** INPUT.xlsx **')
+    rlang::abort('ana_slvr \n Wrong file or file name. Path should end with ** IN.Rda **')
   }
 
   ############################## DEFINE outdir #####################
-  run_dir <- paste(prefix, "OUT", sep = "")
+  run_dir <- paste(prefix, "_DIGEST", sep = "")
   outdir <- paste(cwd, "/", run_dir, "/", sep = "")
-  if (!dir.exists(outdir)){dir.create(outdir)}
+
+  ############################## LOAD IN.Rda ###################################
+  load(namefile)
 
   ############################## CONSTANTS ###################################
-  consts_f = as.data.frame(readxl::read_excel(namefile, "CONSTS"))
+  consts_f <- CONSTS_IN
   ratio_standard = as.numeric(consts_f[consts_f$CONSTS_ID == "Ratio_Standard", "CONSTS"])
   time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
-  nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"]))
+  nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
   time = seq(0, time_max, length = nb_steps)
 
   ############################## INITIAL ###################################
-  initial_f = as.data.frame(readxl::read_excel(namefile, "INITIAL"))
+  initial_f <- INITIAL_IN
   boxes_id = as.character(initial_f$BOXES_ID)
   boxes_nb = length(boxes_id)
   boxes_size = as.numeric(initial_f$SIZE_INIT)
   delta = as.numeric(initial_f$DELTA_INIT)
 
   ############################## FLUXES ###################################
-  fluxes_f = as.data.frame(readxl::read_excel(namefile, "FLUXES"))
-  fluxes <- as.matrix(fluxes_f[,2:(boxes_nb+1)]) # maybe +1 if .xlsx with mac...
+  fluxes_f <- FLUXES_IN
+  fluxes <- as.matrix(fluxes_f[,2:(boxes_nb+1)])
   colnames(fluxes) <- NULL
 
   ############################## FRACTIONATION COEFFICIENTS ("ALPHAs") ###################################
-  coeffs_f = as.data.frame(readxl::read_excel(namefile, "COEFFS"))
-  coeffs <- as.matrix(coeffs_f[,2:(boxes_nb+1)]) # maybe +1 if .xlsx with mac...
+  coeffs_f <- COEFFS_IN
+  coeffs <- as.matrix(coeffs_f[,2:(boxes_nb+1)])
   colnames(coeffs) <- NULL
 
   ############################## MATRIX ODE SYSTEM ###################################
@@ -261,7 +275,7 @@ ana_slvr <- function(input_path){
   results <- initial_f
   results$SIZE_FINAL <- results$SIZE_INIT
   results <- cbind(results, d_as_df)
-  data.table::fwrite(results, file = paste(outdir, prefix, "A_1_OUT.csv", sep = ""), row.names = F, quote = F)
+
 
   ############################## EXPORT ODE SOLUTIONS #################################
   eigenval_as_df_inverse <- -1/eigenval_as_df
@@ -271,7 +285,7 @@ ana_slvr <- function(input_path){
   ODE_SOLNs <- cbind(ODE_SOLNs, C_as_df)
   colnames(eigenvec_as_df) <- paste("EigenVec_", rep(1:(length(colnames(eigenvec_as_df))), 1), sep = "")
   ODE_SOLNs <- cbind(ODE_SOLNs, eigenvec_as_df)
-  data.table::fwrite(ODE_SOLNs, file = paste(outdir, prefix, "A_2_ODE_SOLNs.csv", sep = ""), row.names = F, quote = F)
+
 
   ############################## CALCULATE AND WRITE evD with solutions from ODE EigenVec/Vals/Constants#################################
   i <- 1
@@ -288,11 +302,16 @@ ana_slvr <- function(input_path){
     i <- i + 1
   }
 
-  data.table::fwrite(d_t_all, file = paste(outdir, prefix, "A_3_evD.csv", sep = ""), row.names = F, quote = F)
+  ############################## save outputs ##############################
+  if (isTRUE(to_DIGEST_csv)){
+    if (!dir.exists(outdir)){dir.create(outdir)}
+    data.table::fwrite(results, file = paste(outdir, "out_1_A_OUT_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+    data.table::fwrite(ODE_SOLNs, file = paste(outdir, "out_2_A_ODE_SOLNs_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+    data.table::fwrite(d_t_all, file = paste(outdir, "out_3_A_evD_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+  }
 
-  # # ############################## Rdata ############################## FOR FUTURE DEPLOYMENT
-  # A_evD <- d_t_all
-  # A_ODE_SOLNs <- ODE_SOLNs
-  # A_OUT <- results
-  # save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(cwd, "/", prefix, "OUT_A.Rda", sep = ""))
+  A_evD <- d_t_all
+  A_ODE_SOLNs <- ODE_SOLNs
+  A_OUT <- results
+  save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(cwd, "/", prefix, "_OUT.Rda", sep = ""))
 }
