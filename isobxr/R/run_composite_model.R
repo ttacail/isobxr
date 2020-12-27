@@ -74,6 +74,9 @@ compose_isobxr <- function(workdir,
                            EACH_RUN_DIGEST = FALSE,
                            to_CPS_DIGEST_CSVs = FALSE){
 
+  # locally bind variables (fixing binding global variable issue)
+  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
+
   # REMARKS
   # the FORCING_DELTA sheet :  when a delta value is forced at a stage it will be inherited in the next runs
   # FORCING_ALPHA sheet : not inherited from a run to another, back to previous value

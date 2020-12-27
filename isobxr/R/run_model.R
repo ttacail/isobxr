@@ -146,6 +146,11 @@ run_isobxr <- function(workdir,
                        to_DIGEST_DIAGRAMS = TRUE,
                        to_DIGEST_evD_PLOT = TRUE,
                        to_DIGEST_CSV_XLS = FALSE){
+
+  # locally bind variables (fixing binding global variable issue)
+  A_evD <- N_evD <- NULL
+
+
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()

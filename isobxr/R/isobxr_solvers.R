@@ -32,6 +32,9 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @export
 num_slvr <- function(input_path,
                      to_DIGEST_csv = FALSE){
+  # locally bind variables (fixing binding global variable issue)
+  CONSTS_IN <- INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- NULL
+
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
   if (stringr::str_detect(input_path, "IN.Rda")){
     input_path <- normalizePath(input_path, winslash = "/")
@@ -191,6 +194,9 @@ num_slvr <- function(input_path,
 #' @export
 ana_slvr <- function(input_path,
                      to_DIGEST_csv = FALSE){
+  # locally bind variables (fixing binding global variable issue)
+  CONSTS_IN <- INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- NULL
+
   ############################## IDENTIFY PREFIX in INPUT FILENAME #####################
   if (stringr::str_detect(input_path, "IN.Rda")){
     input_path <- normalizePath(input_path, winslash = "/")

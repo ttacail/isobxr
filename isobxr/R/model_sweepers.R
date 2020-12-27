@@ -58,6 +58,8 @@ sweep_steady <- function(workdir,
                          EXPLO_AXIS_2,
                          to_STD_DIGEST_CSVs = FALSE){
 
+  # locally bind variables (fixing binding global variable issue)
+  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
 
 
   # Clear plots
@@ -809,6 +811,9 @@ sweep_dyn <- function(workdir,
                       EXPLO_AXIS_1,
                       EXPLO_AXIS_2,
                       to_DYN_DIGEST_CSVs = FALSE){
+
+  # locally bind variables (fixing binding global variable issue)
+  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
 
   # Clear plots
   if(!is.null(dev.list())) dev.off()
