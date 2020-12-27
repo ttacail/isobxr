@@ -39,7 +39,8 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @param plot_HIDE_BOXES_size Vector of strings of characters defining the names of the
 #' boxes to hide in the plot of the box sizes (masses of X) as a function of time edited
 #' as a pdf.
-#' \cr (e.g., c("BOX_A", "BOX_C"))
+#' @param EACH_RUN_DIGEST Get each full digest for each model run (INPUT xlsx, diagrams, plot and csv outputs). Default is FALSE.
+#' @param to_CPS_DIGEST_CSVs Export all global csv outputs (full evD and full evS). Default is FALSE.
 #' @return If non existing, the fonction creates and stores all outputs
 #' in a dedicated composite SERIES directory located in working directory.
 #' \cr Directory name structure: 3_CPS + SERIES_ID + YYY, where YYY is an automically set composite run number between 001 and 999.
@@ -69,19 +70,24 @@ compose_isobxr <- function(workdir,
                            time_units, # WARNING, so far it only works from "days" (inherited by the units of the fluxes values) to "minutes", "hours", "days", "hours"
                            COMPO_MASTER, # excel file
                            plot_HIDE_BOXES_delta,
-                           plot_HIDE_BOXES_size){
+                           plot_HIDE_BOXES_size,
+                           EACH_RUN_DIGEST = FALSE,
+                           to_CPS_DIGEST_CSVs = FALSE){
+
+  # locally bind variables (fixing binding global variable issue)
+  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
 
   # REMARKS
   # the FORCING_DELTA sheet :  when a delta value is forced at a stage it will be inherited in the next runs
   # FORCING_ALPHA sheet : not inherited from a run to another, back to previous value
 
+  # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLEAR
   # Clear plots
   if(!is.null(dev.list())) dev.off()
   # Clear console
   # cat("\014")
   # Clean workspace
-  rm(list=ls())
-
+  # rm(list=ls())
   Time_plot <- VAR <- VAR_TYPE <- NULL
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
@@ -92,6 +98,16 @@ compose_isobxr <- function(workdir,
   setwd(LOC_workdir)
 
   plot_HIDE_RUNs_n <- c(1)
+
+  if (isFALSE(EACH_RUN_DIGEST)){
+    to_DIGEST_DIAGRAMS = FALSE
+    to_DIGEST_evD_PLOT = FALSE
+    to_DIGEST_CSV_XLS = FALSE
+  } else {
+    to_DIGEST_DIAGRAMS = TRUE
+    to_DIGEST_evD_PLOT = TRUE
+    to_DIGEST_CSV_XLS = TRUE
+  }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE ISOPYBOX ARGUMENTS
   #************************************** DEFINE LOCAL FORCINGs and CONSTANTS from COMPO_MASTER #----
@@ -175,7 +191,7 @@ compose_isobxr <- function(workdir,
   }
 
   COMPOSITE <- TRUE
-  cat("\n *** COMPUTING *** \n ")
+  rlang::inform("* COMPUTING *")
 
   run_isobxr(workdir = LOC_workdir,
              SERIES_ID = SERIES_ID,
@@ -195,9 +211,9 @@ compose_isobxr <- function(workdir,
              EXPLO_SERIES_n = NaN,
              EXPLO_SERIES_FAMILY = NaN,
              HIDE_PRINTS = FALSE,
-             PLOT_DIAGRAMS = TRUE,
-             PLOT_evD = TRUE
-  )
+             to_DIGEST_DIAGRAMS = to_DIGEST_DIAGRAMS,
+             to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
+             to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS)
 
   calculation_gauge(0, length(t_lim_list))
   calculation_gauge(i, length(t_lim_list))
@@ -224,17 +240,15 @@ compose_isobxr <- function(workdir,
     remove(LOG)
 
     if (LOG_last$NUM_ANA == "ANA"){
-      path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_A_1_OUT.csv", sep = "")
-      OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
-
+      load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+      OUT_last_final <- A_OUT
       OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
       OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
       names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
 
     } else {
-      path_to_OUT_last_final <- paste(LOG_last$path_outdir, "OUT/", LOG_last$SERIES_RUN_ID, "_N_1_OUT.csv", sep = "")
-      OUT_last_final <- data.table::fread(path_to_OUT_last_final, data.table = F, stringsAsFactors = F, integer64 = "double")
-
+      load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+      OUT_last_final <- N_OUT
       OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
       names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
       OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
@@ -295,9 +309,9 @@ compose_isobxr <- function(workdir,
                EXPLO_SERIES_n = NaN,
                EXPLO_SERIES_FAMILY = NaN,
                HIDE_PRINTS = TRUE,
-               PLOT_DIAGRAMS = TRUE,
-               PLOT_evD = FALSE
-    )
+               to_DIGEST_DIAGRAMS = to_DIGEST_DIAGRAMS,
+               to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
+               to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS)
     calculation_gauge(i, length(t_lim_list))
     i <- i + 1
   }
@@ -309,28 +323,30 @@ compose_isobxr <- function(workdir,
   remove(LOG)
   LOG_SERIES <- clear_subset(LOG_SERIES)
   SERIES_RUN_ID_1 <- LOG_SERIES[1, "SERIES_RUN_ID"]
-  path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "INPUT.xlsx", sep = "")
-  BOXES_IDs <- as.data.frame(readxl::read_excel(path_to_input_1, "INITIAL"))[,c("BOXES_ID")]
+  path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "IN.Rda", sep = "")
+  load(path_to_input_1)
+  BOXES_IDs <- as.character(INITIAL_IN$BOXES_ID)
 
   #************************************** READ/BUILD/MERGE evS/evD for ANA/NUM WHOLE COMPOSITE RUN #----
   i <- 1
 
-  cat("\n *** PREPARE RESULTS *** \n \n ")
+  rlang::inform("* PREPARE RESULTS *")
   calculation_gauge(0, length(t_lim_list))
 
   for (i in 1:length(t_lim_list)){
     SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
     RUN_n_i <- LOG_SERIES[i, "RUN_n"]
     path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
-    path_to_INPUT_i <- paste(path_outdir_i, "INPUT.xlsx", sep = "")
-    SIZE_INIT_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "INITIAL"))[,c("BOXES_ID", "SIZE_INIT")]
-    DELTA_INIT_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "INITIAL"))[,c("BOXES_ID", "DELTA_INIT")]
-    FLUXES_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "FLUXES"))
-    COEFFS_i <- as.data.frame(readxl::read_excel(path_to_INPUT_i, "COEFFS"))
+    path_to_INPUT_i <- paste(path_outdir_i, "IN.Rda", sep = "")
+    load(path_to_INPUT_i)
+    SIZE_INIT_i <- INITIAL_IN[,c("BOXES_ID", "SIZE_INIT")]
+    DELTA_INIT_i <- INITIAL_IN[,c("BOXES_ID", "DELTA_INIT")]
+    FLUXES_i <- FLUXES_IN
+    COEFFS_i <- COEFFS_IN
 
     if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
-      evD_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_A_3_evD.csv" , sep = "")
-      evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T)
+      load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+      evD_i <- A_evD
       SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
       names(SIZE_INIT_i_hor) <- SIZE_INIT_i$BOXES_ID
       SIZE_INIT_i_hor$Time = NaN
@@ -342,10 +358,9 @@ compose_isobxr <- function(workdir,
       }
     } else {
       if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
-        evD_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_N_3_evD.csv" , sep = "")
-        evD_i <- data.table::fread(evD_address, data.table = F, stringsAsFactors = T, sep = ",")
-        evS_address <- paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT/", as.character(LOG_SERIES[i, "SERIES_RUN_ID"]), "_N_2_evS.csv" , sep = "")
-        evS_i <- data.table::fread(evS_address, data.table = F, stringsAsFactors = T, sep = ",")
+        load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+        evD_i <- N_evD
+        evS_i <- N_evS
       }
     }
 
@@ -371,12 +386,21 @@ compose_isobxr <- function(workdir,
   }
 
   #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-  cat("\n *** WRITE OUTPUTS *** \n \n ")
+  rlang::inform("* WRITE OUTPUTS *")
 
-  path_out_COMPO <- paste("3_", as.character(SERIES_ID), "/", "0_", SERIES_ID, sep = "")
+  path_out_COMPO <- paste("3_", as.character(SERIES_ID), "/", "0_CPS_DIGEST/", sep = "")
+  if (!dir.exists(path_out_COMPO)){dir.create(path_out_COMPO)}
+  path_out_COMPO <- paste(path_out_COMPO, as.character(SERIES_ID), sep = "")
+
   data.table::fwrite(LOG_SERIES, file = paste(path_out_COMPO, "_LOG.csv", sep = ""), row.names = F, quote = F)
-  data.table::fwrite(evD, file = paste(path_out_COMPO, "_evD.csv", sep = ""), row.names = F, quote = F)
-  data.table::fwrite(evS, file = paste(path_out_COMPO, "_evS.csv", sep = ""), row.names = F, quote = F)
+  saveRDS(object = evD, file = paste(path_out_COMPO, "_evD.RDS", sep = ""))
+  saveRDS(object = evS, file = paste(path_out_COMPO, "_evS.RDS", sep = ""))
+
+  if (isTRUE(to_CPS_DIGEST_CSVs)){
+    data.table::fwrite(evD, file = paste(path_out_COMPO, "_evD.csv", sep = ""), row.names = F, quote = F)
+    data.table::fwrite(evS, file = paste(path_out_COMPO, "_evS.csv", sep = ""), row.names = F, quote = F)
+  }
+
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PLOT COMPOSITE RUN
   #************************************** PLOT evD #----
@@ -616,8 +640,7 @@ compose_isobxr <- function(workdir,
                            FORCING_RAYLEIGH = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_RAYLEIGH")),
                            FORCING_SIZE = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_SIZE")),
                            FORCING_DELTA = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_DELTA")),
-                           FORCING_ALPHA =  as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_ALPHA"))
-  ),
-  compo_master_excel_path)
+                           FORCING_ALPHA =  as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_ALPHA"))),
+                      compo_master_excel_path)
   beepr::beep(sound = 10)
 }

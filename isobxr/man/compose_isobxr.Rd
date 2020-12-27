@@ -10,7 +10,9 @@ compose_isobxr(
   time_units,
   COMPO_MASTER,
   plot_HIDE_BOXES_delta,
-  plot_HIDE_BOXES_size
+  plot_HIDE_BOXES_size,
+  EACH_RUN_DIGEST = FALSE,
+  to_CPS_DIGEST_CSVs = FALSE
 )
 }
 \arguments{
@@ -39,8 +41,11 @@ boxes to hide in the plot of the delta values as a function of time edited as a 
 
 \item{plot_HIDE_BOXES_size}{Vector of strings of characters defining the names of the
 boxes to hide in the plot of the box sizes (masses of X) as a function of time edited
-as a pdf.
-\cr (e.g., c("BOX_A", "BOX_C"))}
+as a pdf.}
+
+\item{EACH_RUN_DIGEST}{Get each full digest for each model run (INPUT xlsx, diagrams, plot and csv outputs). Default is FALSE.}
+
+\item{to_CPS_DIGEST_CSVs}{Export all global csv outputs (full evD and full evS). Default is FALSE.}
 }
 \value{
 If non existing, the fonction creates and stores all outputs

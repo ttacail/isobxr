@@ -10,7 +10,8 @@ sweep_dyn(
   time_units,
   EXPLO_MASTER,
   EXPLO_AXIS_1,
-  EXPLO_AXIS_2
+  EXPLO_AXIS_2,
+  to_DYN_DIGEST_CSVs = FALSE
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ defining the dynamic sweep run scenario.
 \item{EXPLO_AXIS_1}{Set of values of sweeping parameter 1}
 
 \item{EXPLO_AXIS_2}{Set of values of sweeping parameter 2}
+
+\item{to_DYN_DIGEST_CSVs}{Export all global csv outputs (full evD and full evS).}
 }
 \value{
 If non existing, the fonction creates and stores all outputs

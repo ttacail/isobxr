@@ -4,31 +4,38 @@
 \alias{ana_slvr}
 \title{Analytically solve stable isotope box models}
 \usage{
-ana_slvr(input_path)
+ana_slvr(input_path, to_DIGEST_csv = FALSE)
 }
 \arguments{
 \item{input_path}{path to the INPUT file containing all commands for the run.
-\cr (file name structure: RUN name + _INPUT.xlsx)}
+\cr (file name structure: RUN name + _IN.Rda)}
+
+\item{to_DIGEST_csv}{edit csv outputs or not (logical) to the RUN DIGEST folder. Default is FALSE.}
 }
 \value{
 The function returns the analytically determined evolution of stable
 isotope compositions in all boxes over the run duration as specified in
-INPUT file. The function outputs are as follows:
-\enumerate{
-\item OUT data file with initial and final size and delta values in each boxes.
-\cr (file name structure: RUN name + _A_1_OUT.csv)
-\item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES
-(eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).
-\cr (file name structure: RUN name + _A_2_ODE_SOLNs.csv)
-\item evD data file of the evolution with time of the delta values in each boxes.
-\cr (file name structure: RUN name + _A_3_evD.csv)
-}
+INPUT file. The outputs of the run are stored in a Rda output file.
+\cr (file name structure: RUN name + _OUT.Rda)
 }
 \description{
 An analytical solver of the system of ordinary differential
 equations (ODES) of stable isotope ratios of element X in all boxes.
 The analytical solver finds the eigenvalues and eigenvectors of the ODES.
-Given the initial conditions as specified in INPUT.xlsx file, it determines the
+Given the initial conditions as specified in IN.Rda file, it determines the
 set of analytical solutions that describes the evolution of isotope ratios
 in each box over time.
 }
+\section{Optional csv outputs to the DIGEST folder are as follows}{
+
+\enumerate{
+\item OUT data file with initial and final size and delta values in each boxes.
+\cr (file name structure: out_1_A_OUT + RUN name + .csv)
+\item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES
+(eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).
+\cr (file name structure: out_2_A_ODE_SOLNs + RUN name + .csv)
+\item evD data file of the evolution with time of the delta values in each boxes.
+\cr (file name structure: out_3_A_evD + RUN name + .csv)
+}
+}
+
