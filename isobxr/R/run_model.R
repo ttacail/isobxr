@@ -337,15 +337,6 @@ run_isobxr <- function(workdir,
   row.names(COEFFS) <- COEFFS$BOXES_ID
 
   #************************************** CHECKING FLUX BALANCE in each FINITE BOX / ROUTE TO NUM vs. ANA #----
-  #### REMIND USER WHAT ARE THE INFINITE BOXES
-
-  if (HIDE_PRINTS == F){
-    if (is.na(INFINITE_BOXES[1]) == F){
-      rlang::inform(message = paste("The INFINITE boxes are: ", paste(INFINITE_BOXES,  collapse = ", "), sep = ""))
-    } else {
-      rlang::inform(message = paste("All boxes are FINITE", sep = ""))
-    }
-  }
 
   #### CACLULATE FLUX BALANCE and RESIDENCE TIME for EACH BOX
   BOXES_ID <- as.character(FLUXES$BOXES_ID)
@@ -364,6 +355,21 @@ run_isobxr <- function(workdir,
 
   INITIAL$FLUX_BALANCE <- INITIAL$FLUX_IN-INITIAL$FLUX_OUT
   INITIAL$RES_TIME <- INITIAL$SIZE_INIT/INITIAL$FLUX_OUT #### !!!! WARNING !!!! DEFINITION FOR A BOX WITH BALANCED IN/OUT FLUXES
+
+  #### REMIND USER WHAT ARE THE INFINITE BOXES
+
+  if (HIDE_PRINTS == F){
+    if (is.na(INFINITE_BOXES[1]) == F){
+      CONNECTED_INFINITE_BOXES <- INITIAL[INITIAL$FLUX_BALANCE != 0 & INITIAL$BOXES_ID %in% INFINITE_BOXES, "BOXES_ID"]
+      if (length(CONNECTED_INFINITE_BOXES) != 0){
+        rlang::inform(message = paste("The INFINITE boxes are: ", paste(CONNECTED_INFINITE_BOXES,  collapse = ", "), sep = ""))
+      }  else {
+        rlang::inform(message = paste("All boxes are FINITE", sep = ""))
+      }
+    } else {
+      rlang::inform(message = paste("All boxes are FINITE", sep = ""))
+    }
+  }
 
   #### IDENTIFY AND EDIT WARNINGS FOR UNBALANCED FINITE BOXES
   #### AND AUTOMATICALLY ROUTE TO EITHER ANALYTICAL SOLVER (ISOPYBOX_ANA) or NUMERICAL SOLVER (ISOPYBOX_NUM)
