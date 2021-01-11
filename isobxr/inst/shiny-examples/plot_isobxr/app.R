@@ -473,10 +473,13 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD" | SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN" ){
-      # colnames <- names(evD_final())
-      colnames <- names(evD())
-      colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      if (SERIES_TYPE()[2] == "DYN"){
+        colnames <- names(evD())
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      }
       if (SERIES_TYPE()[2] == "STD"){
+        colnames <- names(evD_final())
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
         if (LOG_SERIES()[2,"EXPLO_TYPES_1"] == "EXPLO_1_RAYLEIGH_ALPHA"){
           Rayleigh_description <- strsplit(as.character(LOG_SERIES()[2,"LEGEND_EXPLO_1"]), split = "_")[[1]]
           Rayleigh_description_len <- length(Rayleigh_description)
@@ -504,10 +507,14 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD" | SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN" ){
-      # colnames <- names(evD_final())
-      colnames <- names(evD())
-      colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      if (SERIES_TYPE()[2] == "DYN"){
+        colnames <- names(evD())
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      }
+
       if (SERIES_TYPE()[2] == "STD"){
+        colnames <- names(evD_final())
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
         if (LOG_SERIES()[2,"EXPLO_TYPES_1"] == "EXPLO_1_RAYLEIGH_ALPHA"){
           Rayleigh_description <- strsplit(as.character(LOG_SERIES()[2,"LEGEND_EXPLO_1"]), split = "_")[[1]]
           Rayleigh_description_len <- length(Rayleigh_description)
@@ -535,10 +542,15 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD" | SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN" ){
-      # colnames <- c("1", names(evD_final()))
-      colnames <- c("1", names(evD()))
-      colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      if (SERIES_TYPE()[2] == "DYN"){
+        colnames <- c("1",names(evD()))
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      }
+
       if (SERIES_TYPE()[2] == "STD"){
+        colnames <- c("1",names(evD_final()))
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+
         if (LOG_SERIES()[2,"EXPLO_TYPES_1"] == "EXPLO_1_RAYLEIGH_ALPHA"){
           Rayleigh_description <- strsplit(as.character(LOG_SERIES()[2,"LEGEND_EXPLO_1"]), split = "_")[[1]]
           Rayleigh_description_len <- length(Rayleigh_description)
@@ -566,10 +578,14 @@ server <- function(input, output) {
     if (is.null(SERIES_TYPE())) {
       return(NULL)
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD" | SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN" ){
-      # colnames <- c("1", names(evD_final()))
-      colnames <- c("1", names(evD()))
-      colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      if (SERIES_TYPE()[2] == "DYN"){
+        colnames <- c("1",names(evD()))
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
+      }
+
       if (SERIES_TYPE()[2] == "STD"){
+        colnames <- c("1",names(evD_final()))
+        colnames <- colnames[!colnames %in% c(ALL_BOXES(), "Time", "SERIES_RUN_ID", "RUN_n", "LEGEND_EXPLO_1", "LEGEND_EXPLO_2")]
         if (LOG_SERIES()[2,"EXPLO_TYPES_1"] == "EXPLO_1_RAYLEIGH_ALPHA"){
           Rayleigh_description <- strsplit(as.character(LOG_SERIES()[2,"LEGEND_EXPLO_1"]), split = "_")[[1]]
           Rayleigh_description_len <- length(Rayleigh_description)
@@ -858,6 +874,7 @@ server <- function(input, output) {
       return()
     }
   })
+
   PLOT_SWEEP_STD <- reactive({
     if (is.null(SERIES_TYPE())){
       return()
@@ -1025,6 +1042,7 @@ server <- function(input, output) {
       return()
     }
   })
+
   PLOT_SWEEP_DYN <- reactive({
     if (is.null(SERIES_TYPE())){
       return()
