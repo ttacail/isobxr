@@ -206,6 +206,14 @@ time_converter <- function(dataframe,
                                       Myr = c(31557600009333300000, 31557600009333300000, 31557600009333.3, 525960000155.555, 8766000002.59259, 365250000.108025, 52178571.4440035, 11975409.84, 1000000, 1000, 1, 0.001),
                                       Gyr = c(3.15576000093333E+22, 3.15576000093333E+22, 31557600009333300, 525960000155555, 8766000002592.59, 365250000108.025, 52178571444.0035, 11975409840, 1000000000, 1000000, 1000, 1))
 
+  if (!(former_unit %in% time_converting_table$UNIT)){
+    rlang::abort(paste("Native time unit should be amonst the following: ", paste(time_converting_table$UNIT, collapse = ", ")))
+  }
+
+  if (!(new_unit %in% time_converting_table$UNIT)){
+    rlang::abort(paste("Conversion time unit should be amonst the following: ", paste(time_converting_table$UNIT, collapse = ", ")))
+  }
+
   dataframe$conv_timecolname <- dataframe[,time_colname]*time_converting_table[time_converting_table$UNIT == new_unit, former_unit]
   names(dataframe)[names(dataframe) == "conv_timecolname"] <- conv_timecolname
   return(dataframe)
