@@ -29,7 +29,8 @@ overwrite a previous composite run.
 
 \item{time_units}{Vector defining the initial time units (identical to time unit
 used for fluxes) followed by the time unit used for the graphic output.
-\cr (vector of two strings of characters, eg. c("days", "years")).}
+\cr (vector of two strings of characters, eg. c("days", "years")).
+\cr should be picked amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"}
 
 \item{COMPO_MASTER}{Name of the composite master file (e.g., 0_COMPO_MASTER.xlsx),
 defining the composite run scenario.

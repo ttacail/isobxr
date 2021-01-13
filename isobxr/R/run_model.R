@@ -38,8 +38,9 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @param nb_steps Number of steps that will define the resolution of the run.
 #' \cr (integer)
 #' @param time_units Vector defining the initial time units (identical to time unit
-#' used for fluxes) followed by the time unit used for the graphic output.
+#' used for fluxes) followed by the time unit used for the graphical output.
 #' \cr (vector of two strings of characters, eg. c("days", "years"))
+#' \cr has to be selected amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
 #' @param FORCING_RAYLEIGH \emph{OPTIONAL} Dataframe describing the forcing on a Rayleigh
 #' distillation driven fractionation coefficient as a function of flux intensities
 #' and a fundamental fractionation coefficient (Dataframe formating details in
@@ -778,21 +779,28 @@ run_isobxr <- function(workdir,
     evD_vert <- DF_verticalizer(df_hor = evD, vert_col = BOXES_IDs)
 
     #### CHANGE TIME UNITS FROM FLUX IMPOSED UNIT TO WANTED DISPLAY UNIT
-    if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-      if (display_time_unit == "hours"){
-        evD_vert$Time <- evD_vert$Time*24
-      } else {
-        if (display_time_unit == "minutes"){
-          evD_vert$Time <- evD_vert$Time*24*60
-        } else {
-          if (display_time_unit == "years"){
-            evD_vert$Time <- evD_vert$Time/365
-          } else {
-            display_time_unit = initial_time_unit
-          }
-        }
-      }
-    }
+    # if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
+    #   if (display_time_unit == "hours"){
+    #     evD_vert$Time <- evD_vert$Time*24
+    #   } else {
+    #     if (display_time_unit == "minutes"){
+    #       evD_vert$Time <- evD_vert$Time*24*60
+    #     } else {
+    #       if (display_time_unit == "years"){
+    #         evD_vert$Time <- evD_vert$Time/365
+    #       } else {
+    #         display_time_unit = initial_time_unit
+    #       }
+    #     }
+    #   }
+    # }
+
+    evD_vert <- time_converter(dataframe = evD_vert, time_colname = "Time",
+                               conv_timecolname = "Time_conv",
+                               former_unit = initial_time_unit,
+                               new_unit = display_time_unit)
+
+    evD_vert$Time <- evD_vert$Time_conv
 
     Ymin <- round(min(evD_vert$VAR), 0)-1
     Ymax <- round(max(evD_vert$VAR), 0)+1

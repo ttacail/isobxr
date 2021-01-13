@@ -30,6 +30,7 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @param time_units Vector defining the initial time units (identical to time unit
 #' used for fluxes) followed by the time unit used for the graphic output.
 #' \cr (vector of two strings of characters, eg. c("days", "years")).
+#' \cr should be picked amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
 #' @param COMPO_MASTER Name of the composite master file (e.g., 0_COMPO_MASTER.xlsx),
 #' defining the composite run scenario.
 #' \cr (string of characters).
@@ -414,21 +415,29 @@ compose_isobxr <- function(workdir,
   #### reset time units
   initial_time_unit <- time_units[1]
   display_time_unit <- time_units[2]
-  if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-    if (display_time_unit == "hours"){
-      evD$Time_plot <- evD$Time_plot*24
-    } else {
-      if (display_time_unit == "minutes"){
-        evD$Time_plot <- evD$Time_plot*24*60
-      } else {
-        if (display_time_unit == "years"){
-          evD$Time_plot <- evD$Time_plot/365
-        } else {
-          display_time_unit = initial_time_unit
-        }
-      }
-    }
-  }
+
+  # if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
+  #   if (display_time_unit == "hours"){
+  #     evD$Time_plot <- evD$Time_plot*24
+  #   } else {
+  #     if (display_time_unit == "minutes"){
+  #       evD$Time_plot <- evD$Time_plot*24*60
+  #     } else {
+  #       if (display_time_unit == "years"){
+  #         evD$Time_plot <- evD$Time_plot/365
+  #       } else {
+  #         display_time_unit = initial_time_unit
+  #       }
+  #     }
+  #   }
+  # }
+
+  evD <- time_converter(dataframe = evD, time_colname = "Time_plot",
+                             conv_timecolname = "Time_plot_conv",
+                             former_unit = initial_time_unit,
+                             new_unit = display_time_unit)
+
+  evD$Time_plot <- evD$Time_plot_conv
 
   #### extract composite sub-runs (zones)
   k <- 1
@@ -528,21 +537,29 @@ compose_isobxr <- function(workdir,
   #### reset time units
   initial_time_unit <- time_units[1]
   display_time_unit <- time_units[2]
-  if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-    if (display_time_unit == "hours"){
-      evS$Time_plot <- evS$Time_plot*24
-    } else {
-      if (display_time_unit == "minutes"){
-        evS$Time_plot <- evS$Time_plot*24*60
-      } else {
-        if (display_time_unit == "years"){
-          evS$Time_plot <- evS$Time_plot/365
-        } else {
-          display_time_unit = initial_time_unit
-        }
-      }
-    }
-  }
+
+  # if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
+  #   if (display_time_unit == "hours"){
+  #     evS$Time_plot <- evS$Time_plot*24
+  #   } else {
+  #     if (display_time_unit == "minutes"){
+  #       evS$Time_plot <- evS$Time_plot*24*60
+  #     } else {
+  #       if (display_time_unit == "years"){
+  #         evS$Time_plot <- evS$Time_plot/365
+  #       } else {
+  #         display_time_unit = initial_time_unit
+  #       }
+  #     }
+  #   }
+  # }
+
+  evS <- time_converter(dataframe = evS, time_colname = "Time_plot",
+                        conv_timecolname = "Time_plot_conv",
+                        former_unit = initial_time_unit,
+                        new_unit = display_time_unit)
+
+  evS$Time_plot <- evS$Time_plot_conv
 
   #### extract composite sub-runs (zones)
   k <- 1

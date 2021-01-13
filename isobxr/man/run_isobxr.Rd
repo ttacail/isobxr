@@ -53,8 +53,9 @@ for the run as defined in a single column of the COEFFS sheet of the
 \cr (integer)}
 
 \item{time_units}{Vector defining the initial time units (identical to time unit
-used for fluxes) followed by the time unit used for the graphic output.
-\cr (vector of two strings of characters, eg. c("days", "years"))}
+used for fluxes) followed by the time unit used for the graphical output.
+\cr (vector of two strings of characters, eg. c("days", "years"))
+\cr has to be selected amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"}
 
 \item{FORCING_RAYLEIGH}{\emph{OPTIONAL} Dataframe describing the forcing on a Rayleigh
 distillation driven fractionation coefficient as a function of flux intensities
