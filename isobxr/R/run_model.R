@@ -14,115 +14,144 @@ usethis::use_package("ggplot2", min_version = TRUE)
 usethis::use_package("ggrepel", min_version = TRUE)
 usethis::use_package("rlang", min_version = TRUE)
 
-
 #  #_________________________________________________________________________80char
 #' Run isobxr stable isotope box model
 #' @description  A function to run the isobxr stable isotope box model,
 #' assessing the design of the model and automatically running \code{\link{num_slvr}}
 #' or \code{\link{ana_slvr}} depending on the conditions.
-#' @param workdir Working directory in which the master file (0_ISOBXR_MASTER.xlsx)
-#' is found and where the output files will be stored.
-#' \cr (string of characters)
-#' @param SERIES_ID Name of the model series the run belongs to, that will determine
-#' the folder in which the output files will be stored.
-#' \cr (string of characters)
-#' @param flux_list_name Name of the list of fluxes to be used for the run as
-#' defined in a single column of the FLUXES sheet of the 0_ISOBXR_MASTER.xlsx file.
-#' \cr (string of characters)
+#' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file \cr
+#' and where output files will be stored. \cr
+#' (character string)
+#' @param SERIES_ID Name of the model series the run belongs to. \cr
+#' It determines the folder in which the output files will be stored.\cr
+#' (character string)
+#' @param flux_list_name Name of the list of fluxes to be used for the run, \cr
+#' as defined in by single column of the \strong{FLUXES} sheet
+#' of the \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
+#' (character string)
 #' @param coeff_list_name Name of the list of fractionation coefficients to be used
-#' for the run as defined in a single column of the COEFFS sheet of the
-#' 0_ISOBXR_MASTER.xlsx file.
-#' \cr (string of characters)
-#' @param t_lim Run duration, given in the same time units as the fluxes.
-#' \cr (integer)
-#' @param nb_steps Number of steps that will define the resolution of the run.
-#' \cr (integer)
-#' @param time_units Vector defining the initial time units (identical to time unit
-#' used for fluxes) followed by the time unit used for the graphical output.
-#' \cr (vector of two strings of characters, eg. c("days", "years"))
-#' \cr has to be selected amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
-#' @param FORCING_RAYLEIGH \emph{OPTIONAL} Dataframe describing the forcing on a Rayleigh
-#' distillation driven fractionation coefficient as a function of flux intensities
-#' and a fundamental fractionation coefficient (Dataframe formating details in
-#' read me).
-#' \cr Default is NULL.
-#' @param FORCING_SIZE \emph{OPTIONAL} Dataframe describing the forcing on one or several box
-#' sizes (mass of element X). The newly defined sizes for the given set of boxes
-#' shown in dataframe will overwrite the sizes as defined in 0_ISOBXR_MASTER.xlsx file.
-#' \cr Default is NULL.
-#' @param FORCING_DELTA \emph{OPTIONAL} Dataframe describing the forcing on one or several boxes
-#' initial isotope composition described as delta (Dataframe formating details in read me).
-#' The newly defined delta values for the given set of boxes shown in dataframe will
-#' overwrite the delta values as defined in ISOBXR_MASTER file.
-#' \cr Default is NULL.
-#' @param FORCING_ALPHA \emph{OPTIONAL} Dataframe describing the forcing on one or several
-#' fractionation coefficients linked to fluxes from one reservoir to another
-#' (Dataframe formating details in read me). The newly defined alpha values
-#' for the given set of boxes shown in dataframe will overwrite the alpha values
-#' as defined in ISOBXR_MASTER file.
-#' \cr Default is NULL.
-#' @param COMPOSITE \emph{NOT TO BE USED IN SINGLE RUN} Logical value automatically defined in \code{\link{compose_isobxr}}.
-#' \cr Default is FALSE.
-#' @param COMPO_SERIES_n \emph{NOT TO BE USED IN SINGLE RUN} Iteration of the composite run for the given series it belongs to,
-#' automatically defined in \code{\link{compose_isobxr}}.
-#' \cr Default is NaN.
-#' @param COMPO_SERIES_FAMILY \emph{NOT TO BE USED IN SINGLE RUN} Composite run series family, automatically defined in
-#' \code{\link{compose_isobxr}}.
-#' \cr Default is NaN.
-#' @param EXPLORER \emph{NOT TO BE USED IN SINGLE RUN} Logical value automatically defined in \code{\link{sweep_steady}}
-#' or \code{\link{sweep_dyn}}.
-#' \cr Default is FALSE.
-#' @param EXPLO_SERIES_n \emph{NOT TO BE USED IN SINGLE RUN} Iteration of the sweep run for the given series it belongs to,
-#' automatically defined in \code{\link{sweep_steady}} or \code{\link{sweep_dyn}}.
-#' \cr Default is NaN.
-#' @param EXPLO_SERIES_FAMILY \emph{NOT TO BE USED IN SINGLE RUN} Sweep run series family, automatically defined in
-#' \code{\link{sweep_steady}} or \code{\link{sweep_dyn}}.
-#' \cr Default is NaN.
-#' @param HIDE_PRINTS \emph{OPTIONAL} Logical value determining whether to run outputs details in R console.
-#' This parameter will not hide the warnings regarding the automatic update of
-#' the run duration in case of the emptying of a box.
-#' \cr Default is FALSE.
-#' @param to_DIGEST_DIAGRAMS \emph{OPTIONAL} Logical value to edit pdf of box model diagram or not in RUN DIGEST folder.
-#' \cr Default is TRUE.
-#' @param to_DIGEST_evD_PLOT \emph{OPTIONAL} Logical value to edit pdf of delta time evolution plot or not in RUN DIGEST folder.
-#' \cr Default is TRUE.
-#' @param to_DIGEST_CSV_XLS \emph{OPTIONAL} Logical value to edit Rda input file (ending with _IN.Rda) and CSV output files in RUN DIGEST folder.
-#' \cr Default is FALSE.
+#' for the run, \cr
+#' as defined in a single column of the \strong{COEFFS} sheet of the
+#' \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
+#' (character string)
+#' @param t_lim Run duration, given in the same time units as the fluxes. \cr
+#' (integer)
+#' @param nb_steps Number of calculation steps. \cr
+#' It determines the resolution of the run. \cr
+#' (integer)
+#' @param time_units Vector defining the initial time unit
+#' (identical to unit used in fluxes), \cr
+#' followed by the time unit used for the graphical output.\cr
+#' Character string, to be selected  amongst the following:\cr
+#' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
+#' e.g.,  c("d", "yr") to convert days into years
+#' @param FORCING_RAYLEIGH \emph{OPTIONAL} \cr
+#' Dataframe describing the forcing on a fractionation coefficient
+#' by a Rayleigh isotope distillation, \cr
+#' as a function of flux intensities and a fundamental fractionation coefficient. \cr
+#' Dataframe formatting details are in isobxr vignette. \cr
+#' Default is NULL.
+#' @param FORCING_SIZE \emph{OPTIONAL} \cr
+#' Dataframe describing the forcing on one or several box sizes (mass of element X). \cr
+#' The newly defined sizes for the given set of boxes
+#' overwrite their sizes as previously defined in \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
+#' Dataframe formatting details are in isobxr vignette. \cr
+#' Default is NULL.
+#' @param FORCING_DELTA \emph{OPTIONAL} \cr
+#' Dataframe describing the forcing on one or several boxes
+#' initial isotope composition expressed as delta values. \cr
+#' The newly defined delta values for the given set of boxes
+#' overwrite the delta values as previously defined in \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
+#' Dataframe formatting details are in isobxr vignette. \cr
+#' Default is NULL.
+#' @param FORCING_ALPHA \emph{OPTIONAL} \cr
+#' Dataframe describing the forcing on one or several
+#' fractionation coefficients from one reservoir to another. \cr
+#' The newly defined alpha values for the given set of boxes
+#' overwrite the alpha values as previously defined in \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
+#' Dataframe formatting details are in isobxr vignette. \cr
+#' Default is NULL.
+#' @param COMPOSITE \emph{NOT TO BE USED IN SINGLE RUN}  \cr
+#' Logical value automatically defined in \code{\link{compose_isobxr}}. \cr
+#' Default is FALSE.
+#' @param COMPO_SERIES_n \emph{NOT TO BE USED IN SINGLE RUN}  \cr
+#' Iteration of the composite run for the given series it belongs to,
+#' automatically defined in \code{\link{compose_isobxr}}.  \cr
+#' Default is NaN.
+#' @param COMPO_SERIES_FAMILY \emph{NOT TO BE USED IN SINGLE RUN} \cr
+#' Composite run series family, automatically defined in
+#' \code{\link{compose_isobxr}}. \cr
+#' Default is NaN.
+#' @param EXPLORER \emph{NOT TO BE USED IN SINGLE RUN} \cr
+#' Logical value automatically defined in \code{\link{sweep_steady}}
+#' or \code{\link{sweep_dyn}}. \cr
+#' Default is FALSE.
+#' @param EXPLO_SERIES_n \emph{NOT TO BE USED IN SINGLE RUN}  \cr
+#' Iteration of the sweep run for the given series it belongs to,
+#' automatically defined in \code{\link{sweep_steady}} or \code{\link{sweep_dyn}}. \cr
+#' Default is NaN.
+#' @param EXPLO_SERIES_FAMILY \emph{NOT TO BE USED IN SINGLE RUN}  \cr
+#' Sweep run series family, automatically defined in
+#' \code{\link{sweep_steady}} or \code{\link{sweep_dyn}}. \cr
+#' Default is NaN.
+#' @param HIDE_PRINTS \emph{OPTIONAL}  \cr
+#' Logical value. \cr
+#' Prints outputs details in R console if TRUE. \cr
+#' This parameter does not hide the warnings regarding the automatic update of
+#' the run duration in case of the emptying of a box. \cr
+#' Default is FALSE.
+#' @param to_DIGEST_DIAGRAMS \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Edits pdf of box model diagram in RUN DIGEST folder if TRUE. \cr
+#' Default is TRUE.
+#' @param to_DIGEST_evD_PLOT \emph{OPTIONAL} \cr
+#' Logical value.  \cr
+#' Edits pdf of delta time evolution plot in RUN DIGEST folder if TRUE.\cr
+#' Default is TRUE.
+#' @param to_DIGEST_CSV_XLS \emph{OPTIONAL}\cr
+#' Logical value.  \cr
+#' Edits Rda input file (ending with _IN.Rda) and CSV output files in RUN DIGEST folder if TRUE. \cr
+#' Default is FALSE.
 #'
-#' @return If the function is run independently and if the directory is non existing,
-#' the fonction creates and stores all outputs in a SERIES directory located in working directory.
-#' \cr Directory name structure: 2_RUN + SERIES_ID
+#' @return If the function is run independently and if directory is not yet existing, \cr
+#' \code{\link{run_isobxr}} creates and stores all outputs in a \emph{SERIES} folder located in working directory,
+#' with the following name structure: \cr
+#' \strong{\emph{2_RUN + SERIES_ID}}
 #'
 #' \enumerate{
-#' \item Automatically sets a XXXX run number between 0001 and 9999. The outputs do not overwrite possible identical previously performed runs.
-#' \item Stores all outputs in a file with the Rda format. This file stores all data produced by the function.
-#' \cr (file name structure: SERIES_ID + XXXX + _OUT.Rda)
+#' \item Automatically sets a XXXX run number between 0001 and 9999. \cr
+#' The outputs do not overwrite possible identical previously performed runs.
+#' \item Stores all outputs in a file with the Rda format. \cr
+#' This file stores all data produced by the function. \cr
+#' (file name structure: \strong{\emph{SERIES_ID + XXXX + _OUT.Rda}})
 #' }
-#' @section Optional outputs
+#'
+#' @section Optional outputs, stored in \emph{DIGEST} folder:
 #' \enumerate{
-#' \item Creates an INPUT xlsx file with all run conditions and parameters. File created in located in DIGEST directory.
-#' \cr (file name structure: in_0_INPUTS + SERIES_ID + XXXX + .xlsx)
-#' \cr (created if to_DIGEST_CSV_XLS = TRUE)
+#' \item If to_DIGEST_CSV_XLS = TRUE, \cr
+#' creates an INPUT file in the xlsx format, with all run conditions and parameters. \cr
+#' (file name structure: \strong{\emph{in_0_INPUTS + SERIES_ID + XXXX + .xlsx}}) \cr
 #'
-#' \item Edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
-#' between all boxes. File created in located in DIGEST directory.
-#' \cr (file name structure: in_1_DIAG_FLUX + SERIES_ID + XXXX + .pdf)
-#' \cr (created if to_DIGEST_DIAGRAMS = TRUE)
+#' \item If to_DIGEST_DIAGRAMS = TRUE, \cr
+#' edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
+#' between all boxes. \cr
+#' (file name structure: \strong{\emph{in_1_DIAG_FLUX + SERIES_ID + XXXX + .pdf}})
 #'
-#' \item Edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
-#' between all boxes. File created in located in DIGEST directory.
-#' \cr (file name structure: in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf)
-#' \cr (created if to_DIGEST_DIAGRAMS = TRUE)
+#' \item If to_DIGEST_DIAGRAMS = TRUE, \cr
+#' edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
+#' between all boxes. \cr
+#' (file name structure: \strong{\emph{in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf}})
 #'
-#' \item Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale.
-#' \cr (file name structure: out_0_PLOT_evD + SERIES_ID + XXXX + .pdf)
-#' \cr (created if to_DIGEST_evD_PLOT = TRUE)
+#' \item If to_DIGEST_evD_PLOT = TRUE, \cr
+#' edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale. \cr
+#' (file name structure: \strong{\emph{out_0_PLOT_evD + SERIES_ID + XXXX + .pdf}})
 #'
-#' \item Stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in DIGEST directory.
-#' \cr (created if to_DIGEST_CSV_XLS = TRUE)
+#' \item If to_DIGEST_CSV_XLS = TRUE, \cr
+#' stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in \emph{DIGEST} folder. \cr
+#' See \code{\link{num_slvr}} or \code{\link{ana_slvr}} documentation for further details.
 #'
 #' \item Creates or updates the general log file, located in general working directory.
-#' \cr (file name: 1_LOG.csv)
+#' (file name: \strong{\emph{1_LOG.csv}})
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export
