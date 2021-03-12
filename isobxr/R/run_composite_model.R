@@ -8,61 +8,91 @@ usethis::use_package("rlang", min_version = TRUE)
 #  #_________________________________________________________________________80char
 #' Compose a stable isotope box model scenario
 #' @description  A function to compose an isobxr box model scenario,
-#' defined by a series of \emph{n} model runs inheriting from previous run's final state and
-#' with the possibility to force conditions at each run, namely:
+#' defined by a series of \emph{n} successive runs, \cr
+#' each run inheriting from the final state conditions of the previous run, \cr
+#' and with the possibility to force parameters at each run, namely:
 #' \enumerate{
 #' \item fluxes (all or overwriting only a subset of them)
 #' \item isotope fractionation coefficients (all or overwriting only a subset of them)
 #' \item box sizes
-#' \item rayleigh distillation
+#' \item rayleigh isotope distillation
 #' \item isotope composition of a source box
-#' \item (...)
 #' }
-#' @param workdir Working directory in which the general master file (0_ISOBXR_MASTER.xlsx)
-#' and composite master file (e.g., 0_COMPO_MASTER.xlsx)
-#' are found and where the output files will be stored.
-#' \cr (string of characters).
-#' @param SERIES_ID Name of the composite model series the run belongs to, that will determine
-#' the folder in which the output files of this composite run
-#' will be stored. A composite run number will be automatically linked to it and no run will
-#' overwrite a previous composite run.
-#' \cr (string of characters).
-#' @param time_units Vector defining the initial time units (identical to time unit
-#' used for fluxes) followed by the time unit used for the graphic output.
-#' \cr (vector of two strings of characters, eg. c("days", "years")).
-#' \cr should be picked amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
-#' @param COMPO_MASTER Name of the composite master file (e.g., 0_COMPO_MASTER.xlsx),
-#' defining the composite run scenario.
-#' \cr (string of characters).
-#' @param plot_HIDE_BOXES_delta Vector of strings of characters defining the names of the
-#' boxes to hide in the plot of the delta values as a function of time edited as a pdf.
+#' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
+#' of the composite master file (e.g., \strong{\emph{0_COMPO_MASTER.xlsx}}) \cr
+#' and where output files will be stored. \cr
+#' (character string)
+#' @param SERIES_ID Name of the composite model series the run belongs to. \cr
+#' It determines the folder in which the output files will be stored for this composite run.\cr
+#' A composite run number is automatically linked to it,
+#' subsequent runs can not overwrite a previous composite run.\cr
+#' (character string)
+#' @param time_units Vector defining the initial time unit
+#' (identical to unit used in fluxes), \cr
+#' followed by the time unit used for the graphical output.\cr
+#' Character string, to be selected  amongst the following:\cr
+#' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
+#' e.g.,  c("d", "yr") to convert days into years
+#' @param COMPO_MASTER Name of the composite master file (e.g., \strong{\emph{0_COMPO_MASTER.xlsx}}),
+#' defining the composite run scenario. \cr
+#' (character string)
+#' @param plot_HIDE_BOXES_delta Vector of character strings, \cr
+#' defining the names of the boxes to hide in the plot of the delta values as a function of time, edited as a pdf.
 #' \cr (e.g., c("BOX_A", "BOX_C"))
-#' @param plot_HIDE_BOXES_size Vector of strings of characters defining the names of the
-#' boxes to hide in the plot of the box sizes (masses of X) as a function of time edited
-#' as a pdf.
-#' @param EACH_RUN_DIGEST Get each full digest for each model run (INPUT xlsx, diagrams, plot and csv outputs). Default is FALSE.
-#' @param to_CPS_DIGEST_CSVs Export all global csv outputs (full evD and full evS). Default is FALSE.
-#' @return If non existing, the fonction creates and stores all outputs
-#' in a dedicated composite SERIES directory located in working directory.
-#' \cr Directory name structure: 3_CPS + SERIES_ID + YYY, where YYY is an automically set composite run number between 001 and 999.
-#' \cr No overwriting of previous composite runs is possible.
+#' @param plot_HIDE_BOXES_size Vector of character strings, \cr
+#' defining the names of the boxes to hide in the plot of the box sizes (masses of X) as a function of time, edited as a pdf.
+#' \cr (e.g., c("BOX_A", "BOX_C"))
+#' @param EACH_RUN_DIGEST \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Edits all full digests for each model run
+#' (all optional outputs of \code{\link{run_isobxr}} function) if TRUE. \cr
+#' Default is FALSE.
+#' @param to_CPS_DIGEST_CSVs \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Exports all global csv outputs to \strong{\emph{0_CPS_DIGEST}} folder (full evD and full evS) if TRUE. \cr
+#' Default is FALSE.
+#'
+#' @return Creates and stores all outputs in a dedicated composite SERIES directory located in working directory,
+#' with the following name structure: \cr
+#' \strong{\emph{3_CPS + SERIES_ID + YYY}}, where YYY is a composite scenario number automically set between 001 and 999. \cr
+#' No overwriting of previous composite runs is possible.
+#'
 #' \enumerate{
-#' \item Creates the set of inputs and outputs for each successive \emph{n} runs, numbered from to 1 to \emph{n} in an XXXX format (see \code{\link{run_isobxr}} documentation).
-#' \cr Named with the following format: CPS + SERIES_ID + YYY + XXXX
-#' \item Archives the composite master file.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + COMPO_MASTER.xlsx)
-#' \item Archives the local LOG for the given composite run.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + LOG.csv)
-#' \item Stores the evolution of delta values with time in all boxes over the \emph{n} runs that constitute the composite run scenario.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + evD.csv)
-#' \item Stores the evolution of box sizes (masses of X) with time in all boxes over the \emph{n} runs that constitute the composite run scenario.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + evS.csv)
-#' \item Edits the pdf of the all in one plot of the evolution of delta values + sizes in all non hidden boxes.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + p_evDS.pdf)
-#' \item Edits the pdf of multiple plots of the evolution of delta values in all non hidden boxes.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + pf_evD.pdf)
-#' \item Edits the pdf of multiple plots of the evolution of box sizes in all non hidden boxes.
-#' \cr (file name structure: 0_CPS + SERIES_ID + YYY + pf_evS.pdf)
+#' \item Creates the set of inputs and outputs for all successive \emph{n} runs,\cr
+#' numbered from to 1 to \emph{n} in an XXXX format with the following format: \cr
+#' \strong{\emph{CPS + SERIES_ID + YYY + XXXX + IN.Rda}} \cr
+#' \strong{\emph{CPS + SERIES_ID + YYY + XXXX + OUT.Rda}} \cr
+#' (see \code{\link{run_isobxr}} documentation)
+#'
+#' \item Writes summarized results in the  \strong{\emph{0_CPS_DIGEST}} folder:
+#' \enumerate{
+#' \item LOG file of local composite run. \cr
+#' (file name structure:  \strong{\emph{CPS + SERIES_ID + YYY + _LOG.csv}})
+#' \item Composite master file. \cr
+#' (file name structure:  \strong{\emph{CPS + SERIES_ID + YYY + _MASTER.xlsx}})
+#' \item Dataset of temporal evolution of delta values (evD) in all boxes over the \emph{n} runs that constitute the composite run scenario \cr
+#' (file name structure: \strong{\emph{CPS + SERIES_ID + YYY + evD.RDS}})
+#' \item Dataset of temporal evolution of box sizes (evS, masses of X) in all boxes over the \emph{n} runs that constitute the composite run scenario \cr
+#' (file name structure: \strong{\emph{CPS + SERIES_ID + YYY + evS.RDS}})
+#' \item All-in-one plot of the evolution of delta values + sizes in all non hidden boxes. \cr
+#' (file name structure: \strong{\emph{CPS + SERIES_ID + YYY + p_evDS.pdf}})
+#' \item Multiple plots of the evolution of delta values in all non hidden boxes. \cr
+#' (file name structure: \strong{\emph{CPS + SERIES_ID + YYY + pf_evD.pdf}})
+#' \item Multiple plots of the evolution of box sizes in all non hidden boxes. \cr
+#' (file name structure: \strong{\emph{CPS + SERIES_ID + YYY + pf_evS.pdf}})
+#' }
+#' }
+#' @section Optional outputs:
+#' \enumerate{
+#' \item If EACH_RUN_DIGEST = TRUE \cr
+#' Creates and fills \strong{\emph{DIGEST}} folder for each run of the composite scenario with
+#' all optional outputs of \code{\link{run_isobxr}} function. \cr
+#' (folder name structure: \strong{\emph{CPS + SERIES_ID + YYY + XXXX + DIGEST}})
+#' \item If to_CPS_DIGEST_CSVs = TRUE \cr
+#' In the \strong{\emph{0_CPS_DIGEST}} folder,
+#' edits csv versions of the whole-composite scenario evD and evS datasets. \cr
+#' (file names structures: \strong{\emph{CPS + SERIES_ID + YYY + evD.csv}}
+#' and \strong{\emph{CPS + SERIES_ID + YYY + evS.csv}})
 #' }
 #' @seealso Documentation on \code{\link{run_isobxr}}
 #' @export
@@ -651,7 +681,8 @@ compose_isobxr <- function(workdir,
   graphics.off()
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# EDIT LOCAL COMPO MASTER XLSX #----
-  compo_master_excel_path <-  paste(path_out_COMPO, "_COMPO_MASTER.xlsx", sep = "")
+  # compo_master_excel_path <-  paste(path_out_COMPO, "_COMPO_MASTER.xlsx", sep = "")
+  compo_master_excel_path <-  paste(path_out_COMPO, "_MASTER.xlsx", sep = "")
 
   writexl::write_xlsx(list(RUN_LIST = RUN_LIST,
                            FORCING_RAYLEIGH = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_RAYLEIGH")),
