@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate delta values at t with ODE solutions from ana_slvr — ANA_delta_t_Calculator • isobxr</title>
+<title>Calculate delta values at t time with ODE solutions from ana_slvr — ANA_delta_t_Calculator • isobxr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Calculate delta values at t with ODE solutions from ana_slvr — ANA_delta_t_Calculator" />
-<meta property="og:description" content="Calucate the delta values at time t using the ODE analytical solutions of the isotopic box model." />
+<meta property="og:title" content="Calculate delta values at t time with ODE solutions from ana_slvr — ANA_delta_t_Calculator" />
+<meta property="og:description" content="Calculate the delta values at t time using the ODE analytical solutions of the isotopic box model." />
 
 
 
@@ -126,13 +126,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate delta values at t with ODE solutions from <code><a href='ana_slvr.html'>ana_slvr</a></code></h1>
+    <h1>Calculate delta values at t time with ODE solutions from <code><a href='ana_slvr.html'>ana_slvr</a></code></h1>
     <small class="dont-index">Source: <a href='https://github.com/ttacail/isobxr/blob/master/R/local_functions.R'><code>R/local_functions.R</code></a></small>
     <div class="hidden name"><code>ANA_delta_t_Calculator.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calucate the delta values at time t using the ODE analytical solutions of the isotopic box model.</p>
+    <p>Calculate the delta values at t time using the ODE analytical solutions of the isotopic box model.</p>
     </div>
 
     <pre class="usage"><span class='fu'>ANA_delta_t_Calculator</span><span class='op'>(</span>
@@ -149,23 +149,27 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>t</th>
-      <td><p>Time at which the delta values are to be calculated</p></td>
+      <td><p>Time at which the delta values are to be calculated (numeric)</p></td>
     </tr>
     <tr>
       <th>ODE_Constants</th>
-      <td><p>Constants as determined by the analytical solver for the system of ordinary differential equations (single column data frame).</p></td>
+      <td><p>Constants as determined by the analytical solver for the system of <br />
+ordinary differential equations (single column dataframe).</p></td>
     </tr>
     <tr>
       <th>ODE_Eigenvalues</th>
-      <td><p>Eigenvalues as determined by the analytical solver for the system of ordinary differential equations (single column data frame).</p></td>
+      <td><p>Eigenvalues as determined by the analytical solver for the system of <br />
+ordinary differential equations (single column dataframe).</p></td>
     </tr>
     <tr>
       <th>ODE_Eigenvectors</th>
-      <td><p>Eigenvectors as determined by the analytical solver for the system of ordinary differential equations (multiple columns data frame).</p></td>
+      <td><p>Eigenvectors as determined by the analytical solver for the system of <br />
+ordinary differential equations (multiple columns dataframe).</p></td>
     </tr>
     <tr>
       <th>BOXES_IDs</th>
-      <td><p>Vector of string of characters with the names of the boxes in the same order as used in <code><a href='ana_slvr.html'>ana_slvr</a></code>.</p></td>
+      <td><p>Vector of character strings with the names of the boxes <br />
+in the same order as used in <code><a href='ana_slvr.html'>ana_slvr</a></code>.</p></td>
     </tr>
     <tr>
       <th>ratio_standard</th>
@@ -175,7 +179,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Data frame of the delta values in all boxes at time t.</p>
+    <p>Dataframe of the delta values in all boxes at t time.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='ana_slvr.html'>ana_slvr</a></code></p></div>

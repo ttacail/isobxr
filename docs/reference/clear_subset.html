@@ -40,8 +40,7 @@
 
 
 <meta property="og:title" content="Clear a subset — clear_subset" />
-<meta property="og:description" content="Takes a previously subsetted data frame and
-clears the lost levels of factor type columns and resets the rown numbering." />
+<meta property="og:description" content="Takes a previously subsetted dataframe, clears its deleted levels and resets its row indexes." />
 
 
 
@@ -133,8 +132,7 @@ clears the lost levels of factor type columns and resets the rown numbering." />
     </div>
 
     <div class="ref-description">
-    <p>Takes a previously subsetted data frame and
-clears the lost levels of factor type columns and resets the rown numbering.</p>
+    <p>Takes a previously subsetted dataframe, clears its deleted levels and resets its row indexes.</p>
     </div>
 
     <pre class="usage"><span class='fu'>clear_subset</span><span class='op'>(</span><span class='va'>dataset</span><span class='op'>)</span></pre>
@@ -144,14 +142,39 @@ clears the lost levels of factor type columns and resets the rown numbering.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dataset</th>
-      <td><p>Previously subsetted data frame</p></td>
+      <td><p>Previously subsetted dataframe.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The cleared data frame.</p>
+    <p>Cleared dataframe.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>clear_subset</span><span class='op'>(</span><span class='va'>iris</span><span class='op'>[</span><span class='va'>iris</span><span class='op'>$</span><span class='va'>Species</span> <span class='op'>==</span> <span class='st'>"setosa"</span> <span class='op'>&amp;</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Sepal.Length</span> <span class='op'>&gt;</span> <span class='fl'>5</span> ,<span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#&gt; 1           5.1         3.5          1.4         0.2  setosa
+#&gt; 2           5.4         3.9          1.7         0.4  setosa
+#&gt; 3           5.4         3.7          1.5         0.2  setosa
+#&gt; 4           5.8         4.0          1.2         0.2  setosa
+#&gt; 5           5.7         4.4          1.5         0.4  setosa
+#&gt; 6           5.4         3.9          1.3         0.4  setosa
+#&gt; 7           5.1         3.5          1.4         0.3  setosa
+#&gt; 8           5.7         3.8          1.7         0.3  setosa
+#&gt; 9           5.1         3.8          1.5         0.3  setosa
+#&gt; 10          5.4         3.4          1.7         0.2  setosa
+#&gt; 11          5.1         3.7          1.5         0.4  setosa
+#&gt; 12          5.1         3.3          1.7         0.5  setosa
+#&gt; 13          5.2         3.5          1.5         0.2  setosa
+#&gt; 14          5.2         3.4          1.4         0.2  setosa
+#&gt; 15          5.4         3.4          1.5         0.4  setosa
+#&gt; 16          5.2         4.1          1.5         0.1  setosa
+#&gt; 17          5.5         4.2          1.4         0.2  setosa
+#&gt; 18          5.5         3.5          1.3         0.2  setosa
+#&gt; 19          5.1         3.4          1.5         0.2  setosa
+#&gt; 20          5.1         3.8          1.9         0.4  setosa
+#&gt; 21          5.1         3.8          1.6         0.2  setosa
+#&gt; 22          5.3         3.7          1.5         0.2  setosa</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

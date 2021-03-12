@@ -41,9 +41,9 @@
 
 <meta property="og:title" content="Analytically solve stable isotope box models — ana_slvr" />
 <meta property="og:description" content="An analytical solver of the system of ordinary differential
-equations (ODES) of stable isotope ratios of element X in all boxes.
-The analytical solver finds the eigenvalues and eigenvectors of the ODES.
-Given the initial conditions as specified in INPUT.xlsx file, it determines the
+equations (ODES) of stable isotope ratios of element X in all boxes. 
+The analytical solver finds the eigenvalues and eigenvectors of the ODES. 
+Given the initial conditions as specified in IN.Rda file, it determines the
 set of analytical solutions that describes the evolution of isotope ratios
 in each box over time." />
 
@@ -138,37 +138,49 @@ in each box over time." />
 
     <div class="ref-description">
     <p>An analytical solver of the system of ordinary differential
-equations (ODES) of stable isotope ratios of element X in all boxes.
-The analytical solver finds the eigenvalues and eigenvectors of the ODES.
-Given the initial conditions as specified in INPUT.xlsx file, it determines the
+equations (ODES) of stable isotope ratios of element X in all boxes. <br />
+The analytical solver finds the eigenvalues and eigenvectors of the ODES. <br />
+Given the initial conditions as specified in IN.Rda file, it determines the
 set of analytical solutions that describes the evolution of isotope ratios
 in each box over time.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ana_slvr</span><span class='op'>(</span><span class='va'>input_path</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ana_slvr</span><span class='op'>(</span><span class='va'>input_path</span>, to_DIGEST_csv <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>input_path</th>
-      <td><p>path to the INPUT file containing all commands for the run.
-<br /> (file name structure: RUN name + _INPUT.xlsx)</p></td>
+      <td><p>path to the INPUT file containing all commands for the run <br />
+(character string, file name structure: <strong><em>RUN name + _IN.Rda</em></strong>)</p></td>
+    </tr>
+    <tr>
+      <th>to_DIGEST_csv</th>
+      <td><p>edit csv outputs or not (logical) to the RUN DIGEST folder <br />
+(logical, default is FALSE)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The function returns the analytically determined evolution of stable
-isotope compositions in all boxes over the run duration as specified in
-INPUT file. The function outputs are as follows:</p><ol>
-<li><p>OUT data file with initial and final size and delta values in each boxes.
-<br /> (file name structure: RUN name + _A_1_OUT.csv)</p></li>
-<li><p>ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES
-(eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).
-<br /> (file name structure: RUN name + _A_2_ODE_SOLNs.csv)</p></li>
-<li><p>evD data file of the evolution with time of the delta values in each boxes.
-<br /> (file name structure: RUN name + _A_3_evD.csv)</p></li>
+isotope compositions in all boxes over the run duration as specified in INPUT file. <br /> <br />
+The outputs of the run are stored in a Rda output file
+with the following file name structure: <br />
+<strong><em>RUN name + _OUT.Rda</em></strong></p>
+    <h2 class="hasAnchor" id="optional-csv-outputs-to-the-digest-folder-are-as-follows"><a class="anchor" href="#optional-csv-outputs-to-the-digest-folder-are-as-follows"></a>Optional csv outputs to the DIGEST folder are as follows</h2>
+
+    
+
+<ol>
+<li><p>OUT data file with initial and final size and delta values in each boxes. <br />
+(file name structure: <strong><em>out_1_A_OUT + RUN name + .csv</em></strong>)</p></li>
+<li><p>ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES  <br />
+(eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  <br />
+(file name structure: <strong><em>out_2_A_ODE_SOLNs + RUN name + .csv</em></strong>)</p></li>
+<li><p>evD data file of the evolution with time of the delta values in each boxes.  <br />
+(file name structure: <strong><em>out_3_A_evD + RUN name + .csv</em></strong>)</p></li>
 </ol>
 
 

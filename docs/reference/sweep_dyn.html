@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Sweep the space of two parameters during a dynamic run — sweep_dyn" />
 <meta property="og:description" content="A function to assess the influence of two parameters (varying
-over a range of values) on dynamic evolution of given model." />
+over a range of values) on dynamic evolution of a given model." />
 
 
 
@@ -134,7 +134,7 @@ over a range of values) on dynamic evolution of given model." />
 
     <div class="ref-description">
     <p>A function to assess the influence of two parameters (varying
-over a range of values) on dynamic evolution of given model.</p>
+over a range of values) on dynamic evolution of a given model.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sweep_dyn</span><span class='op'>(</span>
@@ -143,7 +143,8 @@ over a range of values) on dynamic evolution of given model.</p>
   <span class='va'>time_units</span>,
   <span class='va'>EXPLO_MASTER</span>,
   <span class='va'>EXPLO_AXIS_1</span>,
-  <span class='va'>EXPLO_AXIS_2</span>
+  <span class='va'>EXPLO_AXIS_2</span>,
+  to_DYN_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -151,65 +152,89 @@ over a range of values) on dynamic evolution of given model.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>workdir</th>
-      <td><p>Working directory in which the general master file (0_ISOBXR_MASTER.xlsx)
-and dynamic sweep master file (e.g., 0_EXPLO_DYN_MASTER.xlsx)
-are found and where the output files will be stored.
-<br /> (string of characters)</p></td>
+      <td><p>Working directory of <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> master file, <br />
+of the dynamic sweep master file (e.g., <strong><em>0_EXPLO_DYN_MASTER.xlsx</em></strong>) <br />
+and where output files will be stored. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>SERIES_ID</th>
-      <td><p>Name of the sweep series the run belongs to, that will determine
-the folder in which the output files of this sweep run will be stored.
-A sweep run number in YYY format will be automatically linked to it and no run will
-overwrite a previous sweep run.
-<br /> (string of characters)</p></td>
+      <td><p>Name of the sweep series the run belongs to. <br />
+It determines the folder in which the output files will be stored for this sweep run.<br />
+A sweep run number is automatically linked to it,
+and subsequent sweep runs can not overwrite a previous one.<br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>time_units</th>
-      <td><p>Vector defining the initial time units (identical to time unit
-used for fluxes) followed by the time unit used for the graphic output.
-<br /> (vector of two strings of characters, eg. c("days", "years"))</p></td>
+      <td><p>Vector defining the initial time unit
+(identical to unit used in fluxes), <br />
+followed by the time unit used for the graphical output.<br />
+Character string, to be selected  amongst the following:<br />
+<em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em><br />
+e.g.,  c("d", "yr") to convert days into years</p></td>
     </tr>
     <tr>
       <th>EXPLO_MASTER</th>
-      <td><p>Name of the dynamic sweep master file (e.g., 0_EXPLO_DYN_MASTER.xlsx),
-defining the dynamic sweep run scenario.
-<br /> (string of characters)</p></td>
+      <td><p>Name of the dynamic sweep master file (e.g., <strong><em>0_EXPLO_DYN_MASTER.xlsx</em></strong>),
+defining the dynamic sweep run scenario. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>EXPLO_AXIS_1</th>
-      <td><p>Set of values of sweeping parameter 1</p></td>
+      <td><p>Set of values of sweeping parameter 1. <br />
+See Vignette for further details.</p></td>
     </tr>
     <tr>
       <th>EXPLO_AXIS_2</th>
-      <td><p>Set of values of sweeping parameter 2</p></td>
+      <td><p>Set of values of sweeping parameter 2. <br />
+See Vignette for further details.</p></td>
+    </tr>
+    <tr>
+      <th>to_DYN_DIGEST_CSVs</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value. <br />
+Exports all global csv outputs to <strong><em>0_DYN_DIGEST</em></strong> folder (full evD and evS) if TRUE. <br />
+Default is FALSE.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If non existing, the fonction creates and stores all outputs
-in a SERIES directory located in working directory, automatically numbered.
-<br /> Directory name structure: 4_DYN + SERIES_ID + YYY, YYY being an automically set dynamic sweep run number between 001 and 999.
-<br /> No overwriting of previous dynamic sweep runs is possible.</p><ol>
-<li><p>Calculates the number of runs the sweeping will require depending on the sweeped parameters.
-The function then asks the user confirmation to run sweep_dyn,
+    <p>Creates and stores all outputs in a dedicated dynamic steady SERIES directory
+located in working directory, with the following name structure: <br />
+<strong><em>4_DYN + SERIES_ID + YYY</em></strong>, where YYY is a sweep dynamic run number automically set between 001 and 999. <br />
+No overwriting of previous sweep dynamic run runs is possible.</p><ol>
+<li><p>Calculates the number of single runs the sweeping will require depending on the sweeped parameters.</p></li>
+<li><p>Asks the user confirmation to run <code>sweep_dyn</code>,
 as the run calculation time depends on the number of successive sweeping runs.</p></li>
-<li><p>Creates the set of inputs and outputs for each successive <em>n</em> runs, numbered from to 1 to <em>n</em> in an XXXX format (see <code><a href='run_isobxr.html'>run_isobxr</a></code> documentation).
-<br /> Single run plots normally edited by <code><a href='run_isobxr.html'>run_isobxr</a></code> are here not edited.
-<br /> Named with the following format: DYN + SERIES_ID + YYY + XXXX</p></li>
-<li><p>Archives the dynamic sweep master file.
-<br /> (file name structure: 0_DYN + SERIES_ID + YYY + 0_EXPLO_DYN_MASTER.xlsx)</p></li>
-<li><p>Archives the local LOG for the given dynamic sweep run.
-<br /> (file name structure: 0_DYN + SERIES_ID + YYY + LOG.csv)</p></li>
-<li><p>Stores the evolution of delta values with time in all boxes over the <em>n</em> runs that constitute the dynamic sweep run.
-<br /> (file name structure: 0_DYN + SERIES_ID + YYY + evD.csv)</p></li>
-<li><p>Stores the evolution of box sizes (masses of element X) with time in all boxes over the <em>n</em> runs that constitute the dynamic sweep run
-<br /> (file name structure: 0_DYN + SERIES_ID + YYY + evS.csv)</p></li>
-<li><p>Stores the final state of delta values with time in all boxes over the <em>n</em> runs that constitute the dynamic sweep run.
-<br /> (file name structure: 0_DYN + SERIES_ID + YYY + evD_final.csv)</p></li>
-<li><p>Stores the final state of box sizes (masses of element X) with time in all boxes over the <em>n</em> runs that constitute the dynamic sweep run
-<br /> (file name structure: 0_DYN + SERIES_ID + YYY + evS_final.csv)</p></li>
+<li><p>Writes the set of inputs and outputs for all successive <em>n</em> sweeping runs, numbered from to 1 to <em>n</em> in an XXXX format,
+with the following name formats: <br />
+<strong><em>DYN + SERIES_ID + YYY + XXXX + IN.Rda</em></strong> <br />
+<strong><em>DYN + SERIES_ID + YYY + XXXX + OUT.Rda</em></strong> <br />
+(see <code><a href='run_isobxr.html'>run_isobxr</a></code> documentation).</p></li>
+<li><p>Writes summarized results in the  <strong><em>0_DYN_DIGEST</em></strong> folder:</p><ol>
+<li><p>LOG file of local sweep dynamic run. <br />
+(file name structure:  <strong><em>DYN + SERIES_ID + YYY + _LOG.csv</em></strong>)</p></li>
+<li><p>Sweep dynamic master file. <br />
+(file name structure:  <strong><em>DYN + SERIES_ID + YYY + _MASTER.xlsx</em></strong>)</p></li>
+<li><p>Dataset of temporal evolution of delta values (evD) in all boxes over the <em>n</em> runs that constitute the sweep dynamic run. <br />
+(file name structure: <strong><em>DYN + SERIES_ID + YYY + evD.RDS</em></strong>)</p></li>
+<li><p>Dataset of temporal evolution of box sizes (evS, masses of X) in all boxes over the <em>n</em> runs that constitute the sweep dynamic run. <br />
+(file name structure: <strong><em>DYN + SERIES_ID + YYY + evS.RDS</em></strong>)</p></li>
+</ol></li>
+</ol>
+
+    <h2 class="hasAnchor" id="optional-output"><a class="anchor" href="#optional-output"></a>Optional output</h2>
+
+    
+
+<ol>
+<li><p>If to_DYN_DIGEST_CSVs = TRUE <br />
+In the <strong><em>0_DYN_DIGEST</em></strong> folder,
+edits csv versions of the sweep dynamic run datasets: full evD and evS. <br />
+(file name structure: <strong><em>DYN + SERIES_ID + YYY + evD.csv</em></strong>) <br />
+(file name structure: <strong><em>DYN + SERIES_ID + YYY + evS.csv</em></strong>) <br /></p></li>
 </ol>
 
 

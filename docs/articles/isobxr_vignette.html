@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Using isobxr</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2020-12-08</h4>
+            <h4 class="date">2021-03-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/isobxr_vignette.Rmd"><code>vignettes/isobxr_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>isobxr_vignette.Rmd</code></div>
@@ -98,7 +98,7 @@
     
     
 <hr>
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modeling of open or closed systems. It provides a ready-to-use tool allowing users to develop and test isotopic box models of their system of interest. It allows the user to explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, as well as sweep the space of parameters in both static and dynamic modes.</p>
+<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modeling of open or closed systems. It provides a ready-to-use tool allowing users to develop and test isotopic box models of their system of interest. It allows the user to explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, and sweep the space of parameters in both static and dynamic modes.</p>
 <hr>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -115,7 +115,7 @@
 </ol>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ttacail/isobxr/isobxr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># FALSE if no pandoc/Rstudio </span></pre></div>
-<p>The user is also invited to <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">download the reference templates</a> for all input and master excel files described in this vignette, as well as <a href="https://ttacail.github.io/source/demos/1_ABCD.zip">download input and master excel files</a> used for the demonstrations in this vignette and in the getting started vignette (see <a href="https://ttacail.github.io/isobxr/articles/Demo_ABCD.html">Getting started 1</a> and <a href="https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html">Getting started 2</a>).</p>
+<p>The user is also invited to download the <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">reference templates</a> for all input and master excel files described in this vignette, as well as download <a href="https://ttacail.github.io/source/demos/1_ABCD.zip">the demonstration files input and master excel files</a> (see <a href="https://ttacail.github.io/isobxr/articles/Demo_ABCD.html">Getting started 1</a> and <a href="https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html">Getting started 2</a>).</p>
 <p>The <strong>isobxr</strong> package is working under R 3.5.2 to 4.0.3 versions.</p>
 <p>It's portability has been proof checked for the following platforms:</p>
 <ol style="list-style-type: decimal">
@@ -158,9 +158,9 @@
 <span class="co">#&gt; VignetteBuilder: knitr</span>
 <span class="co">#&gt; Author: Theo Tacail [aut, cre]</span>
 <span class="co">#&gt; Maintainer: Theo Tacail &lt;theo.tacail@gmail.com&gt;</span>
-<span class="co">#&gt; Built: R 4.0.3; ; 2020-12-08 13:16:44 UTC; unix</span>
+<span class="co">#&gt; Built: R 4.0.3; ; 2021-03-12 17:21:47 UTC; unix</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; -- File: /private/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T/RtmpIZJcsq/temp_libpath4d2647818701/isobxr/Meta/package.rds</span></pre></div>
+<span class="co">#&gt; -- File: /private/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T/Rtmpmfsz8u/temp_libpath3a362e8b7ea9/isobxr/Meta/package.rds</span></pre></div>
 <p>You can locally browse the vignette as follows:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
@@ -240,7 +240,8 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^N}{m^N_i} \left(1- D_{i \maps
 \dfrac{J_{j \mapsto i}^N}{m^N_j} \simeq \dfrac{J_{j \mapsto i}^X}{m^X_j} &amp; , &amp;
 \dfrac{m^N_j}{m^N_i} \simeq \dfrac{m^X_j}{m^X_i}
 \end{array}\]</span></p>
-<p>These assumptions are valid for amplitude of stable isotope fractionations of the order of tens of ‰. This assumption finds its limitation in the case of ample stable isotope fractionations of isotopic systems of light elements (such as D/H), In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.</p>
+<p>These assumptions are valid for amplitude of stable isotope fractionations of the order of tens of ‰. This assumption finds its limitation in the case of ample stable isotope fractionations of isotopic systems of light elements (such as D/H).</p>
+<p>In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.</p>
 <p>We thus have the following system of first order differential equations used thereafter:</p>
 <p><span class="math display">\[
 \dfrac{dR_i}{dt} = 

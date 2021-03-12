@@ -158,8 +158,9 @@ or <code><a href='ana_slvr.html'>ana_slvr</a></code> depending on the conditions
   EXPLO_SERIES_n <span class='op'>=</span> <span class='cn'>NaN</span>,
   EXPLO_SERIES_FAMILY <span class='op'>=</span> <span class='cn'>NaN</span>,
   HIDE_PRINTS <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  PLOT_DIAGRAMS <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  PLOT_evD <span class='op'>=</span> <span class='cn'>FALSE</span>
+  to_DIGEST_DIAGRAMS <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  to_DIGEST_evD_PLOT <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  to_DIGEST_CSV_XLS <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -167,156 +168,200 @@ or <code><a href='ana_slvr.html'>ana_slvr</a></code> depending on the conditions
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>workdir</th>
-      <td><p>Working directory in which the master file (0_ISOBXR_MASTER.xlsx)
-is found and where the output files will be stored.
-<br /> (string of characters)</p></td>
+      <td><p>Working directory of <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> master file <br />
+and where output files will be stored. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>SERIES_ID</th>
-      <td><p>Name of the model series the run belongs to, that will determine
-the folder in which the output files will be stored.
-<br /> (string of characters)</p></td>
+      <td><p>Name of the model series the run belongs to. <br />
+It determines the folder in which the output files will be stored.<br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>flux_list_name</th>
-      <td><p>Name of the list of fluxes to be used for the run as
-defined in a single column of the FLUXES sheet of the 0_ISOBXR_MASTER.xlsx file.
-<br /> (string of characters)</p></td>
+      <td><p>Name of the list of fluxes to be used for the run, <br />
+as defined in by single column of the <strong>FLUXES</strong> sheet
+of the <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> file. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>coeff_list_name</th>
       <td><p>Name of the list of fractionation coefficients to be used
-for the run as defined in a single column of the COEFFS sheet of the
-0_ISOBXR_MASTER.xlsx file.
-<br /> (string of characters)</p></td>
+for the run, <br />
+as defined in a single column of the <strong>COEFFS</strong> sheet of the
+<strong><em>0_ISOBXR_MASTER.xlsx</em></strong> file. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>t_lim</th>
-      <td><p>Run duration, given in the same time units as the fluxes.
-<br /> (integer)</p></td>
+      <td><p>Run duration, given in the same time units as the fluxes. <br />
+(integer)</p></td>
     </tr>
     <tr>
       <th>nb_steps</th>
-      <td><p>Number of steps that will define the resolution of the run.
-<br /> (integer)</p></td>
+      <td><p>Number of calculation steps. <br />
+It determines the resolution of the run. <br />
+(integer)</p></td>
     </tr>
     <tr>
       <th>time_units</th>
-      <td><p>Vector defining the initial time units (identical to time unit
-used for fluxes) followed by the time unit used for the graphic output.
-<br /> (vector of two strings of characters, eg. c("days", "years"))</p></td>
+      <td><p>Vector defining the initial time unit
+(identical to unit used in fluxes), <br />
+followed by the time unit used for the graphical output.<br />
+Character string, to be selected  amongst the following:<br />
+<em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em><br />
+e.g.,  c("d", "yr") to convert days into years</p></td>
     </tr>
     <tr>
       <th>FORCING_RAYLEIGH</th>
-      <td><p><em>OPTIONAL</em> Dataframe describing the forcing on a Rayleigh
-distillation driven fractionation coefficient as a function of flux intensities
-and a fundamental fractionation coefficient (Dataframe formating details in
-read me).
-<br /> Default is NULL.</p></td>
+      <td><p><em>OPTIONAL</em> <br />
+Dataframe describing the forcing on a fractionation coefficient
+by a Rayleigh isotope distillation, <br />
+as a function of flux intensities and a fundamental fractionation coefficient. <br />
+Dataframe formatting details are in isobxr vignette. <br />
+Default is NULL.</p></td>
     </tr>
     <tr>
       <th>FORCING_SIZE</th>
-      <td><p><em>OPTIONAL</em> Dataframe describing the forcing on one or several box
-sizes (mass of element X). The newly defined sizes for the given set of boxes
-shown in dataframe will overwrite the sizes as defined in 0_ISOBXR_MASTER.xlsx file.
-<br /> Default is NULL.</p></td>
+      <td><p><em>OPTIONAL</em> <br />
+Dataframe describing the forcing on one or several box sizes (mass of element X). <br />
+The newly defined sizes for the given set of boxes
+overwrite their sizes as previously defined in <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> file. <br />
+Dataframe formatting details are in isobxr vignette. <br />
+Default is NULL.</p></td>
     </tr>
     <tr>
       <th>FORCING_DELTA</th>
-      <td><p><em>OPTIONAL</em> Dataframe describing the forcing on one or several boxes
-initial isotope composition described as delta (Dataframe formating details in read me).
-The newly defined delta values for the given set of boxes shown in dataframe will
-overwrite the delta values as defined in ISOBXR_MASTER file.
-<br /> Default is NULL.</p></td>
+      <td><p><em>OPTIONAL</em> <br />
+Dataframe describing the forcing on one or several boxes
+initial isotope composition expressed as delta values. <br />
+The newly defined delta values for the given set of boxes
+overwrite the delta values as previously defined in <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> file. <br />
+Dataframe formatting details are in isobxr vignette. <br />
+Default is NULL.</p></td>
     </tr>
     <tr>
       <th>FORCING_ALPHA</th>
-      <td><p><em>OPTIONAL</em> Dataframe describing the forcing on one or several
-fractionation coefficients linked to fluxes from one reservoir to another
-(Dataframe formating details in read me). The newly defined alpha values
-for the given set of boxes shown in dataframe will overwrite the alpha values
-as defined in ISOBXR_MASTER file.
-<br /> Default is NULL.</p></td>
+      <td><p><em>OPTIONAL</em> <br />
+Dataframe describing the forcing on one or several
+fractionation coefficients from one reservoir to another. <br />
+The newly defined alpha values for the given set of boxes
+overwrite the alpha values as previously defined in <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> file. <br />
+Dataframe formatting details are in isobxr vignette. <br />
+Default is NULL.</p></td>
     </tr>
     <tr>
       <th>COMPOSITE</th>
-      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> Logical value automatically defined in <code><a href='compose_isobxr.html'>compose_isobxr</a></code>.
-<br /> Default is FALSE.</p></td>
+      <td><p><em>NOT TO BE USED IN SINGLE RUN</em>  <br />
+Logical value automatically defined in <code><a href='compose_isobxr.html'>compose_isobxr</a></code>. <br />
+Default is FALSE.</p></td>
     </tr>
     <tr>
       <th>COMPO_SERIES_n</th>
-      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> Iteration of the composite run for the given series it belongs to,
-automatically defined in <code><a href='compose_isobxr.html'>compose_isobxr</a></code>.
-<br /> Default is NaN.</p></td>
+      <td><p><em>NOT TO BE USED IN SINGLE RUN</em>  <br />
+Iteration of the composite run for the given series it belongs to,
+automatically defined in <code><a href='compose_isobxr.html'>compose_isobxr</a></code>.  <br />
+Default is NaN.</p></td>
     </tr>
     <tr>
       <th>COMPO_SERIES_FAMILY</th>
-      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> Composite run series family, automatically defined in
-<code><a href='compose_isobxr.html'>compose_isobxr</a></code>.
-<br /> Default is NaN.</p></td>
+      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> <br />
+Composite run series family, automatically defined in
+<code><a href='compose_isobxr.html'>compose_isobxr</a></code>. <br />
+Default is NaN.</p></td>
     </tr>
     <tr>
       <th>EXPLORER</th>
-      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> Logical value automatically defined in <code><a href='sweep_steady.html'>sweep_steady</a></code>
-or <code><a href='sweep_dyn.html'>sweep_dyn</a></code>.
-<br /> Default is FALSE.</p></td>
+      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> <br />
+Logical value automatically defined in <code><a href='sweep_steady.html'>sweep_steady</a></code>
+or <code><a href='sweep_dyn.html'>sweep_dyn</a></code>. <br />
+Default is FALSE.</p></td>
     </tr>
     <tr>
       <th>EXPLO_SERIES_n</th>
-      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> Iteration of the sweep run for the given series it belongs to,
-automatically defined in <code><a href='sweep_steady.html'>sweep_steady</a></code> or <code><a href='sweep_dyn.html'>sweep_dyn</a></code>.
-<br /> Default is NaN.</p></td>
+      <td><p><em>NOT TO BE USED IN SINGLE RUN</em>  <br />
+Iteration of the sweep run for the given series it belongs to,
+automatically defined in <code><a href='sweep_steady.html'>sweep_steady</a></code> or <code><a href='sweep_dyn.html'>sweep_dyn</a></code>. <br />
+Default is NaN.</p></td>
     </tr>
     <tr>
       <th>EXPLO_SERIES_FAMILY</th>
-      <td><p><em>NOT TO BE USED IN SINGLE RUN</em> Sweep run series family, automatically defined in
-<code><a href='sweep_steady.html'>sweep_steady</a></code> or <code><a href='sweep_dyn.html'>sweep_dyn</a></code>.
-<br /> Default is NaN.</p></td>
+      <td><p><em>NOT TO BE USED IN SINGLE RUN</em>  <br />
+Sweep run series family, automatically defined in
+<code><a href='sweep_steady.html'>sweep_steady</a></code> or <code><a href='sweep_dyn.html'>sweep_dyn</a></code>. <br />
+Default is NaN.</p></td>
     </tr>
     <tr>
       <th>HIDE_PRINTS</th>
-      <td><p><em>OPTIONAL</em> Logical value determining whether to run outputs details in R console.
-This parameter will not hide the warnings regarding the automatic update of
-the run duration in case of the emptying of a box.
-<br /> Default is FALSE.</p></td>
+      <td><p><em>OPTIONAL</em>  <br />
+Logical value. <br />
+Prints outputs details in R console if TRUE. <br />
+This parameter does not hide the warnings regarding the automatic update of
+the run duration in case of the emptying of a box. <br />
+Default is FALSE.</p></td>
     </tr>
     <tr>
-      <th>PLOT_DIAGRAMS</th>
-      <td><p><em>OPTIONAL</em> Logical value to edit pdf of box model diagram or not.
-<br /> Default is TRUE.</p></td>
+      <th>to_DIGEST_DIAGRAMS</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value. <br />
+Edits pdf of box model diagram in RUN DIGEST folder if TRUE. <br />
+Default is TRUE.</p></td>
     </tr>
     <tr>
-      <th>PLOT_evD</th>
-      <td><p><em>OPTIONAL</em> Logical value to edit pdf of delta time evolution plot or not.
-<br /> Default is TRUE.</p></td>
+      <th>to_DIGEST_evD_PLOT</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value.  <br />
+Edits pdf of delta time evolution plot in RUN DIGEST folder if TRUE.<br />
+Default is TRUE.</p></td>
+    </tr>
+    <tr>
+      <th>to_DIGEST_CSV_XLS</th>
+      <td><p><em>OPTIONAL</em><br />
+Logical value.  <br />
+Edits Rda input file (ending with _IN.Rda) and CSV output files in RUN DIGEST folder if TRUE. <br />
+Default is FALSE.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If function is run independently and if the directory is non existing,
-the fonction creates and stores all outputs
-in a SERIES directory located in working directory.
-<br /> Directory name structure: 2_RUN + SERIES_ID</p>
+    <p>If the function is run independently and if directory is not yet existing, <br />
+<code>run_isobxr</code> creates and stores all outputs in a <em>SERIES</em> folder located in working directory,
+with the following name structure: <br />
+<strong><em>2_RUN + SERIES_ID</em></strong></p>
 <ol>
-<li><p>Automatically sets a XXXX run number between 0001 and 9999. The outputs do not overwrite possible identical previously performed runs.</p></li>
-<li><p>Creates an INPUT file with all run conditions, located in SERIES directory.
-<br /> (file name structure: SERIES_ID + XXXX + _INPUT.xlsx)</p></li>
-<li><p>Edits a Box model diagram of flux (DIAGf pdf) of element X (mass per time unit)
-between all boxes. (Optional, depends on parameter PLOT_DIAGRAM), located in SERIES directory.
-<br /> (file name structure: SERIES_ID + XXXX + DIAGf + _flux_list_name.pdf)</p></li>
-<li><p>Edits a Box model diagram of isotope fractionation coefficients (alphas, DIAGa pdf)
-between all boxes (optional, depends on parameter PLOT_DIAGRAM), located in SERIES directory.
-<br /> (file name structure: SERIES_ID + XXXX + DIAGf + _flux_list_name.pdf)</p></li>
-<li><p>Creates a subdirectory for numerical outputs.
-<br /> (directory name structure: SERIES_ID + XXXX + _OUT)</p>
+<li><p>Automatically sets a XXXX run number between 0001 and 9999. <br />
+The outputs do not overwrite possible identical previously performed runs.</p></li>
+<li><p>Stores all outputs in a file with the Rda format. <br />
+This file stores all data produced by the function. <br />
+(file name structure: <strong><em>SERIES_ID + XXXX + _OUT.Rda</em></strong>)</p></li>
+</ol>
+
+    <h2 class="hasAnchor" id="optional-outputs-stored-in-digest-folder"><a class="anchor" href="#optional-outputs-stored-in-digest-folder"></a>Optional outputs, stored in <em>DIGEST</em> folder</h2>
+
+    
+
 <ol>
-<li><p>Stores <code><a href='num_slvr.html'>num_slvr</a></code> or <code><a href='ana_slvr.html'>ana_slvr</a></code> outputs in subdirectory.</p></li>
-<li><p>Edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale (optional).
-<br /> (file name structure: SERIES_ID + XXXX + _plot_evD.pdf)</p></li>
-</ol></li>
+<li><p>If to_DIGEST_CSV_XLS = TRUE, <br />
+creates an INPUT file in the xlsx format, with all run conditions and parameters. <br />
+(file name structure: <strong><em>in_0_INPUTS + SERIES_ID + XXXX + .xlsx</em></strong>) <br /></p></li>
+<li><p>If to_DIGEST_DIAGRAMS = TRUE, <br />
+edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
+between all boxes. <br />
+(file name structure: <strong><em>in_1_DIAG_FLUX + SERIES_ID + XXXX + .pdf</em></strong>)</p></li>
+<li><p>If to_DIGEST_DIAGRAMS = TRUE, <br />
+edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
+between all boxes. <br />
+(file name structure: <strong><em>in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf</em></strong>)</p></li>
+<li><p>If to_DIGEST_evD_PLOT = TRUE, <br />
+edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale. <br />
+(file name structure: <strong><em>out_0_PLOT_evD + SERIES_ID + XXXX + .pdf</em></strong>)</p></li>
+<li><p>If to_DIGEST_CSV_XLS = TRUE, <br />
+stores csv versions of the <code><a href='num_slvr.html'>num_slvr</a></code> or <code><a href='ana_slvr.html'>ana_slvr</a></code> outputs in <em>DIGEST</em> folder. <br />
+See <code><a href='num_slvr.html'>num_slvr</a></code> or <code><a href='ana_slvr.html'>ana_slvr</a></code> documentation for further details.</p></li>
 <li><p>Creates or updates the general log file, located in general working directory.
-<br /> (file name: 1_LOG.csv)</p></li>
+(file name: <strong><em>1_LOG.csv</em></strong>)</p></li>
 </ol>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

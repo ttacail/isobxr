@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert time units in a data frame column — time_converter • isobxr</title>
+<title>Convert time units in a dataframe column — time_converter • isobxr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Convert time units in a data frame column — time_converter" />
+<meta property="og:title" content="Convert time units in a dataframe column — time_converter" />
 <meta property="og:description" content="Convert the time units in plots" />
 
 
@@ -126,7 +126,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert time units in a data frame column</h1>
+    <h1>Convert time units in a dataframe column</h1>
     <small class="dont-index">Source: <a href='https://github.com/ttacail/isobxr/blob/master/R/local_functions.R'><code>R/local_functions.R</code></a></small>
     <div class="hidden name"><code>time_converter.Rd</code></div>
     </div>
@@ -148,27 +148,40 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dataframe</th>
-      <td><p>data frame for which a column with numerical time values should be converted to another unit</p></td>
+      <td><p>dataframe for which a column with numerical time values should be converted.</p></td>
     </tr>
     <tr>
       <th>time_colname</th>
-      <td><p>column with time values that need to be converted to a different time unit</p></td>
+      <td><p>name of column with time (numerical) values to be converted to a different time unit. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>conv_timecolname</th>
-      <td><p>name of the column once time units converted. Can be identical to time_colname</p></td>
+      <td><p>name of the column after time units conversion.  <br />
+Can be identical to time_colname. <br />
+(character string)</p></td>
     </tr>
     <tr>
       <th>former_unit</th>
-      <td><p>former time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")</p></td>
+      <td><p>former time unit. Character string amongst the following: <br />
+<em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em></p></td>
     </tr>
     <tr>
       <th>new_unit</th>
-      <td><p>new time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")</p></td>
+      <td><p>new time unit. Character string amongst the following: <br />
+<em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em></p></td>
     </tr>
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>ex_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>observation_num <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span><span class='op'>)</span>, time_d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>365</span>, <span class='fl'>1000</span>, <span class='fl'>3650</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>time_converter</span><span class='op'>(</span><span class='va'>ex_df</span>, <span class='st'>"time_d"</span>, <span class='st'>"time_yr"</span>, <span class='st'>"d"</span>, <span class='st'>"yr"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   observation_num time_d   time_yr
+#&gt; 1               1    100 0.2737851
+#&gt; 2               2    365 0.9993155
+#&gt; 3               3   1000 2.7378508
+#&gt; 4               4   3650 9.9931554</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

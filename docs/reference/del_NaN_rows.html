@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Delete rows of a data frame containing NaN values in a given column — del_NaN_rows • isobxr</title>
+<title>Delete rows of a dataframe containing NaN values in a given column — del_NaN_rows • isobxr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Delete rows of a data frame containing NaN values in a given column — del_NaN_rows" />
-<meta property="og:description" content="Delete rows of a data frame containing NaN values in a given column" />
+<meta property="og:title" content="Delete rows of a dataframe containing NaN values in a given column — del_NaN_rows" />
+<meta property="og:description" content="Delete rows of a dataframe containing NaN values in a given column" />
 
 
 
@@ -126,13 +126,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Delete rows of a data frame containing NaN values in a given column</h1>
+    <h1>Delete rows of a dataframe containing NaN values in a given column</h1>
     <small class="dont-index">Source: <a href='https://github.com/ttacail/isobxr/blob/master/R/local_functions.R'><code>R/local_functions.R</code></a></small>
     <div class="hidden name"><code>del_NaN_rows.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Delete rows of a data frame containing NaN values in a given column</p>
+    <p>Delete rows of a dataframe containing NaN values in a given column</p>
     </div>
 
     <pre class="usage"><span class='fu'>del_NaN_rows</span><span class='op'>(</span><span class='va'>dataframe</span>, <span class='va'>by_col</span>, <span class='va'>resetrows</span><span class='op'>)</span></pre>
@@ -142,11 +142,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dataframe</th>
-      <td><p>Data frame</p></td>
+      <td><p>dataframe</p></td>
     </tr>
     <tr>
       <th>by_col</th>
-      <td><p>Name of column from which NaN values should be removed</p></td>
+      <td><p>Name of column from which NaN values should be removed. Character string.</p></td>
     </tr>
     <tr>
       <th>resetrows</th>
@@ -156,8 +156,20 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Data frame without the rows in which there previously were NaN values in column by_col</p>
+    <p>Subset of dataframe without the rows containing NaN values in column by_col</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>ex_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>letters <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span>, <span class='st'>"C"</span>, <span class='st'>"D"</span><span class='op'>)</span>,  numbers <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='cn'>NaN</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>ex_df</span>
+</div><div class='output co'>#&gt;   letters numbers
+#&gt; 1       A       1
+#&gt; 2       B       2
+#&gt; 3       C       3
+#&gt; 4       D     NaN</div><div class='input'><span class='fu'>del_NaN_rows</span><span class='op'>(</span><span class='va'>ex_df</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"numbers"</span><span class='op'>)</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   letters numbers
+#&gt; 1       A       1
+#&gt; 2       B       2
+#&gt; 3       C       3</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

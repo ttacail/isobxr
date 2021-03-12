@@ -40,10 +40,10 @@
 
 
 <meta property="og:title" content="Numerically solve stable isotope box models — num_slvr" />
-<meta property="og:description" content="A numerical solver of the system of ordinary differential
-equations (ODES) of stable isotope ratios of element X in all boxes of a system.
-The numerical solver uses the ode function of the deSolve package
-to integrate the stable isotopes ratios in each box. It allows the
+<meta property="og:description" content="A numerical solver of the system of ordinary differential equations (ODES),
+describing the evolution of stable isotope ratios in all boxes of a system.
+ The numerical solver uses the ode function of the deSolve package
+to integrate the stable isotopes ratios over time in each box. It allows the
 calculation of the evolution of stable isotope ratio even in the case of
 unbalanced outward and inward fluxes of element X in a given box
 resulting in the accumulation or loss of element X." />
@@ -138,24 +138,29 @@ resulting in the accumulation or loss of element X." />
     </div>
 
     <div class="ref-description">
-    <p>A numerical solver of the system of ordinary differential
-equations (ODES) of stable isotope ratios of element X in all boxes of a system.
-The numerical solver uses the ode function of the deSolve package
-to integrate the stable isotopes ratios in each box. It allows the
+    <p>A numerical solver of the system of ordinary differential equations (ODES),
+describing the evolution of stable isotope ratios in all boxes of a system.
+<br /> The numerical solver uses the ode function of the deSolve package
+to integrate the stable isotopes ratios over time in each box. It allows the
 calculation of the evolution of stable isotope ratio even in the case of
 unbalanced outward and inward fluxes of element X in a given box
 resulting in the accumulation or loss of element X.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>num_slvr</span><span class='op'>(</span><span class='va'>input_path</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>num_slvr</span><span class='op'>(</span><span class='va'>input_path</span>, to_DIGEST_csv <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>input_path</th>
-      <td><p>path to the INPUT file containing all commands for the run.
-<br /> (file name structure: RUN name + _INPUT.xlsx)</p></td>
+      <td><p>path to the INPUT file containing all commands for the run <br />
+(character string, file name structure: <strong><em>RUN name + _IN.Rda</em></strong>)</p></td>
+    </tr>
+    <tr>
+      <th>to_DIGEST_csv</th>
+      <td><p>edit csv outputs or not to the RUN DIGEST folder <br />
+(logical, default is FALSE)</p></td>
     </tr>
     </table>
 
@@ -163,13 +168,21 @@ resulting in the accumulation or loss of element X.</p>
 
     <p>The function returns the numerically determined evolution of stable
 isotope compositions and mass of element X in all boxes over the run duration as
-specified in INPUT file. The function outputs are as follows:</p><ol>
-<li><p>OUT data file storing initial and final size and delta values in all boxes.
-<br /> (file name structure: RUN name + _N_1_OUT.csv)</p></li>
-<li><p>evS data file storing the evolution with time of the sizes (masses of element X) of all boxes.
-<br /> (file name structure: RUN name + _N_2_evS.csv)</p></li>
-<li><p>evD data file storing the evolution with time of the delta values in all boxes.
-<br /> (file name structure: RUN name + _N_3_evD.csv)</p></li>
+specified in INPUT file. <br />  <br />
+The outputs of the run are stored in a Rda output file
+with the following file name structure:  <br />
+<strong><em>RUN name + _OUT.Rda</em></strong></p>
+    <h2 class="hasAnchor" id="optional-csv-outputs-to-the-digest-folder-are-as-follows"><a class="anchor" href="#optional-csv-outputs-to-the-digest-folder-are-as-follows"></a>Optional csv outputs to the DIGEST folder are as follows</h2>
+
+    
+
+<ol>
+<li><p>OUT data file storing initial and final size and delta values in all boxes.<br />
+(file name structure: <strong><em>out_1_N_OUT + RUN name + .csv</em></strong>)</p></li>
+<li><p>evS data file storing the evolution with time of the sizes (masses of element X) of all boxes.<br />
+(file name structure:  <strong><em>out_2_N_evS + RUN name + .csv</em></strong>)</p></li>
+<li><p>evD data file storing the evolution with time of the delta values in all boxes.<br />
+(file name structure:  <strong><em>out_3_N_evD + RUN name + .csv</em></strong>)</p></li>
 </ol>
 
 
