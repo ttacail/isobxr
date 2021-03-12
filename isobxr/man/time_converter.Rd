@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{time_converter}
 \alias{time_converter}
-\title{Convert time units in a data frame column}
+\title{Convert time units in a dataframe column}
 \usage{
 time_converter(
   dataframe,
@@ -13,16 +13,25 @@ time_converter(
 )
 }
 \arguments{
-\item{dataframe}{data frame for which a column with numerical time values should be converted to another unit}
+\item{dataframe}{dataframe for which a column with numerical time values should be converted.}
 
-\item{time_colname}{column with time values that need to be converted to a different time unit}
+\item{time_colname}{name of column with time (numerical) values to be converted to a different time unit. \cr
+(character string)}
 
-\item{conv_timecolname}{name of the column once time units converted. Can be identical to time_colname}
+\item{conv_timecolname}{name of the column after time units conversion.  \cr
+Can be identical to time_colname. \cr
+(character string)}
 
-\item{former_unit}{former time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")}
+\item{former_unit}{former time unit. Character string amongst the following: \cr
+\emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}}
 
-\item{new_unit}{new time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")}
+\item{new_unit}{new time unit. Character string amongst the following: \cr
+\emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}}
 }
 \description{
 Convert the time units in plots
+}
+\examples{
+ex_df <- data.frame(observation_num = c(1,2,3,4), time_d = c(100, 365, 1000, 3650))
+time_converter(ex_df, "time_d", "time_yr", "d", "yr")
 }

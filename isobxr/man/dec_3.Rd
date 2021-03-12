@@ -10,8 +10,11 @@ dec_3(x)
 \item{x}{Numerical value}
 }
 \value{
-A print (string of character) with 3 decimal figure.
+A character string with 3 decimal figures.
 }
 \description{
 Takes a numerical value and returns a print with 3 decimal figures.
+}
+\examples{
+dec_3(1.2345)
 }

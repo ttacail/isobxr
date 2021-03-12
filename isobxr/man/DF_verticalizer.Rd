@@ -2,20 +2,24 @@
 % Please edit documentation in R/local_functions.R
 \name{DF_verticalizer}
 \alias{DF_verticalizer}
-\title{Verticalizes a data frame}
+\title{Verticalizes a dataframe}
 \usage{
 DF_verticalizer(df_hor, vert_col)
 }
 \arguments{
-\item{df_hor}{Horizontal data frame}
+\item{df_hor}{Horizontal dataframe}
 
-\item{vert_col}{Vector of string of characters containing the names of the columns of numerical variables to be verticalized}
+\item{vert_col}{Vector of the names of the columns of numerical variables to be verticalized.}
 }
 \value{
-A vertical data frame containing the variables to be verticalized (column "VAR") and the name of the variable (column "VAR_TYPE").
+A vertical dataframe containing the variables to be verticalized (column "VAR", numeric)
+and the name of the variable (column "VAR_TYPE", character strings).
 }
 \description{
 Takes a dataframe with a set of different columns containing numerical values to be verticalized,
 returns a vertical dataframe with all variables in a single column called "VAR" together with a "VAR_TYPE" column
-defining the type of variable for the given row, named after the column name found in horizontal data frame.
+defining the type of variable for the given row, named after the column name found in horizontal dataframe.
+}
+\examples{
+DF_verticalizer(df_hor = iris, vert_col = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))
 }

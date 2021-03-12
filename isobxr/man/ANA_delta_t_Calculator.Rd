@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{ANA_delta_t_Calculator}
 \alias{ANA_delta_t_Calculator}
-\title{Calculate delta values at t with ODE solutions from \code{\link{ana_slvr}}}
+\title{Calculate delta values at t time with ODE solutions from \code{\link{ana_slvr}}}
 \usage{
 ANA_delta_t_Calculator(
   t,
@@ -14,23 +14,27 @@ ANA_delta_t_Calculator(
 )
 }
 \arguments{
-\item{t}{Time at which the delta values are to be calculated}
+\item{t}{Time at which the delta values are to be calculated (numeric)}
 
-\item{ODE_Constants}{Constants as determined by the analytical solver for the system of ordinary differential equations (single column data frame).}
+\item{ODE_Constants}{Constants as determined by the analytical solver for the system of \cr
+ordinary differential equations (single column dataframe).}
 
-\item{ODE_Eigenvalues}{Eigenvalues as determined by the analytical solver for the system of ordinary differential equations (single column data frame).}
+\item{ODE_Eigenvalues}{Eigenvalues as determined by the analytical solver for the system of \cr
+ordinary differential equations (single column dataframe).}
 
-\item{ODE_Eigenvectors}{Eigenvectors as determined by the analytical solver for the system of ordinary differential equations (multiple columns data frame).}
+\item{ODE_Eigenvectors}{Eigenvectors as determined by the analytical solver for the system of \cr
+ordinary differential equations (multiple columns dataframe).}
 
-\item{BOXES_IDs}{Vector of string of characters with the names of the boxes in the same order as used in \code{\link{ana_slvr}}.}
+\item{BOXES_IDs}{Vector of character strings with the names of the boxes \cr
+in the same order as used in \code{\link{ana_slvr}}.}
 
 \item{ratio_standard}{Isotope ratio of the reference material used to calculate the delta values.}
 }
 \value{
-Data frame of the delta values in all boxes at time t.
+Dataframe of the delta values in all boxes at t time.
 }
 \description{
-Calucate the delta values at time t using the ODE analytical solutions of the isotopic box model.
+Calculate the delta values at t time using the ODE analytical solutions of the isotopic box model.
 }
 \seealso{
 \code{\link{ana_slvr}}

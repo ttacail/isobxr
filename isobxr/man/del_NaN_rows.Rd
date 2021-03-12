@@ -2,20 +2,25 @@
 % Please edit documentation in R/local_functions.R
 \name{del_NaN_rows}
 \alias{del_NaN_rows}
-\title{Delete rows of a data frame containing NaN values in a given column}
+\title{Delete rows of a dataframe containing NaN values in a given column}
 \usage{
 del_NaN_rows(dataframe, by_col, resetrows)
 }
 \arguments{
-\item{dataframe}{Data frame}
+\item{dataframe}{dataframe}
 
-\item{by_col}{Name of column from which NaN values should be removed}
+\item{by_col}{Name of column from which NaN values should be removed. Character string.}
 
 \item{resetrows}{Logical value to reset the row numbering or not.}
 }
 \value{
-Data frame without the rows in which there previously were NaN values in column by_col
+Subset of dataframe without the rows containing NaN values in column by_col
 }
 \description{
-Delete rows of a data frame containing NaN values in a given column
+Delete rows of a dataframe containing NaN values in a given column
+}
+\examples{
+ex_df <- data.frame(letters = c("A", "B", "C", "D"),  numbers = c(1,2,3,NaN))
+ex_df
+del_NaN_rows(ex_df, c("numbers"), TRUE)
 }

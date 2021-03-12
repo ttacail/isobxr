@@ -7,12 +7,14 @@
 clear_subset(dataset)
 }
 \arguments{
-\item{dataset}{Previously subsetted data frame}
+\item{dataset}{Previously subsetted dataframe.}
 }
 \value{
-The cleared data frame.
+Cleared dataframe.
 }
 \description{
-Takes a previously subsetted data frame and
-clears the lost levels of factor type columns and resets the rown numbering.
+Takes a previously subsetted dataframe, clears its deleted levels and resets its row indexes.
+}
+\examples{
+clear_subset(iris[iris$Species == "setosa" & iris$Sepal.Length > 5 ,])
 }

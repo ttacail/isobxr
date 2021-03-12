@@ -10,8 +10,11 @@ dec_4(x)
 \item{x}{Numerical value}
 }
 \value{
-A print (string of character) with 4 decimal figure.
+A character string with 4 decimal figures.
 }
 \description{
 Takes a numerical value and returns a print with 4 decimal figures.
+}
+\examples{
+dec_4(1.2345)
 }

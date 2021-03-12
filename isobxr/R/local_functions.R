@@ -2,65 +2,77 @@ usethis::use_package("grid", min_version = TRUE)
 usethis::use_package("devtools", "Suggests")
 usethis::use_package("rlang", min_version = TRUE)
 
-# clear a subset #######################################################################################################
+# clear a subset
 #' Clear a subset
-#' @description Takes a previously subsetted data frame and
-#' clears the lost levels of factor type columns and resets the rown numbering.
-#' @param dataset Previously subsetted data frame
-#' @return The cleared data frame.
+#' @description Takes a previously subsetted dataframe, clears its deleted levels and resets its row indexes.
+#' @param dataset Previously subsetted dataframe.
+#' @return Cleared dataframe.
 #' @export
+#' @examples
+#' clear_subset(iris[iris$Species == "setosa" & iris$Sepal.Length > 5 ,])
 clear_subset <- function(dataset){
   dataset <- droplevels(dataset)
   rownames(dataset) <- NULL
   return(dataset)}
 
-# display a number as a character with two decimals only ############################################################
 #' Print a number with 0 decimal figures
-#' @description Takes a numerical value and returns a print with 0 decimal figures.
+#' @description Takes a numerical value and returns a string of the rounded value, with 0 decimal figures.
 #' @param x Numerical value
-#' @return A print (string of character) with 0 decimal figure.
+#' @return A character string with 0 decimal figures.
 #' @export
+#' @examples
+#' dec_0(1.2345)
 dec_0 <- function(x) sprintf("%.0f", x)
 
 #' Print a number with 1 decimal figures
 #' @description Takes a numerical value and returns a print with 1 decimal figures.
 #' @param x Numerical value
-#' @return A print (string of character) with 1 decimal figure.
+#' @return A character string with 1 decimal figure.
 #' @export
+#' @examples
+#' dec_1(1.2345)
 dec_1 <- function(x) sprintf("%.1f", x)
 
 #' Print a number with 2 decimal figures
 #' @description Takes a numerical value and returns a print with 2 decimal figures.
 #' @param x Numerical value
-#' @return A print (string of character) with 2 decimal figure.
+#' @return A character string with 2 decimal figures.
 #' @export
+#' @examples
+#' dec_2(1.2345)
 dec_2 <- function(x) sprintf("%.2f", x)
 
 #' Print a number with 3 decimal figures
 #' @description Takes a numerical value and returns a print with 3 decimal figures.
 #' @param x Numerical value
-#' @return A print (string of character) with 3 decimal figure.
+#' @return A character string with 3 decimal figures.
 #' @export
+#' @examples
+#' dec_3(1.2345)
 dec_3 <- function(x) sprintf("%.3f", x)
 
 #' Print a number with 4 decimal figures
 #' @description Takes a numerical value and returns a print with 4 decimal figures.
 #' @param x Numerical value
-#' @return A print (string of character) with 4 decimal figure.
+#' @return A character string with 4 decimal figures.
 #' @export
+#' @examples
+#' dec_4(1.2345)
 dec_4 <- function(x) sprintf("%.4f", x)
 
-# verticalize a dataframe for a given set of columns  ############################################################
-#' Verticalizes a data frame
+#' Verticalizes a dataframe
 #' @description Takes a dataframe with a set of different columns containing numerical values to be verticalized,
 #' returns a vertical dataframe with all variables in a single column called "VAR" together with a "VAR_TYPE" column
-#' defining the type of variable for the given row, named after the column name found in horizontal data frame.
-#' @param df_hor Horizontal data frame
-#' @param vert_col Vector of string of characters containing the names of the columns of numerical variables to be verticalized
-#' @return A vertical data frame containing the variables to be verticalized (column "VAR") and the name of the variable (column "VAR_TYPE").
+#' defining the type of variable for the given row, named after the column name found in horizontal dataframe.
+#' @param df_hor Horizontal dataframe
+#' @param vert_col Vector of the names of the columns of numerical variables to be verticalized.
+#' @return A vertical dataframe containing the variables to be verticalized (column "VAR", numeric)
+#' and the name of the variable (column "VAR_TYPE", character strings).
 #' @export
-DF_verticalizer <- function(df_hor,      # dataframe
-                            vert_col     # columns of numerical variables to be verticalized
+#' @examples
+#' DF_verticalizer(df_hor = iris, vert_col = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))
+DF_verticalizer <- function(df_hor,      # horizontal dataframe
+                            vert_col     # vector of column names of numerical variables to be verticalized
 ){
   hor_col <- names(df_hor)[-which(names(df_hor) %in% vert_col)]
   i <- 1
@@ -78,7 +90,6 @@ DF_verticalizer <- function(df_hor,      # dataframe
   return(df_vert)
 }
 
-# Multiple plot function  ############################################################
 #' Collate multiple ggplot object into a grid format
 #' @description Takes a list of ggplot objects and returns a single object with a grid of the ggplot objects.
 #' \cr ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -128,8 +139,6 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-
-# CALCULATION GAUGE ############################################################
 #' Gauge of calcucation
 #' @description Prints a gauge of the calculation progress
 #' @param i Calculating step number
@@ -142,30 +151,36 @@ calculation_gauge <- function(i, len){
   print(paste(stars, straights, perc, sep = ""), quote = F)
 }
 
-# delete Rows with NaN values for a given column of a dataframe ############################################################
-#' Delete rows of a data frame containing NaN values in a given column
-#' @description Delete rows of a data frame containing NaN values in a given column
-#' @param dataframe Data frame
-#' @param by_col Name of column from which NaN values should be removed
+#' Delete rows of a dataframe containing NaN values in a given column
+#' @description Delete rows of a dataframe containing NaN values in a given column
+#' @param dataframe dataframe
+#' @param by_col Name of column from which NaN values should be removed. Character string.
 #' @param resetrows Logical value to reset the row numbering or not.
-#' @return Data frame without the rows in which there previously were NaN values in column by_col
+#' @return Subset of dataframe without the rows containing NaN values in column by_col
 #' @export
+#' @examples
+#' ex_df <- data.frame(letters = c("A", "B", "C", "D"),  numbers = c(1,2,3,NaN))
+#' ex_df
+#' del_NaN_rows(ex_df, c("numbers"), TRUE)
 del_NaN_rows <- function(dataframe, by_col, resetrows){
   dataframe <- subset(dataframe,!(is.na(dataframe[by_col])))
   if(resetrows == TRUE){rownames(dataframe) <- NULL}
   return(dataframe)
 }
 
-# calculate delta values at time = t using ODE analytical solutions ############################################################
-#' Calculate delta values at t with ODE solutions from \code{\link{ana_slvr}}
-#' @description Calucate the delta values at time t using the ODE analytical solutions of the isotopic box model.
-#' @param t Time at which the delta values are to be calculated
-#' @param ODE_Constants Constants as determined by the analytical solver for the system of ordinary differential equations (single column data frame).
-#' @param ODE_Eigenvalues Eigenvalues as determined by the analytical solver for the system of ordinary differential equations (single column data frame).
-#' @param ODE_Eigenvectors Eigenvectors as determined by the analytical solver for the system of ordinary differential equations (multiple columns data frame).
-#' @param BOXES_IDs Vector of string of characters with the names of the boxes in the same order as used in \code{\link{ana_slvr}}.
+#' Calculate delta values at t time with ODE solutions from \code{\link{ana_slvr}}
+#' @description Calculate the delta values at t time using the ODE analytical solutions of the isotopic box model.
+#' @param t Time at which the delta values are to be calculated (numeric)
+#' @param ODE_Constants Constants as determined by the analytical solver for the system of \cr
+#' ordinary differential equations (single column dataframe).
+#' @param ODE_Eigenvalues Eigenvalues as determined by the analytical solver for the system of \cr
+#' ordinary differential equations (single column dataframe).
+#' @param ODE_Eigenvectors Eigenvectors as determined by the analytical solver for the system of \cr
+#' ordinary differential equations (multiple columns dataframe).
+#' @param BOXES_IDs Vector of character strings with the names of the boxes \cr
+#' in the same order as used in \code{\link{ana_slvr}}.
 #' @param ratio_standard Isotope ratio of the reference material used to calculate the delta values.
-#' @return Data frame of the delta values in all boxes at time t.
+#' @return Dataframe of the delta values in all boxes at t time.
 #' @seealso \code{\link{ana_slvr}}
 ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenvectors, BOXES_IDs, ratio_standard){
   R_t_loc <- ((ODE_Constants*exp(ODE_Eigenvalues*t)))%*%t(ODE_Eigenvectors)
@@ -177,15 +192,22 @@ ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenv
   return(d_t_loc)
 }
 
-# Convert the time units in plots ############################################################
-#' Convert time units in a data frame column
+#' Convert time units in a dataframe column
 #' @description Convert the time units in plots
-#' @param dataframe data frame for which a column with numerical time values should be converted to another unit
-#' @param time_colname column with time values that need to be converted to a different time unit
-#' @param conv_timecolname name of the column once time units converted. Can be identical to time_colname
-#' @param former_unit former time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")
-#' @param new_unit new time unit (amongst: "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr")
+#' @param dataframe dataframe for which a column with numerical time values should be converted.
+#' @param time_colname name of column with time (numerical) values to be converted to a different time unit. \cr
+#' (character string)
+#' @param conv_timecolname name of the column after time units conversion.  \cr
+#' Can be identical to time_colname. \cr
+#' (character string)
+#' @param former_unit former time unit. Character string amongst the following: \cr
+#' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
+#' @param new_unit new time unit. Character string amongst the following: \cr
+#' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
 #' @export
+#' @examples
+#' ex_df <- data.frame(observation_num = c(1,2,3,4), time_d = c(100, 365, 1000, 3650))
+#' time_converter(ex_df, "time_d", "time_yr", "d", "yr")
 time_converter <- function(dataframe,
                            time_colname,
                            conv_timecolname,
@@ -201,7 +223,7 @@ time_converter <- function(dataframe,
                                       d = c(86400000000, 86400000000, 86400, 1440, 24, 1, 0.142857142857143, 0.0327868852469766, 0.00273785078632237, 2.73785078632237E-06, 2.73785078632237E-09, 2.73785078632237E-12),
                                       wk = c(604800000000, 604800000000, 604800, 10080, 168, 7, 1, 0.229508196728836, 0.0191649555042566, 1.91649555042566E-05, 1.91649555042566E-08, 1.91649555042566E-11),
                                       mo = c(2635199999913.6, 2635199999913.6, 2635199.9999136, 43919.99999856, 731.999999976, 30.499999999, 4.357142857, 1, 0.0835044489800944, 8.35044489800944E-05, 8.35044489800944E-08, 8.35044489800944E-11),
-                                      yr = c(31557600009333.3, 31557600009333.3, 31557600.0093333, 525960.000155555, 8766.00000259259, 365.250000108025, 52.1785714440035, 11.97540984, 1, 0.001, 0.000001, 0.000000001),
+                                        yr = c(31557600009333.3, 31557600009333.3, 31557600.0093333, 525960.000155555, 8766.00000259259, 365.250000108025, 52.1785714440035, 11.97540984, 1, 0.001, 0.000001, 0.000000001),
                                       kyr = c(31557600009333300, 31557600009333300, 31557600009.3333, 525960000.155555, 8766000.00259259, 365250.000108025, 52178.5714440035, 11975.40984, 1000, 1, 0.001, 0.000001),
                                       Myr = c(31557600009333300000, 31557600009333300000, 31557600009333.3, 525960000155.555, 8766000002.59259, 365250000.108025, 52178571.4440035, 11975409.84, 1000000, 1000, 1, 0.001),
                                       Gyr = c(3.15576000093333E+22, 3.15576000093333E+22, 31557600009333300, 525960000155555, 8766000002592.59, 365250000108.025, 52178571444.0035, 11975409840, 1000000000, 1000000, 1000, 1))
@@ -219,7 +241,6 @@ time_converter <- function(dataframe,
   return(dataframe)
 }
 
-# A function to prevent any console prints (for sweepers only) ############################################################
 #' Preventing any console prints (for sweepers only)
 #' @description Preventing any console prints (for sweepers only)
 #' @param x function to quiet
@@ -229,7 +250,6 @@ quiet <- function(x) {
   invisible(force(x))
 }
 
-# A function to collect local platform/session/versions data for portability (for DEV only) ############################################################
 #' Collect local portability data (for DEV only)
 #' @description collect local platform/session/versions data for portability (for DEV only)
 #' @param workdir directory where Rdata local summary will be exported
