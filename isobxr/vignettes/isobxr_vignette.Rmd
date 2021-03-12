@@ -24,13 +24,15 @@ knitr::opts_chunk$set(
 
 ----
 
-The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools designed to perform and explore stable isotope box
+The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools 
+designed to perform and explore stable isotope box
 modeling of open or closed systems.
 It provides a ready-to-use tool allowing users to 
 develop and test isotopic box models of their system of interest. 
 It allows the user to explore the behavior of these systems
-in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, 
-as well as sweep the space of parameters in both static and dynamic modes.
+in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), 
+build complex scenarios, 
+and sweep the space of parameters in both static and dynamic modes.
 
 ----
 
@@ -53,7 +55,7 @@ install.packages("devtools")
 devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
 ```
 
-The user is also invited to [download the reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip) for all input and master excel files described in this vignette, as well as [download input and master excel files](https://ttacail.github.io/source/demos/1_ABCD.zip) used for the demonstrations in this vignette and in the getting started vignette (see [Getting started 1](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html) and [Getting started 2](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html)).
+The user is also invited to download the [reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip) for all input and master excel files described in this vignette, as well as download [the demonstration files input and master excel files](https://ttacail.github.io/source/demos/1_ABCD.zip) (see [Getting started 1](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html) and [Getting started 2](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html)).
 
 The **isobxr** package is working under R 3.5.2 to 4.0.3 versions.
 
@@ -179,7 +181,8 @@ $$\begin{array}{ccccc}
 \end{array}$$
 
 These assumptions are valid for amplitude of stable isotope fractionations of the order of tens of ‰.
-This assumption finds its limitation in the case of ample stable isotope fractionations of isotopic systems of light elements (such as D/H), 
+This assumption finds its limitation in the case of ample stable isotope fractionations of isotopic systems of light elements (such as D/H).
+
 In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.
 
 We thus have the following system of first order differential equations used thereafter: 
