@@ -6,28 +6,31 @@ usethis::use_package("deSolve", min_version = TRUE)
 usethis::use_package("rlang", min_version = TRUE)
 #  #_________________________________________________________________________80char
 #' Numerically solve stable isotope box models
-#' @description  A numerical solver of the system of ordinary differential
-#' equations (ODES) of stable isotope ratios of element X in all boxes of a system.
-#' The numerical solver uses the ode function of the deSolve package
+#' @description A numerical solver of the system of ordinary differential equations (ODES),
+#' describing the evolution of stable isotope ratios in all boxes of a system.
+#' \cr The numerical solver uses the ode function of the deSolve package
 #' to integrate the stable isotopes ratios over time in each box. It allows the
 #' calculation of the evolution of stable isotope ratio even in the case of
 #' unbalanced outward and inward fluxes of element X in a given box
 #' resulting in the accumulation or loss of element X.
-#' @param input_path path to the INPUT file containing all commands for the run.
-#' \cr (file name structure: RUN name + _IN.Rda)
-#' @param to_DIGEST_csv edit csv outputs or not (logical) to the RUN DIGEST folder. Default is FALSE.
+#' @param input_path path to the INPUT file containing all commands for the run \cr
+#' (character string, file name structure: \strong{\emph{RUN name + _IN.Rda}})
+#' @param to_DIGEST_csv edit csv outputs or not to the RUN DIGEST folder \cr
+#' (logical, default is FALSE)
 #' @return The function returns the numerically determined evolution of stable
 #' isotope compositions and mass of element X in all boxes over the run duration as
-#' specified in INPUT file. The outputs of the run are stored in a Rda output file.
-#' \cr (file name structure: RUN name + _OUT.Rda)
+#' specified in INPUT file. \cr  \cr
+#' The outputs of the run are stored in a Rda output file
+#' with the following file name structure:  \cr
+#' \strong{\emph{RUN name + _OUT.Rda}}
 #' @section Optional csv outputs to the DIGEST folder are as follows:
 #' \enumerate{
-#' \item OUT data file storing initial and final size and delta values in all boxes.
-#' \cr (file name structure: out_1_N_OUT + RUN name + .csv)
-#' \item evS data file storing the evolution with time of the sizes (masses of element X) of all boxes.
-#' \cr (file name structure: out_2_N_evS + RUN name + .csv)
-#' \item evD data file storing the evolution with time of the delta values in all boxes.
-#' \cr (file name structure: out_3_N_evD + RUN name + .csv)
+#' \item OUT data file storing initial and final size and delta values in all boxes.\cr
+#' (file name structure: \strong{\emph{out_1_N_OUT + RUN name + .csv}})
+#' \item evS data file storing the evolution with time of the sizes (masses of element X) of all boxes.\cr
+#' (file name structure:  \strong{\emph{out_2_N_evS + RUN name + .csv}})
+#' \item evD data file storing the evolution with time of the delta values in all boxes.\cr
+#' (file name structure:  \strong{\emph{out_3_N_evD + RUN name + .csv}})
 #' }
 #' @export
 num_slvr <- function(input_path,
@@ -169,27 +172,29 @@ num_slvr <- function(input_path,
 #  #_________________________________________________________________________80char
 #' Analytically solve stable isotope box models
 #' @description  An analytical solver of the system of ordinary differential
-#' equations (ODES) of stable isotope ratios of element X in all boxes.
-#' The analytical solver finds the eigenvalues and eigenvectors of the ODES.
+#' equations (ODES) of stable isotope ratios of element X in all boxes. \cr
+#' The analytical solver finds the eigenvalues and eigenvectors of the ODES. \cr
 #' Given the initial conditions as specified in IN.Rda file, it determines the
 #' set of analytical solutions that describes the evolution of isotope ratios
 #' in each box over time.
-#' @param input_path path to the INPUT file containing all commands for the run.
-#' \cr (file name structure: RUN name + _IN.Rda)
-#' @param to_DIGEST_csv edit csv outputs or not (logical) to the RUN DIGEST folder. Default is FALSE.
+#' @param input_path path to the INPUT file containing all commands for the run \cr
+#' (character string, file name structure: \strong{\emph{RUN name + _IN.Rda}})
+#' @param to_DIGEST_csv edit csv outputs or not (logical) to the RUN DIGEST folder \cr
+#' (logical, default is FALSE)
 #' @return The function returns the analytically determined evolution of stable
-#' isotope compositions in all boxes over the run duration as specified in
-#' INPUT file. The outputs of the run are stored in a Rda output file.
-#' \cr (file name structure: RUN name + _OUT.Rda)
+#' isotope compositions in all boxes over the run duration as specified in INPUT file. \cr \cr
+#' The outputs of the run are stored in a Rda output file
+#' with the following file name structure: \cr
+#' \strong{\emph{RUN name + _OUT.Rda}}
 #' @section Optional csv outputs to the DIGEST folder are as follows:
 #' \enumerate{
-#' \item OUT data file with initial and final size and delta values in each boxes.
-#' \cr (file name structure: out_1_A_OUT + RUN name + .csv)
-#' \item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES
-#' (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).
-#' \cr (file name structure: out_2_A_ODE_SOLNs + RUN name + .csv)
-#' \item evD data file of the evolution with time of the delta values in each boxes.
-#' \cr (file name structure: out_3_A_evD + RUN name + .csv)
+#' \item OUT data file with initial and final size and delta values in each boxes. \cr
+#' (file name structure: \strong{\emph{out_1_A_OUT + RUN name + .csv}})
+#' \item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES  \cr
+#' (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  \cr
+#' (file name structure: \strong{\emph{out_2_A_ODE_SOLNs + RUN name + .csv}})
+#' \item evD data file of the evolution with time of the delta values in each boxes.  \cr
+#' (file name structure: \strong{\emph{out_3_A_evD + RUN name + .csv}})
 #' }
 #' @export
 ana_slvr <- function(input_path,
