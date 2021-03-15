@@ -58,8 +58,12 @@ num_slvr <- function(input_path,
   ############################## CONSTANTS ###################################
   consts_f <- CONSTS_IN
   ratio_standard = as.numeric(consts_f[consts_f$CONSTS_ID == "Ratio_Standard", "CONSTS"])
-  time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
-  nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  # # issue with as.integer used for time max (and nb_steps: ) as such does not accept values higher than 2147483647
+  # time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  # nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  # to avoid this issue, as.integer is replaced with ceiling (round to next unity)
+  time_max = ceiling(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  nb_steps = ceiling(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
   time = seq(0, time_max, length = nb_steps)
 
   ############################## INITIAL ###################################
@@ -222,8 +226,12 @@ ana_slvr <- function(input_path,
   ############################## CONSTANTS ###################################
   consts_f <- CONSTS_IN
   ratio_standard = as.numeric(consts_f[consts_f$CONSTS_ID == "Ratio_Standard", "CONSTS"])
-  time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
-  nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  # # issue with as.integer used for time max (and nb_steps: ) as such does not accept values higher than 2147483647
+  # time_max = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  # nb_steps = as.integer(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  # to avoid this issue, as.integer is replaced with ceiling (round to next unity)
+  time_max = ceiling(as.numeric(consts_f[consts_f$CONSTS_ID == "time", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
+  nb_steps = ceiling(as.numeric(consts_f[consts_f$CONSTS_ID == "n_steps", "CONSTS"])) ##### as.integer PREVENTS RUN DURATIONS SHORTER THAN 1 TIME UNIT
   time = seq(0, time_max, length = nb_steps)
 
   ############################## INITIAL ###################################
