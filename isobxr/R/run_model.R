@@ -835,7 +835,8 @@ run_isobxr <- function(workdir,
     Ymax <- round(max(evD_vert$VAR), 0)+1
     Ymin_zoom <- min(evD_vert$VAR)
     Ymax_zoom <- max(evD_vert$VAR)
-    Ybin <- 0.25
+    # Ybin <- 0.25
+    Ybin <- signif((Ymax-Ymin)/10, digits = 1) # automatic definition of Ybin
     Xmin <- evD_vert[2,"Time"]
     Xmax <- max(evD_vert$Time) + 0.5*max(evD_vert$Time)
 
