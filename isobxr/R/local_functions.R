@@ -19,18 +19,12 @@ clear_subset <- function(dataset){
 #' @description Takes a numerical value and returns a string of the rounded value, with 0 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 0 decimal figures.
-#' @export
-#' @examples
-#' dec_0(1.2345)
 dec_0 <- function(x) sprintf("%.0f", x)
 
 #' Print a number with 1 decimal figures
 #' @description Takes a numerical value and returns a print with 1 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 1 decimal figure.
-#' @export
-#' @examples
-#' dec_1(1.2345)
 dec_1 <- function(x) sprintf("%.1f", x)
 
 #' Print a number with 2 decimal figures
@@ -46,18 +40,12 @@ dec_2 <- function(x) sprintf("%.2f", x)
 #' @description Takes a numerical value and returns a print with 3 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 3 decimal figures.
-#' @export
-#' @examples
-#' dec_3(1.2345)
 dec_3 <- function(x) sprintf("%.3f", x)
 
 #' Print a number with 4 decimal figures
 #' @description Takes a numerical value and returns a print with 4 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 4 decimal figures.
-#' @export
-#' @examples
-#' dec_4(1.2345)
 dec_4 <- function(x) sprintf("%.4f", x)
 
 #' Verticalizes a dataframe
@@ -69,8 +57,6 @@ dec_4 <- function(x) sprintf("%.4f", x)
 #' @return A vertical dataframe containing the variables to be verticalized (column "VAR", numeric)
 #' and the name of the variable (column "VAR_TYPE", character strings).
 #' @export
-#' @examples
-#' DF_verticalizer(df_hor = iris, vert_col = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))
 DF_verticalizer <- function(df_hor,      # horizontal dataframe
                             vert_col     # vector of column names of numerical variables to be verticalized
 ){
