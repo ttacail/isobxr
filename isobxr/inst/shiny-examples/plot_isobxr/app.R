@@ -378,11 +378,11 @@ server <- function(input, output) {
 
   DISCONNECTED_BOXES <- reactive({
     DISCONNECTED_BOXES <- strsplit(as.character(LOG_SERIES()$DISCONNECTED_BOXES[1]),split = "_")[[1]]
-    if(is.null(DISCONNECTED_BOXES) == FALSE | length(DISCONNECTED_BOXES) != 0){
-      DISCONNECTED_BOXES <- DISCONNECTED_BOXES
-    } else {
-      DISCONNECTED_BOXES <- NULL
-    }
+    # if(is.null(DISCONNECTED_BOXES) == FALSE | length(DISCONNECTED_BOXES) != 0 | !is.na(DISCONNECTED_BOXES)){
+    #   DISCONNECTED_BOXES <- DISCONNECTED_BOXES
+    # } else {
+    #   DISCONNECTED_BOXES <- NULL
+    # }
     DISCONNECTED_BOXES
   })
 
@@ -393,7 +393,8 @@ server <- function(input, output) {
       selectInput(inputId = "HIDE_BOX_CPS",
                   label =  "Select boxes to hide",
                   multiple = T,
-                  choices = ALL_BOXES()[!ALL_BOXES() %in% DISCONNECTED_BOXES()])
+                  choices = ALL_BOXES()[!ALL_BOXES() %in% DISCONNECTED_BOXES()]
+                  )
     } else {
       return(NULL)
     }
@@ -744,7 +745,6 @@ server <- function(input, output) {
     } else if (SERIES_TYPE()[1] == "CPS"){
       #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# COMPOSITE PLOT
 
-
       if (input$SHOW_RUNS[1] == 1 & input$SHOW_RUNS[2] == max(LOG_SERIES()$RUN_n)){
         plot_HIDE_RUNs_n <- NULL
       } else {
@@ -755,10 +755,20 @@ server <- function(input, output) {
 
       time_units <- c(input$TIME_UNIT_in, input$TIME_UNIT_out)
 
-      if (length(input$HIDE_BOX_CPS) == 0){
-        plot_HIDE_BOXES <- c(NULL, DISCONNECTED_BOXES())
+      if (is.null(input$HIDE_BOX_CPS)){
+        # if (is.null(DISCONNECTED_BOXES()) | is.na(DISCONNECTED_BOXES())){
+        if (is.na(DISCONNECTED_BOXES())){
+          plot_HIDE_BOXES <- NULL
+        } else {
+          plot_HIDE_BOXES <- c(NULL, DISCONNECTED_BOXES())
+        }
       } else {
-        plot_HIDE_BOXES <- c(input$HIDE_BOX_CPS, DISCONNECTED_BOXES())
+        # if (is.null(DISCONNECTED_BOXES()) | is.na(DISCONNECTED_BOXES())){
+        if (is.na(DISCONNECTED_BOXES())){
+          plot_HIDE_BOXES <- input$HIDE_BOX_CPS
+        } else {
+          plot_HIDE_BOXES <- c(input$HIDE_BOX_CPS, DISCONNECTED_BOXES())
+        }
       }
 
 
@@ -815,7 +825,8 @@ server <- function(input, output) {
       Ymin_zoom <- min(evD_vert$VAR) - 0.1*Ymax
       Ymax_zoom <- max(evD_vert$VAR) + 0.2*Ymax
 
-      Ybin <- 0.2
+      # Ybin <- 0.2
+      Ybin <- signif((Ymax-Ymin)/10, digits = 1) # automatic definition of Ybin
       Xmax <- max(evD_vert$Time_plot) + 0.1*max(evD_vert$Time_plot)
 
       #### extract t0 and t_final delta values
@@ -832,7 +843,6 @@ server <- function(input, output) {
       if (is.null(plot_HIDE_BOXES) == FALSE){
         Sub_title <- paste(Sub_title, " - Hidden boxes: ", paste(plot_HIDE_BOXES, collapse = ", "))
       }
-
 
       #### plot delta evol
       evD_plot <- ggplot2::ggplot(data = evD_vert, ggplot2::aes(x = Time_plot, y = VAR, color = VAR_TYPE))+
@@ -874,6 +884,7 @@ server <- function(input, output) {
       }
 
       evD_plot
+
     } else {
       return()
     }
@@ -1750,32 +1761,28 @@ server <- function(input, output) {
     } else {
       RUN_n_loc <- input$DIAG_RUN_loc
 
-      # dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
-      # BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
-
       dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
       load(dir_INPUT_loc)
       BOX_META <- BOX_META_IN
 
-      BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
+      if (!is.na(DISCONNECTED_BOXES())){
+        BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
+      } else {
+        BOX_META <- clear_subset(BOX_META)
+      }
+
       LAYOUT <- as.matrix(BOX_META[,c("LAYOUT_X", "LAYOUT_Y")])
-      DIAG_GROUPS <- as.factor(BOX_META[,c("INFINITE")])
+      DIAG_GROUPS <- as.factor(BOX_META[, c("INFINITE")])
 
       NET_FLUXES_title <-  paste("RUN # :", as.character(RUN_n_loc) , " - Flux config: " , as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc, "FLUX_MASTER"]), sep = "")
-      # FLUXES_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "FLUXES"))
       FLUXES_adj <- FLUXES_IN
 
-      if (is.null(DISCONNECTED_BOXES()) == FALSE){
+      if (!is.na(DISCONNECTED_BOXES())){
         FLUXES_adj <- FLUXES_adj[,-which(names(FLUXES_adj) %in% DISCONNECTED_BOXES())]
         FLUXES_adj <- FLUXES_adj[-which(FLUXES_adj$BOXES_ID %in% DISCONNECTED_BOXES()),]
-        # COEFFS_adj <- COEFFS_adj[,-which(names(COEFFS_adj) %in% DISCONNECTED_BOXES())]
-        # COEFFS_adj <- COEFFS_adj[-which(COEFFS_adj$BOXES_ID %in% DISCONNECTED_BOXES()),]
       }
 
       FLUXES_adj <- clear_subset(FLUXES_adj[ , !(names(FLUXES_adj) %in% "BOXES_ID")])
-      # COEFFS_adj <- clear_subset(COEFFS_adj[ , !(names(COEFFS_adj) %in% "BOXES_ID")])
-
-      # COEFFS_adj <- 1000*log(COEFFS_adj)
 
       NET_FLUXES <- qgraph::qgraph(FLUXES_adj,
                                    title = NET_FLUXES_title,
@@ -1805,24 +1812,23 @@ server <- function(input, output) {
     } else {
       RUN_n_loc <- input$DIAG_RUN_loc
 
-      # dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
-      # BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
-
-      dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
+            dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
       load(dir_INPUT_loc)
       BOX_META <- BOX_META_IN
 
-      BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
+      if (!is.na(DISCONNECTED_BOXES())){
+        BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
+      } else {
+        BOX_META <- clear_subset(BOX_META)
+      }
+
       LAYOUT <- as.matrix(BOX_META[,c("LAYOUT_X", "LAYOUT_Y")])
       DIAG_GROUPS <- as.factor(BOX_META[,c("INFINITE")])
 
       NET_COEFFS_title <-  paste("RUN # :", as.character(RUN_n_loc) , " - Coeff config: " , as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc, "COEFF_RUN"]), sep = "")
-      # COEFFS_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "COEFFS"))
       COEFFS_adj <- COEFFS_IN
 
-
-
-      if (is.null(DISCONNECTED_BOXES()) == FALSE){
+      if (!is.na(DISCONNECTED_BOXES())){
         COEFFS_adj <- COEFFS_adj[,-which(names(COEFFS_adj) %in% DISCONNECTED_BOXES())]
         COEFFS_adj <- COEFFS_adj[-which(COEFFS_adj$BOXES_ID %in% DISCONNECTED_BOXES()),]
       }
@@ -1882,17 +1888,19 @@ server <- function(input, output) {
       LOG <- LOG_SERIES()
       BOXES_IDs_list <- strsplit(as.character(LOG[1,"BOXES_ID_list"]), split = "_")[[1]]
       INFINITE_BOXES_list <- strsplit(as.character(LOG[1,"INFINITE_BOXES_list"]), split = "_")[[1]]
-      if(is.null(INFINITE_BOXES_list) == FALSE | length(INFINITE_BOXES_list) != 0){
+      # if(is.null(INFINITE_BOXES_list) == FALSE | length(INFINITE_BOXES_list) != 0){
+      if(!is.na(INFINITE_BOXES_list)){
         INFINITE_BOXES_list <- INFINITE_BOXES_list
+        FINITE_BOXES_list <- BOXES_IDs_list[!BOXES_IDs_list %in% c(INFINITE_BOXES_list)]
       } else {
         INFINITE_BOXES_list <- NULL
+        FINITE_BOXES_list <- BOXES_IDs_list
       }
-      FINITE_BOXES_list <- BOXES_IDs_list[!BOXES_IDs_list %in% c(INFINITE_BOXES_list)]
+      # FINITE_BOXES_list <- BOXES_IDs_list[!BOXES_IDs_list %in% c(INFINITE_BOXES_list)]
       RUN_n_list <- as.vector(LOG$RUN_n)
       T_lim_list <- as.vector(LOG$T_LIM)
 
-
-      dir_COMPO_MASTER <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_COMPO_MASTER.xlsx", sep = "")
+      dir_COMPO_MASTER <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_MASTER.xlsx", sep = "")
       COMPO_MASTER_RUN_LIST <- as.data.frame(readxl::read_excel(dir_COMPO_MASTER, "RUN_LIST"))
       COMPO_MASTER_FORCING_RAYLEIGH <- as.data.frame(readxl::read_excel(dir_COMPO_MASTER, "FORCING_RAYLEIGH"))
       COMPO_MASTER_FORCING_SIZE <- as.data.frame(readxl::read_excel(dir_COMPO_MASTER, "FORCING_SIZE"))
@@ -1901,8 +1909,13 @@ server <- function(input, output) {
       COMPO_MASTER_RUN_LIST$Time_composite <- COMPO_MASTER_RUN_LIST$t_lim_list
 
       evS <- evS()
-      evS <- evS[,-which(names(evS) %in% INFINITE_BOXES_list)]
+      if (!is.null(INFINITE_BOXES_list)){
+        evS <- evS[,-which(names(evS) %in% INFINITE_BOXES_list)]
+      } else {
+        evS <- evS
+      }
       evS_meta_colnames <- names(evS)[!names(evS) %in% FINITE_BOXES_list]
+
       i <- 1
       for (i in 1:length(FINITE_BOXES_list)){
         if (length(unique(evS[,FINITE_BOXES_list[i]])) == 1){
@@ -1913,11 +1926,10 @@ server <- function(input, output) {
 
       evS_box_colnames <- names(evS)[!names(evS) %in% evS_meta_colnames]
 
-      if (length(evS_box_colnames) != 0 | is.null(evS_box_colnames) == FALSE){
+      # if (length(evS_box_colnames) != 0 | is.null(evS_box_colnames) == FALSE){
+      if (length(evS_box_colnames) != 0){
         evS_vert <- DF_verticalizer(evS, vert_col = evS_box_colnames)
       }
-
-
 
       i <- 1
       Time <- 0
@@ -1938,22 +1950,10 @@ server <- function(input, output) {
 
         DF_REPORT_empty <- DF_REPORT_loc
 
-        # dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
         dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
         load(dir_INPUT_loc)
-        # dir_INPUT_loc <- paste("/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ISOPY_PROJECT/DEMOS/DEMO_HUMAN_CBM/3_CPS_DIET_BL50100150_003", "/", as.character(LOG[LOG$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_INPUT.xlsx", sep = "")
-        # BOX_META <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "BOX_META"))
-        # BOX_META <- clear_subset(BOX_META[-which(BOX_META$BOXES_ID %in% DISCONNECTED_BOXES()),])
-        # FLUXES_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "FLUXES"))
-        # COEFFS_adj <- as.data.frame(readxl::read_excel(dir_INPUT_loc, "COEFFS"))
         FLUXES_adj <- FLUXES_IN
         COEFFS_adj <- COEFFS_IN
-        # if (is.null(DISCONNECTED_BOXES()) == FALSE){
-        #   FLUXES_adj <- FLUXES_adj[,-which(names(FLUXES_adj) %in% DISCONNECTED_BOXES())]
-        #   FLUXES_adj <- FLUXES_adj[-which(FLUXES_adj$BOXES_ID %in% DISCONNECTED_BOXES()),]
-        #   COEFFS_adj <- COEFFS_adj[,-which(names(COEFFS_adj) %in% DISCONNECTED_BOXES())]
-        #   COEFFS_adj <- COEFFS_adj[-which(COEFFS_adj$BOXES_ID %in% DISCONNECTED_BOXES()),]
-        # }
 
         DF_REPORT_FLUXES <- clear_subset(DF_REPORT_empty[rep(seq_len(nrow(DF_REPORT_empty)), each = (nrow(FLUXES_adj))^2), ])
         DF_REPORT_FLUXES$TYPE <- "FLUX"
@@ -1970,22 +1970,6 @@ server <- function(input, output) {
         DF_REPORT_COEFFS$TO <- COEFFS_vert_loc$VAR_TYPE
         DF_REPORT_COEFFS$VALUE <- COEFFS_vert_loc$VAR
         DF_REPORT_COEFFS$FROM_TO <- paste(DF_REPORT_COEFFS$FROM, DF_REPORT_COEFFS$TO, sep = "_")
-
-        # DF_REPORT_SIZE_INIT <- clear_subset(DF_REPORT_empty[rep(seq_len(nrow(DF_REPORT_empty)), each = length(BOXES_IDs_list)), ])
-        # DF_REPORT_SIZE_INIT$TYPE <- "SIZE_INIT"
-        # DF_REPORT_SIZE_INIT$BOX <- BOXES_IDs_list
-        # DF_REPORT_SIZE_INIT$VALUE <- strsplit(as.character(LOG[LOG$RUN_n == RUN_n_list[i],"SIZE_INIT"]), split = "_")[[1]]
-
-        # DF_REPORT_DELTA_INIT <- clear_subset(DF_REPORT_empty[rep(seq_len(nrow(DF_REPORT_empty)), each = length(BOXES_IDs_list)), ])
-        # DF_REPORT_DELTA_INIT$TYPE <- "DELTA_INIT"
-        # DF_REPORT_DELTA_INIT$BOX <- BOXES_IDs_list
-        # DF_REPORT_DELTA_INIT$VALUE <- strsplit(as.character(LOG[LOG$RUN_n == RUN_n_list[i],"DELTA_INIT"]), split = "_")[[1]]
-
-
-        # head(DF_REPORT_FLUXES)
-        # head(DF_REPORT_COEFFS)
-        # # head(DF_REPORT_SIZE_INIT)
-        # # head(DF_REPORT_DELTA_INIT)
 
         if (i == 1){
           DF_REPORT <- rbind(DF_REPORT_FLUXES, DF_REPORT_COEFFS)
@@ -2016,8 +2000,6 @@ server <- function(input, output) {
 
         DF_REPORT <- DF_REPORT[-which(DF_REPORT$TYPE == "FLUX" & DF_REPORT$FROM_TO %in% FLUXES_FROM_TO_list_drop),  ]
         DF_REPORT <- DF_REPORT[-which(DF_REPORT$TYPE == "COEFF" & DF_REPORT$FROM_TO %in% COEFFS_FROM_TO_list_drop),  ]
-        # DF_REPORT <- DF_REPORT[-which(DF_REPORT$TYPE == "FLUX" & DF_REPORT$FROM_TO %in% FLUXES_FROM_TO_list),  ]
-        # DF_REPORT <- DF_REPORT[-which(DF_REPORT$TYPE == "COEFF" & DF_REPORT$FROM_TO %in% COEFFS_FROM_TO_list),  ]
         DF_REPORT <- clear_subset(DF_REPORT)
       }
 
@@ -2088,12 +2070,6 @@ server <- function(input, output) {
         DF_REPORT_evS$TYPE <- "SIZE"
         DF_REPORT_evS$BOX <- evS_vert$VAR_TYPE
         DF_REPORT_evS$VALUE <- evS_vert$VAR
-        # i <- 1
-        # for (i in 1:nrow(COMPO_MASTER_RUN_LIST)){
-        #   DF_REPORT_SIZE[DF_REPORT_SIZE$RUN_n == COMPO_MASTER_RUN_LIST[i,"COMPO_RUN_n"], "T_lim"] <- COMPO_MASTER_RUN_LIST[i,"t_lim_list"]
-        #   DF_REPORT_SIZE[DF_REPORT_SIZE$RUN_n == COMPO_MASTER_RUN_LIST[i,"COMPO_RUN_n"], "Time"] <- COMPO_MASTER_RUN_LIST[i,"Time_composite"]
-        #   i <- i + 1
-        # }
         DF_REPORT <- rbind(DF_REPORT, DF_REPORT_evS)
       }
 
@@ -2109,11 +2085,7 @@ server <- function(input, output) {
       i <- 1
       for (i in 1:length(TYPE_list)){
         DF_plot_loc <- DF_plot[DF_plot$TYPE == TYPE_list[i],]
-        # j <- 1
-        # for (j in 1:nrow(DF_plot_loc)){
         DF_plot_loc$Time <- DF_plot_loc$T_lim + DF_plot_loc$Time
-        #   j <- j + 1
-        # }
         i <- i + 1
         DF_plot <- rbind(DF_plot_loc, DF_plot)
       }
@@ -2122,27 +2094,22 @@ server <- function(input, output) {
 
       initial_time_unit <- time_units[1]
       display_time_unit <- time_units[2]
-      # initial_time_unit <- "d"
-      # display_time_unit <- "d"
 
       DF_REPORT <- time_converter(dataframe = DF_REPORT, time_colname = "Time", conv_timecolname = "Time_plot", former_unit = initial_time_unit, new_unit = display_time_unit)
       COMPO_MASTER_RUN_LIST <- time_converter(dataframe = COMPO_MASTER_RUN_LIST, time_colname = "Time_composite", conv_timecolname = "Time_plot", former_unit = initial_time_unit, new_unit = display_time_unit)
       COMPO_MASTER_RUN_LIST <- time_converter(dataframe = COMPO_MASTER_RUN_LIST, time_colname = "t_lim_list", conv_timecolname = "t_lim_list_plot", former_unit = initial_time_unit, new_unit = display_time_unit)
 
       DF_REPORT <- DF_REPORT[DF_REPORT$RUN_n %in% seq(input$SHOW_RUNS[1],input$SHOW_RUNS[2],1), ]
-      # DF_REPORT <- DF_REPORT[DF_REPORT$RUN_n %in% seq(2,6,1), ]
 
       DF_REPORT[DF_REPORT$TYPE %in% c("RAYLEIGH_ALPHA", "COEFF"),"VALUE"] <- 1000*log(DF_REPORT[DF_REPORT$TYPE %in% c("RAYLEIGH_ALPHA", "COEFF"),"VALUE"])
 
       COMPO_MASTER_RUN_LIST <- COMPO_MASTER_RUN_LIST[COMPO_MASTER_RUN_LIST$COMPO_RUN_n %in% seq(input$SHOW_RUNS[1],input$SHOW_RUNS[2],1), ]
-      # COMPO_MASTER_RUN_LIST <- COMPO_MASTER_RUN_LIST[COMPO_MASTER_RUN_LIST$COMPO_RUN_n %in% seq(2,6,1), ]
 
       return(list(DF_REPORT, COMPO_MASTER_RUN_LIST))
 
     } else {
       return(NULL)
     }
-
 
   })
 
@@ -2181,9 +2148,6 @@ server <- function(input, output) {
       CPS_PLOT_REPORT <- CPS_PLOT_REPORT + ggplot2::geom_point(pch = 19, cex = 4)
 
       CPS_PLOT_REPORT
-
-      # ggplot2::ggplot(evS, ggplot2::aes(x = Time_COMPOSITE, y = BONE))+
-      #   geom_point()
 
     } else {
       return()
