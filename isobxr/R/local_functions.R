@@ -33,6 +33,7 @@ dec_1 <- function(x) sprintf("%.1f", x)
 #' @description Takes a numerical value and returns a print with 2 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 2 decimal figures.
+#' @export
 #' @keywords internal
 dec_2 <- function(x) sprintf("%.2f", x)
 
