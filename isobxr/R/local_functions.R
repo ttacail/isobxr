@@ -136,6 +136,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 #' @param i Calculating step number
 #' @param len Total calculation steps
 #' @return A print summarizing the progress of calculation
+#' @keywords internal
 calculation_gauge <- function(i, len){
   stars <- paste(rep("*", round(i*50/len, 0)), collapse = "")
   straights <- paste(rep("-", 50-round(i*50/len, 0)), collapse = "")

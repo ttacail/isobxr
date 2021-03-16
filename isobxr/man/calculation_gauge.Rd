@@ -17,3 +17,4 @@ A print summarizing the progress of calculation
 \description{
 Prints a gauge of the calculation progress
 }
+\keyword{internal}
