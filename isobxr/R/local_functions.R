@@ -19,33 +19,35 @@ clear_subset <- function(dataset){
 #' @description Takes a numerical value and returns a string of the rounded value, with 0 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 0 decimal figures.
+#' @keywords internal
 dec_0 <- function(x) sprintf("%.0f", x)
 
 #' Print a number with 1 decimal figures
 #' @description Takes a numerical value and returns a print with 1 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 1 decimal figure.
+#' @keywords internal
 dec_1 <- function(x) sprintf("%.1f", x)
 
 #' Print a number with 2 decimal figures
 #' @description Takes a numerical value and returns a print with 2 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 2 decimal figures.
-#' @export
-#' @examples
-#' dec_2(1.2345)
+#' @keywords internal
 dec_2 <- function(x) sprintf("%.2f", x)
 
 #' Print a number with 3 decimal figures
 #' @description Takes a numerical value and returns a print with 3 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 3 decimal figures.
+#' @keywords internal
 dec_3 <- function(x) sprintf("%.3f", x)
 
 #' Print a number with 4 decimal figures
 #' @description Takes a numerical value and returns a print with 4 decimal figures.
 #' @param x Numerical value
 #' @return A character string with 4 decimal figures.
+#' @keywords internal
 dec_4 <- function(x) sprintf("%.4f", x)
 
 #' Verticalizes a dataframe

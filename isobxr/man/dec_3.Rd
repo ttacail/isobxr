@@ -15,3 +15,4 @@ A character string with 3 decimal figures.
 \description{
 Takes a numerical value and returns a print with 3 decimal figures.
 }
+\keyword{internal}

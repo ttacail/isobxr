@@ -15,6 +15,4 @@ A character string with 2 decimal figures.
 \description{
 Takes a numerical value and returns a print with 2 decimal figures.
 }
-\examples{
-dec_2(1.2345)
-}
+\keyword{internal}
