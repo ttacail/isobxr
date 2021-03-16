@@ -322,7 +322,8 @@ server <- function(input, output) {
     if (SERIES_TYPE()[1] == "CPS"){
       dir_evD_loc <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_evD.RDS", sep = "")
       # data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
-      readRDS(dir_evD_loc)
+      # readRDS(dir_evD_loc)
+      dplyr::mutate_if(readRDS(dir_evD_loc), is.character, as.factor)
     } else if (SERIES_TYPE()[1] == "SWEEP"){
       if (SERIES_TYPE()[2] == "STD"){
         return(NULL)
@@ -331,7 +332,7 @@ server <- function(input, output) {
       } else if (SERIES_TYPE()[2] == "DYN"){
         dir_evD_loc <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "DYN_", SERIES_RUN_ID(), "_evD.RDS", sep = "")
         # data.table::fread(dir_evD_loc, data.table = F, stringsAsFactors = T)
-        readRDS(dir_evD_loc)
+        dplyr::mutate_if(readRDS(dir_evD_loc), is.character, as.factor)
       }
     } else {
       return(NULL)
@@ -344,13 +345,15 @@ server <- function(input, output) {
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "STD"){
       dir_evD_final_loc <- paste(SERIES_RUN_dir(), "/0_STD_DIGEST/", "STD_", SERIES_RUN_ID(), "_evD_final.RDS", sep = "")
       # data.table::fread(dir_evD_final_loc, data.table = F, stringsAsFactors = T)
-      readRDS(dir_evD_final_loc)
+      # readRDS(dir_evD_final_loc)
+      dplyr::mutate_if(readRDS(dir_evD_final_loc), is.character, as.factor)
       # print("evD_final loaded")
     } else if (SERIES_TYPE()[1] == "SWEEP" & SERIES_TYPE()[2] == "DYN"){
       # return(NULL)
       dir_evD_final_loc <- paste(SERIES_RUN_dir(), "/0_DYN_DIGEST/", "DYN_", SERIES_RUN_ID(), "_evD_final.RDS", sep = "")
       # data.table::fread(dir_evD_final_loc, data.table = F, stringsAsFactors = T)
-      readRDS(dir_evD_final_loc)
+      # readRDS(dir_evD_final_loc)
+      dplyr::mutate_if(readRDS(dir_evD_final_loc), is.character, as.factor)
     } else {
       return(NULL)
     }
@@ -362,7 +365,8 @@ server <- function(input, output) {
     } else if (SERIES_TYPE()[1] == "CPS"){
       dir_evS_loc <- paste(SERIES_RUN_dir(), "/0_CPS_DIGEST/", "CPS_", SERIES_RUN_ID(), "_evS.RDS", sep = "")
       # data.table::fread(dir_evS_loc, data.table = F, stringsAsFactors = T)
-      readRDS(dir_evS_loc)
+      # readRDS(dir_evS_loc)
+      dplyr::mutate_if(readRDS(dir_evS_loc), is.character, as.factor)
     } else {
       return(NULL)
     }
