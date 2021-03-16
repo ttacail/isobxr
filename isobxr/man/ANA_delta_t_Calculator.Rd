@@ -39,3 +39,4 @@ Calculate the delta values at t time using the ODE analytical solutions of the i
 \seealso{
 \code{\link{ana_slvr}}
 }
+\keyword{internal}

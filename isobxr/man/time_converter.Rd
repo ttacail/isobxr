@@ -35,3 +35,4 @@ Convert the time units in plots
 ex_df <- data.frame(observation_num = c(1,2,3,4), time_d = c(100, 365, 1000, 3650))
 time_converter(ex_df, "time_d", "time_yr", "d", "yr")
 }
+\keyword{internal}

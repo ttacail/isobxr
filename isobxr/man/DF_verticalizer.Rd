@@ -20,3 +20,4 @@ Takes a dataframe with a set of different columns containing numerical values to
 returns a vertical dataframe with all variables in a single column called "VAR" together with a "VAR_TYPE" column
 defining the type of variable for the given row, named after the column name found in horizontal dataframe.
 }
+\keyword{internal}

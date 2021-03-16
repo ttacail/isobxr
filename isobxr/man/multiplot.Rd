@@ -27,3 +27,4 @@ multiplot(a, b, c, layout = matrix(c(1,1,1,1,1,2,2,2,2,3,3,3,3,3,3,3,3,3), nrow=
 then plot 1 will go in the upper left, 2 will go in the upper right, and
 3 will go all the way across the bottom.
 }
+\keyword{internal}

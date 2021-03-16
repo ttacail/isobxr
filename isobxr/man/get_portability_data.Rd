@@ -15,3 +15,4 @@ a Rdata file with loc wd, version, sessionInfo, installed packages
 \description{
 collect local platform/session/versions data for portability (for DEV only)
 }
+\keyword{internal}

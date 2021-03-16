@@ -8,6 +8,7 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @param dataset Previously subsetted dataframe.
 #' @return Cleared dataframe.
 #' @export
+#' @keywords internal
 #' @examples
 #' clear_subset(iris[iris$Species == "setosa" & iris$Sepal.Length > 5 ,])
 clear_subset <- function(dataset){
@@ -59,6 +60,7 @@ dec_4 <- function(x) sprintf("%.4f", x)
 #' @param vert_col Vector of the names of the columns of numerical variables to be verticalized.
 #' @return A vertical dataframe containing the variables to be verticalized (column "VAR", numeric)
 #' and the name of the variable (column "VAR_TYPE", character strings).
+#' @keywords internal
 #' @export
 DF_verticalizer <- function(df_hor,      # horizontal dataframe
                             vert_col     # vector of column names of numerical variables to be verticalized
@@ -93,6 +95,7 @@ DF_verticalizer <- function(df_hor,      # horizontal dataframe
 #' @param file file
 #' @param cols number of columns for the facetting
 #' @param layout user defined matrix layout (numeric matrix). default is NULL.
+#' @keywords internal
 #' @export
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   # Make a list from the ... arguments and plotlist
@@ -147,11 +150,12 @@ calculation_gauge <- function(i, len){
 #' @param resetrows Logical value to reset the row numbering or not.
 #' @return Subset of dataframe without the rows containing NaN values in column by_col
 #' @export
+#' @keywords internal
 #' @examples
 #' ex_df <- data.frame(letters = c("A", "B", "C", "D"),  numbers = c(1,2,3,NaN))
 #' ex_df
 #' del_NaN_rows(ex_df, c("numbers"), TRUE)
-del_NaN_rows <- function(dataframe, by_col, resetrows){
+del_NaN_rows <- function(dataframe, by_col, resetrows){ # not used in app, could be unexported
   dataframe <- subset(dataframe,!(is.na(dataframe[by_col])))
   if(resetrows == TRUE){rownames(dataframe) <- NULL}
   return(dataframe)
@@ -170,6 +174,7 @@ del_NaN_rows <- function(dataframe, by_col, resetrows){
 #' in the same order as used in \code{\link{ana_slvr}}.
 #' @param ratio_standard Isotope ratio of the reference material used to calculate the delta values.
 #' @return Dataframe of the delta values in all boxes at t time.
+#' @keywords internal
 #' @seealso \code{\link{ana_slvr}}
 ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenvectors, BOXES_IDs, ratio_standard){
   R_t_loc <- ((ODE_Constants*exp(ODE_Eigenvalues*t)))%*%t(ODE_Eigenvectors)
@@ -193,6 +198,7 @@ ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenv
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
 #' @param new_unit new time unit. Character string amongst the following: \cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
+#' @keywords internal
 #' @export
 #' @examples
 #' ex_df <- data.frame(observation_num = c(1,2,3,4), time_d = c(100, 365, 1000, 3650))
@@ -233,6 +239,7 @@ time_converter <- function(dataframe,
 #' Preventing any console prints (for sweepers only)
 #' @description Preventing any console prints (for sweepers only)
 #' @param x function to quiet
+#' @keywords internal
 quiet <- function(x) {
   sink(tempfile())
   on.exit(sink())
@@ -243,6 +250,7 @@ quiet <- function(x) {
 #' @description collect local platform/session/versions data for portability (for DEV only)
 #' @param workdir directory where Rdata local summary will be exported
 #' @return a Rdata file with loc wd, version, sessionInfo, installed packages
+#' @keywords internal
 #' @export
 get_portability_data <- function(workdir){
   loc_wd <- getwd()

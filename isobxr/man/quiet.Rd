@@ -12,3 +12,4 @@ quiet(x)
 \description{
 Preventing any console prints (for sweepers only)
 }
+\keyword{internal}

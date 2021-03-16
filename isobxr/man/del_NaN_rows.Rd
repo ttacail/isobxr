@@ -24,3 +24,4 @@ ex_df <- data.frame(letters = c("A", "B", "C", "D"),  numbers = c(1,2,3,NaN))
 ex_df
 del_NaN_rows(ex_df, c("numbers"), TRUE)
 }
+\keyword{internal}
