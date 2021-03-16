@@ -23,8 +23,9 @@ with the following file name structure:  \cr
 }
 \description{
 A numerical solver of the system of ordinary differential equations (ODES),
-describing the evolution of stable isotope ratios in all boxes of a system.
-\cr The numerical solver uses the ode function of the deSolve package
+describing the evolution of stable isotope ratios in all boxes of a system. \cr
+Not intended for direct use although possible. \cr
+The numerical solver uses the ode function of the deSolve package
 to integrate the stable isotopes ratios over time in each box. It allows the
 calculation of the evolution of stable isotope ratio even in the case of
 unbalanced outward and inward fluxes of element X in a given box

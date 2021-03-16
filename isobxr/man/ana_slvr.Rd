@@ -23,6 +23,7 @@ with the following file name structure: \cr
 \description{
 An analytical solver of the system of ordinary differential
 equations (ODES) of stable isotope ratios of element X in all boxes. \cr
+Not intended for direct use although possible. \cr
 The analytical solver finds the eigenvalues and eigenvectors of the ODES. \cr
 Given the initial conditions as specified in IN.Rda file, it determines the
 set of analytical solutions that describes the evolution of isotope ratios

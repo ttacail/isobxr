@@ -7,8 +7,9 @@ usethis::use_package("rlang", min_version = TRUE)
 #  #_________________________________________________________________________80char
 #' Numerically solve stable isotope box models
 #' @description A numerical solver of the system of ordinary differential equations (ODES),
-#' describing the evolution of stable isotope ratios in all boxes of a system.
-#' \cr The numerical solver uses the ode function of the deSolve package
+#' describing the evolution of stable isotope ratios in all boxes of a system. \cr
+#' Not intended for direct use although possible. \cr
+#' The numerical solver uses the ode function of the deSolve package
 #' to integrate the stable isotopes ratios over time in each box. It allows the
 #' calculation of the evolution of stable isotope ratio even in the case of
 #' unbalanced outward and inward fluxes of element X in a given box
@@ -177,6 +178,7 @@ num_slvr <- function(input_path,
 #' Analytically solve stable isotope box models
 #' @description  An analytical solver of the system of ordinary differential
 #' equations (ODES) of stable isotope ratios of element X in all boxes. \cr
+#' Not intended for direct use although possible. \cr
 #' The analytical solver finds the eigenvalues and eigenvectors of the ODES. \cr
 #' Given the initial conditions as specified in IN.Rda file, it determines the
 #' set of analytical solutions that describes the evolution of isotope ratios
