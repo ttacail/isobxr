@@ -15,6 +15,3 @@ A character string with 0 decimal figures.
 \description{
 Takes a numerical value and returns a string of the rounded value, with 0 decimal figures.
 }
-\examples{
-dec_0(1.2345)
-}

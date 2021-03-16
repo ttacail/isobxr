@@ -15,6 +15,3 @@ A character string with 4 decimal figures.
 \description{
 Takes a numerical value and returns a print with 4 decimal figures.
 }
-\examples{
-dec_4(1.2345)
-}

@@ -15,6 +15,3 @@ A character string with 1 decimal figure.
 \description{
 Takes a numerical value and returns a print with 1 decimal figures.
 }
-\examples{
-dec_1(1.2345)
-}
