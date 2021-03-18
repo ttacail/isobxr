@@ -157,7 +157,7 @@ sweep_steady <- function(workdir,
     }
   } else {
     EXPLO_SERIES_n <- 1
-    EXPLO_SERIES_FAMILY <- SERIES_ID
+    EXPLO_SERIES_FAMILY <- paste("STD", as.character(SERIES_ID), sep = "_")
     SERIES_ID <- paste("STD", as.character(SERIES_ID), paste(as.character(c(replicate(n_zeros-1,0),1)), collapse = ""), sep = "_")
   }
 
@@ -939,7 +939,7 @@ sweep_dyn <- function(workdir,
     }
   } else {
     EXPLO_SERIES_n <- 1
-    EXPLO_SERIES_FAMILY <- SERIES_ID
+    EXPLO_SERIES_FAMILY <- paste("DYN", as.character(SERIES_ID), sep = "_")
     SERIES_ID <- paste("DYN", as.character(SERIES_ID), paste(as.character(c(replicate(n_zeros-1,0),1)), collapse = ""), sep = "_")
   }
 

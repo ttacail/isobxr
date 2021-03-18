@@ -183,7 +183,7 @@ compose_isobxr <- function(workdir,
     }
   } else {
     COMPO_SERIES_n <- 1
-    COMPO_SERIES_FAMILY <- SERIES_ID
+    COMPO_SERIES_FAMILY <- paste("CPS", as.character(SERIES_ID), sep = "_")
     SERIES_ID <- paste("CPS", as.character(SERIES_ID), paste(as.character(c(replicate(n_zeros-1,0),1)), collapse = ""), sep = "_")
   }
 
