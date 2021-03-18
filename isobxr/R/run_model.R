@@ -844,8 +844,11 @@ run_isobxr <- function(workdir,
       evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% c(INFINITE_BOXES)),]
     }
 
+    BOXES_network_drop <- as.character(BOXES_network_drop)
+    BOXES_network_drop <- BOXES_network_drop[!BOXES_network_drop %in% INFINITE_BOXES]
+
     if (length(BOXES_network_drop) > 0){
-      evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% c(as.character(BOXES_network_drop))),]
+      evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% c(BOXES_network_drop)),]
     }
 
     evD_vert <- evD_vert[2:nrow(evD_vert),]
