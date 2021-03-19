@@ -32,12 +32,12 @@ in each box over time.
 \section{Optional csv outputs to the DIGEST folder are as follows}{
 
 \enumerate{
-\item OUT data file with initial and final size and delta values in each boxes. \cr
+\item OUT data file with initial and final size and delta values in all boxes. \cr
 (file name structure: \strong{\emph{out_1_A_OUT + RUN name + .csv}})
 \item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES  \cr
 (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  \cr
 (file name structure: \strong{\emph{out_2_A_ODE_SOLNs + RUN name + .csv}})
-\item evD data file of the evolution with time of the delta values in each boxes.  \cr
+\item evD data file of the evolution with time of the delta values in all boxes.  \cr
 (file name structure: \strong{\emph{out_3_A_evD + RUN name + .csv}})
 }
 }

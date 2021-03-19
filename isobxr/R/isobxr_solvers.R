@@ -4,6 +4,7 @@ usethis::use_package("dplyr", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("deSolve", min_version = TRUE)
 usethis::use_package("rlang", min_version = TRUE)
+
 #  #_________________________________________________________________________80char
 #' Numerically solve stable isotope box models
 #' @description A numerical solver of the system of ordinary differential equations (ODES),
@@ -16,7 +17,7 @@ usethis::use_package("rlang", min_version = TRUE)
 #' resulting in the accumulation or loss of element X.
 #' @param input_path path to the INPUT file containing all commands for the run \cr
 #' (character string, file name structure: \strong{\emph{RUN name + _IN.Rda}})
-#' @param to_DIGEST_csv edit csv outputs or not to the RUN DIGEST folder \cr
+#' @param to_DIGEST_csv Edits csv outputs to the RUN DIGEST folder \cr
 #' (logical, default is FALSE)
 #' @return The function returns the numerically determined evolution of stable
 #' isotope compositions and mass of element X in all boxes over the run duration as
@@ -194,12 +195,12 @@ num_slvr <- function(input_path,
 #' \strong{\emph{RUN name + _OUT.Rda}}
 #' @section Optional csv outputs to the DIGEST folder are as follows:
 #' \enumerate{
-#' \item OUT data file with initial and final size and delta values in each boxes. \cr
+#' \item OUT data file with initial and final size and delta values in all boxes. \cr
 #' (file name structure: \strong{\emph{out_1_A_OUT + RUN name + .csv}})
 #' \item ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES  \cr
 #' (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  \cr
 #' (file name structure: \strong{\emph{out_2_A_ODE_SOLNs + RUN name + .csv}})
-#' \item evD data file of the evolution with time of the delta values in each boxes.  \cr
+#' \item evD data file of the evolution with time of the delta values in all boxes.  \cr
 #' (file name structure: \strong{\emph{out_3_A_evD + RUN name + .csv}})
 #' }
 #' @export

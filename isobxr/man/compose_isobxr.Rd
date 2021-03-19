@@ -48,7 +48,7 @@ defining the names of the boxes to hide in the plot of the box sizes (masses of 
 
 \item{EACH_RUN_DIGEST}{\emph{OPTIONAL} \cr
 Logical value. \cr
-Edits all full digests for each model run
+Edits full digests for each model run
 (all optional outputs of \code{\link{run_isobxr}} function) if TRUE. \cr
 Default is FALSE.}
 
@@ -92,14 +92,17 @@ numbered from to 1 to \emph{n} in an XXXX format with the following format: \cr
 \description{
 A function to compose an isobxr box model scenario,
 defined by a series of \emph{n} successive runs, \cr
-each run inheriting from the final state conditions of the previous run, \cr
-and with the possibility to force parameters at each run, namely:
+each run inheriting from the final state conditions of the previous run. \cr
+It is possible to force parameters at each run, namely:
 \enumerate{
-\item fluxes (all or overwriting only a subset of them)
-\item isotope fractionation coefficients (all or overwriting only a subset of them)
-\item box sizes
-\item rayleigh isotope distillation
-\item isotope composition of a source box
+\item \strong{fluxes} \cr
+(overwriting all or a subset of fluxes defined in \emph{0_ISOBXR_MASTER.xlsx} master file)
+\item \strong{isotope fractionation coefficients} \cr
+(overwriting all or a subset of coefficients defined in \emph{0_ISOBXR_MASTER.xlsx} master file)
+\item \strong{box sizes} \cr
+(overwriting all or a subset of box sizes defined in \emph{0_ISOBXR_MASTER.xlsx} master file)
+\item \strong{rayleigh isotope distillation}
+\item \strong{isotope composition of a source box at initial state}
 }
 }
 \section{Optional outputs}{

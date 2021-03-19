@@ -25,14 +25,13 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @param SERIES_ID Name of the model series the run belongs to. \cr
 #' It determines the folder in which the output files will be stored.\cr
 #' (character string)
-#' @param flux_list_name Name of the list of fluxes to be used for the run, \cr
-#' as defined in by single column of the \strong{FLUXES} sheet
+#' @param flux_list_name Name of the list of fluxes and initial box sizes to be used for the run, \cr
+#' calling (by its header name) a single column of the \strong{FLUXES} sheet
 #' of the \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
 #' (character string)
-#' @param coeff_list_name Name of the list of fractionation coefficients to be used
-#' for the run, \cr
-#' as defined in a single column of the \strong{COEFFS} sheet of the
-#' \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
+#' @param coeff_list_name Name of the list of fractionation coefficients to be used for the run, \cr
+#' calling (by its header name) a single column of the \strong{COEFFS} sheet
+#' of the \strong{\emph{0_ISOBXR_MASTER.xlsx}} file. \cr
 #' (character string)
 #' @param t_lim Run duration, given in the same time units as the fluxes. \cr
 #' (integer)
@@ -110,7 +109,7 @@ usethis::use_package("rlang", min_version = TRUE)
 #' Default is TRUE.
 #' @param to_DIGEST_CSV_XLS \emph{OPTIONAL}\cr
 #' Logical value.  \cr
-#' Edits Rda input file (ending with _IN.Rda) and CSV output files in RUN DIGEST folder if TRUE. \cr
+#' Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}} or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
 #' Default is FALSE.
 #'
 #' @return If the function is run independently and if directory is not yet existing, \cr
@@ -121,16 +120,30 @@ usethis::use_package("rlang", min_version = TRUE)
 #' \enumerate{
 #' \item Automatically sets a XXXX run number between 0001 and 9999. \cr
 #' The outputs do not overwrite possible identical previously performed runs.
+#'
 #' \item Stores all outputs in a file with the Rda format. \cr
 #' This file stores all data produced by the function. \cr
 #' (file name structure: \strong{\emph{SERIES_ID + XXXX + _OUT.Rda}})
+#'
+#' \item Updates the general log file, located in general working directory. \cr
+#' (file name: \strong{\emph{1_LOG.csv}})
 #' }
 #'
 #' @section Optional outputs, stored in \emph{DIGEST} folder:
+#'
+#' A \emph{DIGEST} folder is created to store all optional outputs of the \code{\link{run_isobxr}} function. \cr
+#' The \emph{DIGEST} folder is created in the \emph{SERIES} folder with the following name structure: \cr
+#' \strong{\emph{2_RUN + SERIES_ID / SERIES_ID + XXXX + DIGEST}}
+#'
 #' \enumerate{
 #' \item If to_DIGEST_CSV_XLS = TRUE, \cr
-#' creates an INPUT file in the xlsx format, with all run conditions and parameters. \cr
+#' creates an INPUT file in the xlsx format stored in \emph{DIGEST} folder, \cr
+#' containing all run conditions and parameters. \cr
 #' (file name structure: \strong{\emph{in_0_INPUTS + SERIES_ID + XXXX + .xlsx}}) \cr
+#'
+#' \item If to_DIGEST_CSV_XLS = TRUE, \cr
+#' stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in \emph{DIGEST} folder. \cr
+#' See \code{\link{num_slvr}} or \code{\link{ana_slvr}} documentation for further details.
 #'
 #' \item If to_DIGEST_DIAGRAMS = TRUE, \cr
 #' edits a Box model diagram of flux (DIAG_FLUX pdf) of element X (mass per time unit)
@@ -146,12 +159,6 @@ usethis::use_package("rlang", min_version = TRUE)
 #' edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale. \cr
 #' (file name structure: \strong{\emph{out_0_PLOT_evD + SERIES_ID + XXXX + .pdf}})
 #'
-#' \item If to_DIGEST_CSV_XLS = TRUE, \cr
-#' stores csv versions of the \code{\link{num_slvr}} or \code{\link{ana_slvr}} outputs in \emph{DIGEST} folder. \cr
-#' See \code{\link{num_slvr}} or \code{\link{ana_slvr}} documentation for further details.
-#'
-#' \item Creates or updates the general log file, located in general working directory.
-#' (file name: \strong{\emph{1_LOG.csv}})
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export

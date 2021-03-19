@@ -65,9 +65,9 @@ as the run calculation time depends on the number of successive sweeping runs.
 
 \item Writes summarized results in the  \strong{\emph{0_STD_DIGEST}} folder:
 \enumerate{
-\item LOG file of local sweep steady run. \cr
+\item Archived LOG file of local sweep steady run. \cr
 (file name structure:  \strong{\emph{STD + SERIES_ID + YYY + _LOG.csv}})
-\item Sweep steady master file. \cr
+\item Archived sweep steady master file. \cr
 (file name structure:  \strong{\emph{STD + SERIES_ID + YYY + _MASTER.xlsx}})
 \item Dataset of temporal evolution of delta values (evD) in all boxes over the \emph{n} runs that constitute the sweep steady run. \cr
 (file name structure: \strong{\emph{STD + SERIES_ID + YYY + evD.RDS}})
@@ -89,11 +89,13 @@ over a range of values) on the final state of a given model.
 \enumerate{
 \item If to_STD_DIGEST_CSVs = TRUE \cr
 In the \strong{\emph{0_STD_DIGEST}} folder,
-edits csv versions of the sweep steady run datasets: full and final evD and evS. \cr
-(file name structure: \strong{\emph{STD + SERIES_ID + YYY + evD.csv}}) \cr
-(file name structure: \strong{\emph{STD + SERIES_ID + YYY + evS.csv}}) \cr
-(file name structure: \strong{\emph{STD + SERIES_ID + YYY + evD_final.csv}}) \cr
-(file name structure: \strong{\emph{STD + SERIES_ID + YYY + evS_final.csv}}) \cr
+edits csv versions of the sweep steady run datasets (full and final evD and evS) with the following name structures:
+\enumerate{
+\item \strong{\emph{STD + SERIES_ID + YYY + evD.csv}}
+\item \strong{\emph{STD + SERIES_ID + YYY + evS.csv}}
+\item \strong{\emph{STD + SERIES_ID + YYY + evD_final.csv}}
+\item \strong{\emph{STD + SERIES_ID + YYY + evS_final.csv}}
+}
 }
 }
 

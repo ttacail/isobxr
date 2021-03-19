@@ -60,9 +60,9 @@ usethis::use_package("rlang", min_version = TRUE)
 #'
 #' \item Writes summarized results in the  \strong{\emph{0_STD_DIGEST}} folder:
 #' \enumerate{
-#' \item LOG file of local sweep steady run. \cr
+#' \item Archived LOG file of local sweep steady run. \cr
 #' (file name structure:  \strong{\emph{STD + SERIES_ID + YYY + _LOG.csv}})
-#' \item Sweep steady master file. \cr
+#' \item Archived sweep steady master file. \cr
 #' (file name structure:  \strong{\emph{STD + SERIES_ID + YYY + _MASTER.xlsx}})
 #' \item Dataset of temporal evolution of delta values (evD) in all boxes over the \emph{n} runs that constitute the sweep steady run. \cr
 #' (file name structure: \strong{\emph{STD + SERIES_ID + YYY + evD.RDS}})
@@ -79,13 +79,14 @@ usethis::use_package("rlang", min_version = TRUE)
 #' \enumerate{
 #' \item If to_STD_DIGEST_CSVs = TRUE \cr
 #' In the \strong{\emph{0_STD_DIGEST}} folder,
-#' edits csv versions of the sweep steady run datasets: full and final evD and evS. \cr
-#' (file name structure: \strong{\emph{STD + SERIES_ID + YYY + evD.csv}}) \cr
-#' (file name structure: \strong{\emph{STD + SERIES_ID + YYY + evS.csv}}) \cr
-#' (file name structure: \strong{\emph{STD + SERIES_ID + YYY + evD_final.csv}}) \cr
-#' (file name structure: \strong{\emph{STD + SERIES_ID + YYY + evS_final.csv}}) \cr
+#' edits csv versions of the sweep steady run datasets (full and final evD and evS) with the following name structures:
+#' \enumerate{
+#' \item \strong{\emph{STD + SERIES_ID + YYY + evD.csv}}
+#' \item \strong{\emph{STD + SERIES_ID + YYY + evS.csv}}
+#' \item \strong{\emph{STD + SERIES_ID + YYY + evD_final.csv}}
+#' \item \strong{\emph{STD + SERIES_ID + YYY + evS_final.csv}}
 #' }
-#'
+#' }
 #' @export
 sweep_steady <- function(workdir,
                          SERIES_ID,
@@ -798,7 +799,7 @@ sweep_steady <- function(workdir,
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters during a dynamic run
 #' @description  A function to assess the influence of two parameters (varying
-#' over a range of values) on dynamic evolution of a given model.
+#' over a range of values) on dynamic evolution of a given model in response to a given perturbation.
 #'
 #' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
 #' of the dynamic sweep master file (e.g., \strong{\emph{0_EXPLO_DYN_MASTER.xlsx}}) \cr
@@ -850,9 +851,9 @@ sweep_steady <- function(workdir,
 #'
 #' \item Writes summarized results in the  \strong{\emph{0_DYN_DIGEST}} folder:
 #' \enumerate{
-#' \item LOG file of local sweep dynamic run. \cr
+#' \item Archived LOG file of local sweep dynamic run. \cr
 #' (file name structure:  \strong{\emph{DYN + SERIES_ID + YYY + _LOG.csv}})
-#' \item Sweep dynamic master file. \cr
+#' \item Archived sweep dynamic master file. \cr
 #' (file name structure:  \strong{\emph{DYN + SERIES_ID + YYY + _MASTER.xlsx}})
 #' \item Dataset of temporal evolution of delta values (evD) in all boxes over the \emph{n} runs that constitute the sweep dynamic run. \cr
 #' (file name structure: \strong{\emph{DYN + SERIES_ID + YYY + evD.RDS}})
@@ -865,11 +866,12 @@ sweep_steady <- function(workdir,
 #' \enumerate{
 #' \item If to_DYN_DIGEST_CSVs = TRUE \cr
 #' In the \strong{\emph{0_DYN_DIGEST}} folder,
-#' edits csv versions of the sweep dynamic run datasets: full evD and evS. \cr
-#' (file name structure: \strong{\emph{DYN + SERIES_ID + YYY + evD.csv}}) \cr
-#' (file name structure: \strong{\emph{DYN + SERIES_ID + YYY + evS.csv}}) \cr
+#' edits csv versions of the sweep dynamic run datasets (full evD and evS) with the following name structures:
+#' \enumerate{
+#' \item \strong{\emph{DYN + SERIES_ID + YYY + evD.csv}}
+#' \item \strong{\emph{DYN + SERIES_ID + YYY + evS.csv}}
 #' }
-#'
+#' }
 #' @export
 sweep_dyn <- function(workdir,
                       SERIES_ID,

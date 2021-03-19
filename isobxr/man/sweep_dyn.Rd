@@ -65,9 +65,9 @@ with the following name formats: \cr
 
 \item Writes summarized results in the  \strong{\emph{0_DYN_DIGEST}} folder:
 \enumerate{
-\item LOG file of local sweep dynamic run. \cr
+\item Archived LOG file of local sweep dynamic run. \cr
 (file name structure:  \strong{\emph{DYN + SERIES_ID + YYY + _LOG.csv}})
-\item Sweep dynamic master file. \cr
+\item Archived sweep dynamic master file. \cr
 (file name structure:  \strong{\emph{DYN + SERIES_ID + YYY + _MASTER.xlsx}})
 \item Dataset of temporal evolution of delta values (evD) in all boxes over the \emph{n} runs that constitute the sweep dynamic run. \cr
 (file name structure: \strong{\emph{DYN + SERIES_ID + YYY + evD.RDS}})
@@ -78,16 +78,18 @@ with the following name formats: \cr
 }
 \description{
 A function to assess the influence of two parameters (varying
-over a range of values) on dynamic evolution of a given model.
+over a range of values) on dynamic evolution of a given model in response to a given perturbation.
 }
 \section{Optional output}{
 
 \enumerate{
 \item If to_DYN_DIGEST_CSVs = TRUE \cr
 In the \strong{\emph{0_DYN_DIGEST}} folder,
-edits csv versions of the sweep dynamic run datasets: full evD and evS. \cr
-(file name structure: \strong{\emph{DYN + SERIES_ID + YYY + evD.csv}}) \cr
-(file name structure: \strong{\emph{DYN + SERIES_ID + YYY + evS.csv}}) \cr
+edits csv versions of the sweep dynamic run datasets (full evD and evS) with the following name structures:
+\enumerate{
+\item \strong{\emph{DYN + SERIES_ID + YYY + evD.csv}}
+\item \strong{\emph{DYN + SERIES_ID + YYY + evS.csv}}
+}
 }
 }
 

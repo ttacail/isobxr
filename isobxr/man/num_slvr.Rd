@@ -10,7 +10,7 @@ num_slvr(input_path, to_DIGEST_csv = FALSE)
 \item{input_path}{path to the INPUT file containing all commands for the run \cr
 (character string, file name structure: \strong{\emph{RUN name + _IN.Rda}})}
 
-\item{to_DIGEST_csv}{edit csv outputs or not to the RUN DIGEST folder \cr
+\item{to_DIGEST_csv}{Edits csv outputs to the RUN DIGEST folder \cr
 (logical, default is FALSE)}
 }
 \value{
