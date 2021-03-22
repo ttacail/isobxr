@@ -311,6 +311,15 @@ run_isobxr <- function(workdir,
   names(SIZE_INITIAL)[names(SIZE_INITIAL) == 'ID'] <- 'BOXES_ID'
   names(SIZE_INITIAL)[names(SIZE_INITIAL) == flux_list_name] <- 'SIZE_INIT'
   SIZE_INITIAL <- clear_subset(SIZE_INITIAL)
+
+  # CHECK ALL BOXES DEFINED IN BOXES SHEET ARE HAVE DEFINED SIZES
+  if (isFALSE(identical(stringr::str_sort(as.character(SIZE_INITIAL$BOXES_ID)),
+                        stringr::str_sort(list_BOXES_master)))){
+    rlang::abort("
+The list of boxes with defined sizes (FLUXES sheet) does not match the list of boxes (BOXES sheet).
+Please fix this error in the 0_ISOBXR_MASTER.xlsx")
+  }
+
   INITIAL <- data.frame(BOXES_ID = list_BOXES_master)
   INITIAL <- merge(INITIAL, SIZE_INITIAL, by = "BOXES_ID", all = T, sort = F)
   INITIAL[is.na(INITIAL)] = 0
