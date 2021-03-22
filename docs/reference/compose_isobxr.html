@@ -42,13 +42,16 @@
 <meta property="og:title" content="Compose a stable isotope box model scenario — compose_isobxr" />
 <meta property="og:description" content="A function to compose an isobxr box model scenario,
 defined by a series of n successive runs, 
-each run inheriting from the final state conditions of the previous run, 
-and with the possibility to force parameters at each run, namely:
-fluxes (all or overwriting only a subset of them)
-isotope fractionation coefficients (all or overwriting only a subset of them)
-box sizes
+each run inheriting from the final state conditions of the previous run. 
+It is possible to force parameters at each run, namely:
+fluxes 
+(overwriting all or a subset of fluxes defined in 0_ISOBXR_MASTER.xlsx master file)
+isotope fractionation coefficients 
+(overwriting all or a subset of coefficients defined in 0_ISOBXR_MASTER.xlsx master file)
+box sizes 
+(overwriting all or a subset of box sizes defined in 0_ISOBXR_MASTER.xlsx master file)
 rayleigh isotope distillation
-isotope composition of a source box
+isotope composition of a source box at initial state
 
 " />
 
@@ -144,13 +147,16 @@ isotope composition of a source box
     <div class="ref-description">
     <p>A function to compose an isobxr box model scenario,
 defined by a series of <em>n</em> successive runs, <br />
-each run inheriting from the final state conditions of the previous run, <br />
-and with the possibility to force parameters at each run, namely:</p><ol>
-<li><p>fluxes (all or overwriting only a subset of them)</p></li>
-<li><p>isotope fractionation coefficients (all or overwriting only a subset of them)</p></li>
-<li><p>box sizes</p></li>
-<li><p>rayleigh isotope distillation</p></li>
-<li><p>isotope composition of a source box</p></li>
+each run inheriting from the final state conditions of the previous run. <br />
+It is possible to force parameters at each run, namely:</p><ol>
+<li><p><strong>fluxes</strong> <br />
+(overwriting all or a subset of fluxes defined in <em>0_ISOBXR_MASTER.xlsx</em> master file)</p></li>
+<li><p><strong>isotope fractionation coefficients</strong> <br />
+(overwriting all or a subset of coefficients defined in <em>0_ISOBXR_MASTER.xlsx</em> master file)</p></li>
+<li><p><strong>box sizes</strong> <br />
+(overwriting all or a subset of box sizes defined in <em>0_ISOBXR_MASTER.xlsx</em> master file)</p></li>
+<li><p><strong>rayleigh isotope distillation</strong></p></li>
+<li><p><strong>isotope composition of a source box at initial state</strong></p></li>
 </ol>
 
     </div>
@@ -215,7 +221,7 @@ defining the names of the boxes to hide in the plot of the box sizes (masses of 
       <th>EACH_RUN_DIGEST</th>
       <td><p><em>OPTIONAL</em> <br />
 Logical value. <br />
-Edits all full digests for each model run
+Edits full digests for each model run
 (all optional outputs of <code><a href='run_isobxr.html'>run_isobxr</a></code> function) if TRUE. <br />
 Default is FALSE.</p></td>
     </tr>

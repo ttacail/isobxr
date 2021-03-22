@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Sweep the space of two parameters during a dynamic run — sweep_dyn" />
 <meta property="og:description" content="A function to assess the influence of two parameters (varying
-over a range of values) on dynamic evolution of a given model." />
+over a range of values) on dynamic evolution of a given model in response to a given perturbation." />
 
 
 
@@ -134,7 +134,7 @@ over a range of values) on dynamic evolution of a given model." />
 
     <div class="ref-description">
     <p>A function to assess the influence of two parameters (varying
-over a range of values) on dynamic evolution of a given model.</p>
+over a range of values) on dynamic evolution of a given model in response to a given perturbation.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sweep_dyn</span><span class='op'>(</span>
@@ -214,9 +214,9 @@ with the following name formats: <br />
 <strong><em>DYN + SERIES_ID + YYY + XXXX + OUT.Rda</em></strong> <br />
 (see <code><a href='run_isobxr.html'>run_isobxr</a></code> documentation).</p></li>
 <li><p>Writes summarized results in the  <strong><em>0_DYN_DIGEST</em></strong> folder:</p><ol>
-<li><p>LOG file of local sweep dynamic run. <br />
+<li><p>Archived LOG file of local sweep dynamic run. <br />
 (file name structure:  <strong><em>DYN + SERIES_ID + YYY + _LOG.csv</em></strong>)</p></li>
-<li><p>Sweep dynamic master file. <br />
+<li><p>Archived sweep dynamic master file. <br />
 (file name structure:  <strong><em>DYN + SERIES_ID + YYY + _MASTER.xlsx</em></strong>)</p></li>
 <li><p>Dataset of temporal evolution of delta values (evD) in all boxes over the <em>n</em> runs that constitute the sweep dynamic run. <br />
 (file name structure: <strong><em>DYN + SERIES_ID + YYY + evD.RDS</em></strong>)</p></li>
@@ -232,9 +232,10 @@ with the following name formats: <br />
 <ol>
 <li><p>If to_DYN_DIGEST_CSVs = TRUE <br />
 In the <strong><em>0_DYN_DIGEST</em></strong> folder,
-edits csv versions of the sweep dynamic run datasets: full evD and evS. <br />
-(file name structure: <strong><em>DYN + SERIES_ID + YYY + evD.csv</em></strong>) <br />
-(file name structure: <strong><em>DYN + SERIES_ID + YYY + evS.csv</em></strong>) <br /></p></li>
+edits csv versions of the sweep dynamic run datasets (full evD and evS) with the following name structures:</p><ol>
+<li><p><strong><em>DYN + SERIES_ID + YYY + evD.csv</em></strong></p></li>
+<li><p><strong><em>DYN + SERIES_ID + YYY + evS.csv</em></strong></p></li>
+</ol></li>
 </ol>
 
 

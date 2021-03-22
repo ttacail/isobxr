@@ -42,6 +42,7 @@
 <meta property="og:title" content="Analytically solve stable isotope box models — ana_slvr" />
 <meta property="og:description" content="An analytical solver of the system of ordinary differential
 equations (ODES) of stable isotope ratios of element X in all boxes. 
+Not intended for direct use although possible. 
 The analytical solver finds the eigenvalues and eigenvectors of the ODES. 
 Given the initial conditions as specified in IN.Rda file, it determines the
 set of analytical solutions that describes the evolution of isotope ratios
@@ -139,6 +140,7 @@ in each box over time." />
     <div class="ref-description">
     <p>An analytical solver of the system of ordinary differential
 equations (ODES) of stable isotope ratios of element X in all boxes. <br />
+Not intended for direct use although possible. <br />
 The analytical solver finds the eigenvalues and eigenvectors of the ODES. <br />
 Given the initial conditions as specified in IN.Rda file, it determines the
 set of analytical solutions that describes the evolution of isotope ratios
@@ -174,12 +176,12 @@ with the following file name structure: <br />
     
 
 <ol>
-<li><p>OUT data file with initial and final size and delta values in each boxes. <br />
+<li><p>OUT data file with initial and final size and delta values in all boxes. <br />
 (file name structure: <strong><em>out_1_A_OUT + RUN name + .csv</em></strong>)</p></li>
 <li><p>ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES  <br />
 (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  <br />
 (file name structure: <strong><em>out_2_A_ODE_SOLNs + RUN name + .csv</em></strong>)</p></li>
-<li><p>evD data file of the evolution with time of the delta values in each boxes.  <br />
+<li><p>evD data file of the evolution with time of the delta values in all boxes.  <br />
 (file name structure: <strong><em>out_3_A_evD + RUN name + .csv</em></strong>)</p></li>
 </ol>
 

@@ -214,9 +214,9 @@ as the run calculation time depends on the number of successive sweeping runs.</
 <strong><em>STD + SERIES_ID + YYY + 0001 + OUT.Rda</em></strong> <br />
 (see <code><a href='run_isobxr.html'>run_isobxr</a></code> documentation).</p></li>
 <li><p>Writes summarized results in the  <strong><em>0_STD_DIGEST</em></strong> folder:</p><ol>
-<li><p>LOG file of local sweep steady run. <br />
+<li><p>Archived LOG file of local sweep steady run. <br />
 (file name structure:  <strong><em>STD + SERIES_ID + YYY + _LOG.csv</em></strong>)</p></li>
-<li><p>Sweep steady master file. <br />
+<li><p>Archived sweep steady master file. <br />
 (file name structure:  <strong><em>STD + SERIES_ID + YYY + _MASTER.xlsx</em></strong>)</p></li>
 <li><p>Dataset of temporal evolution of delta values (evD) in all boxes over the <em>n</em> runs that constitute the sweep steady run. <br />
 (file name structure: <strong><em>STD + SERIES_ID + YYY + evD.RDS</em></strong>)</p></li>
@@ -236,11 +236,12 @@ as the run calculation time depends on the number of successive sweeping runs.</
 <ol>
 <li><p>If to_STD_DIGEST_CSVs = TRUE <br />
 In the <strong><em>0_STD_DIGEST</em></strong> folder,
-edits csv versions of the sweep steady run datasets: full and final evD and evS. <br />
-(file name structure: <strong><em>STD + SERIES_ID + YYY + evD.csv</em></strong>) <br />
-(file name structure: <strong><em>STD + SERIES_ID + YYY + evS.csv</em></strong>) <br />
-(file name structure: <strong><em>STD + SERIES_ID + YYY + evD_final.csv</em></strong>) <br />
-(file name structure: <strong><em>STD + SERIES_ID + YYY + evS_final.csv</em></strong>) <br /></p></li>
+edits csv versions of the sweep steady run datasets (full and final evD and evS) with the following name structures:</p><ol>
+<li><p><strong><em>STD + SERIES_ID + YYY + evD.csv</em></strong></p></li>
+<li><p><strong><em>STD + SERIES_ID + YYY + evS.csv</em></strong></p></li>
+<li><p><strong><em>STD + SERIES_ID + YYY + evD_final.csv</em></strong></p></li>
+<li><p><strong><em>STD + SERIES_ID + YYY + evS_final.csv</em></strong></p></li>
+</ol></li>
 </ol>
 
 

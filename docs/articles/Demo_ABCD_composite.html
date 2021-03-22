@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Getting started 2: composite runs</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-03-12</h4>
+            <h4 class="date">2021-03-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/Demo_ABCD_composite.Rmd"><code>vignettes/Demo_ABCD_composite.Rmd</code></a></small>
       <div class="hidden name"><code>Demo_ABCD_composite.Rmd</code></div>
@@ -205,19 +205,21 @@
 <p>All other sheets defining forcing parameters (<strong>FORCING_RAYLEIGH</strong>, <strong>FORCING_SIZE</strong>, <strong>FORCING_DELTA</strong>, <strong>FORCING_ALPHA</strong>) are left empty (with column headers as defined by template but empty lines).</p>
 <p>We call the function as follows:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/DEMO_ABCD"</span> <span class="co"># isobxr and compo master file work. dir.</span>
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/1_ABC_tutorial"</span> <span class="co"># isobxr and compo master file work. dir.</span>
 <span class="va">SERIES_ID</span> <span class="op">&lt;-</span> <span class="st">"ABC_change_balance"</span> <span class="co"># series ID of the set of compo runs</span>
-<span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"days"</span><span class="op">)</span> <span class="co"># time units for run (days) and for plots (years)</span>
-<span class="va">COMPO_MASTER</span> <span class="op">&lt;-</span> <span class="st">"0_COMPO_MASTER_balance_change.xlsx"</span> <span class="co"># compo master file name</span>
+<span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span> <span class="co"># time units for run (days) and for plots (years)</span>
+<span class="va">COMPO_MASTER</span> <span class="op">&lt;-</span> <span class="st">"0_CPS_MASTER_changing_balance.xlsx"</span> <span class="co"># compo master file name</span>
 <span class="va">plot_HIDE_BOXES_delta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evD plot</span>
 <span class="va">plot_HIDE_BOXES_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SOURCE"</span>, <span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evS plot</span>
-  
+
 <span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span><span class="va">workdir</span>,
-               <span class="va">SERIES_ID</span>, 
+               <span class="va">SERIES_ID</span>,
                <span class="va">time_units</span>,
-               <span class="va">COMPO_MASTER</span>, 
-               <span class="va">plot_HIDE_BOXES_delta</span>, 
-               <span class="va">plot_HIDE_BOXES_size</span><span class="op">)</span></pre></div>
+               <span class="va">COMPO_MASTER</span>,
+               <span class="va">plot_HIDE_BOXES_delta</span>,
+               <span class="va">plot_HIDE_BOXES_size</span>,
+               EACH_RUN_DIGEST <span class="op">=</span> <span class="cn">TRUE</span>,
+               to_CPS_DIGEST_CSVs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <p>We obtain the following overviews of the evolution of delta values and box sizes over the run duration. By default the plotting functionnality of the <code>compose_isobxr</code> function hides initial run of the composite scenario because it is usually used as a run to let the system artificially relax to it's steady state.<br>
 Nevertheless, all the data files edited by the function do include the initial run of the composite scenario.</p>
 <p>Below is the plot evDS output of both delta and box sizes over time. <img src="31_CPS_ABC_change_balance_001_p_evDS.png" width="100%"></p>
@@ -239,19 +241,21 @@ Nevertheless, all the data files edited by the function do include the initial r
 </ol>
 <p>We call the function as follows:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/DEMO_ABCD"</span> <span class="co"># isobxr and compo master file work. dir.</span>
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/1_ABC_tutorial"</span> <span class="co"># isobxr and compo master file work. dir.</span>
 <span class="va">SERIES_ID</span> <span class="op">&lt;-</span> <span class="st">"ABC_change_source"</span> <span class="co"># series ID of the set of compo runs</span>
-<span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"days"</span><span class="op">)</span> <span class="co"># time units for run (days) and for plots (years)</span>
-<span class="va">COMPO_MASTER</span> <span class="op">&lt;-</span> <span class="st">"0_COMPO_MASTER_source_change.xlsx"</span> <span class="co"># compo master file name</span>
+<span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span> <span class="co"># time units for run (days) and for plots (years)</span>
+<span class="va">COMPO_MASTER</span> <span class="op">&lt;-</span> <span class="st">"0_CPS_MASTER_changing_source.xlsx"</span> <span class="co"># compo master file name</span>
 <span class="va">plot_HIDE_BOXES_delta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evD plot</span>
 <span class="va">plot_HIDE_BOXES_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SOURCE"</span>, <span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evS plot</span>
-  
+
 <span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span><span class="va">workdir</span>,
-               <span class="va">SERIES_ID</span>, 
+               <span class="va">SERIES_ID</span>,
                <span class="va">time_units</span>,
-               <span class="va">COMPO_MASTER</span>, 
-               <span class="va">plot_HIDE_BOXES_delta</span>, 
-               <span class="va">plot_HIDE_BOXES_size</span><span class="op">)</span></pre></div>
+               <span class="va">COMPO_MASTER</span>,
+               <span class="va">plot_HIDE_BOXES_delta</span>,
+               <span class="va">plot_HIDE_BOXES_size</span>,
+               EACH_RUN_DIGEST <span class="op">=</span> <span class="cn">TRUE</span>,
+               to_CPS_DIGEST_CSVs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <p>And for instance, we obtain the following evDS pdf output where we see that the effect of the change in the source isotope composition slightly affects the delta values of A, B and C boxes.</p>
 <p><img src="36_0_CPS_ABC_change_source_001_p_evDS.png" width="100%"></p>
 <hr>

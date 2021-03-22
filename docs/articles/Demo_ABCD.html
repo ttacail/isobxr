@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Getting started 1: single runs</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-03-12</h4>
+            <h4 class="date">2021-03-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/Demo_ABCD.Rmd"><code>vignettes/Demo_ABCD.Rmd</code></a></small>
       <div class="hidden name"><code>Demo_ABCD.Rmd</code></div>
@@ -112,7 +112,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<a href="https://ttacail.github.io/source/demos/1_ABCD.zip">Download the ABCD demo zip file</a>.</li>
+<a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">Download the ABCD demo zip file</a>.</li>
 </ol>
 <dl>
 <dt>Note</dt>
@@ -124,10 +124,10 @@
 <li><p>Take note of the path to this folder, for instance:</p></li>
 </ol>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">workingdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD/"</span></pre></div>
+<span class="va">workingdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span></pre></div>
 <p>or set it as a working directory, for instance:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD"</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial"</span><span class="op">)</span></pre></div>
 <p>Everything is now ready to run box models with <strong>isobxr</strong>.</p>
 <hr>
 </div>
@@ -196,14 +196,16 @@
 For this run we use the <em>a1</em> fractionation coefficients list.<br>
 We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD/"</span>, <span class="co"># isobxr master file work. dir.</span>
-           SERIES_ID <span class="op">=</span> <span class="st">"ABC_balanced_closed"</span>, <span class="co"># series ID of the set of runs</span>
-           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_bal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
-           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet </span>
+<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span>, <span class="co"># isobxr master file work. dir.</span>
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>, <span class="co"># series ID of the set of runs</span>
+           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
+           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
            t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how long do I want to run</span>
            nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"years"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
-           PLOT_evD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf </span></pre></div>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
 <p>The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).</p>
 <p>The <code>run_isobxr</code> function therefore choses to run the analytical solver (<code>ana_slvr</code>).</p>
 <p>In the case of this run we can see the following messages:</p>
@@ -227,14 +229,16 @@ We will run this model for total time of 2500 days with a resolution of 1 calcul
 For this run we use the <em>a1</em> fractionation coefficients list.<br>
 We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD/"</span>, <span class="co"># isobxr master file work. dir.</span>
-           SERIES_ID <span class="op">=</span> <span class="st">"ABC_unbalanced_closed"</span>, <span class="co"># series ID of the set of runs</span>
-           flux_list_name <span class="op">=</span> <span class="st">"Fx2_ABC_unbal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
-           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet </span>
+<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span>, <span class="co"># isobxr master file work. dir.</span>
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_unbalanced"</span>, <span class="co"># series ID of the set of runs</span>
+           flux_list_name <span class="op">=</span> <span class="st">"Fx2_ABC_closed_unbal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
+           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
            t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how long do I want to run</span>
            nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"years"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
-           PLOT_evD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf </span></pre></div>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
 <p>The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).</p>
 <p>In the case of this run we can see the following messages:</p>
 <pre><code>#&gt; [1] "&lt; All boxes are FINITE &gt;"
@@ -265,14 +269,16 @@ We will run this model for a total time of 2500 days with a resolution of 1 calc
 <p>The function call would be the following for a run of 25000 days, with one calculation every 10 days (nb_steps = 2500).</p>
 <p>We use the <em>Fx6_ABC_open_bal</em> flux list and the <em>a1</em> coefficient list.</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD/"</span>, <span class="co"># isobxr master file work. dir.</span>
-           SERIES_ID <span class="op">=</span> <span class="st">"ABC_balanced_open"</span>, <span class="co"># series ID of the set of runs</span>
-           flux_list_name <span class="op">=</span> <span class="st">"Fx6_ABC_open_bal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
-           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet </span>
+<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span>, <span class="co"># isobxr master file work. dir.</span>
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_open_balanced"</span>, <span class="co"># series ID of the set of runs</span>
+           flux_list_name <span class="op">=</span> <span class="st">"Fx3_ABC_open_bal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
+           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
            t_lim <span class="op">=</span> <span class="fl">25000</span>, <span class="co"># how long do I want to run</span>
            nb_steps <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"years"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
-           PLOT_evD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf </span></pre></div>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
 <p>We obtain the following diagrams, where the infinite boxes display a different color.</p>
 <p><img src="22_ABC_balanced_open_0001_DIAGf_Fx6_ABC_open_bal.png" width="47%"><img src="21_ABC_balanced_open_0001_DIAGa_a1.png" width="47%"></p>
 <p>And we finally obtain the following plot of the evolution of <span class="math inline">\(\delta\)</span> values in all finite boxes over time, where we observe the relaxation of the system to it's steady state.</p>
