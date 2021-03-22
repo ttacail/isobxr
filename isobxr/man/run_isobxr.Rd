@@ -152,6 +152,25 @@ with the following name structure: \cr
 \item Automatically sets a XXXX run number between 0001 and 9999. \cr
 The outputs do not overwrite possible identical previously performed runs.
 
+\item Stores all run commands in a file with the Rda format. \cr
+This file stores all commands used as arguments for solver function
+(\code{\link{ana_slvr}} or \code{\link{num_slvr}}). \cr
+(file name structure: \strong{\emph{SERIES_ID + XXXX + _IN.Rda}}) \cr
+This encompasses the following: \cr
+\enumerate{
+\item \strong{CONSTS_IN}: Dataframe documenting the constants (Element, isotopes, reference ratio)
+\item \strong{INITIAL_IN}:  Dataframe documenting the initial conditions of all box sizes (incl. empty boxes) \cr
+and all initial delta values.
+\item \strong{FLUXES_IN}: Dataframe documenting the massic fluxes of element X \cr
+between all boxes (structured as a square matrix)
+\item \strong{COEFFS_IN}: Dataframe documenting the isotopic fractionation coefficients \cr
+between all boxes (structured as a square matrix)
+\item \strong{BOX_META_IN}: Dataframe documenting box metadata \cr
+(Box names, initial X masses and delta values, total inward and outward X fluxes in each box, \cr
+flux balance for each box, X residence time in each box, max run time before total emptying of each box, \cr
+box infinite/finite status, system diagram coordinates)
+}
+
 \item Stores all outputs in a file with the Rda format. \cr
 This file stores all data produced by the function. \cr
 (file name structure: \strong{\emph{SERIES_ID + XXXX + _OUT.Rda}})
