@@ -1,6 +1,6 @@
 Package: isobxr
 Type: Package
-Title: Stable isotope box-modelling in R
+Title: Stable isotope box modelling in R
 Version: 0.1.0
 Authors@R: person("Theo", "Tacail", email = "theo.tacail@gmail.com", role = c("aut", "cre"))
 Description: A set of functions to run simple and composite box-models to describe the 
