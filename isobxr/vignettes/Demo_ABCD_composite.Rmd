@@ -141,19 +141,21 @@ All other sheets defining forcing parameters (**FORCING_RAYLEIGH**, **FORCING_SI
 We call the function as follows:
 
 ```{r eval=FALSE}
-workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/1_ABC_tutorial" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_balance" # series ID of the set of compo runs
-time_units <- c("days", "days") # time units for run (days) and for plots (years)
-COMPO_MASTER <- "0_COMPO_MASTER_balance_change.xlsx" # compo master file name
+time_units <- c("d", "d") # time units for run (days) and for plots (years)
+COMPO_MASTER <- "0_CPS_MASTER_changing_balance.xlsx" # compo master file name
 plot_HIDE_BOXES_delta <- c("SINK") # boxes to hide from evD plot
 plot_HIDE_BOXES_size <- c("SOURCE", "SINK") # boxes to hide from evS plot
-  
+
 compose_isobxr(workdir,
-               SERIES_ID, 
+               SERIES_ID,
                time_units,
-               COMPO_MASTER, 
-               plot_HIDE_BOXES_delta, 
-               plot_HIDE_BOXES_size)
+               COMPO_MASTER,
+               plot_HIDE_BOXES_delta,
+               plot_HIDE_BOXES_size,
+               EACH_RUN_DIGEST = TRUE,
+               to_CPS_DIGEST_CSVs = TRUE)
 ```
 
 We obtain the following overviews of the evolution of delta values and box sizes over the run duration. 
@@ -201,19 +203,21 @@ knitr::include_graphics('./34_FORCING_DELTA_ABC.png')
 We call the function as follows:
 
 ```{r eval=FALSE}
-workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/1_ABC_tutorial" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_source" # series ID of the set of compo runs
-time_units <- c("days", "days") # time units for run (days) and for plots (years)
-COMPO_MASTER <- "0_COMPO_MASTER_source_change.xlsx" # compo master file name
+time_units <- c("d", "d") # time units for run (days) and for plots (years)
+COMPO_MASTER <- "0_CPS_MASTER_changing_source.xlsx" # compo master file name
 plot_HIDE_BOXES_delta <- c("SINK") # boxes to hide from evD plot
 plot_HIDE_BOXES_size <- c("SOURCE", "SINK") # boxes to hide from evS plot
-  
+
 compose_isobxr(workdir,
-               SERIES_ID, 
+               SERIES_ID,
                time_units,
-               COMPO_MASTER, 
-               plot_HIDE_BOXES_delta, 
-               plot_HIDE_BOXES_size)
+               COMPO_MASTER,
+               plot_HIDE_BOXES_delta,
+               plot_HIDE_BOXES_size,
+               EACH_RUN_DIGEST = TRUE,
+               to_CPS_DIGEST_CSVs = TRUE)
 ```
 
 And for instance, we obtain the following evDS pdf output where we see that the effect of the change in the source isotope composition slightly affects the delta values of A, B and C boxes. 

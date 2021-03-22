@@ -14,6 +14,7 @@ vignette: >
 
 
 ```{r, include = FALSE}
+#####################################################################################
 library(devtools)
 
 knitr::opts_chunk$set(
@@ -25,21 +26,21 @@ knitr::opts_chunk$set(
 ----
 
 The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools 
-designed to perform and explore stable isotope box
-modeling of open or closed systems.
+designed to perform and explore stable isotope box modelling of open or closed systems.
 It provides a ready-to-use tool allowing users to 
 develop and test isotopic box models of their system of interest. 
 It allows the user to explore the behavior of these systems
 in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), 
-build complex scenarios, 
-and sweep the space of parameters in both static and dynamic modes.
+build complex scenarios, and sweep the space of parameters in both static and dynamic modes.
 
 ----
 
 # Installation
 
+The [isobxr](https://ttacail.github.io/isobxr/) is available as a source package
+from [GitHub](https://github.com/).
 
-The **isobxr** is available as a source package from [GitHub](https://github.com/).
+The installation process can be done as follows:
 
 1. Download and install/update [R](https://cran.r-project.org/).
 
@@ -49,15 +50,22 @@ The **isobxr** is available as a source package from [GitHub](https://github.com
 install.packages("devtools")
 ```
 
-3. Download and install **isobxr** source package.
+3. Download and install [isobxr](https://ttacail.github.io/isobxr/) source package.
 
 ```{r eval = FALSE}
-devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
+devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) 
+# FALSE if no pandoc/Rstudio 
 ```
 
-The user is also invited to download the [reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip) for all input and master excel files described in this vignette, as well as download [the demonstration files input and master excel files](https://ttacail.github.io/source/demos/1_ABCD.zip) (see [Getting started 1](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html) and [Getting started 2](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html)).
+The user is also invited to download the [reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip) 
+for all master files used as entries to the functions and described in this vignette
 
-The **isobxr** package is working under R 3.5.2 to 4.0.3 versions.
+The user can also download the [demonstration master files](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip) 
+used in the [Getting started 1](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html) and 
+[Getting started 2](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html) demonstrations.
+
+The [isobxr](https://ttacail.github.io/isobxr/) package is working under
+R 3.5.2 to 4.0.3 versions.
 
 It's portability has been proof checked for the following platforms: 
 
@@ -67,12 +75,13 @@ It's portability has been proof checked for the following platforms:
 
 3. Windows 10
 
-You can load the **isobxr** package as follows:
+You can load the [isobxr](https://ttacail.github.io/isobxr/) package as follows:
 ```{r eval = FALSE}
 library(isobxr)
 ```
 
-Here is the package description of the current version, where you can find the required minimal versions of dependencies:
+Here is the package description of the current version, 
+where you can find the required minimal versions of dependencies:
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 packageDescription("isobxr")
 ```
@@ -83,14 +92,15 @@ browseVignettes("isobxr")
 ```
 
 ----
-# Theory of box modeling and formalism
+# Theory of box modelling and formalism
 
-The theory and formalism shown in this section is derived from the chapter 7 (*Dynamic systems*) of
+The theory and formalism shown in this section is derived from the chapter 7
+(*Dynamic systems*) of
 
-:    Albarède, F., 1995. Introduction to Geochemical Modeling. Cambridge University Press, Cambridge.    
+:    Albarède, F., 1995. Introduction to Geochemical Modelling. Cambridge University Press, Cambridge.    
      https://doi.org/10.1017/CBO9780511622960
 
-## Principles of stable isotopes box modeling
+## Principles of stable isotopes box modelling
 
 
 We consider a system consisting of $n$ boxes $j$, exchanging an element **X** that has at least 
@@ -116,7 +126,7 @@ Finally, we define $D_{i \mapsto j}^{M/N}$ the relative fractionation coefficien
 
 $$D_{i \mapsto j}^{M/N} = \dfrac{{J_{i \mapsto j}^M}/{J_{i \mapsto j}^N}}{m^M_i/m^N_i}$$
 
-The principe of modeling the system consists now in predicting the evolution of **box sizes** ($m^X_i$) during time and the evolution of the **isotope ratios** ($R_i$), knowing the fluxes, initial box sizes and fractionation coefficients. 
+The principe of modelling the system consists now in predicting the evolution of **box sizes** ($m^X_i$) during time and the evolution of the **isotope ratios** ($R_i$), knowing the fluxes, initial box sizes and fractionation coefficients. 
 
 ## Mass conservation of element X
 
@@ -124,7 +134,8 @@ Considering **X** has **no radioactive nor radiogenic component**, mass conserva
 
 $$\dfrac{dm^X_i}{dt} = - \sum \limits_{j\neq i} J_{i \mapsto j}^X + \sum \limits_{j\neq i} J_{j \mapsto i}^X$$
 
-This equation can be integrated in its linear form considering constant fluxes as follows: 
+When considering constant fluxes, this equation can be integrated 
+in its linear form as follows: 
 
 $$m^X_i = \left(- \sum \limits_{j\neq i} J_{i \mapsto j}^X + \sum \limits_{j\neq i} J_{j \mapsto i}^X\right) \times t + m^X_{i, t_0}$$
 
@@ -181,11 +192,11 @@ $$\begin{array}{ccccc}
 \end{array}$$
 
 These assumptions are valid for amplitude of stable isotope fractionations of the order of tens of ‰.
-This assumption finds its limitation in the case of ample stable isotope fractionations of isotopic systems of light elements (such as D/H).
 
-In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.
+These assumptions find their limitation in the case of ample stable isotope fractionations such as sometimes observed for isotopic systems of light elements (such as D/H). In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.
 
-We thus have the following system of first order differential equations used thereafter: 
+We thus have the following \strongr{system of first order differential equations}
+used thereafter: 
 
 $$
 \dfrac{dR_i}{dt} = 
@@ -194,18 +205,33 @@ $$
 
 
 This system can be solved in order to reconstruct the evolution of stable isotope ratios $R_i(t)$ in each box over time. 
+
 Two main situations can be distinguished here. 
 
-1. The inward and outward fluxes of element **X** for any given box are **balanced** (*i.e.* ${dm^X_i}/{dt} = 0$ for all boxes).
-    All box sizes ($m^X_i$) are thus constants.
+1. **The inward and outward fluxes of element X for any given box are balanced**
+
+    In this case, all box sizes ($m^X_i$) are constant, which means that 
+    ${dm^X_i}/{dt} = 0$ for all boxes.
     
-1. The inward and outward fluxes of element **X** for at least one box is **unbalanced** (*i.e.* ${dm^X_i}/{dt} \neq 0$ for at least one box).
-    Thus, at least one box displays a varying mass of element **X** with time ($m^X_i(t)$).
-
-
-In the first case, the reconstruction of $R_i(t)$ only requires the solving of the system of ordinary first order differential equations. This can be done analytically *via* the algebric inversion of the equation system matrix. This is what the `ana_slvr` core functions does.
-
-In the second case, the reconstruction of $R_i(t)$ requires the simultaneous solving of the system of ordinary first order differential equations describing $R_i(t)$ and of the derivative of $m^X_i(t)$ (with a linear solution). This is performed numerically *via* an incremental integration as done by the `num_slvr` core function. 
+    The reconstruction of $R_i(t)$ only requires the solving of the system of
+    ordinary first order differential equations.
+    
+    This can be done analytically *via* the algebric inversion 
+    of the equation system matrix. 
+    This is what the `ana_slvr` core functions does.
+    
+1. **The inward and outward fluxes of element X for at least one box is unbalanced** 
+    
+    In this case, at least one box displays a varying mass of element 
+    **X** with time ($m^X_i(t)$) 
+    which means that ${dm^X_i}/{dt} \neq 0$ for at least one box.
+    
+    The reconstruction of $R_i(t)$ requires the simultaneous solving 
+    of the system of ordinary first order differential equations describing $R_i(t)$ 
+    and of the derivative of $m^X_i(t)$ (with a linear solution). 
+    
+    This is performed numerically *via* an incremental integration
+    as done by the `num_slvr` core function. 
 
 All $R_i(t)$ stable isotope ratios can be also expressed as $\delta_i(t)$ values expressed in the ‰ unit, defined as follows and where $R_{std}$ is the stable isotope ratio of the standard or reference material: 
 
@@ -214,139 +240,86 @@ $$\delta^{M/N}X_i(t) = \left(\dfrac{R_i(t)}{R_{std}} - 1\right) \times 1000 $$
 ****************************************************************
 # The isobxr solvers of stable isotope box models
 
-The **isobxr** package uses two core solver functions to solve the system of differential equations: **num_slvr** and **ana_slvr**.
-These functions are called within broader functions and are not designed to be directly used by users themselves, although this remains possible.
-Nonetheless, because these functions are the actual solvers of the stable isotope box model equation systems, 
-you will find here a description of their functionning as well as their inputs and outputs.
+The [isobxr](https://ttacail.github.io/isobxr/) package uses two core solver functions to solve the system of differential equations: `num_slvr` and `ana_slvr`.
 
-You can also refer to the documentation for these two functions by typing the following code into your R console: 
+These functions are not intended to be directly called by users themselves, 
+although this remains possible.
+
+These functions are called within broader functions (e.g., `run_isobxr`).
+
+Because these functions are the actual solvers 
+of the stable isotope box model equation systems,
+you will find here a description of their functionning and applicability.
+
+You can also refer to the documentation for these two functions 
+by typing the following code into your R console: 
 ```{r, include = TRUE, echo=TRUE, results = "hide"}
 ?ana_slvr
 ?num_slvr
 ```
 
-## Structure and format required for the *input files*
+## Structure and format required for the **INPUT** file
 
-The *input file* is the (xlsx) document containing all input data allowing both `ana_slvr` and `num_slvr` to run. Its format and name are standardized and should not be altered. Its direct modification by user is not required because *input files* are edited by the broader and user-friendly `run_isobxr` function, described in another section of this vignette.
+The **INPUT** file contains the set of commands required to run
+either `ana_slvr` or `num_slvr`.
 
-#### **Input file name**
+Its format and name are standardized and should not be altered. 
 
-* The *input file* is an xlsx file.  
-* The *input file* name needs to end with the following: [ _INPUT.xlsx ].  
-* The *input file* name structure is [ RUN name + _INPUT.xlsx ].  
-* *Example*: [ TEST_RUN_INPUT.xlsx ]
+Its direct modification by user is not required because **INPUT** files 
+are edited by the broader and user-friendly `run_isobxr` function, 
+described in another section of this vignette.
 
-#### **Input file structure**
+#### **Input file name and format**
 
-The *input file* contains at least the 4 following sheet strictly named as follows: 
+* The **INPUT** file is an **Rda** file
+(R data format allowing to store multiple R objects)
+* The **INPUT** file name has to end with the following: [ **IN.Rda** ].  
+* The **INPUT** file name structure is [ **RUN name + IN.Rda** ].  
+* *Example*: [ **this_is_a_run_name_IN.Rda** ]
 
-1. **CONSTS**: Sheet documenting the constants  
-1. **INITIAL**: Sheet documenting the initial conditions of all box sizes (even empty ones) and all initial delta values.
-1. **FLUXES**: Sheet documenting the massic fluxes of element X between all boxes (structured as a matrix)
-1. **COEFFS**: Sheet documenting the isotopic fractionation coefficients between all boxes (structured as a matrix)
+#### **Input file content**
 
-#### **CONSTS** sheet
+The **INPUT** file contains at least the 4 following objects 
+strictly named as follows: 
 
-```{r echo=FALSE, out.width='40%'}
-knitr::include_graphics('./1_FORMAT_INPUT_CONSTS.png')
-```
+1. **CONSTS_IN**: Dataframe documenting the constants  
+1. **INITIAL_IN**: Dataframe documenting the initial conditions of all box sizes 
+(even empty ones) and all initial delta values.
+1. **FLUXES_IN**: Dataframe documenting the massic fluxes of element X 
+between all boxes (structured as a square matrix)
+1. **COEFFS_IN**: Dataframe documenting the isotopic fractionation coefficients 
+between all boxes (structured as a square matrix)
 
-The **CONSTS** sheet should be strictly structured as shown here.
-
-All *text in black* has to be strictly the same as shown.  
-
-All *italicized and red text* corresponds to numerical or litteral variables set by the user:  
-
-* **X** is the element of interest. Example: Ca  
-* **M** is the numerator isotope. Example: 44  
-* **N** is the denominator isotope. Example: 42  
-* **$R_{std}$** is the isotope ratio of a standard or reference material, used to express the delta value. Example: 3.20297  
-* **time** is the **duration of the run**, expressed in the same time units as the fluxes (expressed in mass unit per time unit). Example: 365 (days in case fluxes are expressed in mass of element per day)
-* **nb_steps** is the **run resolution**, *i.e.* the number of iterations to do within the run duration. Example: 365 (1 calculated state of the system per day)
-
-#### **INITIAL** sheet
-
-```{r echo=FALSE, out.width='40%'}
-knitr::include_graphics('./2_FORMAT_INPUT_INITIAL.png')
-```
-
-The **INITIAL** sheet should be strictly structured as shown here.
-
-All *text in black* has to be strictly the same as shown.  
-
-All *blue text* corresponds to litteral names of the *n* boxes defined by user.  
-
-* These names should be coherent with all other references to box names (as in **FLUXES** or **COEFFS** sheet).  
-* Two or more boxes can not have the exact same name.   
-* The user should avoid the use of numerical values in the box names.  
-* The user should avoid the use of spaces or special characters, with the exception of the underscore "_".  
-* The user should chose abbvreviated names (preferabily 3 characters, for the sake of clarity in diagrams and plots).  
-
-* Example of lists of box names:  
-    + OCEAN, MTLE, C_CRUST, O_CRUST, RVR for ocean, mantle, continental crust, oceanic crust and river boxes respectively
-    + DIET, MUSCLE, KDN, BONE, UR for diet, muscle, river, bone and urine boxes respectively
-
-All *italicized and red text* corresponds to numerical variables set by the user:  
-
-* In the column **SIZE_INIT** (box sizes at initial state): $m_{BOX\_i, t_0}$ corresponds to the mass of element **X** in box *i* at *t = 0*. 
-These values are null or positive real numbers.
-* In the column **DELTA_INIT** (box delta values at initial state): $\delta_{BOX\_i, t_0}$ corresponds to the delta value in box *i* at *t = 0*.
-These values are real numbers.
-
-#### **FLUXES** sheet
-
-```{r echo=FALSE, out.width='75%'}
-knitr::include_graphics('./3_FORMAT_INPUT_FLUXES.png')
-```
-
-The **FLUXES** sheet should be strictly structured as shown here.
-
-All *text in black* has to be strictly the same as shown (**BOXES_ID** here).
-
-All *blue text* corresponds to exact same litteral names of the *n* boxes as defined by the user in **INITIAL** sheet, 
-in the same vertical and horizontal order as in **INITIAL** sheet.
-
-All *italicized and red text* corresponds to numerical variables set by the user:  
-
-* $F_{i \to j}$ corresponds to flux of element **X** from box *i* to box *j*  
-    (equivalent to $J_{i \mapsto j}^X$ in the system of differential equations as described above).  
-    These values are null or positive real numbers.
-
-#### **COEFFS** sheet
-
-```{r echo=FALSE, out.width='75%'}
-knitr::include_graphics('./4_FORMAT_INPUT_COEFFS.png')
-```
-
-The **COEFFS** sheet should be strictly structured as shown here.
-
-All *text in black* has to be strictly the same as shown (**BOXES_ID** here).
-
-All *blue text* corresponds to exact same litteral names of the *n* boxes as defined by the user in **INITIAL** sheet, 
-in the same vertical and horizontal order as in **INITIAL** sheet.
-
-All *italicized and red text* corresponds to numerical variables set by the user:  
-
-* $\alpha_{i \to j}$ corresponds to isotope fractionation coefficient from box *i* to box *j*   
-    (equivalent to $D_{i \mapsto j}^X$ in the system of differential equations as described above).  
-    These values are stricly positive real numbers.
-
+The **INPUT** file is an output from the `run_isobxr` function and 
+does not require the user intervention.
 
 ## Numerical solver (`num_slvr`)
 
-The numerical solver `num_slvr` iteratively integrates the derivatives of the box sizes ($\frac{dm^X_i}{dt}$) and isotope ratios ($\frac{dR_i}{dt}$) over the whole run duration. The `num_slvr` uses the `ode` ordinary differential equation integrating function from the **deSolve** package. 
+The numerical solver `num_slvr` iteratively integrates the derivatives 
+of the box sizes ($\frac{dm^X_i}{dt}$) and isotope ratios ($\frac{dR_i}{dt}$) 
+over the whole run duration. 
+
+The `num_slvr` uses the `ode` ordinary differential equation integrating function 
+from the **deSolve** package. 
 
 #### Applicability
 
-This function solves both the evolution of isotope ratios and box sizes in each box defined by user. 
-The `num_slvr` function therefore can be used in two distinct sitation: 
+This function solves the evolution of both the isotope ratios and the sizes 
+of each box defined by user. 
 
-1. In the case of balanced fluxes of element **X** between all involved boxes.  
+The `num_slvr` function therefore can be used in **two distinct cases**: 
+
+1. In the case of **balanced inward and outward fluxes** 
+    of element **X** between all involved boxes.  
+
     The derivative of box sizes will be null ($\frac{dm^X_i}{dt} = 0$),
     in other words all box sizes will be constant.
     
-1. In the case of unbalanced fluxes of element **X** for at least one box of the system.  
-    The derivative of box sizes will be non null in at least one case ($\frac{dm^X_i}{dt} \neq 0$),
+1. In the case of **unbalanced inward and outward fluxes** 
+    of element **X** for at least one box of the system.  
+
+    The derivative of box sizes will be non null 
+    in at least one case ($\frac{dm^X_i}{dt} \neq 0$),
     in other words at least on box loses and accumulates the element X.
 
 The drawbacks of this function is that 
@@ -355,75 +328,143 @@ The drawbacks of this function is that
 * The calculation can be time consuming.  
 * We miss information on the system dynamics, which an analytical solver could bring.
 
-The use of this function is thus preferred in the case of unbalanced fluxes, where at least one box loses or accumulates the element **X** over time (case #2). 
+**The use of this function is thus preferred in the case of unbalanced fluxes**,
+where at least one box loses or accumulates the element **X** over time (case #2).
+
 It then allows to study the dynamic responses of a system to a perturbation of the flux balance for at least one box.
 
 #### Using num_slvr
-*Remark*: The direct use of `num_slvr` function by user is not encouraged since this function is integrated in the global `run_isobxr` function described thereafter. 
+*Remark*: The direct use of `num_slvr` function by user is not intended 
+because this function is integrated in the global `run_isobxr` function 
+described thereafter. 
 
-The `num_slvr` function reads an INPUT file (file name structure: RUN name + _INPUT.xlsx, format described in detail below) 
-containing all commands and conditions for the required model run, namely:
+The `num_slvr` function reads an **INPUT** file 
+(file name structure: [ **RUN name + INPUT.Rda** ]) 
+containing all commands for the required model run, namely:
 
-* *Constants* defining the system (Element symbol, isotopes considered, standard or reference material isotope ratio, run duration and number of time steps)  
-* *Initial conditions* where each box is associated to an initial size (mass of element X) and an initial isotope composition expressed in delta value (‰ unit)  
-* A matrix *fluxes* of element **X** between all boxes of the system (in mass unit per time unit)  
-* A matrix of *isotope fractionation coefficients* associated to all boxes of the system   
+* *Constants* (CONSTS_IN) defining the system (Element symbol, isotopes considered,
+standard or reference material isotope ratio, run duration and number of time steps)  
+* *Initial conditions* (INITIAL_IN) where each box is associated to an initial size
+(mass of element X) and an initial isotope composition expressed in delta value 
+(‰ unit)  
+* A matrix *fluxes* (FLUXES_IN) of element **X** between all boxes of the system 
+(in mass unit per time unit)  
+* A matrix of *isotope fractionation coefficients* (COEFFS_IN) associated 
+to all boxes of the system   
 
-The `num_slvr` function returns the numerically determined evolution of the stable isotope compositions and box sizes **X** in all boxes over the run duration. The detailed outputs are as follows: 
+The `num_slvr` function returns the numerically determined evolution of the 
+stable isotope ratios and masses of element **X** in all boxes over the run duration.
 
-* OUT data file storing initial and final size and delta values in each box.  
-    (file name structure: RUN name + _N_1_OUT.csv)
-* evS data file storing the evolution with time of the sizes (masses of element X) of each box.  
-    (file name structure: RUN name + _N_2_evS.csv)
-* evD data file storing the evolution with time of the delta values in each box.  
-    (file name structure: RUN name + _N_3_evD.csv)
+The `num_slvr` **OUTPUT** contains the following:
+
+* OUT data file storing initial and final size and delta values in each box
+* evS data file storing the evolution of the sizes (masses of element X) of each box
+* evD data file storing the evolution of the delta values in each box
+
+The **OUTPUT** data are stored by default 
+in a **Rda** output file (**RUN name + OUT.Rda**), 
+in the same location as the input file. 
+
+The `num_slvr` function optionally allows user to edit the **OUTPUT** data
+as **csv** files stored in a DIGEST folder ([ **RUN name + DIGEST** ]) with the following name structures:
+
+* OUT data:  [ **out_1_N_OUT + RUN name + .csv** ]
+* evS data:  [ **out_2_N_evS + RUN name + .csv** ]
+* evD data:  [ **out_3_N_evD + RUN name + .csv** ]
 
 ## Analytical solver (`ana_slvr`)
 
-The analytical solver `ana_slvr` calculates the analytical solutions of the system of ordinary differential equations (ODES) of stable isotope ratios of an element **X** in all boxes. It determines the eigenvalues, eigenvectors and constants defined by initial conditions associated to the ODES, 
-and allows to determine the expression of stable isotope ratios as a function of time. 
+The analytical solver `ana_slvr` calculates the analytical solutions
+of the system of ordinary differential equations (ODES) of stable isotope ratios 
+for an element **X** in all boxes. 
+
+It determines the eigenvalues, eigenvectors and constants defined by initial
+conditions associated to the ODES, and allows to determine 
+the functions that describe the evolution of stable isotope 
+ratios as a function of time. 
 
 #### Applicability
 
-In this case, the box sizes are considered as constant since the solving of the system of differential equations only considers the isotope ratios as functions of time. 
-In other words, in the case with balanced inward and outward fluxes for all boxes ($\frac{dm^X_i}{dt} = 0$), this function allows to accurately determine the expression of the stable isotope ratio in a given box as a function of time. The function also edits a data set of the evolution of isotope compositions in each box over the time range and with the time resolution determined by the user.
+In this case, the box sizes are considered as constant 
+because the solving of the system of differential equations 
+only considers the isotope ratios as varying with time. 
 
-The use of this function is thus not applicable in the case of unbalanced fluxes for one box or more, 
-with the exception of boxes defined as source or sinks (or waste) in the case of open systems, as described in the model design section thereafter. 
+In other words, in the case of **balanced inward and outward fluxes** for all finite boxes ($\frac{dm^X_i}{dt} = 0$), 
+this function allows to accurately determine the expression of
+the stable isotope ratio in a given box as a function of time. 
+
+The function also edits a dataset of the evolution of isotope compositions 
+in each box over the time range, with the time resolution determined by the user.
+
+The use of this function is thus **not applicable in the case of unbalanced fluxes**
+for one finite box or more. 
+
+However, the `ana_slvr` function can be used in balanced open systems, 
+with boxes defined as infinite and unbalanced sources or sinks, 
+as described in the model design section thereafter. 
 
 #### Using ana_slvr
+*Remark*: The direct use of `ana_slvr` function by user is not intended 
+because this function is integrated in the global `run_isobxr` function 
+described thereafter. 
 
-*Remark*: The direct use of `ana_slvr` function by user is not encouraged since this function is integrated in the global `run_isobxr` function described thereafter. 
+The `ana_slvr` function reads an **INPUT** file 
+(file name structure: [ **RUN name + INPUT.Rda** ]) 
+containing all commands for the required model run, namely:
 
-The `ana_slvr` function reads an INPUT file (file name structure: RUN_ID + INPUT.xlsx, format described in detail below) 
-containing all commands and conditions for the required model run, namely:
+* *Constants* (CONSTS_IN) defining the system (Element symbol, isotopes considered,
+standard or reference material isotope ratio, run duration and number of time steps)  
+* *Initial conditions* (INITIAL_IN) where each box is associated to an initial size
+(mass of element X) and an initial isotope composition expressed in delta value 
+(‰ unit)  
+* A matrix *fluxes* (FLUXES_IN) of element **X** between all boxes of the system 
+(in mass unit per time unit)  
+* A matrix of *isotope fractionation coefficients* (COEFFS_IN) associated 
+to all boxes of the system   
 
-* *Constants* defining the system (Element symbol, isotopes considered, standard or reference material isotope ratio, run duration and number of time steps)  
-* *Initial conditions* where each box is associated to an initial size (mass of element X) and an initial isotope composition expressed in delta value (‰ unit)  
-* A matrix *fluxes* of element **X** between all boxes of the system (in mass unit per time unit)  
-* A matrix of *isotope fractionation coefficients* associated to all boxes of the system   
+The `ana_slvr` function returns the analytical solutions of the ODES 
+which describes the stable isotope ratios in each box. 
+The `ana_slvr` function also returns the evolution of the delta values in each box.
+(in ‰, relative to the reference material). 
 
-The `ana_slvr` function returns the analytical solutions of the stable isotope ratios as well as the evolution of the delta values (in ‰, relative to the reference material). The detailed outputs are as follows: 
 
-* OUT data file with initial and final size and delta values in each box.  
-    (file name structure: RUN name + _A_1_OUT.csv)
-* ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES
-    (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  
-    (file name structure: RUN name + _A_2_ODE_SOLNs.csv)
-* evD data file of the evolution with time of the delta values in each box.  
-    (file name structure: RUN name + _A_3_evD.csv)
+The `ana_slvr` **OUTPUT** contains the following:
+
+* OUT data file storing initial and final size and delta values in each box
+* ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES   
+    
+    
+    (eigenvalues, eigenvectors, relaxation times, constants according to initial conditions)
+
+* evD data file storing the evolution of the delta values in each box
+
+The **OUTPUT** data are stored by default 
+in a **Rda** output file (**RUN name + OUT.Rda**), 
+in the same location as the input file. 
+
+The `ana_slvr` function optionally allows user to edit the **OUTPUT** data
+as **csv** files stored in a DIGEST folder ([ **RUN name + DIGEST** ]) with the following name structures:
+
+* OUT data:  [ **out_1_A_OUT + RUN name + .csv** ]
+* ODE_SOLNs data:  [ **out_2_A_ODE_SOLNs + RUN name + .csv** ]
+* evD data:  [ **out_3_A_evD + RUN name + .csv** ]
 
 ****************************************************************
 # Running isobxr box models with `run_isobxr`
 ## How does `run_isobxr` work?
 
-The `run_isobxr` function allows to run the **isobxr** stable 
-isotope box model, assess and render the design of the model 
+The `run_isobxr` function allows to run the [isobxr](https://ttacail.github.io/isobxr/) 
+stable isotope box model, assess and render the design of the model 
 and automatically run `num_slvr` or `ana_slvr` depending on the model design.
 
-As defined in the documentation, `run_isobxr` takes a series of inputs from a working directory as well as from the user in the console, 
-it stores a track of all the run conditions both in run specific files and in a global LOG file, 
-and it returns several outputs files to an automatically created and managed directory and subdirectories.
+As defined in the documentation, `run_isobxr`
+
+1. takes a series of inputs from a working directory as well as from the user in the console
+
+1. stores a track of all the runs (names, conditions, characteristics) 
+both in run specific files and in a global LOG **csv** file
+
+1. returns several outputs files to automatically created and managed directories and subdirectories
 
 To find the detailed description of `run_isobxr` inputs and outputs, refer to its documentation:
 ```{r eval = FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -437,24 +478,36 @@ The `run_isobxr` general principle is shown in following diagram.
 knitr::include_graphics('./9_run_isobxr_directory_structure.png')
 ```
 
-1. The `run_isobxr` function first extracts the configuration of the system (boxes, fluxes, fractionation coefficients) and of the given run (run duration, initial conditions).   
-    i) These parameters come in majority from the *isobxr master file* (isotope system details, boxes details, flux and fractionation coefficient lists).
-    i) Run specific parameters are directly set as parameters of the function (run duration, run resolution, time units for the plot).
-    i) Optional parameters allow the manual forcing of some parameters (FORCING_RAYLEIGH, FORCING_SIZE, FORCING_DELTA, FORCING_ALPHA).
+1. The `run_isobxr` function first extracts the configuration of the system 
+(boxes, fluxes, fractionation coefficients) and of the given run (run duration, initial conditions):   
+    i) These parameters come in majority from the **isobxr master file** 
+      (isotope system details, boxes details, flux and fractionation coefficient lists)
+    i) Run specific parameters are directly set as parameters of the function 
+      (run duration, run resolution, time units for the plot)
+    i) Optional parameters allow the manual forcing of some parameters 
+      (FORCING_RAYLEIGH, FORCING_SIZE, FORCING_DELTA, FORCING_ALPHA)
     
 1. The `run_isobxr` function then evaluates the general design of the box model.  
-    i) It will ignore boxes possibly named by user but isolated from the general system (no inward nor outward fluxes).  
-    i) It will determine if the system is closed or open by identifying the presence/absence of boxes with the **INFINITE** status.  
-        + In the case of a closed system, *i.e.* with no declared **INFINITE** boxes, it will display the following message in the console:  
+    i) It ignores boxes possibly named by user but isolated from the general system
+      (no inward nor outward fluxes)
+    i) It determines if the system is closed or open by identifying the presence/absence 
+    of boxes with the **INFINITE** status  
+        + In the case of a closed system, *i.e.* with no declared **INFINITE** boxes, 
+        it displays the following message in the console:  
             - **< All boxes are FINITE >**  
-        + In the case of an open system, *i.e.* with declared **INFINITE** boxes, it will display the list of infinite boxes in the console:  
+        + In the case of an open system, *i.e.* with declared **INFINITE** boxes, 
+        it displays the list of infinite boxes in the console:  
             - **< The INFINITE boxes are ... BOX_i ... >**  
-    i) It will then determine whether some finite boxes are out of balance (unbalanced inward/outward fluxes).
-        + In the case of a globally balanced system, *i.e.* no out of balance finite boxes, no message will be printed in the console.
-        + In the case of a system with at least one unbalanced finite box, it will display a message for each unbalanced finite box in the console:   
-            - **< BOX_i IN/OUT is pos >**  if the balance of box *i* is positive (accumulation of X)  
-            - **< BOX_i IN/OUT is neg (max run: empty_duration t units) >** if the balance of box *i* is negative (loss of X).
-                It will also display the maximum duration of the run until the box is totally emptied.
+    i) It determines whether some finite boxes are out of balance (unbalanced inward/outward fluxes).
+        + In the case of a globally balanced system, *i.e.* no out of balance finite boxes, 
+        no message is printed in the console.
+        + In the case of a system with at least one unbalanced finite box,
+        it displays a message for each unbalanced finite box in the console:   
+            - **< BOX_i IN/OUT is pos >**  
+            if the balance of box *i* is positive (accumulation of X)  
+            - **< BOX_i IN/OUT is neg (max run: empty_duration t units) >** 
+            if the balance of box *i* is negative (loss of X).
+                It also displays the maximum duration of the run until the box is totally emptied.
 
 1. On this basis, the `run_isobxr` function then determines which solver function to run:  
     i) `ana_slvr` if all finite boxes have balanced inward and outward fluxes. It will then display the following message:  
@@ -477,7 +530,7 @@ knitr::include_graphics('./9_run_isobxr_directory_structure.png')
 All the functions designed to be directly used by users (`run_isobxr`, `compose_isobxr`, `sweep_steady`, `sweep_dyn`) 
 are meant to be run in relation with an *isobxr master file*. 
 
-The *isobxr master file* is the (xlsx) document containing all input data 
+The **isobxr master file** is the (xlsx) document containing all input data 
 allowing `run_isobxr` function to perform single runs,
 and is required alongside specific complementary files for functions 
 performing multiple runs (`compose_isobxr`, `sweep_steady`, `sweep_dyn`).
@@ -490,22 +543,22 @@ It is where the user sets the design of their model:
 * define the values of fluxes between boxes   
 * define the values of stable isotope fractionation coefficients linked to these fluxes   
 
-The format of the *isobxr master file* is standardized. 
+The format of the **isobxr master file** is standardized. 
 The user is encouraged to comply with these standards, as described thereafter, 
 otherwise there is a high probability for these functions to crash.
 
 #### **isobxr master file** name and location
 
-* The *isobxr master file* is an xlsx file.  
-* The *isobxr master file* name needs to be exactly as follows: [ **0_ISOBXR_MASTER.xlsx** ].
-* the *isobxr master file* should be stored in the directory in which all runs (single or multiple runs)
+* The **isobxr master file** is an xlsx file.  
+* The **isobxr master file** name needs to be exactly as follows: [ **0_ISOBXR_MASTER.xlsx** ].
+* the **isobxr master file** should be stored in the directory in which all runs (single or multiple runs)
     for this box model system will be performed 
     and where all outputs will be stored in automatically created subdirectories.
     This directory corresponds to the working directory (*workdir*) used as parameter of the `run_isobxr` function.
 
 #### **isobxr master file structure**
 
-The *isobxr master file* contains the 4 following sheet strictly named as follows: 
+The **isobxr master file** contains the 4 following sheet strictly named as follows: 
 
 1. **CONSTANTS**: Sheet documenting the constants of the isotopic system
 1. **BOXES**: Sheet documenting names and status of all boxes constituting the system
@@ -529,7 +582,7 @@ All *red text* corresponds to numerical or litteral variables set by the user:
 * **M** is the numerator isotope. Example: 44
 * **N** is the denominator isotope. Example: 42
 
-These constants will be used throughout all runs performed within the working directory in which the *isobxr master file* is stored.
+These constants will be used throughout all runs performed within the working directory in which the **isobxr master file** is stored.
 
 #### **BOXES** sheet
 
@@ -565,7 +618,7 @@ The first purpose of this column is to specify to the code whether the model rep
     In this case, the box status name needs to be named following the same spelling rules as for the box names.  
     Several boxes can have the same status name (*e.g.*, **INTERFACE** or **DEAD_END** or **FINITE**). 
     + Beyond the determination of the **INFINITE** *vs.* **FINITE** status of a box used for calculation purposes, 
-    this column is used by the **isobxr** functions to set a color code in the automatic box model diagram edition.
+    this column is used by the [isobxr](https://ttacail.github.io/isobxr/) functions to set a color code in the automatic box model diagram edition.
 
 * The **LAYOUT_X** and **LAYOUT_Y** columns correspond to the user defined layout of the box model diagram.   
     + It corresponds to the definition of the coordinates of the boxes to be displayed in the diagram over a matrix format 
@@ -666,7 +719,7 @@ are stored in as many columns as desired (columns **coeff_list_name_1**, **coeff
 
 ## Using `run_isobxr`
 
-We consider the demonstration *isobxr master file* (0_ISOBXR_MASTER.xlsx) stored in the working directory. In the demonstration example, the *isobxr master file* describes an imaginary model. It is designed for the calcium $^{44}Ca/^{42}Ca$ isotope ratios. 
+We consider the demonstration **isobxr master file** (0_ISOBXR_MASTER.xlsx) stored in the working directory. In the demonstration example, the **isobxr master file** describes an imaginary model. It is designed for the calcium $^{44}Ca/^{42}Ca$ isotope ratios. 
 
 ```{r echo=FALSE, out.width='75%'}
 knitr::include_graphics('./10_ABCD_CONSTANTS.png')
@@ -724,14 +777,16 @@ For this run we use the *a1* fractionation coefficients list.
 We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
-           SERIES_ID = "ABC_balanced_closed", # series ID of the set of runs
-           flux_list_name = "Fx1_ABC_bal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = "~/1_ABC_tutorial", # isobxr master file work. dir.
+           SERIES_ID = "ABC_closed_balanced", # series ID of the set of runs
+           flux_list_name = "Fx1_ABC_closed_bal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
 The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).
@@ -771,14 +826,16 @@ For this run we use the *a1* fractionation coefficients list.
 We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
-           SERIES_ID = "ABC_unbalanced_closed", # series ID of the set of runs
-           flux_list_name = "Fx2_ABC_unbal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = "~/1_ABC_tutorial", # isobxr master file work. dir.
+           SERIES_ID = "ABC_closed_unbalanced", # series ID of the set of runs
+           flux_list_name = "Fx2_ABC_closed_unbal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
 
@@ -838,7 +895,7 @@ FORCING_SIZE
 ```
 
 For the 3-boxes closed system model (ABC), in order to change the size of box C from 2000 mg of Ca 
-(default as specified in *isobxr master file* for all flux lists of **FLUXES** sheet)
+(default as specified in **isobxr master file** for all flux lists of **FLUXES** sheet)
 to 3000 mg of Ca, the data frame should be structured as follows:
 
 ```{r echo=TRUE}
@@ -965,7 +1022,7 @@ FORCING_RAYLEIGH <-
 FORCING_RAYLEIGH
 ```
 
-The `run_isobxr` function will in this case overwrite the value of $\alpha_{B \to C}$ set in *isobxr master file* or using the FORCING_ALPHA parameter. 
+The `run_isobxr` function will in this case overwrite the value of $\alpha_{B \to C}$ set in **isobxr master file** or using the FORCING_ALPHA parameter. 
 
 Indeed, if the user forced a new value for $\alpha_{B \to C}$ using the FORCING_ALPHA parameter, 
 the `run_isobxr` function will prioritize the FORCING_RAYLEIGH parameter. 
@@ -995,14 +1052,16 @@ The function call would be the following for a run of 25000 days, with one calcu
 We use the *Fx6_ABC_open_bal* flux list and the *a1* coefficient list.
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "~/DEMO_ABCD", # isobxr master file work. dir.
-           SERIES_ID = "ABC_balanced_open", # series ID of the set of runs
-           flux_list_name = "Fx6_ABC_open_bal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = workdir_ABC, # isobxr master file work. dir.
+           SERIES_ID = "ABC_open_balanced", # series ID of the set of runs
+           flux_list_name = "Fx3_ABC_open_bal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 25000, # how long do I want to run
            nb_steps = 2500, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
 We obtain the following diagrams, where the infinite boxes display a different color. 
@@ -1083,7 +1142,7 @@ otherwise there is a high probability for these functions to crash.
 
 * The *compose master file* is an xlsx file.  
 * The *compose master file* name is chose by user and specified in the `compose_isobxr` function inputs: [*e.g.*, **0_COMPO_MASTER.xlsx** ].  
-* the *compose master file* should be stored in the directory in which *isobxr master file* is found,
+* the *compose master file* should be stored in the directory in which **isobxr master file** is found,
     where all runs for this box model system will be performed and where all outputs will be stored 
     in automatically created subdirectories. This directory corresponds to the working directory (*workdir*) 
     used as parameter of the `compose_isobxr` function.
@@ -1111,8 +1170,8 @@ Each of these runs should be succesively described one by one on every row of th
 1. the run number (COMPO_RUN_n column)  
 1. the run duration (t_lim_list column)  
 1. the run resolution (nb_steps_list)  
-1. the flux list name (flux_list) that will be read from *isobxr master file*  
-1. the coefficients list name (coeff_list) that will be read from *isobxr master file*  
+1. the flux list name (flux_list) that will be read from **isobxr master file**  
+1. the coefficients list name (coeff_list) that will be read from **isobxr master file**  
 
 One run should not be described twice.
 
@@ -1180,6 +1239,7 @@ In case no Rayleigh forcing is required by the user, this sheet should remain wi
 
 ## Using `compose_isobxr`
 
+
 ### example #1: perturbating the fluxes  
 We compose here the first scenario as described on the screenshot of the *composite master file* used for this run.
 
@@ -1197,19 +1257,21 @@ Here, we start with the previous example: a set of 3 finite boxes (A, B, C) cons
 We call the function as follows:
 
 ```{r eval=FALSE}
-workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/1_ABC_tutorial" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_balance" # series ID of the set of compo runs
-time_units <- c("days", "days") # time units for run (days) and for plots (years)
-COMPO_MASTER <- "0_COMPO_MASTER_balance_change.xlsx" # compo master file name
+time_units <- c("d", "d") # time units for run (days) and for plots (years)
+COMPO_MASTER <- "0_CPS_MASTER_changing_balance.xlsx" # compo master file name
 plot_HIDE_BOXES_delta <- c("SINK") # boxes to hide from evD plot
 plot_HIDE_BOXES_size <- c("SOURCE", "SINK") # boxes to hide from evS plot
-  
+
 compose_isobxr(workdir,
-               SERIES_ID, 
+               SERIES_ID,
                time_units,
-               COMPO_MASTER, 
-               plot_HIDE_BOXES_delta, 
-               plot_HIDE_BOXES_size)
+               COMPO_MASTER,
+               plot_HIDE_BOXES_delta,
+               plot_HIDE_BOXES_size,
+               EACH_RUN_DIGEST = TRUE,
+               to_CPS_DIGEST_CSVs = TRUE)
 ```
 
 We obtain the following overviews of the evolution of delta values and box sizes over the run duration. 
@@ -1257,19 +1319,21 @@ knitr::include_graphics('./34_FORCING_DELTA_ABC.png')
 We call the function as follows:
 
 ```{r eval=FALSE}
-workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- workdir_ABC # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_source" # series ID of the set of compo runs
-time_units <- c("days", "days") # time units for run (days) and for plots (years)
-COMPO_MASTER <- "0_COMPO_MASTER_source_change.xlsx" # compo master file name
+time_units <- c("d", "d") # time units for run (days) and for plots (years)
+COMPO_MASTER <- "0_CPS_MASTER_changing_source.xlsx" # compo master file name
 plot_HIDE_BOXES_delta <- c("SINK") # boxes to hide from evD plot
 plot_HIDE_BOXES_size <- c("SOURCE", "SINK") # boxes to hide from evS plot
-  
+
 compose_isobxr(workdir,
-               SERIES_ID, 
+               SERIES_ID,
                time_units,
-               COMPO_MASTER, 
-               plot_HIDE_BOXES_delta, 
-               plot_HIDE_BOXES_size)
+               COMPO_MASTER,
+               plot_HIDE_BOXES_delta,
+               plot_HIDE_BOXES_size,
+               EACH_RUN_DIGEST = TRUE,
+               to_CPS_DIGEST_CSVs = TRUE)
 ```
 
 And for instance, we obtain the following evDS pdf output where we see that the effect of the change in the source isotope composition slightly affects the delta values of A, B and C boxes. 
@@ -1283,7 +1347,7 @@ knitr::include_graphics('./36_0_CPS_ABC_change_source_001_p_evDS.png')
 
 ## How does `sweep_steady` work?
 
-The `sweep_steady` function is designed to allow the user to map the combined effects of two parameters over the final state of an **isobxr** box model. 
+The `sweep_steady` function is designed to allow the user to map the combined effects of two parameters over the final state of an [isobxr](https://ttacail.github.io/isobxr/) box model. 
 
 It's structure is shown below: 
 
@@ -1333,7 +1397,7 @@ otherwise there is a high probability for these functions to crash.
 
 * The *sweep steady master file* is an xlsx file.  
 * The *sweep steady master file* name is chosen by user and specified in the `sweep_steady` function inputs: [*e.g.*, **0_SWEEP_STEADY_MASTER.xlsx** ].  
-* the *sweep steady master file* should be stored in the directory in which *isobxr master file* is found, 
+* the *sweep steady master file* should be stored in the directory in which **isobxr master file** is found, 
     where all runs for this box model system will be performed 
     and where all outputs will be stored in automatically created subdirectories. 
     This directory corresponds to the working directory (*workdir*) used as parameter of the `sweep_steady` function.
@@ -1360,8 +1424,8 @@ Both of these runs should be succesively described one by one on two rows of thi
 1. the run number (COMPO_RUN_n column)  
 1. the run duration (t_lim_list column)  
 1. the run resolution (nb_steps_list)  
-1. the flux list name (flux_list) that will be read from *isobxr master file*  
-1. the coefficients list name (coeff_list) that will be read from *isobxr master file*  
+1. the flux list name (flux_list) that will be read from **isobxr master file**  
+1. the coefficients list name (coeff_list) that will be read from **isobxr master file**  
 
 #### **FORCING_SIZE** sheet (*FILLING OPTIONAL*)
 ```{r echo=FALSE, out.width='50%'}
@@ -1398,7 +1462,7 @@ See *composite master file* format description for details.
 The user needs to define the two runs composing the 2 steps scenario. 
 
 1. The first run is used to let the system relax to its steady state used as an initial state in run #2.  
-    i) The user should consider here a balanced system. The **isobxr** functions will thus use the analytical solver (`ana_slvr`).
+    i) The user should consider here a balanced system. The [isobxr](https://ttacail.github.io/isobxr/) functions will thus use the analytical solver (`ana_slvr`).
     i) We thus recommand the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).  
         This allows to only calculate the final state of the system, at the end of run #1.  
         This reduces the calculation time and data produced without affecting the accuracy of the calculation.  
@@ -1429,6 +1493,7 @@ The user needs to define the two runs composing the 2 steps scenario.
 In addition to all the usual input parameters required for the `sweep_steady` function, the user has to define the two parameters to be sweeped.
 
 There are 6 types of sweepable parameters (or that can be explored), which names are strictly defined as follows:
+
 
 ```{r echo=FALSE}
 # explore a series of flux lists as defined in isobxr master file
@@ -1580,41 +1645,42 @@ No forcings are applied.
 To do so, the `sweep_steady` function can be used as follows: 
 
 ```{r eval=FALSE, include=TRUE}
-workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/1_ABC_tutorial" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_sweep_steady_demo1" # series ID of the set of compo runs
-time_units <- c("days", "days") # time units for run (days) and for plots (years)
-EXPLO_MASTER <- "0_EXPLO_STEADY_MASTER_demo1.xlsx" # compo master file name
+time_units <- c("d", "d") # time units for run (days) and for plots (years)
+EXPLO_MASTER <- "0_SWEEP_STD_MASTER.xlsx" # compo master file name
 
-EXPLO_AXIS_1 <- data.frame(FROM = c("C"), 
-                           TO = c("B"), 
-                           ALPHA_MIN = 1, 
-                           ALPHA_MAX = 1.0005, 
-                           ALPHA_STEPS = 0.00005, 
+EXPLO_AXIS_1 <- data.frame(FROM = c("C"),
+                           TO = c("B"),
+                           ALPHA_MIN = 1,
+                           ALPHA_MAX = 1.0005,
+                           ALPHA_STEPS = 0.00005,
                            EXPLO_TYPES = "EXPLO_1_ALPHA")
 
-EXPLO_AXIS_2 <- data.frame(FROM = c("A"), 
-                           TO = c("C"), 
-                           ALPHA_MIN = 0.9996, 
-                           ALPHA_MAX = 1, 
-                           ALPHA_STEPS = 0.00005, 
+EXPLO_AXIS_2 <- data.frame(FROM = c("A"),
+                           TO = c("C"),
+                           ALPHA_MIN = 0.9996,
+                           ALPHA_MAX = 1,
+                           ALPHA_STEPS = 0.00005,
                            EXPLO_TYPES = "EXPLO_1_ALPHA")
 
 sweep_steady(workdir,
              SERIES_ID,
              time_units,
              EXPLO_MASTER,
-             EXPLO_AXIS_1, 
-             EXPLO_AXIS_2)
+             EXPLO_AXIS_1,
+             EXPLO_AXIS_2,
+             to_STD_DIGEST_CSVs = T)
 ```
 
-You can explore the outputs by then using the **isobxr** Shiny app (`runShinyPlots` function, presented below).
+You can explore the outputs by then using the [isobxr](https://ttacail.github.io/isobxr/) Shiny app (`runShinyPlots` function, presented below).
 
 ************************************************
 # 2D sweep dynamic response with `sweep_dyn`
 
 ## How does `sweep_dyn` work?
 
-The `sweep_dyn` function is designed to allow the user to map the combined effects of two parameters over the dynamic response of an **isobxr** box model, 
+The `sweep_dyn` function is designed to allow the user to map the combined effects of two parameters over the dynamic response of an [isobxr](https://ttacail.github.io/isobxr/) box model, 
 typically in a system at steady state suddenly facing a perturbation. 
 
 It's structure is shown below: 
@@ -1663,7 +1729,7 @@ otherwise there is a high probability for these functions to crash.
 
 * The *sweep dyn master file* is an xlsx file.  
 * The *sweep dyn master file* name is chosen by user and specified in the `sweep_dyn` function inputs: [*e.g.*, **0_SWEEP_DYN_MASTER.xlsx** ].  
-* the *sweep dyn master file* should be stored in the directory in which *isobxr master file* is found, 
+* the *sweep dyn master file* should be stored in the directory in which **isobxr master file** is found, 
     where all runs for this box model system will be performed 
     and where all outputs will be stored in automatically created subdirectories. 
     This directory corresponds to the working directory (*workdir*) used as parameter of the `sweep_dyn` function.
@@ -1690,8 +1756,8 @@ Both of these runs should be succesively described one by one on two rows of thi
 1. the run number (COMPO_RUN_n column)  
 1. the run duration (t_lim_list column)  
 1. the run resolution (nb_steps_list)  
-1. the flux list name (flux_list) that will be read from *isobxr master file*  
-1. the coefficients list name (coeff_list) that will be read from *isobxr master file*  
+1. the flux list name (flux_list) that will be read from **isobxr master file**  
+1. the coefficients list name (coeff_list) that will be read from **isobxr master file**  
 
 #### **FORCING_SIZE** sheet (*FILLING OPTIONAL*)
 ```{r echo=FALSE, out.width='50%'}
@@ -1728,7 +1794,7 @@ See *composite master file* format description for details.
 The user needs to define the two runs composing the 2 steps scenario. 
 
 1. The first run is typically used to let the system relax to its steady state used as an initial state in run #2.  
-    i) The user should consider here a balanced system. The **isobxr** functions will thus use the analytical solver (`ana_slvr`).
+    i) The user should consider here a balanced system. The [isobxr](https://ttacail.github.io/isobxr/) functions will thus use the analytical solver (`ana_slvr`).
     i) We thus recommand the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).  
         This allows to only calculate the final state of the system, at the end of run #1.  
         This reduces the calculation time and data produced without affecting the accuracy of the calculation.  
@@ -1908,7 +1974,6 @@ data.frame(XFROM = "Box_B", # B>C flux at numerator (strings of char)
 
 
 ******************************************************
-
 ### Example: dynamic sweeping of the size of box B and one fractionation coefficient in a 3-boxes balanced open system after a change in the source isotope composition
 
 Both run #1 and run #2 are performed with the *a1* coefficients list, the *Fx6_ABC_open_bal* flux list and the sweeping paramaters. 
@@ -1927,30 +1992,32 @@ No forcings other than the FORCING_DELTA on the SOURCE box are applied.
 To do so, the `sweep_steady` function can be used as follows: 
 
 ```{r eval=FALSE, include=TRUE}
-workdir <- "~/DEMO_ABCD" # isobxr and compo master file work. dir.
+workdir <- "~/1_ABC_tutorial" # isobxr and compo master file work. dir.
 SERIES_ID <- "ABC_change_source_sweep_dyn_demo1" # series ID of the set of compo runs
-time_units <- c("days", "days") # time units for run (days) and for plots (years)
-EXPLO_MASTER <- "0_EXPLO_DYN_MASTER_demo1.xlsx" # compo master file name
+time_units <- c("d", "d") # time units for run (days) and for plots (years)
+EXPLO_MASTER <- "0_SWEEP_DYN_MASTER.xlsx" # compo master file name
 
-EXPLO_AXIS_1 <- data.frame(BOXES_ID = c("B"), 
-                           SIZE_MIN = 1500, 
-                           SIZE_MAX = 2500, 
-                           SIZE_STEPS = 250, 
-                           EXPLO_TYPES = "EXPLO_1_SIZE")
-
-EXPLO_AXIS_2 <- data.frame(FROM = c("A"), 
-                           TO = c("C"), 
-                           ALPHA_MIN = 0.9988, 
-                           ALPHA_MAX = 1, 
-                           ALPHA_STEPS = 0.0004, 
+EXPLO_AXIS_1 <- data.frame(FROM = c("A"),
+                           TO = c("C"),
+                           ALPHA_MIN = 0.9988,
+                           ALPHA_MAX = 1,
+                           ALPHA_STEPS = 0.0004,
                            EXPLO_TYPES = "EXPLO_1_ALPHA")
+
+EXPLO_AXIS_2 <- data.frame(BOXES_ID = c("B"),
+                           SIZE_MIN = 1500,
+                           SIZE_MAX = 2500,
+                           SIZE_STEPS = 250,
+                           EXPLO_TYPES = "EXPLO_1_SIZE")
 
 sweep_dyn(workdir,
           SERIES_ID,
           time_units,
           EXPLO_MASTER,
-          EXPLO_AXIS_1, 
-          EXPLO_AXIS_2)
+          EXPLO_AXIS_1,
+          EXPLO_AXIS_2,
+          to_DYN_DIGEST_CSVs = T)
+
 ```
 
 ************************************************
@@ -1964,11 +2031,12 @@ This is notably very useful for the complex outputs of `sweep_steady` & `sweep_d
 
 This app also allows to export a pdf version of the plot.
 
+
 ```{r eval = FALSE, include=TRUE}
 # define workdir in which the SERIES directories are found 
 # (SERIES directories start with 3_CPS, 4_STD or 4_DYN) 
 # for instance:
-workdir <- "~/DEMO_ABCD"
+workdir <- "~/1_ABC_tutorial"
 
 # Launch the shiny app
 runShinyPlots()

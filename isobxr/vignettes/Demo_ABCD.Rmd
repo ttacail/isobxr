@@ -15,8 +15,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
-)
+  comment = "#>")
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
@@ -38,7 +37,7 @@ Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles
 library(isobxr)
 ```
 
-3. [Download the ABCD demo zip file](https://ttacail.github.io/source/demos/1_ABCD.zip).
+3. [Download the ABCD demo zip file](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip).
 
 Note
 :    Templates for all input and master excel files described in this vignette are available for 
@@ -49,13 +48,13 @@ Note
 5. Take note of the path to this folder, for instance:
 
 ```{r eval=FALSE}
-workingdir <- "/Users/username/Documents/isobxr/demos/1_ABCD/"
+workingdir <- "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"
 ```
 
 or set it as a working directory, for instance:
 
 ```{r eval=FALSE}
-setwd("/Users/username/Documents/isobxr/demos/1_ABCD")
+setwd("/Users/username/Documents/isobxr/demos/1_ABC_tutorial")
 ```
 
 
@@ -124,14 +123,16 @@ For this run we use the *a1* fractionation coefficients list.
 We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABCD/", # isobxr master file work. dir.
-           SERIES_ID = "ABC_balanced_closed", # series ID of the set of runs
-           flux_list_name = "Fx1_ABC_bal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", # isobxr master file work. dir.
+           SERIES_ID = "ABC_closed_balanced", # series ID of the set of runs
+           flux_list_name = "Fx1_ABC_closed_bal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
 The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).
@@ -175,14 +176,16 @@ For this run we use the *a1* fractionation coefficients list.
 We will run this model for a total time of 2500 days with a resolution of 1 calculation every 10 days (250 steps).  
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABCD/", # isobxr master file work. dir.
-           SERIES_ID = "ABC_unbalanced_closed", # series ID of the set of runs
-           flux_list_name = "Fx2_ABC_unbal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", # isobxr master file work. dir.
+           SERIES_ID = "ABC_closed_unbalanced", # series ID of the set of runs
+           flux_list_name = "Fx2_ABC_closed_unbal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
 
@@ -248,14 +251,16 @@ The function call would be the following for a run of 25000 days, with one calcu
 We use the *Fx6_ABC_open_bal* flux list and the *a1* coefficient list.
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABCD/", # isobxr master file work. dir.
-           SERIES_ID = "ABC_balanced_open", # series ID of the set of runs
-           flux_list_name = "Fx6_ABC_open_bal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", # isobxr master file work. dir.
+           SERIES_ID = "ABC_open_balanced", # series ID of the set of runs
+           flux_list_name = "Fx3_ABC_open_bal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 25000, # how long do I want to run
            nb_steps = 2500, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
 We obtain the following diagrams, where the infinite boxes display a different color. 
