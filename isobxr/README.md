@@ -59,13 +59,15 @@ This is a basic example which shows you how to run a simple box model, using the
 ``` r
 library(isobxr)
 
-run_isobxr(workdir =  "~/DEMO_ABCD", # isobxr master file work. dir.
-           SERIES_ID = "ABC_balanced_closed", # series ID of the set of runs
-           flux_list_name = "Fx1_ABC_bal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet 
+run_isobxr(workdir = "~/1_ABC_tutorial", # isobxr master file work. dir.
+           SERIES_ID = "ABC_closed_balanced", # series ID of the set of runs
+           flux_list_name = "Fx1_ABC_closed_bal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("days", "years"), # run time units (days), plot time units (years)
-           PLOT_evD = TRUE) # export plot as pdf 
+           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 ```
 
