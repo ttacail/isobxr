@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Getting started 1: single runs • isobxr</title>
+<title>Getting started 1: single runs /deprecated/ • isobxr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Getting started 1: single runs">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Getting started 1: single runs /deprecated/">
 <meta property="og:description" content="isobxr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,13 +54,25 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Demo_ABCD.html">Getting started 1: single runs</a>
+      <a href="../articles/Demo_ABCD.html">Getting started 1: single runs /deprecated/</a>
     </li>
     <li>
       <a href="../articles/Demo_ABCD_composite.html">Getting started 2: composite runs</a>
     </li>
     <li>
       <a href="../articles/isobxr_vignette.html">Using isobxr</a>
+    </li>
+    <li>
+      <a href="../articles/vgn_01_Installation.html">1 - Install isobxr</a>
+    </li>
+    <li>
+      <a href="../articles/vgn_02_General_presentation.html">2 - General presentation</a>
+    </li>
+    <li>
+      <a href="../articles/vgn_03_Run_isobxr_presentation.html">3 - Run_isobxr: presentation</a>
+    </li>
+    <li>
+      <a href="../articles/vgn_04_Run_isobxr_tutorial.html">4 - Run_isobxr: tutorial</a>
     </li>
   </ul>
 </li>
@@ -85,10 +97,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Getting started 1: single runs</h1>
+      <h1 data-toc-skip>Getting started 1: single runs /deprecated/</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-03-22</h4>
+            <h4 class="date">2021-04-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/Demo_ABCD.Rmd"><code>vignettes/Demo_ABCD.Rmd</code></a></small>
       <div class="hidden name"><code>Demo_ABCD.Rmd</code></div>
@@ -97,6 +109,7 @@
 
     
     
+<p><span style="color: red;"><strong>This vignette is not up to date and has been replaced by a series of short topical vignettes.</strong></span></p>
 <hr>
 <p>This vignette is designed to be used as a <strong>getting started demo 1</strong> for the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package.</p>
 <p>Please refer to the <a href="https://ttacail.github.io/isobxr/articles/isobxr_vignette.html">general vignette</a> for a more exhaustive explanation of the package content and use.</p>
@@ -112,32 +125,73 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">Download the ABCD demo zip file</a>.</li>
+<a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">Download the ABC tutorial zip file</a>.</li>
 </ol>
 <dl>
 <dt>Note</dt>
-<dd>Templates for all input and master excel files described in this vignette are available for <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">download here</a>.
+<dd>The templates of all master files (.xlsx format) described in this vignette are available for <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">download here</a>.
 </dd>
 </dl>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Unzip the ABCD demo file and place it in the working directory of your choice. It is strongly advised to avoid using a working directory linked to an online backup server (such as OneDrive) since it could cause some issues with adressing of output files. If done so, users are then advised to turn the backup server software offline during the use of isobxr functions.</p></li>
+<li><p>Unzip the ABC tutorial file and place it in the working directory of your choice. It is strongly advised to avoid using a working directory linked to an online backup server (such as OneDrive) since it could cause some issues with adressing of output files. If done so, users are then advised to turn the backup server software offline during the use of isobxr functions.</p></li>
 <li><p>Take note of the path to this folder, for instance:</p></li>
 </ol>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">workingdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span></pre></div>
-<p>or set it as a working directory, for instance:</p>
-<div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial"</span><span class="op">)</span></pre></div>
-<p>Everything is now ready to run box models with <strong>isobxr</strong>.</p>
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span></pre></div>
+<p>Everything is now ready to run box models with <a href="https://ttacail.github.io/isobxr/">isobxr</a>.</p>
 <hr>
+</div>
+<div id="example-1-balanced-3-boxes-closed-system-model" class="section level1">
+<h1 class="hasAnchor">
+<a href="#example-1-balanced-3-boxes-closed-system-model" class="anchor"></a>Example #1: Balanced 3-boxes closed system model</h1>
+<p>We consider here the case a balanced closed system of 3 finite boxes (flux list <em>Fx1_ABC_closed_bal</em>).<br>
+For this run we use the <em>a1</em> fractionation coefficients list: we only force a -1‰ fractionation during transport from box C to A.</p>
+<p>We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days, thus corresponding to 250 steps.</p>
+<div class="sourceCode"><pre class="downlit">
+<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"</span>, <span class="co"># isobxr master file work. dir.</span>
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>, <span class="co"># series ID of the set of runs</span>
+           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
+           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
+           t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how long do I want to run</span>
+           nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># how many steps over this run duration</span>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
+           to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
+<p>The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).</p>
+<p>The <code>run_isobxr</code> function therefore choses to run the analytical solver (<code>ana_slvr</code>).</p>
+<p>In the case of this run we can see the following messages:</p>
+<pre><code>#&gt; [1] "&lt; All boxes are FINITE &gt;"
+#&gt; [1] "&lt; Running ana_slvr (BALANCED FINITE BOXES) &gt; "</code></pre>
+<p>This is expected because:</p>
+<ol style="list-style-type: decimal">
+<li><p>no INFINITE box has been declared as connected to the A, B and C boxes</p></li>
+<li><p>all inward and outward fluxes for each box are expected to be balanced</p></li>
+</ol>
+<p>The associated pre-run outputs (optional) are the model diagrams of fluxes (left) and of fractionation coefficients (right, expressed as amplitude of isotope fractionation, in ‰).</p>
+<p>The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).</p>
+<p>The <code>run_isobxr</code> function therefore choses to run the analytical solver (<code>ana_slvr</code>).</p>
+<p>In the case of this run we can see the following messages:</p>
+<pre><code>#&gt; [1] "&lt; All boxes are FINITE &gt;"
+#&gt; [1] "&lt; Running ana_slvr (BALANCED FINITE BOXES) &gt; "</code></pre>
+<p>This is expected because:</p>
+<ol style="list-style-type: decimal">
+<li><p>no INFINITE box has been declared as connected to the A, B and C boxes</p></li>
+<li><p>all inward and outward fluxes for each box are expected to be balanced</p></li>
+</ol>
+<p>The associated pre-run outputs (optional) are the model diagrams of fluxes (left) and of fractionation coefficients (right, expressed as amplitude of isotope fractionation, in ‰).</p>
+<p><img src="15_ABC_balanced_closed_0001_DIAGf_Fx1_ABC_bal.png" width="47%"><img src="14_ABC_balanced_closed_0001_DIAGa_a1.png" width="47%"></p>
+<p>Finally, the post-run output includes the evolution of <span class="math inline">\(\delta\)</span> values over the run duration, shown in years for this run.</p>
+<p><img src="16_ABC_balanced_closed_0001_plot_evD.png" width="100%"></p>
+<p>Note that the run resolution can be seen by the discrete behavior of the evolution of <span class="math inline">\(\delta\)</span> values on the left handside of the logarithmic time scale. This display effect would be smoothed out by a higher run resolution (nb_steps = 2500 or 25000 for instance).</p>
 </div>
 <div id="systems-and-isobxr-master-file" class="section level1">
 <h1 class="hasAnchor">
 <a href="#systems-and-isobxr-master-file" class="anchor"></a>Systems and <em>isobxr master file</em>
 </h1>
-<p>We consider the demonstration <em>isobxr master file</em> (0_ISOBXR_MASTER.xlsx) stored in the working directory. In this demonstration example, the <em>isobxr master file</em> describes an imaginary model, designed for the calcium <span class="math inline">\(^{44}Ca/^{42}Ca\)</span> isotope ratios.</p>
-<p><img src="10_ABCD_CONSTANTS.png" width="75%"></p>
-<p>The <strong>BOXES</strong> sheet describes 4 finite boxes (A, B, C, D) and 2 infinite boxes (SOURCE and SINK).</p>
+<p>We consider the demonstration <em>isobxr master file</em> (0_ISOBXR_MASTER.xlsx) stored in the working directory.</p>
+<p>In this demonstration example, the <em>isobxr master file</em> describes a fiction model, designed for the calcium <span class="math inline">\(^{44}Ca/^{42}Ca\)</span> isotope ratios.</p>
+<p>The <strong>BOXES</strong> sheet describes 3 finite boxes (A, B, C).</p>
 <p>The layout of the boxes in the diagram rendering aims at placing the finite boxes on the four corners of 10x10 units square, and the two infinite boxes on the higher end of the layout (y = 15), with SOURCE on the far left and SINK on the far right.</p>
 <p><img src="40_ABCD_BOXES.png" width="50%"></p>
 <p>We assume that fluxes are expressed in mg of Ca per day, sizes in mg of Ca and run time units will be days.</p>
@@ -202,7 +256,7 @@ We will run this model for total time of 2500 days with a resolution of 1 calcul
            coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
            t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how long do I want to run</span>
            nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
            to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
            to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
            to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
@@ -235,7 +289,7 @@ We will run this model for a total time of 2500 days with a resolution of 1 calc
            coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
            t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how long do I want to run</span>
            nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
            to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
            to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
            to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
@@ -275,7 +329,7 @@ We will run this model for a total time of 2500 days with a resolution of 1 calc
            coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
            t_lim <span class="op">=</span> <span class="fl">25000</span>, <span class="co"># how long do I want to run</span>
            nb_steps <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
            to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
            to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
            to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>

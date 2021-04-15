@@ -5,5 +5,9 @@ articles:
   Demo_ABCD: Demo_ABCD.html
   Demo_ABCD_composite: Demo_ABCD_composite.html
   isobxr_vignette: isobxr_vignette.html
-last_built: 2021-03-22T12:59Z
+  vgn_01_Installation: vgn_01_Installation.html
+  vgn_02_General_presentation: vgn_02_General_presentation.html
+  vgn_03_Run_isobxr_presentation: vgn_03_Run_isobxr_presentation.html
+  vgn_04_Run_isobxr_tutorial: vgn_04_Run_isobxr_tutorial.html
+last_built: 2021-04-15T14:18Z
 
