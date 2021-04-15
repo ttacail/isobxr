@@ -20,7 +20,7 @@ Imports:
     dplyr (>= 1.0.2),
     data.table (>= 1.13.2),
     deSolve (>= 1.28),
-    rlang (>= 0.4.8),
+    rlang (>= 0.4.10),
     grid (>= 4.0.3),
     metR (>= 0.7.0),
     beepr (>= 1.3),
