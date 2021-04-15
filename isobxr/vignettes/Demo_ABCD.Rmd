@@ -1,5 +1,5 @@
 ---
-title: "Getting started 1: single runs"
+title: "Getting started 1: single runs /deprecated/"
 author: "Théo Tacail"
 date: "`r Sys.Date()`" 
 output: 
@@ -19,7 +19,10 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
+<span style='color: red;'>**This vignette is not up to date and has been replaced by a series of short topical vignettes.**</span>
+
 ----
+
 
 This vignette is designed to be used as a **getting started demo 1** for the [isobxr](https://ttacail.github.io/isobxr/) package.
 
@@ -37,40 +40,144 @@ Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles
 library(isobxr)
 ```
 
-3. [Download the ABCD demo zip file](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip).
+3. [Download the ABC tutorial zip file](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip).
 
 Note
-:    Templates for all input and master excel files described in this vignette are available for 
+:    The templates of all master files (.xlsx format) described in this vignette are available for 
      [download here](https://ttacail.github.io/source/demos/0_excel_templates.zip).
 
-4. Unzip the ABCD demo file and place it in the working directory of your choice. It is strongly advised to avoid using a working directory linked to an online backup server (such as OneDrive) since it could cause some issues with adressing of output files. If done so, users are then advised to turn the backup server software offline during the use of isobxr functions.
+4. Unzip the ABC tutorial file and place it in the working directory of your choice. It is strongly advised to avoid using a working directory linked to an online backup server (such as OneDrive) since it could cause some issues with adressing of output files. If done so, users are then advised to turn the backup server software offline during the use of isobxr functions.
 
 5. Take note of the path to this folder, for instance:
 
 ```{r eval=FALSE}
-workingdir <- "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"
+workdir <- "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/"
 ```
 
-or set it as a working directory, for instance:
-
-```{r eval=FALSE}
-setwd("/Users/username/Documents/isobxr/demos/1_ABC_tutorial")
-```
-
-
-Everything is now ready to run box models with **isobxr**.
+Everything is now ready to run box models with [isobxr](https://ttacail.github.io/isobxr/).
 
 ----
 
-# Systems and *isobxr master file*
+# Example #1: Balanced 3-boxes closed system model
 
-We consider the demonstration *isobxr master file* (0_ISOBXR_MASTER.xlsx) stored in the working directory. In this demonstration example, the *isobxr master file* describes an imaginary model, designed for the calcium $^{44}Ca/^{42}Ca$ isotope ratios. 
-
-```{r echo=FALSE, out.width='75%'}
-knitr::include_graphics('./10_ABCD_CONSTANTS.png')
+```{r echo=FALSE, out.width='100%'}
+# knitr::include_graphics('./EXAMPLE_1_ABC_clo_bal.png')
 ```
 
-The **BOXES** sheet describes 4 finite boxes (A, B, C, D) and 2 infinite boxes (SOURCE and SINK). 
+We consider here the case a balanced closed system of 3 finite boxes (flux list *Fx1_ABC_closed_bal*).  
+For this run we use the *a1* fractionation coefficients list: we only force a -1‰ fractionation during transport from box C to A.
+
+We will run this model for total time of 2500 days with a resolution of 1 calculation every 10 days, 
+thus corresponding to 250 steps.  
+
+```{r eval=FALSE}
+run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", # isobxr master file work. dir.
+           SERIES_ID = "ABC_closed_balanced", # series ID of the set of runs
+           flux_list_name = "Fx1_ABC_closed_bal", # which flux list from FLUXES sheet
+           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
+           t_lim = 2500, # how long do I want to run
+           nb_steps = 250, # how many steps over this run duration
+           time_units = c("d", "yr"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE,
+           to_DIGEST_CSV_XLS = TRUE,
+           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
+```
+
+The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).
+
+The `run_isobxr` function therefore choses to run the analytical solver (`ana_slvr`).
+
+In the case of this run we can see the following messages:
+
+```{r echo=FALSE}
+"< All boxes are FINITE >"
+"< Running ana_slvr (BALANCED FINITE BOXES) > "
+```
+
+This is expected because:
+
+1. no INFINITE box has been declared as connected to the A, B and C boxes
+
+2. all inward and outward fluxes for each box are expected to be balanced
+
+The associated pre-run outputs (optional) are the model diagrams of fluxes (left)
+and of fractionation coefficients (right, expressed as amplitude of isotope fractionation, in ‰). 
+
+The first default outputs of the run are the messages sent by the function on the R console (all of these pieces of information being besides stored in the LOG file).
+
+The `run_isobxr` function therefore choses to run the analytical solver (`ana_slvr`).
+
+In the case of this run we can see the following messages:
+
+```{r echo=FALSE}
+"< All boxes are FINITE >"
+"< Running ana_slvr (BALANCED FINITE BOXES) > "
+```
+
+This is expected because:
+
+1. no INFINITE box has been declared as connected to the A, B and C boxes
+
+2. all inward and outward fluxes for each box are expected to be balanced
+
+
+```{r echo=FALSE, out.width='100%'}
+# knitr::include_graphics('./14_outputs_structure.png')
+```
+
+
+The associated pre-run outputs (optional) are the model diagrams of fluxes (left) and of fractionation coefficients (right, expressed as amplitude of isotope fractionation, in ‰). 
+
+```{r echo=FALSE, out.width='47%'}
+knitr::include_graphics('./15_ABC_balanced_closed_0001_DIAGf_Fx1_ABC_bal.png')
+knitr::include_graphics('./14_ABC_balanced_closed_0001_DIAGa_a1.png')
+```
+
+Finally, the post-run output includes the evolution of $\delta$ values over the run duration, shown in years for this run.
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./16_ABC_balanced_closed_0001_plot_evD.png')
+```
+
+Note that the run resolution can be seen by the discrete behavior of the evolution of $\delta$ values on the left handside of the logarithmic time scale. 
+This display effect would be smoothed out by a higher run resolution (nb_steps = 2500 or 25000 for instance).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Systems and *isobxr master file*
+
+
+
+We consider the demonstration *isobxr master file* (0_ISOBXR_MASTER.xlsx) stored in the working directory.
+
+In this demonstration example, the *isobxr master file* describes a fiction model, 
+designed for the calcium $^{44}Ca/^{42}Ca$ isotope ratios. 
+
+```{r echo=FALSE, out.width='100%'}
+# knitr::include_graphics('./EXAMPLE_1_ABC_clo_bal.png')
+```
+
+```{r echo=FALSE, out.width='100%'}
+# knitr::include_graphics('./EXAMPLE_2_ABC_clo_unbal.png')
+```
+
+
+```{r echo=FALSE, out.width='100%'}
+# knitr::include_graphics('./EXAMPLE_3_ABC_open_bal.png')
+```
+
+The **BOXES** sheet describes 3 finite boxes (A, B, C). 
 
 The layout of the boxes in the diagram rendering aims at placing the finite boxes on the four corners of 10x10 units square, and the two infinite boxes on the higher end of the layout (y = 15), with SOURCE on the far left and SINK on the far right.
 
@@ -129,7 +236,7 @@ run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", #
            coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           time_units = c("d", "yr"), # run time units (days), plot time units (years)
            to_DIGEST_evD_PLOT = TRUE,
            to_DIGEST_CSV_XLS = TRUE,
            to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
@@ -182,7 +289,7 @@ run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", #
            coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
-           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           time_units = c("d", "yr"), # run time units (days), plot time units (years)
            to_DIGEST_evD_PLOT = TRUE,
            to_DIGEST_CSV_XLS = TRUE,
            to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
@@ -257,7 +364,7 @@ run_isobxr(workdir = "/Users/username/Documents/isobxr/demos/1_ABC_tutorial/", #
            coeff_list_name = "a1", # which coefficients list from COEFFS sheet
            t_lim = 25000, # how long do I want to run
            nb_steps = 2500, # how many steps over this run duration
-           time_units = c("d", "d"), # run time units (days), plot time units (years)
+           time_units = c("d", "yr"), # run time units (days), plot time units (years)
            to_DIGEST_evD_PLOT = TRUE,
            to_DIGEST_CSV_XLS = TRUE,
            to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf

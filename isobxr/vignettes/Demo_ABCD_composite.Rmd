@@ -20,6 +20,9 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
+
+<span style='color: red;'>**This vignette will soon be replaced by a series of short topical vignettes.**</span>
+
 ----
 
 This vignette is designed to be used as a **getting started demo 2** for the [isobxr](https://ttacail.github.io/isobxr/) package.
