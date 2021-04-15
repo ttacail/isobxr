@@ -1,0 +1,103 @@
+---
+title: "1 - Install isobxr"
+author: "Théo Tacail"
+date: "`r Sys.Date()`" 
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{1 - Install isobxr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+#####################################################################################
+library(devtools)
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+----
+
+The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools 
+designed to perform and explore stable isotope box modelling 
+of open or closed systems.
+It provides a ready-to-use tool allowing users to 
+develop and test isotopic box models of their system of interest. 
+It allows the user to explore the behavior of these systems
+in both static (*e.g.*, at steady state) or dynamic modes 
+(*e.g.*, in reaction to a perturbation), 
+build complex scenarios, and sweep the space of parameters in both static 
+and dynamic modes.
+
+----
+
+# Installation
+
+## Install isobxr
+
+The [isobxr](https://ttacail.github.io/isobxr/) is available as a source package 
+from [GitHub](https://github.com/).
+
+The installation process can be done as follows:
+
+1. Download and install/update [R](https://cran.r-project.org/) and 
+[Rstudio](https://rstudio.com/products/rstudio/download/).
+
+2. Download and install package **devtools** as follows:
+
+```{r eval = FALSE}
+install.packages("devtools")
+```
+
+3. Download and install [isobxr](https://ttacail.github.io/isobxr/) source package.
+
+```{r eval = FALSE}
+devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
+```
+
+The [isobxr](https://ttacail.github.io/isobxr/) package is working under
+R 3.5.2 to 4.0.4 versions.
+
+It's portability has been proof checked for MacOS (10.12 and 10.13), 
+Linux (Ubuntu 20.04.1 LTS) and Windows (7 and 10).
+
+You can load the [isobxr](https://ttacail.github.io/isobxr/) package in R
+as follows:
+```{r eval = FALSE}
+library(isobxr)
+```
+
+Here is the package description of the current version, 
+where you can find the required minimal versions of dependencies:
+```{r eval = FALSE}
+packageDescription("isobxr")
+```
+
+You can locally browse the vignettes as follows:
+```{r eval = FALSE}
+browseVignettes("isobxr")
+```
+
+## Download templates and tutorials
+
+The user is encouraged to: 
+
+1. download the 
+[reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip).
+These files provide the user with formated master files, 
+used as entries to the functions and described in this vignette.
+
+2. download the [tutorial files](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip). 
+These files provide the user with all master files and R commands 
+used throughout all demonstrations shown in the vignettes.
+
+
+----
+
