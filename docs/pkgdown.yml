@@ -2,11 +2,11 @@ pandoc: 1.19.2.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  Demo_ABCD_composite: Demo_ABCD_composite.html
-  isobxr_vignette: isobxr_vignette.html
   vgn_01_Installation: vgn_01_Installation.html
   vgn_02_General_presentation: vgn_02_General_presentation.html
   vgn_03_Run_isobxr_presentation: vgn_03_Run_isobxr_presentation.html
   vgn_04_Run_isobxr_tutorial: vgn_04_Run_isobxr_tutorial.html
-last_built: 2021-04-20T08:19Z
+  vgn_05_compose_isobxr: vgn_05_compose_isobxr.html
+  vgn_10_general_vignette: vgn_10_general_vignette.html
+last_built: 2021-04-20T08:27Z
 
