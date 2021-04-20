@@ -427,6 +427,7 @@ We consider the system of example 3: System {ABC}, open and balanced.
 
 Instead of starting by default with delta values set at 0‰ for all boxes, 
 we want to set: 
+
 * an initial isotope composition of the SOURCE to -3‰
 * an initial isotope composition of the box C to +5‰. 
 
