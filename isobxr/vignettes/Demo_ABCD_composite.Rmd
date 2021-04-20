@@ -1,5 +1,5 @@
 ---
-title: "Getting started 2: composite runs"
+title: "5 - compose_isobxr"
 author: "Théo Tacail"
 date: "`r Sys.Date()`" 
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Demo_ABCD_composite}
+  %\VignetteIndexEntry{5 - compose_isobxr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,19 +21,19 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 
-<span style='color: red;'>**This vignette will soon be replaced by a series of short topical vignettes.**</span>
+<span style='color: red;'>**This vignette will soon be replaced by a general presentation and a tutorial vignette.**</span>
 
 ----
 
-This vignette is designed to be used as a **getting started demo 2** for the [isobxr](https://ttacail.github.io/isobxr/) package.
+This vignette is designed to be used as a demonstration for the compose_isobxr function of the [isobxr](https://ttacail.github.io/isobxr/) package.
 
-Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) for a more exhaustive explanation of the package content and use.
+<!-- Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) for a more exhaustive explanation of the package content and use. -->
 
 ----
 
 # Prepare the demo
 
-1. If not done yet, install the [isobxr](https://ttacail.github.io/isobxr/) package ([installation instructions](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#installation-1)).
+1. If not done yet, install the [isobxr](https://ttacail.github.io/isobxr/) package ([Install isobxr](https://ttacail.github.io/isobxr/articles/vgn_01_Installation.html)).
 
 2. Load isobxr in R:
 
@@ -41,7 +41,7 @@ Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles
 library(isobxr)
 ```
 
-3. [Download the ABCD demo zip file](https://ttacail.github.io/source/demos/1_ABCD.zip).
+3. [Download the tutorial files](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip). 
 
 Note
 :    Templates for all input and master excel files described in this vignette are available for 

@@ -1,5 +1,5 @@
 ---
-title: "Using isobxr"
+title: "6 - General vignette"
 author: "Théo Tacail"
 date: "`r Sys.Date()`" 
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Using isobxr}
+  %\VignetteIndexEntry{6 - General vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
