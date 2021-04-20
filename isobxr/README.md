@@ -43,9 +43,10 @@ The documentation about underlying theory and isobxr utilization is made fully a
 
 The vignettes can be found online: 
 
-1. [Using isobxr](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) general exhaustive vignette
-2. [Getting started 1: single runs](https://ttacail.github.io/isobxr/articles/Demo_ABCD.html)
-3. [Getting started 2: composite runs](https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html)
+1. [Install isobxr](https://ttacail.github.io/isobxr/articles/vgn_01_Installation.html)
+2. [General presentation](https://ttacail.github.io/isobxr/articles/vgn_02_General_presentation.html)
+3. [Run_isobxr: presentation](https://ttacail.github.io/isobxr/articles/vgn_03_Run_isobxr_presentation.html)
+4. [Run_isobxr: tutorial](https://ttacail.github.io/isobxr/articles/vgn_04_Run_isobxr_tutorial.html)
 
 The vignettes can also be locally loaded on R or Rstudio after the package installation as follows:
 ``` r
@@ -59,15 +60,15 @@ This is a basic example which shows you how to run a simple box model, using the
 ``` r
 library(isobxr)
 
-run_isobxr(workdir = "~/1_ABC_tutorial", # isobxr master file work. dir.
-           SERIES_ID = "ABC_closed_balanced", # series ID of the set of runs
-           flux_list_name = "Fx1_ABC_closed_bal", # which flux list from FLUXES sheet
-           coeff_list_name = "a1", # which coefficients list from COEFFS sheet
-           t_lim = 2500, # how long do I want to run
-           nb_steps = 250, # how many steps over this run duration
-           time_units = c("d", "d"), # run time units (days), plot time units (years)
-           to_DIGEST_evD_PLOT = TRUE,
-           to_DIGEST_CSV_XLS = TRUE,
-           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
+run_isobxr(workdir = workdir_ABC, # work. directory
+           SERIES_ID = "ABC_closed_balanced", # name of the series of runs
+           flux_list_name = "Fx1_ABC_closed_bal", # use this list of fluxes/sizes
+           coeff_list_name = "a1", # use list a1 of fractionation coeffs.
+           t_lim = 2500, # run the model over 2500 days
+           nb_steps = 250, # calculate system state in 250 steps
+           time_units = c("d", "yr"), # run time units (days), plot time units (years)
+           to_DIGEST_evD_PLOT = TRUE, # export plot as pdf
+           to_DIGEST_CSV_XLS = TRUE, # export all data as csv and xlsx
+           to_DIGEST_DIAGRAMS = TRUE) # export system diagrams as pdf
 ```
 
