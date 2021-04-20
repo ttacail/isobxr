@@ -100,7 +100,7 @@
       <h1 data-toc-skip>4 - Run_isobxr: tutorial</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-04-15</h4>
+            <h4 class="date">2021-04-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_04_Run_isobxr_tutorial.Rmd"><code>vignettes/vgn_04_Run_isobxr_tutorial.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_04_Run_isobxr_tutorial.Rmd</code></div>
@@ -469,7 +469,7 @@
 <h2 class="hasAnchor">
 <a href="#i--forcing-the-initial-isotope-compositions-of-the-reservoirs" class="anchor"></a>i. Forcing the initial isotope compositions of the reservoirs</h2>
 <p>Instead of starting by default with delta values set at 0‰ for all boxes, we want to set: * an initial isotope composition of the SOURCE to -3‰ * an initial isotope composition of the box C to +5‰.</p>
-<p>To do so we need to define a forcing paramter (<strong>FORCING_DELTA</strong>) as follows:</p>
+<p>To do so we need to define a forcing parameter (<strong>FORCING_DELTA</strong>) as follows:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="va">FORCING_DELTA</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SOURCE"</span>, <span class="st">"C"</span><span class="op">)</span>,

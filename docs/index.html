@@ -135,10 +135,10 @@
 <p>The documentation about underlying theory and isobxr utilization is made fully available to user in the package vignettes.</p>
 <p>The vignettes can be found online:</p>
 <ol>
-<li>
-<a href="https://ttacail.github.io/isobxr/articles/isobxr_vignette.html">Using isobxr</a> general exhaustive vignette</li>
-<li><a href="https://ttacail.github.io/isobxr/articles/Demo_ABCD.html">Getting started 1: single runs</a></li>
-<li><a href="https://ttacail.github.io/isobxr/articles/Demo_ABCD_composite.html">Getting started 2: composite runs</a></li>
+<li><a href="https://ttacail.github.io/isobxr/articles/vgn_01_Installation.html">Install isobxr</a></li>
+<li><a href="https://ttacail.github.io/isobxr/articles/vgn_02_General_presentation.html">General presentation</a></li>
+<li><a href="https://ttacail.github.io/isobxr/articles/vgn_03_Run_isobxr_presentation.html">Run_isobxr: presentation</a></li>
+<li><a href="https://ttacail.github.io/isobxr/articles/vgn_04_Run_isobxr_tutorial.html">Run_isobxr: tutorial</a></li>
 </ol>
 <p>The vignettes can also be locally loaded on R or Rstudio after the package installation as follows:</p>
 <div class="sourceCode"><pre class="downlit">
@@ -152,16 +152,16 @@
 <div class="sourceCode"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span>
 
-<span class="fu"><a href="reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"~/1_ABC_tutorial"</span>, <span class="co"># isobxr master file work. dir.</span>
-           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>, <span class="co"># series ID of the set of runs</span>
-           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>, <span class="co"># which flux list from FLUXES sheet</span>
-           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># which coefficients list from COEFFS sheet</span>
-           t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># how long do I want to run</span>
-           nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># how many steps over this run duration</span>
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
-           to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>,
-           to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>,
-           to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export plot as pdf</span></pre></div>
+<span class="fu"><a href="reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="va">workdir_ABC</span>, <span class="co"># work. directory</span>
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>, <span class="co"># name of the series of runs</span>
+           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>, <span class="co"># use this list of fluxes/sizes</span>
+           coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co"># use list a1 of fractionation coeffs.</span>
+           t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># run the model over 2500 days</span>
+           nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># calculate system state in 250 steps</span>
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># run time units (days), plot time units (years)</span>
+           to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># export plot as pdf</span>
+           to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># export all data as csv and xlsx</span>
+           to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># export system diagrams as pdf</span></pre></div>
 </div>
 </div>
   </div>
