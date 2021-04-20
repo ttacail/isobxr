@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Getting started 2: composite runs • isobxr</title>
+<title>5 - compose_isobxr • isobxr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Getting started 2: composite runs">
+<script src="../pkgdown.js"></script><meta property="og:title" content="5 - compose_isobxr">
 <meta property="og:description" content="isobxr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,10 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Demo_ABCD_composite.html">Getting started 2: composite runs</a>
+      <a href="../articles/Demo_ABCD_composite.html">5 - compose_isobxr</a>
     </li>
     <li>
-      <a href="../articles/isobxr_vignette.html">Using isobxr</a>
+      <a href="../articles/isobxr_vignette.html">6 - General vignette</a>
     </li>
     <li>
       <a href="../articles/vgn_01_Installation.html">1 - Install isobxr</a>
@@ -94,7 +94,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Getting started 2: composite runs</h1>
+      <h1 data-toc-skip>5 - compose_isobxr</h1>
                         <h4 class="author">Théo Tacail</h4>
             
             <h4 class="date">2021-04-20</h4>
@@ -106,23 +106,23 @@
 
     
     
-<p><span style="color: red;"><strong>This vignette will soon be replaced by a series of short topical vignettes.</strong></span></p>
+<p><span style="color: red;"><strong>This vignette will soon be replaced by a general presentation and a tutorial vignette.</strong></span></p>
 <hr>
-<p>This vignette is designed to be used as a <strong>getting started demo 2</strong> for the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package.</p>
-<p>Please refer to the <a href="https://ttacail.github.io/isobxr/articles/isobxr_vignette.html">general vignette</a> for a more exhaustive explanation of the package content and use.</p>
+<p>This vignette is designed to be used as a demonstration for the compose_isobxr function of the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package.</p>
+<!-- Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) for a more exhaustive explanation of the package content and use. -->
 <hr>
 <div id="prepare-the-demo" class="section level1">
 <h1 class="hasAnchor">
 <a href="#prepare-the-demo" class="anchor"></a>Prepare the demo</h1>
 <ol style="list-style-type: decimal">
-<li><p>If not done yet, install the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package (<a href="https://ttacail.github.io/isobxr/articles/isobxr_vignette.html#installation-1">installation instructions</a>).</p></li>
+<li><p>If not done yet, install the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package (<a href="https://ttacail.github.io/isobxr/articles/vgn_01_Installation.html">Install isobxr</a>).</p></li>
 <li><p>Load isobxr in R:</p></li>
 </ol>
 <div class="sourceCode"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<a href="https://ttacail.github.io/source/demos/1_ABCD.zip">Download the ABCD demo zip file</a>.</li>
+<a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">Download the tutorial files</a>.</li>
 </ol>
 <dl>
 <dt>Note</dt>
