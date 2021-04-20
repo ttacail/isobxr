@@ -180,7 +180,7 @@ The **COEFFS** sheet takes the values of the isotope fractionation coefficients 
 
 ----
 
-# Main arguments for `run_isobxr`
+# Main arguments and outputs
 
 The `run_isobxr` function takes required and optional arguments that are described in this section.
  
@@ -271,7 +271,7 @@ run_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
            )
 ```
 
-## `run_isobxr` forcing arguments
+## Additional forcing arguments
 
 ### Forcing initial box sizes
 

@@ -430,7 +430,7 @@ we want to set:
 * an initial isotope composition of the SOURCE to -3‰
 * an initial isotope composition of the box C to +5‰. 
 
-To do so we need to define a forcing paramter (**FORCING_DELTA**) as follows: 
+To do so we need to define a forcing parameter (**FORCING_DELTA**) as follows: 
 
 ```{r eval=TRUE}
 FORCING_DELTA <- 
