@@ -25,14 +25,13 @@ This vignette is designed to drive the user through a step-by-step tutorial for 
 
 The user can run the same box model simulations as described in this vignette using tutorial files.
 
-The user can also find general information about the `run_isobxr` function in the "3 - Run_isobxr: presentation" vignette. <!-- ADD LINK -->
+The user can also find general information about the `run_isobxr` function in the [3 - Run_isobxr: presentation](https://ttacail.github.io/isobxr/articles/vgn_03_Run_isobxr_presentation.html) vignette.
 
 ----
 
 # Prepare tutorial
 
-1. If not done yet, install the [isobxr](https://ttacail.github.io/isobxr/) package (installation instructions are available here).
-<!-- LINK -->
+1. If not done yet, install the [isobxr](https://ttacail.github.io/isobxr/) package [(installation instructions here)](https://ttacail.github.io/isobxr/articles/vgn_01_Installation.html).
 
 2. Load isobxr in R:
 

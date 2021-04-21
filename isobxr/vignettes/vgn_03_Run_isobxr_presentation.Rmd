@@ -25,7 +25,7 @@ In this vignette, the user will be introduced to the main function of [isobxr](h
 
 Here, we shortly present the principles and general usage of the `run_isobxr` function. 
 
-The user is then invited to follow and run a step-by-step tutorial presenting several typical runs (3 - Run_isobxr: tutorial). <!-- ADD LINK -->
+The user is then invited to follow and run a step-by-step tutorial presenting several typical runs [(4 - Run_isobxr: tutorial)](https://ttacail.github.io/isobxr/articles/vgn_04_Run_isobxr_tutorial.html).
 
 ----
 
