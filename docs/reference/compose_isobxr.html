@@ -175,8 +175,8 @@ It is possible to force parameters at each run, namely:</p><ol>
   <span class='va'>SERIES_ID</span>,
   <span class='va'>time_units</span>,
   <span class='va'>COMPO_MASTER</span>,
-  <span class='va'>plot_HIDE_BOXES_delta</span>,
-  <span class='va'>plot_HIDE_BOXES_size</span>,
+  plot_HIDE_BOXES_delta <span class='op'>=</span> <span class='cn'>NULL</span>,
+  plot_HIDE_BOXES_size <span class='op'>=</span> <span class='cn'>NULL</span>,
   EACH_RUN_DIGEST <span class='op'>=</span> <span class='cn'>FALSE</span>,
   to_CPS_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
@@ -216,15 +216,19 @@ defining the composite run scenario. <br />
     </tr>
     <tr>
       <th>plot_HIDE_BOXES_delta</th>
-      <td><p>Vector of character strings, <br />
+      <td><p><em>OPTIONAL</em> <br />
+Vector of character strings, <br />
 defining the names of the boxes to hide in the plot of the delta values as a function of time, edited as a pdf.
-<br /> (e.g., c("BOX_A", "BOX_C"))</p></td>
+<br /> (e.g., c("BOX_A", "BOX_C"))
+<br /> Default is NULL (no box hidden).</p></td>
     </tr>
     <tr>
       <th>plot_HIDE_BOXES_size</th>
-      <td><p>Vector of character strings, <br />
+      <td><p><em>OPTIONAL</em> <br />
+Vector of character strings, <br />
 defining the names of the boxes to hide in the plot of the box sizes (masses of X) as a function of time, edited as a pdf.
-<br /> (e.g., c("BOX_A", "BOX_C"))</p></td>
+<br /> (e.g., c("BOX_A", "BOX_C"))
+<br /> Default is NULL (no box hidden).</p></td>
     </tr>
     <tr>
       <th>EACH_RUN_DIGEST</th>

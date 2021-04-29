@@ -39,12 +39,16 @@ usethis::use_package("rlang", min_version = TRUE)
 #' @param COMPO_MASTER Name of the composite master file (e.g., \strong{\emph{0_COMPO_MASTER.xlsx}}),
 #' defining the composite run scenario. \cr
 #' (character string)
-#' @param plot_HIDE_BOXES_delta Vector of character strings, \cr
+#' @param plot_HIDE_BOXES_delta  \emph{OPTIONAL} \cr
+#' Vector of character strings, \cr
 #' defining the names of the boxes to hide in the plot of the delta values as a function of time, edited as a pdf.
 #' \cr (e.g., c("BOX_A", "BOX_C"))
-#' @param plot_HIDE_BOXES_size Vector of character strings, \cr
+#' \cr Default is NULL (no box hidden).
+#' @param plot_HIDE_BOXES_size  \emph{OPTIONAL} \cr
+#' Vector of character strings, \cr
 #' defining the names of the boxes to hide in the plot of the box sizes (masses of X) as a function of time, edited as a pdf.
 #' \cr (e.g., c("BOX_A", "BOX_C"))
+#' \cr Default is NULL (no box hidden).
 #' @param EACH_RUN_DIGEST \emph{OPTIONAL} \cr
 #' Logical value. \cr
 #' Edits full digests for each model run
@@ -103,8 +107,8 @@ compose_isobxr <- function(workdir,
                            SERIES_ID,
                            time_units, # WARNING, so far it only works from "days" (inherited by the units of the fluxes values) to "minutes", "hours", "days", "hours"
                            COMPO_MASTER, # excel file
-                           plot_HIDE_BOXES_delta,
-                           plot_HIDE_BOXES_size,
+                           plot_HIDE_BOXES_delta = NULL,
+                           plot_HIDE_BOXES_size = NULL,
                            EACH_RUN_DIGEST = FALSE,
                            to_CPS_DIGEST_CSVs = FALSE){
 
@@ -493,9 +497,11 @@ compose_isobxr <- function(workdir,
   display_evD_plot = TRUE
 
   #### hide unwanted boxes for delta plot
-  evD_zones_vert <- evD_zones_vert[-which(evD_zones_vert$VAR_TYPE %in% plot_HIDE_BOXES_delta), ]
+  if (! is.null(plot_HIDE_BOXES_delta)){
+    evD_zones_vert <- evD_zones_vert[-which(evD_zones_vert$VAR_TYPE %in% plot_HIDE_BOXES_delta), ]
+    evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% plot_HIDE_BOXES_delta), ]
+  }
   evD_zones_vert <- clear_subset(evD_zones_vert)
-  evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% plot_HIDE_BOXES_delta), ]
   evD_vert <- clear_subset(evD_vert)
 
   #### set limits of plot
@@ -613,9 +619,12 @@ compose_isobxr <- function(workdir,
   evS_vert <- DF_verticalizer(df_hor = evS, vert_col = BOXES_IDs)
 
   #### hide unwanted boxes for delta plot
-  evS_zones_vert <- evS_zones_vert[-which(evS_zones_vert$VAR_TYPE %in% plot_HIDE_BOXES_size), ]
+  if (! is.null(plot_HIDE_BOXES_size)){
+    evS_zones_vert <- evS_zones_vert[-which(evS_zones_vert$VAR_TYPE %in% plot_HIDE_BOXES_size), ]
+    evS_vert <- evS_vert[-which(evS_vert$VAR_TYPE %in% plot_HIDE_BOXES_size), ]
+  }
+
   evS_zones_vert <- clear_subset(evS_zones_vert)
-  evS_vert <- evS_vert[-which(evS_vert$VAR_TYPE %in% plot_HIDE_BOXES_size), ]
   evS_vert <- clear_subset(evS_vert)
 
   #### set limits of plot

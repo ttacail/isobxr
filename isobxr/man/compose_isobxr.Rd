@@ -9,8 +9,8 @@ compose_isobxr(
   SERIES_ID,
   time_units,
   COMPO_MASTER,
-  plot_HIDE_BOXES_delta,
-  plot_HIDE_BOXES_size,
+  plot_HIDE_BOXES_delta = NULL,
+  plot_HIDE_BOXES_size = NULL,
   EACH_RUN_DIGEST = FALSE,
   to_CPS_DIGEST_CSVs = FALSE
 )
@@ -38,13 +38,17 @@ e.g.,  c("d", "yr") to convert days into years}
 defining the composite run scenario. \cr
 (character string)}
 
-\item{plot_HIDE_BOXES_delta}{Vector of character strings, \cr
+\item{plot_HIDE_BOXES_delta}{\emph{OPTIONAL} \cr
+Vector of character strings, \cr
 defining the names of the boxes to hide in the plot of the delta values as a function of time, edited as a pdf.
-\cr (e.g., c("BOX_A", "BOX_C"))}
+\cr (e.g., c("BOX_A", "BOX_C"))
+\cr Default is NULL (no box hidden).}
 
-\item{plot_HIDE_BOXES_size}{Vector of character strings, \cr
+\item{plot_HIDE_BOXES_size}{\emph{OPTIONAL} \cr
+Vector of character strings, \cr
 defining the names of the boxes to hide in the plot of the box sizes (masses of X) as a function of time, edited as a pdf.
-\cr (e.g., c("BOX_A", "BOX_C"))}
+\cr (e.g., c("BOX_A", "BOX_C"))
+\cr Default is NULL (no box hidden).}
 
 \item{EACH_RUN_DIGEST}{\emph{OPTIONAL} \cr
 Logical value. \cr
