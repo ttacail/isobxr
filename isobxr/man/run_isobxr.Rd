@@ -25,7 +25,8 @@ run_isobxr(
   HIDE_PRINTS = FALSE,
   to_DIGEST_DIAGRAMS = TRUE,
   to_DIGEST_evD_PLOT = TRUE,
-  to_DIGEST_CSV_XLS = FALSE
+  to_DIGEST_CSV_XLS = FALSE,
+  evD_PLOT_time_as_log = TRUE
 )
 }
 \arguments{
@@ -141,6 +142,11 @@ Default is TRUE.}
 Logical value.  \cr
 Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}} or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
 Default is FALSE.}
+
+\item{evD_PLOT_time_as_log}{\emph{OPTIONAL}\cr
+Logical value.  \cr
+Print evD plot with log10 time scale as x-axis. \cr
+Default is TRUE.}
 }
 \value{
 If the function is run independently and if directory is not yet existing, \cr
@@ -212,7 +218,10 @@ between all boxes. \cr
 (file name structure: \strong{\emph{in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf}})
 
 \item If to_DIGEST_evD_PLOT = TRUE, \cr
-edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale. \cr
+edits a pdf plot of the time dependent evolution of delta values
+together with the evolution of the box sizes (masses of element X). \cr
+The time x-axis is a logarithmic scale by default but can be set
+to linear scale with the evD_PLOT_time_as_log parameter, if set to FALSE.
 (file name structure: \strong{\emph{out_0_PLOT_evD + SERIES_ID + XXXX + .pdf}})
 
 }

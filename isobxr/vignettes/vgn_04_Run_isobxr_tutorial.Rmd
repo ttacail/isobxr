@@ -162,13 +162,13 @@ knitr::include_graphics('./04_runisobxr_tuto_02_ex1_diag_alpha.png')
 
 ### evD plot of isotope compositions with time
 
-The `run_isobxr` outputs include the evolution of isotope compositions over the run duration (edited as pdf), shown in years for this run.
+The `run_isobxr` outputs include the evolution of isotope compositions over the run duration (edited as pdf) together with the evolution of the box sizes (masses of element X).
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./04_runisobxr_tuto_02_ex1_evD.png')
 ```
 
-Note that the time axis is displayed with a log scale.
+Note that the time axis is displayed with a log scale by default but this can be changed to a linear time scale by setting the `run_isobxr` parameter *evD_PLOT_time_as_log* to FALSE.
 
 We thus observe here a **relaxation** of the system to a steady-state where box A tends to -0.31‰, B to -0.18‰ and C to 0.49‰. 
 
@@ -297,7 +297,13 @@ The `run_isobxr` outputs include the evolution of isotope compositions over the 
 knitr::include_graphics('./04_runisobxr_tuto_03_ex2_evD.png')
 ```
 
-Note that in this case, we observe here **no relaxation** to a steady-state.
+We observe that the box sizes are not constant over time: the box A gains 2000 mass units while the box C is totally emptied by the end of the run. 
+
+In this case, we observe here **no relaxation** to a steady-state.
+
+Note that the time axis is displayed with a log scale by default but this can be changed to a linear time scale by setting the `run_isobxr` parameter *evD_PLOT_time_as_log* to FALSE.
+
+
 
 ### Optional data outputs
 
@@ -408,8 +414,10 @@ knitr::include_graphics('./04_runisobxr_tuto_04_ex3_evD.png')
 
 We thus observe here a **relaxation** of the system to a steady-state (different from example 1) where box A tends to -0.12‰, B to 0‰ and C to +0.68‰. 
 
-Note that as we didn't define the initial isotope compositions of the boxes including the SOURCE and SINK infinite boxes, 
+As we didn't define the initial isotope compositions of the boxes including the SOURCE and SINK infinite boxes, 
 the later therefore remain at 0‰ throughout the run.
+
+Note that the time axis is displayed with a log scale by default but this can be changed to a linear time scale by setting the `run_isobxr` parameter *evD_PLOT_time_as_log* to FALSE.
 
 ----
 

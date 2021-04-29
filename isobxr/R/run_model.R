@@ -111,6 +111,10 @@ usethis::use_package("rlang", min_version = TRUE)
 #' Logical value.  \cr
 #' Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}} or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
 #' Default is FALSE.
+#' @param evD_PLOT_time_as_log \emph{OPTIONAL}\cr
+#' Logical value.  \cr
+#' Print evD plot with log10 time scale as x-axis. \cr
+#' Default is TRUE.
 #'
 #' @return If the function is run independently and if directory is not yet existing, \cr
 #' \code{\link{run_isobxr}} creates and stores all outputs in a \emph{SERIES} folder located in working directory,
@@ -175,7 +179,10 @@ usethis::use_package("rlang", min_version = TRUE)
 #' (file name structure: \strong{\emph{in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf}})
 #'
 #' \item If to_DIGEST_evD_PLOT = TRUE, \cr
-#' edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale. \cr
+#' edits a pdf plot of the time dependent evolution of delta values
+#' together with the evolution of the box sizes (masses of element X). \cr
+#' The time x-axis is a logarithmic scale by default but can be set
+#' to linear scale with the evD_PLOT_time_as_log parameter, if set to FALSE.
 #' (file name structure: \strong{\emph{out_0_PLOT_evD + SERIES_ID + XXXX + .pdf}})
 #'
 #' }
@@ -201,10 +208,11 @@ run_isobxr <- function(workdir,
                        HIDE_PRINTS = FALSE,
                        to_DIGEST_DIAGRAMS = TRUE,
                        to_DIGEST_evD_PLOT = TRUE,
-                       to_DIGEST_CSV_XLS = FALSE){
+                       to_DIGEST_CSV_XLS = FALSE,
+                       evD_PLOT_time_as_log = TRUE){
 
   # locally bind variables (fixing binding global variable issue)
-  A_evD <- N_evD <- NULL
+  A_OUT <- N_evS <- A_evD <- N_evD <- NULL
 
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
@@ -812,6 +820,7 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# POST-RUN OUTPUTS
   #### CREATE PLOT (OPTION TO HIDE)
+
   if (to_DIGEST_evD_PLOT == TRUE){
 
     load(paste(folder_outdir, "OUT.Rda", sep = ""))
@@ -823,14 +832,19 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
       nb_steps <- LOG_loc$N_STEPS
       ratio_standard <- CONSTANTS$RATIO_STANDARD
       BOXES_IDs <- names(evD[,-which(names(evD) %in% c("Time"))])
+      S <- as.data.frame(t(A_OUT[, c("SIZE_INIT")]))
+      names(S) <- as.character(A_OUT$BOXES_ID)
+      evS <- dplyr::bind_rows(replicate(nrow(evD), S, simplify = FALSE))
+      evS$Time <- evD$Time
+      evS <- evS[,c("Time", names(S))]
     } else {
       if (LOG_loc$NUM_ANA == "NUM"){ #### READ ISOPYBOX_NUM evD already Computed
-        ISO_OUT_loc <- N_evD
-        evD <- ISO_OUT_loc
+        evD <- N_evD
+        evS <- N_evS
         t_lim = LOG_loc$T_LIM
         nb_steps = LOG_loc$N_STEPS
         ratio_standard <- CONSTANTS$RATIO_STANDARD
-        BOXES_IDs = names(ISO_OUT_loc[,-which(names(ISO_OUT_loc) %in% c("Time"))])
+        BOXES_IDs = names(evD[,-which(names(evD) %in% c("Time"))])
       }
     }
 
@@ -841,30 +855,18 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
 
     #### VERTICALIZE evD
     evD_vert <- DF_verticalizer(df_hor = evD, vert_col = BOXES_IDs)
-
-    #### CHANGE TIME UNITS FROM FLUX IMPOSED UNIT TO WANTED DISPLAY UNIT
-    # if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-    #   if (display_time_unit == "hours"){
-    #     evD_vert$Time <- evD_vert$Time*24
-    #   } else {
-    #     if (display_time_unit == "minutes"){
-    #       evD_vert$Time <- evD_vert$Time*24*60
-    #     } else {
-    #       if (display_time_unit == "years"){
-    #         evD_vert$Time <- evD_vert$Time/365
-    #       } else {
-    #         display_time_unit = initial_time_unit
-    #       }
-    #     }
-    #   }
-    # }
-
     evD_vert <- time_converter(dataframe = evD_vert, time_colname = "Time",
                                conv_timecolname = "Time_conv",
                                former_unit = initial_time_unit,
                                new_unit = display_time_unit)
-
     evD_vert$Time <- evD_vert$Time_conv
+
+    evS_vert <- DF_verticalizer(df_hor = evS, vert_col = BOXES_IDs)
+    evS_vert <- time_converter(dataframe = evS_vert, time_colname = "Time",
+                               conv_timecolname = "Time_conv",
+                               former_unit = initial_time_unit,
+                               new_unit = display_time_unit)
+    evS_vert$Time <- evS_vert$Time_conv
 
     Ymin <- round(min(evD_vert$VAR), 0)-1
     Ymax <- round(max(evD_vert$VAR), 0)+1
@@ -875,23 +877,25 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     Xmin <- evD_vert[2,"Time"]
     Xmax <- max(evD_vert$Time) + 0.5*max(evD_vert$Time)
 
-    if (is.na(INFINITE_BOXES[1]) == F){
-      evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% c(INFINITE_BOXES)),]
-    }
+    # if (is.na(INFINITE_BOXES[1]) == F){
+    #   evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% c(INFINITE_BOXES)),]
+    # }
 
     BOXES_network_drop <- as.character(BOXES_network_drop)
-    BOXES_network_drop <- BOXES_network_drop[!BOXES_network_drop %in% INFINITE_BOXES]
+    # BOXES_network_drop <- BOXES_network_drop[!BOXES_network_drop %in% INFINITE_BOXES]
 
     if (length(BOXES_network_drop) > 0){
       evD_vert <- evD_vert[-which(evD_vert$VAR_TYPE %in% c(BOXES_network_drop)),]
+      evS_vert <- evS_vert[-which(evS_vert$VAR_TYPE %in% c(BOXES_network_drop)),]
     }
 
-    evD_vert <- evD_vert[2:nrow(evD_vert),]
-    evD_vert <- clear_subset(evD_vert)
-
+    # evD_vert <- clear_subset(evD_vert[2:nrow(evD_vert),])
     evD_initial <- evD_vert[evD_vert$Time == min(evD_vert$Time),]
-
     evD_final <- evD_vert[evD_vert$Time == max(evD_vert$Time),]
+
+    # evS_vert <- clear_subset(evS_vert[2:nrow(evS_vert),])
+    evS_initial <- evS_vert[evS_vert$Time == min(evS_vert$Time),]
+    evS_final <- evS_vert[evS_vert$Time == max(evS_vert$Time),]
 
     evD_plot <- ggplot2::ggplot(data = evD_vert, ggplot2::aes(x = Time, y = VAR, color = VAR_TYPE))+
       ggplot2::geom_line(cex = 1)+
@@ -902,15 +906,37 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
                     x = paste("Time in", display_time_unit, sep = " "),
                     title = paste(SERIES_ID, "-", LOG_loc$RUN_ID, ": ", LOG_loc$COEFF_FLUX, ", ", LOG_loc$NUM_ANA, sep = ""),
                     subtitle = NET_COEFFS_title)+
-      ggplot2::theme(plot.subtitle = ggplot2::element_text(size=7))+
-      ggrepel::geom_text_repel(data = evD_final, ggplot2::aes(label = paste(VAR_TYPE, " (", dec_2(VAR), ")", sep = ""), color = VAR_TYPE), nudge_x = 0.05*max(evD_vert$Time),  hjust = 0)+
-      ggplot2::scale_x_log10()
+      ggplot2::theme(plot.subtitle = ggplot2::element_text(size=7),
+                     legend.position = "None")+
+      ggrepel::geom_text_repel(data = evD_final, ggplot2::aes(label = paste(VAR_TYPE, " (", dec_2(VAR), ")", sep = ""), color = VAR_TYPE), nudge_x = 0.05*max(evD_vert$Time),  hjust = 0)
+
+    if (evD_PLOT_time_as_log == T){
+      evD_plot <- evD_plot + ggplot2::scale_x_log10()
+    }
+
+    evS_plot <- ggplot2::ggplot(data = evS_vert, ggplot2::aes(x = Time, y = VAR, color = VAR_TYPE))+
+      ggplot2::geom_line(cex = 1)+
+      ggplot2::theme_bw()+
+      ggplot2::facet_wrap(VAR_TYPE~., scales = "free_y")+
+      # ggplot2::scale_y_continuous(limits=c(Ymin, Ymax), breaks=seq(Ymin, Ymax, by = Ybin), labels = dec_2)+
+      # ggplot2::coord_cartesian(ylim = c(Ymin_zoom, Ymax_zoom), xlim = c(Xmin, Xmax))+
+      ggplot2::labs(y = paste("mass of ", CONSTANTS$ELEMENT, sep = ""),
+                    x = paste("Time in", display_time_unit, sep = " "),
+                    title = paste("Evolution of box sizes (mass of ", CONSTANTS$ELEMENT, ")", sep = ""))+
+      ggplot2::theme(plot.subtitle = ggplot2::element_text(size=7),
+                     legend.position = "None")
+    # ggrepel::geom_text_repel(data = evS_final, ggplot2::aes(label = paste(VAR_TYPE, " (", ttboxR::dec_0(VAR), ")", sep = ""), color = VAR_TYPE), nudge_x = 0.05*max(evS_vert$Time),  hjust = 0)+
+
+
+    if (evD_PLOT_time_as_log == T){
+      evS_plot <- evS_plot + ggplot2::scale_x_log10()
+    }
 
     #### EXPORT PLOT
     pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
     dev.new()
-    pdf(pdf_path, width = 10, height = 7, pointsize = 1, useDingbats=FALSE)
-    suppressWarnings(print(evD_plot))
+    pdf(pdf_path, width = 10, height = 10, pointsize = 1, useDingbats=FALSE)
+    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
     graphics.off()
   }
 }

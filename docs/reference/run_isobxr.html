@@ -169,7 +169,8 @@ or <code><a href='ana_slvr.html'>ana_slvr</a></code> depending on the conditions
   HIDE_PRINTS <span class='op'>=</span> <span class='cn'>FALSE</span>,
   to_DIGEST_DIAGRAMS <span class='op'>=</span> <span class='cn'>TRUE</span>,
   to_DIGEST_evD_PLOT <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  to_DIGEST_CSV_XLS <span class='op'>=</span> <span class='cn'>FALSE</span>
+  to_DIGEST_CSV_XLS <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  evD_PLOT_time_as_log <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -330,6 +331,13 @@ Logical value.  <br />
 Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all <code><a href='ana_slvr.html'>ana_slvr</a></code> or <code><a href='num_slvr.html'>num_slvr</a></code> CSV output files in RUN DIGEST folder if TRUE. <br />
 Default is FALSE.</p></td>
     </tr>
+    <tr>
+      <th>evD_PLOT_time_as_log</th>
+      <td><p><em>OPTIONAL</em><br />
+Logical value.  <br />
+Print evD plot with log10 time scale as x-axis. <br />
+Default is TRUE.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -390,7 +398,10 @@ edits a Box model diagram of isotope fractionation coefficients (DIAG_COEFF pdf)
 between all boxes. <br />
 (file name structure: <strong><em>in_2_DIAG_COEFF + SERIES_ID + XXXX + .pdf</em></strong>)</p></li>
 <li><p>If to_DIGEST_evD_PLOT = TRUE, <br />
-edits a pdf plot of the time dependent evolution of delta values, with a logarithmic x axis time scale. <br />
+edits a pdf plot of the time dependent evolution of delta values
+together with the evolution of the box sizes (masses of element X). <br />
+The time x-axis is a logarithmic scale by default but can be set
+to linear scale with the evD_PLOT_time_as_log parameter, if set to FALSE.
 (file name structure: <strong><em>out_0_PLOT_evD + SERIES_ID + XXXX + .pdf</em></strong>)</p></li>
 </ol>
 

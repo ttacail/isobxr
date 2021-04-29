@@ -97,7 +97,7 @@
       <h1 data-toc-skip>4 - Run_isobxr: tutorial</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-04-21</h4>
+            <h4 class="date">2021-04-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_04_Run_isobxr_tutorial.Rmd"><code>vignettes/vgn_04_Run_isobxr_tutorial.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_04_Run_isobxr_tutorial.Rmd</code></div>
@@ -235,9 +235,9 @@
 <div id="evd-plot-of-isotope-compositions-with-time" class="section level3">
 <h3 class="hasAnchor">
 <a href="#evd-plot-of-isotope-compositions-with-time" class="anchor"></a>evD plot of isotope compositions with time</h3>
-<p>The <code>run_isobxr</code> outputs include the evolution of isotope compositions over the run duration (edited as pdf), shown in years for this run.</p>
+<p>The <code>run_isobxr</code> outputs include the evolution of isotope compositions over the run duration (edited as pdf) together with the evolution of the box sizes (masses of element X).</p>
 <p><img src="04_runisobxr_tuto_02_ex1_evD.png" width="100%"></p>
-<p>Note that the time axis is displayed with a log scale.</p>
+<p>Note that the time axis is displayed with a log scale by default but this can be changed to a linear time scale by setting the <code>run_isobxr</code> parameter <em>evD_PLOT_time_as_log</em> to FALSE.</p>
 <p>We thus observe here a <strong>relaxation</strong> of the system to a steady-state where box A tends to -0.31‰, B to -0.18‰ and C to 0.49‰.</p>
 </div>
 <div id="optional-data-outputs" class="section level3">
@@ -352,7 +352,9 @@
 <a href="#evd-plot-of-isotope-compositions-with-time-1" class="anchor"></a>evD plot of isotope compositions with time</h3>
 <p>The <code>run_isobxr</code> outputs include the evolution of isotope compositions over the run duration (edited as pdf), shown in years for this run.</p>
 <p><img src="04_runisobxr_tuto_03_ex2_evD.png" width="100%"></p>
-<p>Note that in this case, we observe here <strong>no relaxation</strong> to a steady-state.</p>
+<p>We observe that the box sizes are not constant over time: the box A gains 2000 mass units while the box C is totally emptied by the end of the run.</p>
+<p>In this case, we observe here <strong>no relaxation</strong> to a steady-state.</p>
+<p>Note that the time axis is displayed with a log scale by default but this can be changed to a linear time scale by setting the <code>run_isobxr</code> parameter <em>evD_PLOT_time_as_log</em> to FALSE.</p>
 </div>
 <div id="optional-data-outputs-1" class="section level3">
 <h3 class="hasAnchor">
@@ -450,7 +452,8 @@
 <p>The <code>run_isobxr</code> outputs include the evolution of isotope compositions over the run duration (edited as pdf), shown in years for this run.</p>
 <p><img src="04_runisobxr_tuto_04_ex3_evD.png" width="100%"></p>
 <p>We thus observe here a <strong>relaxation</strong> of the system to a steady-state (different from example 1) where box A tends to -0.12‰, B to 0‰ and C to +0.68‰.</p>
-<p>Note that as we didn't define the initial isotope compositions of the boxes including the SOURCE and SINK infinite boxes, the later therefore remain at 0‰ throughout the run.</p>
+<p>As we didn't define the initial isotope compositions of the boxes including the SOURCE and SINK infinite boxes, the later therefore remain at 0‰ throughout the run.</p>
+<p>Note that the time axis is displayed with a log scale by default but this can be changed to a linear time scale by setting the <code>run_isobxr</code> parameter <em>evD_PLOT_time_as_log</em> to FALSE.</p>
 <hr>
 </div>
 </div>
