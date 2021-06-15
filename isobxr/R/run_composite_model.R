@@ -1,5 +1,4 @@
 usethis::use_package("readxl", min_version = TRUE)
-usethis::use_package("beepr", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("ggplot2", min_version = TRUE)
 usethis::use_package("ggrepel", min_version = TRUE)
@@ -703,5 +702,5 @@ compose_isobxr <- function(workdir,
                            FORCING_DELTA = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_DELTA")),
                            FORCING_ALPHA =  as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_ALPHA"))),
                       compo_master_excel_path)
-  beepr::beep(sound = 10)
+  # beepr::beep(sound = 10)
 }

@@ -1,6 +1,5 @@
 usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("metR", min_version = TRUE)
-usethis::use_package("beepr", min_version = TRUE)
 usethis::use_package("data.table", min_version = TRUE)
 usethis::use_package("dplyr", min_version = TRUE)
 usethis::use_package("rlang", min_version = TRUE)
@@ -792,7 +791,7 @@ sweep_steady <- function(workdir,
     explo_master_excel_path)
 
   }
-  beepr::beep(sound = 10)
+  # beepr::beep(sound = 10)
 }
 
 
@@ -1643,5 +1642,5 @@ sweep_dyn <- function(workdir,
     ),
     explo_master_excel_path)
   }
-  beepr::beep(sound = 10)
+  # beepr::beep(sound = 10)
 }
