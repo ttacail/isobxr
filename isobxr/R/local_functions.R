@@ -252,7 +252,6 @@ quiet <- function(x) {
 #' @param workdir directory where Rdata local summary will be exported
 #' @return a Rdata file with loc wd, version, sessionInfo, installed packages
 #' @keywords internal
-#' @export
 get_portability_data <- function(workdir){
   loc_wd <- getwd()
   loc_version <- version
@@ -266,3 +265,5 @@ get_portability_data <- function(workdir){
   }
   save(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages, file = paste(workdir, "portability_data_", gsub(":","",gsub(" ", "_", date())), ".RData", sep = ""))
 }
+
+
