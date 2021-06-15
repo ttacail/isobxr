@@ -1,6 +1,6 @@
-usethis::use_package("grid", min_version = TRUE)
+usethis::use_package("grid")
 usethis::use_package("devtools", "Suggests")
-usethis::use_package("rlang", min_version = TRUE)
+usethis::use_package("rlang")
 
 # clear a subset
 #' Clear a subset

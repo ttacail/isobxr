@@ -1,8 +1,8 @@
-usethis::use_package("readxl", min_version = TRUE)
-usethis::use_package("data.table", min_version = TRUE)
-usethis::use_package("ggplot2", min_version = TRUE)
-usethis::use_package("ggrepel", min_version = TRUE)
-usethis::use_package("rlang", min_version = TRUE)
+usethis::use_package("readxl")
+usethis::use_package("data.table")
+usethis::use_package("ggplot2")
+usethis::use_package("ggrepel")
+usethis::use_package("rlang")
 
 #  #_________________________________________________________________________80char
 #' Compose a stable isotope box model scenario

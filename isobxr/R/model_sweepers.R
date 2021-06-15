@@ -1,8 +1,8 @@
-usethis::use_package("readxl", min_version = TRUE)
-usethis::use_package("metR", min_version = TRUE)
-usethis::use_package("data.table", min_version = TRUE)
-usethis::use_package("dplyr", min_version = TRUE)
-usethis::use_package("rlang", min_version = TRUE)
+usethis::use_package("readxl")
+usethis::use_package("metR")
+usethis::use_package("data.table")
+usethis::use_package("dplyr")
+usethis::use_package("rlang")
 
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters at the final state of a run
