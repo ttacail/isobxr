@@ -765,11 +765,11 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
                                  color = rainbow(length(levels(BOXES_master_loc$GROUP)), s = 0.25),
                                  legend = F,
                                  edge.color = "black",
-                                 edge.label.cex = 2.5,
+                                 edge.label.cex = .75,
                                  edge.label.margin = 0.02,
                                  asize = 8,
-                                 curve = 0.7, curveAll = F,
-                                 vsize = 16*exp(-nrow(BOXES_master_loc)/80)+1)
+                                 curve = 0.2, curveAll = F,
+                                 vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
     dev.off()
 
     pdf_path <- paste(folder_outdir, "DIGEST/", "in_2_DIAG_COEFF_", SERIES_ID_RUN_ID, ".pdf", sep = "")
