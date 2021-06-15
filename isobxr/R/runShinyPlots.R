@@ -22,9 +22,11 @@ usethis::use_package("qgraph", min_version = TRUE)
 runShinyPlots <- function() {
   appDir <- system.file("shiny-examples", "plot_isobxr", package = "isobxr")
   if (appDir == "") {
-    stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
+    stop("Could not find example directory. Try re-installing `isobxr`.", call. = FALSE)
   }
   suppressWarnings(
-    shiny::runApp(appDir, display.mode = "normal", launch.browser = TRUE)
+    shiny::runApp(appDir,
+                  display.mode = "normal",
+                  launch.browser = TRUE)
   )
 }

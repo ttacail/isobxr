@@ -13,7 +13,6 @@ LOC_workdir <- workdir
 #----#----#----#---- UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI - UI -
 #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#
 
-
 ui <- fluidPage(tags$style("
               body {
     -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
@@ -21,17 +20,26 @@ ui <- fluidPage(tags$style("
     zoom: 90%; /* Webkit browsers */
 }
               "),
+
+
+                # SET UI THEME
                 theme = shinythemes::shinytheme("darkly"),
 
+                # add close window option
                 shinyjs::useShinyjs(debug = FALSE),
                 shinyjs::extendShinyjs(text = "shinyjs.closeWindow = function() { window.close(); }", functions = c("closeWindow")),
+
+                # HEADER
                 fluidRow(
+                  # with directory button
                   column(width = 2,
                          shinyFiles::shinyDirButton("dir", "Select Series directory", "Upload"), # ALL
                          em(textOutput(outputId = "SeriesType")) # ALL
                   ),
+                  # APP title
                   column(width = 8,
                          titlePanel(h1("Shinobxr: isobxr plot editor", align = "center"), windowTitle = "shinobxr")),
+                  # Close button
                   column(width = 2,
                          align = "right",
                          actionButton("close", "Quit app")
@@ -40,13 +48,16 @@ ui <- fluidPage(tags$style("
 
                 hr(),
 
+                # TABS
                 tabsetPanel(id = "tabs",
+                            # PLOT TAB
                             tabPanel("Plots", value = 1,
                                      conditionalPanel(condition = 'output.identified_series == "YES"',
                                                       plotOutput("PLOT", height = 600),
                                                       actionButton("downloadPLOT", "Download pdf")
                                      )
                             ),
+                            # CPS summary TAB
                             tabPanel("Composite model summary", value = 2,
                                      fluidRow(
                                        h3("Summary table of composite scenario", align = 'center'),
@@ -78,8 +89,10 @@ ui <- fluidPage(tags$style("
                             )
                 ),
 
+
                 hr(),
 
+                # OPTIONS BELOW
                 fluidRow(
                   column(width = 3,
                          uiOutput("HIDE_BOX_CPS"), # CPS
@@ -112,17 +125,20 @@ ui <- fluidPage(tags$style("
                          uiOutput("TIME_MAP_DYN")
                   )
                 ),
+
                 hr(),
+
+                # INTRODUCTION
                 fluidRow(
                   br(),
                   h3("Welcome to the isobxr plot editor for composite and sweep runs"),
                   p("This app will allow you to interactively display and export the output plots of the",
                     strong("isobxr"),
                     "package."),
-                  p("Here, you need to select the composite or sweep output directory you want to plot. It's name should to start with of these prefixes: "),
-                  strong("[3_CPS]"), em(" for composite_isobxr runs"), br(),
-                  strong("[4_STD]"), em(" for sweep_steady runs"), br(),
-                  strong("[4_DYN]"), em(" for sweep_dyn runs"), br(),
+                  p("Here, you need to select the composite or sweep output directory you want to plot. It's name should to start with one of these prefixes: "),
+                  strong("[3_CPS]"), em("   for composite_isobxr runs"), br(),
+                  strong("[4_STD]"), em("   for sweep_steady runs"), br(),
+                  strong("[4_DYN]"), em("   for sweep_dyn runs"), br(),
                   br(),
                   br(),
 
@@ -160,8 +176,12 @@ ui <- fluidPage(tags$style("
                   em("NOTE: This app does not allow to plot single runs (starting with '2_RUN').", style = "color:grey"),
                   br(),
                   br()
-                ),
+                )
+                ,
+
                 hr(),
+
+                # ours
                 fluidRow(
                   p("This shiny app was developed for the",
                     a("isobxr", href = "https://github.com/ttacail/isobxr"),
@@ -394,7 +414,7 @@ server <- function(input, output) {
                   label =  "Select boxes to hide",
                   multiple = T,
                   choices = ALL_BOXES()[!ALL_BOXES() %in% DISCONNECTED_BOXES()]
-                  )
+      )
     } else {
       return(NULL)
     }
@@ -1812,7 +1832,7 @@ server <- function(input, output) {
     } else {
       RUN_n_loc <- input$DIAG_RUN_loc
 
-            dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
+      dir_INPUT_loc <- paste(SERIES_RUN_dir(), "/", as.character(LOG_SERIES()[LOG_SERIES()$RUN_n == RUN_n_loc,"SERIES_RUN_ID"]), "_IN.Rda", sep = "")
       load(dir_INPUT_loc)
       BOX_META <- BOX_META_IN
 
@@ -2185,4 +2205,5 @@ server <- function(input, output) {
 }
 
 #----#----#----#---- build the application #----#----#----#----#----#----#----#----
-shinyApp(ui = ui, server = server, options = list("quiet", shiny::shinyOptions(shiny.trace = FALSE, shiny.fullstacktrace = FALSE, shiny.reactlog = FALSE)))
+# shinyApp(ui = ui, server = server , options = list("quiet" , shiny::shinyOptions(shiny.trace = FALSE, shiny.fullstacktrace = FALSE, shiny.reactlog = FALSE)))
+shinyApp(ui = ui, server = server)
