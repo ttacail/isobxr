@@ -30,3 +30,30 @@ runShinyPlots <- function() {
                   launch.browser = TRUE)
   )
 }
+
+
+#' silently use packages called in shiny app / silence the warning "Namespaces in Imports field not imported from"
+#' @description collect local platform/session/versions data for portability (for DEV only)
+#' @param param param
+#' @return param
+#' @keywords internal
+silence_shiny_deps <- function(param){
+
+  # DT package
+  m = matrix(nrow = 0, ncol = 5, dimnames = list(NULL, letters[1:5]))
+  DT::datatable(m)  # zero rows
+  DT::datatable(as.data.frame(m))
+
+  # metR package
+  metR::as.path(c(1,1),c(1,1),n = 10, path = T)
+
+  # shinyFiles package
+  shinyFiles::getVolumes()
+
+  # shinyjs package
+  shinyjs::alert("alert")
+
+  # shinythemes
+  shinythemes::shinytheme(theme = "united")
+
+}
