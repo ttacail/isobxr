@@ -1804,6 +1804,20 @@ server <- function(input, output) {
 
       FLUXES_adj <- clear_subset(FLUXES_adj[ , !(names(FLUXES_adj) %in% "BOXES_ID")])
 
+      # NET_FLUXES <- qgraph::qgraph(FLUXES_adj,
+      #                              title = NET_FLUXES_title,
+      #                              layout = LAYOUT,
+      #                              edge.labels = T,
+      #                              edge.label.color = "black",
+      #                              shape = "square",
+      #                              fade = F,
+      #                              groups = DIAG_GROUPS,
+      #                              color = rainbow(length(levels(DIAG_GROUPS)), s = 0.25),
+      #                              legend = F,
+      #                              edge.color = "black",
+      #                              curve = 0.7, curveAll = F,
+      #                              # edge.label.cex = 2.5,
+      #                              edge.label.margin = 0.02)#,
       NET_FLUXES <- qgraph::qgraph(FLUXES_adj,
                                    title = NET_FLUXES_title,
                                    layout = LAYOUT,
@@ -1815,11 +1829,16 @@ server <- function(input, output) {
                                    color = rainbow(length(levels(DIAG_GROUPS)), s = 0.25),
                                    legend = F,
                                    edge.color = "black",
-                                   curve = 0.7, curveAll = F,
                                    # edge.label.cex = 2.5,
-                                   edge.label.margin = 0.02)#,
-      # asize = 8,
-      # vsize = 16*exp(-nrow(BOX_META)/80)+1)
+                                   edge.label.cex = 1.5*exp(-nrow(as.data.frame(FLUXES_adj))/19),
+                                   edge.label.margin = 0.02,
+                                   # asize = 8,
+                                   asize = 4*exp(-nrow(as.data.frame(FLUXES_adj))/20)+2,
+                                   # curve = 0.7,
+                                   curve = 0.88*exp(-nrow(as.data.frame(FLUXES_adj))/17.54),
+                                   # curveScale = T,
+                                   curveAll = F,
+                                   vsize = 8*exp(-nrow(as.data.frame(FLUXES_adj))/80)+1)
 
       NET_FLUXES
 
@@ -1868,10 +1887,15 @@ server <- function(input, output) {
                                    color = rainbow(length(levels(DIAG_GROUPS)), s = 0.25),
                                    legend = F,
                                    edge.color = "brown4",
-                                   curve = 0.7, curveAll = F,
                                    # edge.label.cex = 2.5,
-                                   edge.label.margin = 0.02)#,
-
+                                   edge.label.cex = 1.5*exp(-nrow(as.data.frame(COEFFS_adj))/19),
+                                   edge.label.margin = 0.02,
+                                   # asize = 8,
+                                   asize = 4*exp(-nrow(as.data.frame(COEFFS_adj))/20)+2,
+                                   # curve = 0.7,
+                                   curve = 0.88*exp(-nrow(as.data.frame(COEFFS_adj))/17.54),
+                                   curveAll = F,
+                                   vsize = 8*exp(-nrow(as.data.frame(COEFFS_adj))/80)+1)
       COEFFS_adj
 
     }

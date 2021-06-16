@@ -765,10 +765,15 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
                                  color = rainbow(length(levels(BOXES_master_loc$GROUP)), s = 0.25),
                                  legend = F,
                                  edge.color = "black",
-                                 edge.label.cex = .75,
+                                 # edge.label.cex = 2.5,
+                                 edge.label.cex = 2.89*exp(-nrow(BOXES_master_loc)/19),
                                  edge.label.margin = 0.02,
-                                 asize = 8,
-                                 curve = 0.2, curveAll = F,
+                                 # asize = 8,
+                                 asize = 9*exp(-nrow(BOXES_master_loc)/20)+2,
+                                 # curve = 0.7,
+                                 curve = 0.88*exp(-nrow(BOXES_master_loc)/17.54),
+                                 # curveScale = T,
+                                 curveAll = F,
                                  vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
     dev.off()
 
@@ -786,11 +791,16 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
                                  color = rainbow(length(levels(BOXES_master_loc$GROUP)), s = 0.25),
                                  legend = F,
                                  edge.color = "brown4",
-                                 edge.label.cex = 2.5,
+                                 # edge.label.cex = 2.5,
+                                 edge.label.cex = 2.89*exp(-nrow(BOXES_master_loc)/19),
                                  edge.label.margin = 0.02,
-                                 asize = 8,
-                                 curve = 0.7, curveAll = F,
-                                 vsize = 16*exp(-nrow(BOXES_master_loc)/80)+1)
+                                 # asize = 8,
+                                 asize = 9*exp(-nrow(BOXES_master_loc)/20)+2,
+                                 # curve = 0.7,
+                                 curve = 0.88*exp(-nrow(BOXES_master_loc)/17.54),
+                                 curveAll = F,
+                                 vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
+
     dev.off()
   }
 
