@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/ttacail/isobxr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -97,7 +97,7 @@
       <h1 data-toc-skip>5 - compose_isobxr</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-04-29</h4>
+            <h4 class="date">2021-06-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_05_compose_isobxr.Rmd"><code>vignettes/vgn_05_compose_isobxr.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_05_compose_isobxr.Rmd</code></div>
@@ -106,175 +106,134 @@
 
     
     
-<p><span style="color: red;"><strong>This vignette will soon be replaced by a general presentation and a tutorial vignette.</strong></span></p>
 <hr>
-<p>This vignette is designed to be used as a demonstration for the compose_isobxr function of the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package.</p>
-<!-- Please refer to the [general vignette](https://ttacail.github.io/isobxr/articles/isobxr_vignette.html) for a more exhaustive explanation of the package content and use. -->
+<p>In this vignette, the user will be introduced to the <code>compose_isobxr</code> function of <a href="https://ttacail.github.io/isobxr/">isobxr</a>.</p>
+<p>Here, we shortly present the principles and general usage of the <code>compose_isobxr</code> function.</p>
+<p>The user is then invited to follow and run a step-by-step tutorial presenting several typical runs <!-- [(6 - compose_isobxr: tutorial)](https://ttacail.github.io/isobxr/articles/vgn_06_compose_isobxr_tutorial.html). --></p>
 <hr>
-<div id="prepare-the-demo" class="section level1">
+<div id="how-does-compose_isobxr-work" class="section level1">
 <h1 class="hasAnchor">
-<a href="#prepare-the-demo" class="anchor"></a>Prepare the demo</h1>
-<ol style="list-style-type: decimal">
-<li><p>If not done yet, install the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package (<a href="https://ttacail.github.io/isobxr/articles/vgn_01_Installation.html">Install isobxr</a>).</p></li>
-<li><p>Load isobxr in R:</p></li>
-</ol>
-<div class="sourceCode"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span></pre></div>
-<ol start="3" style="list-style-type: decimal">
-<li>
-<a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">Download the tutorial files</a>.</li>
-</ol>
+<a href="#how-does-compose_isobxr-work" class="anchor"></a>How does <code>compose_isobxr</code> work?</h1>
+<p>The <code>compose_isobxr</code> function is used to build complex scenarios of the evolution of a system going through a series of runs.</p>
+<p>The <code>compose_isobxr</code> function calls a scenario defined in a compose master file (.xlsx file) and also requires the definition of the system from the 0_ISOXBR_MASTER.xlsx file.</p>
+<p>The <code>compose_isobxr</code> works by successively calling the <code>run_isobxr</code>function and performing runs each inheriting from the final state of the system as its own initial state.</p>
+<div id="general-principle" class="section level2">
+<h2 class="hasAnchor">
+<a href="#general-principle" class="anchor"></a>General principle</h2>
+<p>The general principle of the <code>compose_isobxr</code> function is summarised in the cheatsheet below.</p>
+<p><img src="05_cps_01_principle.png" width="100%"></p>
+</div>
+<div id="general-workflow" class="section level2">
+<h2 class="hasAnchor">
+<a href="#general-workflow" class="anchor"></a>General workflow</h2>
+<p>The general workflow of the <code>compose_isobxr</code> function is summarised in the cheatsheet below.</p>
+<p><img src="05_cps_02_workflow.png" width="100%"></p>
+</div>
+<div id="how-is-the-scenario-defined" class="section level2">
+<h2 class="hasAnchor">
+<a href="#how-is-the-scenario-defined" class="anchor"></a>How is the scenario defined ?</h2>
+<p>The scenario is defined in the <strong>compose master file</strong> (xlsx file) which stores the following required and optional information.</p>
+<p><img src="05_cps_03_scenario_definition.png" width="100%"></p>
+</div>
+</div>
+<div id="filling-in-compose-master-file-xlsx" class="section level1">
+<h1 class="hasAnchor">
+<a href="#filling-in-compose-master-file-xlsx" class="anchor"></a>Filling in compose master file (xlsx)</h1>
+<p>The <strong>compose master file</strong> is the excel document containing all data defining the scenario.</p>
+<p>It provides the <code>compose_isobxr</code> function with the <strong>successive runs</strong> to constitute the whole <strong>scenario</strong>.</p>
 <dl>
-<dt>Note</dt>
-<dd>Templates for all input and master excel files described in this vignette are available for <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">download here</a>.
+<dt><strong>Note</strong></dt>
+<dd>The <code>compose_isobxr</code> function also requires the <strong>isobxr master file</strong> where the system states are defined. All the <a href="https://ttacail.github.io/isobxr/">isobxr</a> functions are meant to be run in relation with an <strong>isobxr master file</strong>. All instruction for the filling in of the <strong>isobxr master file</strong> are given in the <a href="https://ttacail.github.io/isobxr/articles/vgn_03_Run_isobxr_presentation.html">3 - Run_isobxr: presentation</a> vignette.
 </dd>
 </dl>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Unzip the ABCD demo file and place it in the working directory of your choice. It is strongly advised to avoid using a working directory linked to an online backup server (such as OneDrive) since it could cause some issues with adressing of output files. If done so, users are then advised to turn the backup server software offline during the use of isobxr functions.</p></li>
-<li><p>Take note of the path to this folder, for instance:</p></li>
-</ol>
-<div class="sourceCode"><pre class="downlit">
-<span class="va">workingdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD/"</span></pre></div>
-<p>or set it as a working directory, for instance:</p>
-<div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">"/Users/username/Documents/isobxr/demos/1_ABCD"</span><span class="op">)</span></pre></div>
-<p>Everything is now ready to run box models with <strong>isobxr</strong>.</p>
-<hr>
-</div>
-<div id="systems-and-isobxr-master-file" class="section level1">
-<h1 class="hasAnchor">
-<a href="#systems-and-isobxr-master-file" class="anchor"></a>Systems and <em>isobxr master file</em>
-</h1>
-<p>If you just followed the <strong>Getting started 1: single runs</strong> demo, this part can be skipped as this demo uses the same <em>isobxr master file</em>.</p>
-<p>We consider the demonstration <em>isobxr master file</em> (0_ISOBXR_MASTER.xlsx) stored in the working directory. In this demonstration example, the <em>isobxr master file</em> describes an imaginary model, designed for the calcium <span class="math inline">\(^{44}Ca/^{42}Ca\)</span> isotope ratios.</p>
-<p><img src="10_ABCD_CONSTANTS.png" width="75%"></p>
-<p>The <strong>BOXES</strong> sheet describes 4 finite boxes (A, B, C, D) and 2 infinite boxes (SOURCE and SINK).</p>
-<p>The layout of the boxes in the diagram rendering aims at placing the finite boxes on the four corners of 10x10 units square, and the two infinite boxes on the higher end of the layout (y = 15), with SOURCE on the far left and SINK on the far right.</p>
-<p><img src="40_ABCD_BOXES.png" width="50%"></p>
-<p>We assume that fluxes are expressed in mg of Ca per day, sizes in mg of Ca and run time units will be days.</p>
-<p>The <strong>FLUXES</strong> sheet describes 5 flux lists</p>
-<ol style="list-style-type: decimal">
-<li>
-<em>Fx1_ABC_bal</em> describes a balanced closed system composed of 3 finite boxes A, B and C.<br>
-</li>
-<li>
-<em>Fx2_ABC_unbal</em> describes an unbalanced closed system composed of 3 finite boxes A, B and C.<br>
-</li>
-<li>
-<em>Fx3_ABC_unbal</em> describes an unbalanced closed system composed of 3 finite boxes A, B and C.<br>
-</li>
-<li>
-<em>Fx4_ABCD_bal</em> describes a balanced closed system composed of 4 finite boxes A, B, C and D.<br>
-</li>
-<li>
-<em>Fx5_ABCD_unbal</em> describes an unbalanced closed system composed of 4 finite boxes A, B, C and D.<br>
-</li>
-<li>
-<em>Fx6_ABC_open_bal</em> describes a balanced open system composed of 4 finite boxes A, B, C and D and two infinite boxes SOURCE and SINK.</li>
-<li>
-<em>Fx7_ABC_open_unbal</em> describes an unbalanced open system composed of 4 finite boxes A, B, C and D and two infinite boxes SOURCE and SINK.</li>
-</ol>
-<p>Sizes of all finite boxes are here set at 2000 mg, infinite boxes are set a 1e15 mg.</p>
-<p><img src="41_ABCD_FLUXES.png" width="100%"></p>
-<p>The <strong>COEFFS</strong> sheet describes 5 lists of fractionation coefficients:</p>
+<div id="name-and-location" class="section level2">
+<h2 class="hasAnchor">
+<a href="#name-and-location" class="anchor"></a>Name and location</h2>
 <ul>
-<li>
-<em>a0</em> describes no isotope fractionation (all <span class="math inline">\(\alpha_{i \to j}\)</span> being equal to one)<br>
-</li>
-<li>
-<em>a1</em> describes a system with 1 fractionation coefficient being different from 1:<br><span class="math inline">\(\alpha_{A \to B} = 0.999\)</span><br>
-</li>
-<li>
-<em>a2</em> describes a system with 2 fractionation coefficients being different from 1:<br><span class="math inline">\(\alpha_{A \to B} = 0.999\)</span>, <span class="math inline">\(\alpha_{B \to A} = 1.001\)</span><br>
-</li>
-<li>
-<em>a3</em> describes a system with 3 fractionation coefficients being different from 1:<br><span class="math inline">\(\alpha_{A \to B} = 0.999\)</span>, <span class="math inline">\(\alpha_{B \to A} = 1.001\)</span>, <span class="math inline">\(\alpha_{C \to A} = 0.9997\)</span><br>
-</li>
-<li>
-<em>a4</em> describes a system with 1 fractionation coefficient being different from 1:<br><span class="math inline">\(\alpha_{C \to D} = 0.99\)</span>
-</li>
+<li>The <strong>compose master file</strong> is an xlsx file</li>
+<li>The <strong>compose master file</strong> name needs not to be formated as the user calls the compose master file name in the function parameters.</li>
+<li>The <strong>compose master file</strong> has to be stored in the working directory (<em>workdir</em>), where the <strong>isobxr master file</strong> is also stored.</li>
 </ul>
-<p><img src="13_ABCD_COEFFS.png" width="100%"></p>
-<hr>
-<hr>
 </div>
-<div id="compose-isobxr-scenarios-with-compose_isobxr" class="section level1">
-<h1 class="hasAnchor">
-<a href="#compose-isobxr-scenarios-with-compose_isobxr" class="anchor"></a>Compose isobxr scenarios with <code>compose_isobxr</code>
-</h1>
-<div id="example-1-perturbating-the-fluxes" class="section level2">
+<div id="structure-and-format" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-1-perturbating-the-fluxes" class="anchor"></a>example #1: perturbating the fluxes</h2>
-<p>We compose here the first scenario as described on the screenshot of the <em>composite master file</em> used for this run (0_COMPO_MASTER_balance_change.xlsx) and found in the directory.</p>
-<p><img src="30_RUN_LIST_ABC.png" width="75%"></p>
-<p>Here, we start with a previous example from <strong>Getting started 1: Single runs</strong> demo: a set of 3 finite boxes (A, B, C) consituting an open system interacting with the environment (SOURCE and SINK boxes).</p>
-<p>As defined in the <strong>RUN_LIST</strong> sheet of the <em>composite master file</em>, 1. We first let the system relax to its' steady-state in a balanced configuration using the <em>Fx6_ABC_open_bal</em> flux list for a total of 25000 days (70 years).<br>
-1. We then let the system run with the exact same conditions for 100 days.<br>
-1. We then provoke a disequilibrium by using an unbalanced <em>Fx7_ABC_open_unbal</em> flux list (A loses 10 mg of Ca per day, B accumulates 10 mg of Ca per day).<br>
-1. We then let the system relax again with the previous balanced flux configuration (<em>Fx6_ABC_open_bal</em>) but with automatically inherited different initial conditions of delta and size values.</p>
-<p>All other sheets defining forcing parameters (<strong>FORCING_RAYLEIGH</strong>, <strong>FORCING_SIZE</strong>, <strong>FORCING_DELTA</strong>, <strong>FORCING_ALPHA</strong>) are left empty (with column headers as defined by template but empty lines).</p>
-<p>We call the function as follows:</p>
-<div class="sourceCode"><pre class="downlit">
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/1_ABC_tutorial"</span> <span class="co"># isobxr and compo master file work. dir.</span>
-<span class="va">SERIES_ID</span> <span class="op">&lt;-</span> <span class="st">"ABC_change_balance"</span> <span class="co"># series ID of the set of compo runs</span>
-<span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span> <span class="co"># time units for run (days) and for plots (years)</span>
-<span class="va">COMPO_MASTER</span> <span class="op">&lt;-</span> <span class="st">"0_CPS_MASTER_changing_balance.xlsx"</span> <span class="co"># compo master file name</span>
-<span class="va">plot_HIDE_BOXES_delta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evD plot</span>
-<span class="va">plot_HIDE_BOXES_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SOURCE"</span>, <span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evS plot</span>
-
-<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span><span class="va">workdir</span>,
-               <span class="va">SERIES_ID</span>,
-               <span class="va">time_units</span>,
-               <span class="va">COMPO_MASTER</span>,
-               <span class="va">plot_HIDE_BOXES_delta</span>,
-               <span class="va">plot_HIDE_BOXES_size</span>,
-               EACH_RUN_DIGEST <span class="op">=</span> <span class="cn">TRUE</span>,
-               to_CPS_DIGEST_CSVs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
-<p>We obtain the following overviews of the evolution of delta values and box sizes over the run duration. By default the plotting functionnality of the <code>compose_isobxr</code> function hides initial run of the composite scenario because it is usually used as a run to let the system artificially relax to it's steady state.<br>
-Nevertheless, all the data files edited by the function do include the initial run of the composite scenario.</p>
-<p>Below is the plot evDS output of both delta and box sizes over time. <img src="31_CPS_ABC_change_balance_001_p_evDS.png" width="100%"></p>
-<p>Below is the facetted plot evD output of delta values in each box over time. <img src="32_CPS_ABC_change_balance_001_pf_evD.png" width="100%"></p>
-<p>Below is the facetted plot evS output of box sizes in each box over time. <img src="33_CPS_ABC_change_balance_001_pf_evS.png" width="100%"></p>
-</div>
-<div id="example-2-changing-the-source-isotope-composition" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example-2-changing-the-source-isotope-composition" class="anchor"></a>example #2: changing the source isotope composition</h2>
-<p>We consider here the same model example of 3 balanced finite boxes in an open system.</p>
-<p>In this case, we leave the same balanced flux configuration for the whole duration of the scenario. We also leave the run durations and resolutions unchanged.</p>
-<p><img src="35_FORCING_DELTA_ABC_RUN_LIST.png" width="75%"></p>
-<p>We however force the delta values of the source box as shown below:</p>
-<p><img src="34_FORCING_DELTA_ABC.png" width="50%"></p>
+<a href="#structure-and-format" class="anchor"></a>Structure and format</h2>
+<p>The <strong>compose master file</strong> contains the 5 following sheet strictly named as follows:</p>
 <ol style="list-style-type: decimal">
-<li>At runs 1 and 2, we leave the source default delta value (0‰).</li>
-<li>At run 3, we change the source default delta value from 0 to + 0.5 ‰.</li>
-<li>At run 4, we change the source delta value bcak to 0‰.</li>
+<li>
+<strong>RUN_LIST</strong>: Sheet defining scenario structure (filling required)</li>
+<li>
+<strong>FORCING_SIZE</strong>: Sheet defining optional forcings on a subset of box initial sizes for subset of runs (filling optional)</li>
+<li>
+<strong>FORCING_DELTA</strong>: Sheet defining optional forcings on a subset of box initial delta values for subset of runs (filling optional)</li>
+<li>
+<strong>FORCING_ALPHA</strong>: Sheet defining optional forcings on a subset of fractionation coefficients for subset of runs (filling optional)</li>
+<li>
+<strong>FORCING_RAYLEIGH</strong>: Sheet defining optional forcings on a subset of fractionation coefficients following a Rayleigh distillation model for subset of runs (filling optional)</li>
 </ol>
-<p>We call the function as follows:</p>
+<p>The general rules for the filling in of the <strong>compose master file</strong> are shown in cheatsheet below:</p>
+<p><img src="05_cps_04_filling_master.png" width="100%"></p>
+</div>
+</div>
+<div id="main-arguments-and-outputs" class="section level1">
+<h1 class="hasAnchor">
+<a href="#main-arguments-and-outputs" class="anchor"></a>Main arguments and outputs</h1>
+<p>The <code>compose_isobxr</code> function takes required and optional arguments that are described in this section.</p>
+<p>All arguments definitions of the <code>compose_isobxr</code> function are accessible in its documentation called as follows</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/1_ABC_tutorial"</span> <span class="co"># isobxr and compo master file work. dir.</span>
-<span class="va">SERIES_ID</span> <span class="op">&lt;-</span> <span class="st">"ABC_change_source"</span> <span class="co"># series ID of the set of compo runs</span>
-<span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"d"</span><span class="op">)</span> <span class="co"># time units for run (days) and for plots (years)</span>
-<span class="va">COMPO_MASTER</span> <span class="op">&lt;-</span> <span class="st">"0_CPS_MASTER_changing_source.xlsx"</span> <span class="co"># compo master file name</span>
-<span class="va">plot_HIDE_BOXES_delta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evD plot</span>
-<span class="va">plot_HIDE_BOXES_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SOURCE"</span>, <span class="st">"SINK"</span><span class="op">)</span> <span class="co"># boxes to hide from evS plot</span>
-
-<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span><span class="va">workdir</span>,
-               <span class="va">SERIES_ID</span>,
-               <span class="va">time_units</span>,
-               <span class="va">COMPO_MASTER</span>,
-               <span class="va">plot_HIDE_BOXES_delta</span>,
-               <span class="va">plot_HIDE_BOXES_size</span>,
+<span class="op">?</span><span class="va">compose_isobxr</span></pre></div>
+<div id="compose_isobxr-required-arguments" class="section level2">
+<h2 class="hasAnchor">
+<a href="#compose_isobxr-required-arguments" class="anchor"></a><code>compose_isobxr</code> required arguments</h2>
+<p>The arguments required to run the <code>compose_isobxr</code> function are examplified and described here:</p>
+<div class="sourceCode"><pre class="downlit">
+<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
+               SERIES_ID <span class="op">=</span> <span class="st">"ABC_change_balance"</span>, <span class="co"># series ID of composite family</span>
+               time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># plot results in years as time units</span>
+               COMPO_MASTER <span class="op">=</span> <span class="st">"0_CPS_MASTER_changing_balance.xlsx"</span><span class="op">)</span> <span class="co"># composite master</span></pre></div>
+<dl>
+<dt><strong>workdir</strong></dt>
+<dd>Working directory of 0_ISOBXR_MASTER.xlsx master file and <strong>compose master file</strong>.
+</dd>
+<dt><strong>SERIES_ID</strong></dt>
+<dd>Name of the model series the run belongs to. It determines the folder in which the output files will be stored.
+</dd>
+<dt><strong>time_units</strong></dt>
+<dd><ul>
+<li>Vector defining the initial time unit (identical to unit used in fluxes), followed by the time unit used for the graphical output</li>
+<li>to be selected amongst the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
+</li>
+<li>e.g., c("d", "yr") to convert days into years</li>
+</ul></dd>
+<dt><strong>COMPO_MASTER</strong></dt>
+<dd>Full name of the composite master file (finishing with ".xlsx")
+</dd>
+</dl>
+</div>
+<div id="compose_isobxr-default-and-optional-outputs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#compose_isobxr-default-and-optional-outputs" class="anchor"></a><code>compose_isobxr</code> default and optional outputs</h2>
+<p>The <code>compose_isobxr</code> outputs are stored in the working directory.</p>
+<p>The <code>compose_isobxr</code> outputs are structured as follows:</p>
+<p><img src="05_cps_05_output_dir.png" width="100%"></p>
+<p>In addition to the default outputs, the <code>compose_isobxr</code> function allows to:</p>
+<ul>
+<li>get each run's digest for all scenario steps (using the <strong>EACH_RUN_DIGEST = TRUE</strong> argument)</li>
+<li>get whole composite run data as csv files (using the <strong>to_CPS_DIGEST_CSVs = TRUE</strong> argument)</li>
+<li>hide boxes in the plots of evolution of delta values (<strong>plot_HIDE_BOXES_delta</strong> = c("BOX_TO_HID_1", "BOX_TO_HID_2"))</li>
+<li>hide boxes in the plots of evolution of box sizes (<strong>plot_HIDE_BOXES_size</strong> = c("BOX_TO_HID_1", "BOX_TO_HID_2"))</li>
+</ul>
+<p>These arguments are called as follows:</p>
+<div class="sourceCode"><pre class="downlit">
+<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
+               SERIES_ID <span class="op">=</span> <span class="st">"ABC_change_balance"</span>, <span class="co"># series ID of composite family</span>
+               time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># plot results in years as time units</span>
+               COMPO_MASTER <span class="op">=</span> <span class="st">"0_CPS_MASTER_changing_balance.xlsx"</span>, <span class="co"># composite master</span>
+               plot_HIDE_BOXES_delta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SINK"</span><span class="op">)</span>, <span class="co"># Hide SINK in evD plots</span>
+               plot_HIDE_BOXES_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SINK"</span>, <span class="st">"SOURCE"</span><span class="op">)</span>, <span class="co"># Hide SINK and SOURCE in evS plots</span>
                EACH_RUN_DIGEST <span class="op">=</span> <span class="cn">TRUE</span>,
                to_CPS_DIGEST_CSVs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
-<p>And for instance, we obtain the following evDS pdf output where we see that the effect of the change in the source isotope composition slightly affects the delta values of A, B and C boxes.</p>
-<p><img src="36_0_CPS_ABC_change_source_001_p_evDS.png" width="100%"></p>
-<hr>
 </div>
-</div>
-<div id="play-time" class="section level1">
-<h1 class="hasAnchor">
-<a href="#play-time" class="anchor"></a>Play time</h1>
-<p>The user is invited to explore the use of the <strong>compose_isobxr</strong> function by running box models with various settings and input values, from the function arguments but also by adding new entries to the <strong>compose master file</strong>, such as new steps in the composite scenario.</p>
 </div>
   </div>
 
