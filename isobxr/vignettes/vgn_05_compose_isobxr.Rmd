@@ -1,5 +1,5 @@
 ---
-title: "5 - compose_isobxr"
+title: "5 - compose_isobxr: presentation"
 author: "Théo Tacail"
 date: "`r Sys.Date()`" 
 output: 
