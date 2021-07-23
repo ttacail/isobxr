@@ -24,6 +24,10 @@ knitr::opts_chunk$set(
 
 ----
 
+[Full documentation and tutorials can be found on the isobxr website.](https://ttacail.github.io/isobxr_web/)
+
+----
+
 The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools 
 designed to perform and explore stable isotope box modelling 
 of open or closed systems.
@@ -62,9 +66,7 @@ knitr::include_graphics('./02_basics_02_runisobxr_wflow.png')
 
 ----
 
-# Box modelling equations and isobxr solving  
-
-## Mathematical formalism
+# Box modelling equations  
 
 In this section we present the mathematic formalism used in isobxr stable isotope
 box modelling. 
@@ -75,7 +77,7 @@ from the chapter 7 (*Dynamic systems*) of
 :    Albarède, F., 1995. Introduction to Geochemical Modelling. Cambridge University Press, Cambridge.    
      https://doi.org/10.1017/CBO9780511622960
 
-### Definitions
+## Definitions
 
 We consider a system consisting of $n$ boxes $j$, 
 exchanging an element **X** that has at least 
@@ -103,7 +105,7 @@ $$D_{i \mapsto j}^{M/N} = \dfrac{{J_{i \mapsto j}^M}/{J_{i \mapsto j}^N}}{m^M_i/
 
 The principe of modelling the system consists now in predicting the evolution of **box sizes** ($m^X_i$) during time and the evolution of the **isotope ratios** ($R_i$), knowing the fluxes, initial box sizes and fractionation coefficients. 
 
-### Mass conservation of element X
+## Mass conservation of element X
 
 Considering **X** has **no radioactive nor radiogenic component**, mass conservation for element **X** reads :
 
@@ -116,7 +118,7 @@ $$m^X_i = \left(- \sum \limits_{j\neq i} J_{i \mapsto j}^X + \sum \limits_{j\neq
 
 where $m^X_{i, t_0}$ is the mass of element **X** in box $i$ at t = 0. 
 
-### System of differential equations for stable isotope ratios
+## Differential equations
 
 Considering $N$ and $M$ are stable and non radiogenic, mass conservation reads :
 
@@ -206,7 +208,7 @@ All $R_i(t)$ stable isotope ratios can be also expressed as $\delta_i(t)$ values
 
 $$\delta^{M/N}X_i(t) = \left(\dfrac{R_i(t)}{R_{std}} - 1\right) \times 1000 $$
 
-## isobxr solvers
+# isobxr solvers
 
 The [isobxr](https://ttacail.github.io/isobxr/) package uses two core solver functions to solve the system of differential equations: `num_slvr` and `ana_slvr`.
 
@@ -226,7 +228,7 @@ by typing the following code into your R console:
 ?num_slvr
 ```
 
-### Structure and format required for the **INPUT** file
+## **INPUT** file
 
 The **INPUT** file contains the set of commands required to run
 either `ana_slvr` or `num_slvr`.
@@ -237,7 +239,7 @@ Its direct modification by user is not required because **INPUT** files
 are edited by the broader and user-friendly `run_isobxr` function, 
 described in another section of this vignette.
 
-#### **Input file name and format**
+### File name and format 
 
 * The **INPUT** file is a **Rda** file
 (R data format allowing to store multiple R objects)
@@ -245,7 +247,7 @@ described in another section of this vignette.
 * The **INPUT** file name structure is [ **RUN name + IN.Rda** ].  
 * *Example*: [ **this_is_a_run_name_IN.Rda** ]
 
-#### **Input file content**
+### File content
 
 The **INPUT** file contains at least the 4 following objects 
 strictly named as follows: 
@@ -261,7 +263,7 @@ between all boxes (structured as a square matrix)
 The **INPUT** file is an output from the `run_isobxr` function and 
 does not require the user intervention.
 
-### Numerical solver (`num_slvr`)
+## Numerical solver (**num_slvr**)
 
 The numerical solver `num_slvr` iteratively integrates the derivatives 
 of the box sizes ($\frac{dm^X_i}{dt}$) and isotope ratios ($\frac{dR_i}{dt}$) 
@@ -270,7 +272,9 @@ over the whole run duration.
 The `num_slvr` uses the `ode` ordinary differential equation integrating function 
 from the **deSolve** package. 
 
-#### Applicability
+ 
+
+### Applicability
 
 This function solves the evolution of both the isotope ratios and the sizes 
 of each box defined by user. 
@@ -301,7 +305,9 @@ where at least one box loses or accumulates the element **X** over time (case #2
 
 It then allows to study the dynamic responses of a system to a perturbation of the flux balance for at least one box.
 
-#### Using num_slvr
+ 
+
+### Using **num_slvr**
 *Remark*: The direct use of `num_slvr` function by user is not intended 
 because this function is integrated in the global `run_isobxr` function 
 described thereafter. 
@@ -340,7 +346,7 @@ as **csv** files stored in a DIGEST folder ([ **RUN name + DIGEST** ]) with the 
 * evS data:  [ **out_2_N_evS + RUN name + .csv** ]
 * evD data:  [ **out_3_N_evD + RUN name + .csv** ]
 
-### Analytical solver (`ana_slvr`)
+## Analytical solver (**ana_slvr**)
 
 The analytical solver `ana_slvr` calculates the analytical solutions
 of the system of ordinary differential equations (ODES) of stable isotope ratios 
@@ -351,7 +357,9 @@ conditions associated to the ODES, and allows to determine
 the functions that describe the evolution of stable isotope 
 ratios as a function of time. 
 
-#### Applicability
+ 
+
+### Applicability
 
 In this case, the box sizes are considered as constant 
 because the solving of the system of differential equations 
@@ -371,7 +379,9 @@ However, the `ana_slvr` function can be used in balanced open systems,
 with boxes defined as infinite and unbalanced sources or sinks, 
 as described in the model design section thereafter. 
 
-#### Using ana_slvr
+
+
+### Using **ana_slvr**
 *Remark*: The direct use of `ana_slvr` function by user is not intended 
 because this function is integrated in the global `run_isobxr` function 
 described thereafter. 

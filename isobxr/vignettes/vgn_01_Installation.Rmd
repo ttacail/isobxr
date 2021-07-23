@@ -25,6 +25,10 @@ knitr::opts_chunk$set(
 
 ----
 
+[Full documentation and tutorials can be found on the isobxr website.](https://ttacail.github.io/isobxr_web/)
+
+----
+
 The [isobxr](https://ttacail.github.io/isobxr/) package is a set of R tools 
 designed to perform and explore stable isotope box modelling 
 of open or closed systems.

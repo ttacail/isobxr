@@ -1,5 +1,5 @@
 ---
-title: "5 - compose_isobxr: presentation"
+title: "4 - compose_isobxr()"
 author: "Théo Tacail"
 date: "`r Sys.Date()`" 
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{5 - compose_isobxr}
+  %\VignetteIndexEntry{4 - compose_isobxr()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,6 +22,10 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 ----
 
+[Full documentation and tutorials can be found on the isobxr website.](https://ttacail.github.io/isobxr_web/)
+
+----
+
 In this vignette, the user will be introduced to the `compose_isobxr` function of [isobxr](https://ttacail.github.io/isobxr/).
 
 Here, we shortly present the principles and general usage of the `compose_isobxr` function. 
@@ -32,7 +36,7 @@ The user is then invited to follow and run a step-by-step tutorial presenting se
 ----
 
 
-# How does `compose_isobxr` work?
+# How does **compose_isobxr** work?
 
 The `compose_isobxr` function is used to build complex scenarios of the evolution of a system going through a series of runs.
 
@@ -76,13 +80,12 @@ It provides the `compose_isobxr` function with the
      All the [isobxr](https://ttacail.github.io/isobxr/) functions 
      are meant to be run in relation with an **isobxr master file**. 
      All instruction for the filling in of the **isobxr master file** 
-     are given in the [3 - Run_isobxr: presentation](https://ttacail.github.io/isobxr/articles/vgn_03_Run_isobxr_presentation.html) 
-     vignette.
+     are given in the presentation of the [run_isobxr function](https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html).
 
 ## Name and location 
 
 * The **compose master file** is an xlsx file
-* The **compose master file** name needs not to be formated as the user calls the compose master file name in the function parameters.
+* The **compose master file** name is freely defined by the user.
 * The **compose master file** has to be stored in the working directory (*workdir*), where the **isobxr master file** is also stored.
 
 ## Structure and format
@@ -111,7 +114,7 @@ All arguments definitions of the `compose_isobxr` function are accessible in its
 ?compose_isobxr
 ```
 
-## `compose_isobxr` required arguments
+## Required arguments
 
 The arguments required to run the `compose_isobxr` function are examplified and described here:
 
@@ -139,15 +142,17 @@ followed by the time unit used for the graphical output
 **COMPO_MASTER**
 :   Full name of the composite master file (finishing with ".xlsx") 
 
-## `compose_isobxr` default and optional outputs
+## Default and optional outputs
 
 The `compose_isobxr` outputs are stored in the working directory. 
 
-The `compose_isobxr` outputs are structured as follows:
+The `compose_isobxr` outputs are structured as shown in the [full package documentation.](https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html)
 
-```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('./05_cps_05_output_dir.png')
-```
+<!-- The `compose_isobxr` outputs are structured as follows: -->
+
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./05_cps_05_output_dir.png') -->
+<!-- ``` -->
 
 In addition to the default outputs,
 the `compose_isobxr` function allows to: 
@@ -170,7 +175,3 @@ compose_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
                to_CPS_DIGEST_CSVs = TRUE)
 ```
 
-
-
-<!-- SHOW PLOT AND OUTPUTS -->
-<!-- INTRODUCE THE RunShinyPlots -->

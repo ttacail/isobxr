@@ -1,0 +1,53 @@
+---
+title: "7 - runShinyPlots()"
+author: "Théo Tacail"
+date: "`r Sys.Date()`" 
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{7 - runShinyPlots()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+----
+
+[Full documentation and tutorials can be found on the isobxr website.](https://ttacail.github.io/isobxr_web/)
+
+----
+
+# Plots with **runShinyPlots** app
+## Calling the Shiny app
+The `runShinyPlots` function calls an **isobxr Shiny app** plotting interface (html interface accessible with any type of internet browser).
+
+This app is still in its' $\beta$ version but already allows to create many plots with a series of options for all outputs given by `compose_isobxr`, `sweep_steady` & `sweep_dyn` functions.
+
+This is notably very useful for the complex outputs of `sweep_steady` & `sweep_dyn` functions. 
+
+This app also allows to export a pdf version of the plot.
+
+
+```{r eval = FALSE, include=TRUE}
+# define workdir in which the SERIES directories are found 
+# (SERIES directories start with 3_CPS, 4_STD or 4_DYN) 
+# for instance:
+workdir <- "~/1_ABC_tutorial"
+
+# Launch the shiny app
+runShinyPlots()
+```
+
+
+## User interface for plot editing
+
+[Full description of the shiny app is available here.](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html)
