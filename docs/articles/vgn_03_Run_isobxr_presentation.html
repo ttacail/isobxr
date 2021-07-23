@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3 - Run_isobxr: presentation • isobxr</title>
+<title>3 - run_isobxr() • isobxr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="3 - Run_isobxr: presentation">
+<script src="../pkgdown.js"></script><meta property="og:title" content="3 - run_isobxr()">
 <meta property="og:description" content="isobxr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -60,16 +60,19 @@
       <a href="../articles/vgn_02_General_presentation.html">2 - General presentation</a>
     </li>
     <li>
-      <a href="../articles/vgn_03_Run_isobxr_presentation.html">3 - Run_isobxr: presentation</a>
+      <a href="../articles/vgn_03_Run_isobxr_presentation.html">3 - run_isobxr()</a>
     </li>
     <li>
-      <a href="../articles/vgn_04_Run_isobxr_tutorial.html">4 - Run_isobxr: tutorial</a>
+      <a href="../articles/vgn_05_compose_isobxr.html">4 - compose_isobxr()</a>
     </li>
     <li>
-      <a href="../articles/vgn_05_compose_isobxr.html">5 - compose_isobxr</a>
+      <a href="../articles/vgn_07_sweep_steady.html">5 - sweep_steady()</a>
     </li>
     <li>
-      <a href="../articles/vgn_10_general_vignette.html">6 - General vignette</a>
+      <a href="../articles/vgn_08_sweep_dyn.html">6 - sweep_dyn()</a>
+    </li>
+    <li>
+      <a href="../articles/vgn_09_runShinyPlots.html">7 - runShinyPlots()</a>
     </li>
   </ul>
 </li>
@@ -94,10 +97,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>3 - Run_isobxr: presentation</h1>
+      <h1 data-toc-skip>3 - run_isobxr()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-06-20</h4>
+            <h4 class="date">2021-07-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_03_Run_isobxr_presentation.Rmd"><code>vignettes/vgn_03_Run_isobxr_presentation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_03_Run_isobxr_presentation.Rmd</code></div>
@@ -107,20 +110,26 @@
     
     
 <hr>
+<p><a href="https://ttacail.github.io/isobxr_web/">Full documentation and tutorials can be found on the isobxr website.</a></p>
+<hr>
 <p>In this vignette, the user will be introduced to the main function of <a href="https://ttacail.github.io/isobxr/">isobxr</a>: <code>run_isobxr</code>.</p>
 <p>Here, we shortly present the principles and general usage of the <code>run_isobxr</code> function.</p>
-<p>The user is then invited to follow and run a step-by-step tutorial presenting several typical runs <a href="https://ttacail.github.io/isobxr/articles/vgn_04_Run_isobxr_tutorial.html">(4 - Run_isobxr: tutorial)</a>.</p>
+<p>The user is then invited to follow and run a step-by-step tutorial presenting several typical runs <a href="https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html">(4 - Run_isobxr: tutorial)</a>.</p>
 <hr>
 <div id="system-definitions" class="section level1">
 <h1 class="hasAnchor">
 <a href="#system-definitions" class="anchor"></a>System definitions</h1>
-<p>As a reminder, the systems considered in the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package are described in the cheatsheet below:</p>
-<p><img src="02_basics_01_sysdef.png" width="100%"></p>
+<p>As a reminder, the systems considered in the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package are described in the cheatsheet presented <a href="https://ttacail.github.io/isobxr_web/vgn_02_General_presentation.html">here</a> and in the "General presentation" vignette.</p>
+<!-- As a reminder, the systems considered in the [isobxr](https://ttacail.github.io/isobxr/) package  -->
+<!-- are described in the cheatsheet below: -->
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./02_basics_01_sysdef.png') -->
+<!-- ``` -->
 <hr>
 </div>
 <div id="how-does-run_isobxr-work" class="section level1">
 <h1 class="hasAnchor">
-<a href="#how-does-run_isobxr-work" class="anchor"></a>How does <code>run_isobxr</code> work?</h1>
+<a href="#how-does-run_isobxr-work" class="anchor"></a>How does <strong>run_isobxr</strong> work?</h1>
 <p>The <code>run_isobxr</code> function is the main function of the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package.</p>
 <p>The <code>run_isobxr</code> function is used to perform single runs of stable isotope box models of all types of systems.</p>
 <p>The <code>run_isobxr</code> function allows to:</p>
@@ -175,70 +184,57 @@
 </ol>
 <p>The general rules for the filling in of the <strong>isobxr master file</strong> are shown in cheatsheet below:</p>
 <p><img src="03_Run_isobxr_01_fill_master.png" width="100%"></p>
-<div id="constants" class="section level3">
-<h3 class="hasAnchor">
-<a href="#constants" class="anchor"></a><strong>CONSTANTS</strong>
-</h3>
-<p><img src="03_Run_isobxr_02_fill_CONSTs.png" width="100%"></p>
-</div>
-<div id="boxes-sheet" class="section level3">
-<h3 class="hasAnchor">
-<a href="#boxes-sheet" class="anchor"></a><strong>BOXES</strong> sheet</h3>
-<p><img src="03_Run_isobxr_03_fill_BOXES.png" width="100%"></p>
-<dl>
-<dt>[INFINITE] column</dt>
-<dd><ul>
-<li>stores the <em>status of the box</em> depending on the box model design (<strong>open</strong> or <strong>closed</strong>)<br>
-</li>
-<li>If system is <strong>open</strong>, environment boxes are declared as <strong>INFINITE</strong>.</li>
-<li>All <em>finite boxes</em> can be declared with <strong>FINITE</strong> status or other user-defined status (<em>e.g.</em>, <strong>INTERFACE</strong> or <strong>DEAD_END</strong> or <strong>FINITE</strong>)</li>
-<li>Status of <em>finite boxes</em> also define color code of system diagrams.</li>
-</ul></dd>
-<dt>[LAYOUT] columns</dt>
-<dd><ul>
-<li>
-<em>LAYOUT_X</em> and <em>LAYOUT_Y</em> columns correspond to the layout of the <strong>box model diagram</strong><br>
-</li>
-<li>They define the coordinates of boxes in the diagram in a X,Y space.</li>
-</ul></dd>
-</dl>
-</div>
-<div id="fluxes-sheet" class="section level3">
-<h3 class="hasAnchor">
-<a href="#fluxes-sheet" class="anchor"></a><strong>FLUXES</strong> sheet</h3>
-<p><img src="03_Run_isobxr_04_fill_FLUXES.png" width="100%"></p>
-<p>The <em>flux lists</em> columns define a set of [fluxes + box sizes] conditions.</p>
-<ul>
-<li>Flux values (<strong>STATUS</strong> = <strong>FLUX</strong>):
-<ul>
-<li>Within a given column, users define as many fluxes as desired</li>
-<li>Undefined fluxes are set to 0 by <code>run_isobxr</code> (no exchange of element X)</li>
-</ul>
-</li>
-<li>Sizes values (<strong>STATUS</strong> = <strong>SIZE</strong>):
-<ul>
-<li><strong>Sizes must be defined for all boxes</strong></li>
-<li>If a box remains unused (no connected flux), its size can be set to 0</li>
-</ul>
-</li>
-</ul>
-<!-- **Negative balance of fluxes** :  --><!-- If too long, the run could lead to the total emptying of the box:  --><!-- * run duration automatically updated to shortest duration box emptying --><!-- * user is advised with a **warning message** in R console --><!-- **Mass and time units** --><!-- :         --><!-- * The **units** of the fluxes (mass/time unit) and sizes (mass unit) need to be homogeneous (same mass unit for both). --><!-- * The **units** of the fluxes (mass unit per time unit) and run duration set in the function (time unit) need to be homogeneous (same time unit for both). -->
-</div>
-<div id="coeffs-sheet" class="section level3">
-<h3 class="hasAnchor">
-<a href="#coeffs-sheet" class="anchor"></a><strong>COEFFS</strong> sheet</h3>
-<p><img src="03_Run_isobxr_05_fill_COEFFS.png" width="100%"></p>
-<!-- All *black text* has to be strictly the same as shown.   -->
-<!-- All *blue text* corresponds to litteral names (string of characters) defined by the user.   -->
-<!-- All *red text* corresponds to litteral or numerical variables set by the user.   -->
-<p>The <strong>COEFFS</strong> sheet takes the values of the isotope fractionation coefficients (<span class="math inline">\(\alpha_{i \to j}\)</span>):</p>
-<ul>
-<li>Users define as many <em>coefficients lists</em> as desired</li>
-<li>Each <em>coefficients lists</em> defines a set of fractionation coefficients</li>
-<li>Undefined coefficients are set to 1 by <code>run_isobxr</code> (no isotope fractionation)</li>
-</ul>
+<p>More complete description of the master file filling can be found <a href="https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html#32_Structure_and_format">here</a> and some examples and tutorials are shown <a href="https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html">here</a>.</p>
+<!-- ### **CONSTANTS** sheet -->
+<!-- ```{r echo=FALSE, out.width='75%'} -->
+<!-- knitr::include_graphics('./03_Run_isobxr_02_fill_CONSTs.png') -->
+<!-- ``` -->
+<!-- ### **BOXES** sheet -->
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./03_Run_isobxr_03_fill_BOXES.png') -->
+<!-- ``` -->
+<!-- [INFINITE] column  -->
+<!-- :     -->
+<!-- * stores the *status of the box* depending on the box model design (**open** or **closed**)   -->
+<!--     + If system is **open**, environment boxes are declared as **INFINITE**. -->
+<!-- * All *finite boxes* can be declared with **FINITE** status or other user-defined status -->
+<!--     (*e.g.*, **INTERFACE** or **DEAD_END** or **FINITE**) -->
+<!-- * Status of *finite boxes* also define color code of system diagrams. -->
+<!-- [LAYOUT] columns  -->
+<!-- :     -->
+<!-- * *LAYOUT_X* and *LAYOUT_Y* columns correspond to the layout of the **box model diagram**    -->
+<!-- * They define the coordinates of boxes in the diagram in a X,Y space. -->
+<!-- ### **FLUXES** sheet -->
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./03_Run_isobxr_04_fill_FLUXES.png') -->
+<!-- ``` -->
+<!-- The *flux lists* columns define a set of [fluxes + box sizes] conditions.   -->
+<!-- * Flux values (**STATUS** = **FLUX**): -->
+<!--     + Within a given column, users define as many fluxes as desired  -->
+<!--     + Undefined fluxes are set to 0 by `run_isobxr` (no exchange of element X) -->
+<!-- * Sizes values (**STATUS** = **SIZE**): -->
+<!--     + **Sizes must be defined for all boxes** -->
+<!--     + If a box remains unused (no connected flux), its size can be set to 0 -->
+<!-- <!-- **Negative balance of fluxes** :  -->
+<!-- <!-- If too long, the run could lead to the total emptying of the box:  -->
+<!-- <!-- * run duration automatically updated to shortest duration box emptying -->
+<!-- <!-- * user is advised with a **warning message** in R console -->
+<!-- <!-- **Mass and time units** -->
+<!-- <!-- :         -->
+<!-- <!-- * The **units** of the fluxes (mass/time unit) and sizes (mass unit) need to be homogeneous (same mass unit for both). -->
+<!-- <!-- * The **units** of the fluxes (mass unit per time unit) and run duration set in the function (time unit) need to be homogeneous (same time unit for both). -->
+<!-- ### **COEFFS** sheet -->
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./03_Run_isobxr_05_fill_COEFFS.png') -->
+<!-- ``` -->
+<!-- <!-- All *black text* has to be strictly the same as shown.   -->
+<!-- <!-- All *blue text* corresponds to litteral names (string of characters) defined by the user.   -->
+<!-- <!-- All *red text* corresponds to litteral or numerical variables set by the user.   -->
+<!-- The **COEFFS** sheet takes the values of the isotope fractionation coefficients ($\alpha_{i \to j}$): -->
+<!-- * Users define as many *coefficients lists* as desired -->
+<!-- * Each *coefficients lists* defines a set of fractionation coefficients -->
+<!-- * Undefined coefficients are set to 1 by `run_isobxr` (no isotope fractionation)   -->
 <hr>
-</div>
 </div>
 </div>
 <div id="main-arguments-and-outputs" class="section level1">
@@ -248,9 +244,9 @@
 <p>All arguments definitions of the <code>run_isobxr</code> function are accessible in its documentation called as follows</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="op">?</span><span class="va">run_isobxr</span></pre></div>
-<div id="run_isobxr-required-arguments" class="section level2">
+<div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
-<a href="#run_isobxr-required-arguments" class="anchor"></a><code>run_isobxr</code> required arguments</h2>
+<a href="#required-arguments" class="anchor"></a>Required arguments</h2>
 <p>The arguments required to run the <code>run_isobxr</code> function are examplified and described here:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
@@ -288,12 +284,15 @@
 </ul></dd>
 </dl>
 </div>
-<div id="run_isobxr-default-and-optional-outputs" class="section level2">
+<div id="default-and-optional-outputs" class="section level2">
 <h2 class="hasAnchor">
-<a href="#run_isobxr-default-and-optional-outputs" class="anchor"></a><code>run_isobxr</code> default and optional outputs</h2>
+<a href="#default-and-optional-outputs" class="anchor"></a>Default and optional outputs</h2>
 <p>The <code>run_isobxr</code> outputs are stored in the working directory.</p>
-<p>The <code>run_isobxr</code> outputs are structured as follows:</p>
-<p><img src="03_Run_isobxr_06_outputs_structure.png" width="100%"></p>
+<p>The <code>run_isobxr</code> outputs are structured as shown in the <a href="https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html#42_Default_and_optional_outputs">full package documentation.</a></p>
+<!-- The `run_isobxr` outputs are structured as follows: -->
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./03_Run_isobxr_06_outputs_structure.png') -->
+<!-- ``` -->
 <p>In addition to the default outputs, the <code>run_isobxr</code> function allows to:</p>
 <ul>
 <li>export system diagrams (as pdf, using the <strong>to_DIGEST_DIAGRAMS = TRUE</strong> argument)</li>
@@ -371,9 +370,9 @@ It is done by defining a data frame structured as follows.</p>
 <span class="co">#&gt;   BOXES_ID DELTA_INIT</span>
 <span class="co">#&gt; 1        A         -1</span></pre></div>
 </div>
-<div id="forcing-isotope-fractionation-coefficients" class="section level3">
+<div id="forcing-fractionation-coefficients" class="section level3">
 <h3 class="hasAnchor">
-<a href="#forcing-isotope-fractionation-coefficients" class="anchor"></a>Forcing isotope fractionation coefficients</h3>
+<a href="#forcing-fractionation-coefficients" class="anchor"></a>Forcing fractionation coefficients</h3>
 <p>By default, the <code>run_isobxr</code> function sets the isotope fractionation coefficients at the values found in the coefficients list specified by user.</p>
 <p>It is possible to manually overwrite the fractionation coefficients of one, several or all pairs of boxes for a given run performed by <code>run_isobxr</code>.<br>
 It is done by defining a data frame structured as follows.</p>
@@ -400,9 +399,9 @@ It is done by defining a data frame structured as follows.</p>
 <span class="co">#&gt;   FROM TO ALPHA FROM_TO</span>
 <span class="co">#&gt; 1    A  B  1.02     A_B</span></pre></div>
 </div>
-<div id="forcing-fractionation-coefficient-to-a-rayleigh-distillation-model" class="section level3">
+<div id="rayleigh-distillation-models" class="section level3">
 <h3 class="hasAnchor">
-<a href="#forcing-fractionation-coefficient-to-a-rayleigh-distillation-model" class="anchor"></a>Forcing fractionation coefficient to a Rayleigh distillation model</h3>
+<a href="#rayleigh-distillation-models" class="anchor"></a>Rayleigh distillation models</h3>
 <p>It is possible to overwrite isotope fractionation coefficients by defining their values as the result of Rayleigh type isotope distillation in the context of a fractional exchange at an interface.</p>
 <p>We consider here the case of the loss of element X from a box A to a box C through an interface box B, all possibly part of a bigger box model system.</p>
 <p>We suppose that the apparent fractionation coefficient <span class="math inline">\(\alpha_{A \to C}\)</span> associated to this flux <span class="math inline">\(F_{A \to C}\)</span> results from a Rayleigh type distillation occuring during the fractional exchange of element X at the interface box B.</p>

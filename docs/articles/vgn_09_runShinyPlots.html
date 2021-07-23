@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1 - Install isobxr • isobxr</title>
+<title>7 - runShinyPlots() • isobxr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="1 - Install isobxr">
+<script src="../pkgdown.js"></script><meta property="og:title" content="7 - runShinyPlots()">
 <meta property="og:description" content="isobxr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -97,13 +97,13 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>1 - Install isobxr</h1>
+      <h1 data-toc-skip>7 - runShinyPlots()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
             <h4 class="date">2021-07-23</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_01_Installation.Rmd"><code>vignettes/vgn_01_Installation.Rmd</code></a></small>
-      <div class="hidden name"><code>vgn_01_Installation.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_09_runShinyPlots.Rmd"><code>vignettes/vgn_09_runShinyPlots.Rmd</code></a></small>
+      <div class="hidden name"><code>vgn_09_runShinyPlots.Rmd</code></div>
 
     </div>
 
@@ -112,48 +112,29 @@
 <hr>
 <p><a href="https://ttacail.github.io/isobxr_web/">Full documentation and tutorials can be found on the isobxr website.</a></p>
 <hr>
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It provides a ready-to-use tool allowing users to develop and test isotopic box models of their system of interest. It allows the user to explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, and sweep the space of parameters in both static and dynamic modes.</p>
-<hr>
-<div id="installation" class="section level1">
+<div id="plots-with-runshinyplots-app" class="section level1">
 <h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
-<div id="install-isobxr" class="section level2">
+<a href="#plots-with-runshinyplots-app" class="anchor"></a>Plots with <strong>runShinyPlots</strong> app</h1>
+<div id="calling-the-shiny-app" class="section level2">
 <h2 class="hasAnchor">
-<a href="#install-isobxr" class="anchor"></a>Install isobxr</h2>
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> is available as a source package from <a href="https://github.com/">GitHub</a>.</p>
-<p>The installation process can be done as follows:</p>
-<ol style="list-style-type: decimal">
-<li><p>Download and install/update <a href="https://cran.r-project.org/">R</a> and <a href="https://rstudio.com/products/rstudio/download/">Rstudio</a>.</p></li>
-<li><p>Download and install package <strong>devtools</strong> as follows:</p></li>
-</ol>
+<a href="#calling-the-shiny-app" class="anchor"></a>Calling the Shiny app</h2>
+<p>The <code>runShinyPlots</code> function calls an <strong>isobxr Shiny app</strong> plotting interface (html interface accessible with any type of internet browser).</p>
+<p>This app is still in its' <span class="math inline">\(\beta\)</span> version but already allows to create many plots with a series of options for all outputs given by <code>compose_isobxr</code>, <code>sweep_steady</code> &amp; <code>sweep_dyn</code> functions.</p>
+<p>This is notably very useful for the complex outputs of <code>sweep_steady</code> &amp; <code>sweep_dyn</code> functions.</p>
+<p>This app also allows to export a pdf version of the plot.</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></pre></div>
-<ol start="3" style="list-style-type: decimal">
-<li>Download and install <a href="https://ttacail.github.io/isobxr/">isobxr</a> source package.</li>
-</ol>
-<div class="sourceCode"><pre class="downlit">
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ttacail/isobxr/isobxr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># FALSE if no pandoc/Rstudio </span></pre></div>
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is working under R 3.5.2 to 4.0.4 versions.</p>
-<p>It's portability has been proof checked for MacOS (10.12 and 10.13), Linux (Ubuntu 20.04.1 LTS) and Windows (7 and 10).</p>
-<p>You can load the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package in R as follows:</p>
-<div class="sourceCode"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span></pre></div>
-<p>Here is the package description of the current version, where you can find the required minimal versions of dependencies:</p>
-<div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageDescription</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
-<p>You can locally browse the vignettes as follows:</p>
-<div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
+<span class="co"># define workdir in which the SERIES directories are found </span>
+<span class="co"># (SERIES directories start with 3_CPS, 4_STD or 4_DYN) </span>
+<span class="co"># for instance:</span>
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/1_ABC_tutorial"</span>
+
+<span class="co"># Launch the shiny app</span>
+<span class="fu"><a href="../reference/runShinyPlots.html">runShinyPlots</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 </div>
-<div id="download-templates-and-tutorials" class="section level2">
+<div id="user-interface-for-plot-editing" class="section level2">
 <h2 class="hasAnchor">
-<a href="#download-templates-and-tutorials" class="anchor"></a>Download templates and tutorials</h2>
-<p>The user is encouraged to:</p>
-<ol style="list-style-type: decimal">
-<li><p>download the <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">reference templates</a>. These files provide the user with formated master files, used as entries to the functions and described in this vignette.</p></li>
-<li><p>download the <a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">tutorial files</a>. These files provide the user with all master files and R commands used throughout all demonstrations shown in the vignettes.</p></li>
-</ol>
-<hr>
+<a href="#user-interface-for-plot-editing" class="anchor"></a>User interface for plot editing</h2>
+<p><a href="https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html">Full description of the shiny app is available here.</a></p>
 </div>
 </div>
   </div>

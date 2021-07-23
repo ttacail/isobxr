@@ -60,16 +60,19 @@
       <a href="../articles/vgn_02_General_presentation.html">2 - General presentation</a>
     </li>
     <li>
-      <a href="../articles/vgn_03_Run_isobxr_presentation.html">3 - Run_isobxr: presentation</a>
+      <a href="../articles/vgn_03_Run_isobxr_presentation.html">3 - run_isobxr()</a>
     </li>
     <li>
-      <a href="../articles/vgn_04_Run_isobxr_tutorial.html">4 - Run_isobxr: tutorial</a>
+      <a href="../articles/vgn_05_compose_isobxr.html">4 - compose_isobxr()</a>
     </li>
     <li>
-      <a href="../articles/vgn_05_compose_isobxr.html">5 - compose_isobxr</a>
+      <a href="../articles/vgn_07_sweep_steady.html">5 - sweep_steady()</a>
     </li>
     <li>
-      <a href="../articles/vgn_10_general_vignette.html">6 - General vignette</a>
+      <a href="../articles/vgn_08_sweep_dyn.html">6 - sweep_dyn()</a>
+    </li>
+    <li>
+      <a href="../articles/vgn_09_runShinyPlots.html">7 - runShinyPlots()</a>
     </li>
   </ul>
 </li>
@@ -97,7 +100,7 @@
       <h1 data-toc-skip>2 - General presentation</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-06-20</h4>
+            <h4 class="date">2021-07-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_02_General_presentation.Rmd"><code>vignettes/vgn_02_General_presentation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_02_General_presentation.Rmd</code></div>
@@ -106,6 +109,8 @@
 
     
     
+<hr>
+<p><a href="https://ttacail.github.io/isobxr_web/">Full documentation and tutorials can be found on the isobxr website.</a></p>
 <hr>
 <p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It provides a ready-to-use tool allowing users to develop and test isotopic box models of their system of interest. It allows the user to explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, and sweep the space of parameters in both static and dynamic modes.</p>
 <hr>
@@ -130,18 +135,15 @@
 <hr>
 </div>
 </div>
-<div id="box-modelling-equations-and-isobxr-solving" class="section level1">
+<div id="box-modelling-equations" class="section level1">
 <h1 class="hasAnchor">
-<a href="#box-modelling-equations-and-isobxr-solving" class="anchor"></a>Box modelling equations and isobxr solving</h1>
-<div id="mathematical-formalism" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mathematical-formalism" class="anchor"></a>Mathematical formalism</h2>
+<a href="#box-modelling-equations" class="anchor"></a>Box modelling equations</h1>
 <p>In this section we present the mathematic formalism used in isobxr stable isotope box modelling.</p>
 <p>The theory and formalism shown in this section is derived from the chapter 7 (<em>Dynamic systems</em>) of</p>
 <p>: Albarède, F., 1995. Introduction to Geochemical Modelling. Cambridge University Press, Cambridge.<br><a href="https://doi.org/10.1017/CBO9780511622960" class="uri">https://doi.org/10.1017/CBO9780511622960</a></p>
-<div id="definitions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#definitions" class="anchor"></a>Definitions</h3>
+<div id="definitions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#definitions" class="anchor"></a>Definitions</h2>
 <p>We consider a system consisting of <span class="math inline">\(n\)</span> boxes <span class="math inline">\(j\)</span>, exchanging an element <strong>X</strong> that has at least two stable isotopes <span class="math inline">\(M\)</span> and <span class="math inline">\(N\)</span>. Any box <span class="math inline">\(i\)</span> is defined by:</p>
 <ul>
 <li>
@@ -167,18 +169,18 @@
 <p><span class="math display">\[D_{i \mapsto j}^{M/N} = \dfrac{{J_{i \mapsto j}^M}/{J_{i \mapsto j}^N}}{m^M_i/m^N_i}\]</span></p>
 <p>The principe of modelling the system consists now in predicting the evolution of <strong>box sizes</strong> (<span class="math inline">\(m^X_i\)</span>) during time and the evolution of the <strong>isotope ratios</strong> (<span class="math inline">\(R_i\)</span>), knowing the fluxes, initial box sizes and fractionation coefficients.</p>
 </div>
-<div id="mass-conservation-of-element-x" class="section level3">
-<h3 class="hasAnchor">
-<a href="#mass-conservation-of-element-x" class="anchor"></a>Mass conservation of element X</h3>
+<div id="mass-conservation-of-element-x" class="section level2">
+<h2 class="hasAnchor">
+<a href="#mass-conservation-of-element-x" class="anchor"></a>Mass conservation of element X</h2>
 <p>Considering <strong>X</strong> has <strong>no radioactive nor radiogenic component</strong>, mass conservation for element <strong>X</strong> reads :</p>
 <p><span class="math display">\[\dfrac{dm^X_i}{dt} = - \sum \limits_{j\neq i} J_{i \mapsto j}^X + \sum \limits_{j\neq i} J_{j \mapsto i}^X\]</span></p>
 <p>When considering constant fluxes, this equation can be integrated in its linear form as follows:</p>
 <p><span class="math display">\[m^X_i = \left(- \sum \limits_{j\neq i} J_{i \mapsto j}^X + \sum \limits_{j\neq i} J_{j \mapsto i}^X\right) \times t + m^X_{i, t_0}\]</span></p>
 <p>where <span class="math inline">\(m^X_{i, t_0}\)</span> is the mass of element <strong>X</strong> in box <span class="math inline">\(i\)</span> at t = 0.</p>
 </div>
-<div id="system-of-differential-equations-for-stable-isotope-ratios" class="section level3">
-<h3 class="hasAnchor">
-<a href="#system-of-differential-equations-for-stable-isotope-ratios" class="anchor"></a>System of differential equations for stable isotope ratios</h3>
+<div id="differential-equations" class="section level2">
+<h2 class="hasAnchor">
+<a href="#differential-equations" class="anchor"></a>Differential equations</h2>
 <p>Considering <span class="math inline">\(N\)</span> and <span class="math inline">\(M\)</span> are stable and non radiogenic, mass conservation reads :</p>
 <p><span class="math display">\[\dfrac{dm^N_i}{dt} = - \sum \limits_{j\neq i} J_{i \mapsto j}^N + \sum \limits_{j\neq i} J_{j \mapsto i}^N = - \sum \limits_{j\neq i} \dfrac{J_{i \mapsto j}^N}{m^N_i} m^N_i + \sum \limits_{j\neq i} \dfrac{J_{j \mapsto i}^N}{m^N_j} m^N_j\]</span></p>
 <p>Likewise,</p>
@@ -231,9 +233,9 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p><span class="math display">\[\delta^{M/N}X_i(t) = \left(\dfrac{R_i(t)}{R_{std}} - 1\right) \times 1000 \]</span></p>
 </div>
 </div>
-<div id="isobxr-solvers" class="section level2">
-<h2 class="hasAnchor">
-<a href="#isobxr-solvers" class="anchor"></a>isobxr solvers</h2>
+<div id="isobxr-solvers" class="section level1">
+<h1 class="hasAnchor">
+<a href="#isobxr-solvers" class="anchor"></a>isobxr solvers</h1>
 <p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package uses two core solver functions to solve the system of differential equations: <code>num_slvr</code> and <code>ana_slvr</code>.</p>
 <p>These functions are not intended to be directly called by users themselves, although this remains possible.</p>
 <p>These functions are called within broader functions (e.g., <code>run_isobxr</code>).</p>
@@ -242,16 +244,15 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <div class="sourceCode"><pre class="downlit">
 <span class="op">?</span><span class="va">ana_slvr</span>
 <span class="op">?</span><span class="va">num_slvr</span></pre></div>
-<div id="structure-and-format-required-for-the-input-file" class="section level3">
-<h3 class="hasAnchor">
-<a href="#structure-and-format-required-for-the-input-file" class="anchor"></a>Structure and format required for the <strong>INPUT</strong> file</h3>
+<div id="input-file" class="section level2">
+<h2 class="hasAnchor">
+<a href="#input-file" class="anchor"></a><strong>INPUT</strong> file</h2>
 <p>The <strong>INPUT</strong> file contains the set of commands required to run either <code>ana_slvr</code> or <code>num_slvr</code>.</p>
 <p>Its format and name are standardized and should not be altered.</p>
 <p>Its direct modification by user is not required because <strong>INPUT</strong> files are edited by the broader and user-friendly <code>run_isobxr</code> function, described in another section of this vignette.</p>
-<div id="input-file-name-and-format" class="section level4">
-<h4 class="hasAnchor">
-<a href="#input-file-name-and-format" class="anchor"></a><strong>Input file name and format</strong>
-</h4>
+<div id="file-name-and-format" class="section level3">
+<h3 class="hasAnchor">
+<a href="#file-name-and-format" class="anchor"></a>File name and format</h3>
 <ul>
 <li>The <strong>INPUT</strong> file is a <strong>Rda</strong> file (R data format allowing to store multiple R objects)</li>
 <li>The <strong>INPUT</strong> file name has to end with the following: [ <strong>IN.Rda</strong> ].<br>
@@ -262,10 +263,9 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <em>Example</em>: [ <strong>this_is_a_run_name_IN.Rda</strong> ]</li>
 </ul>
 </div>
-<div id="input-file-content" class="section level4">
-<h4 class="hasAnchor">
-<a href="#input-file-content" class="anchor"></a><strong>Input file content</strong>
-</h4>
+<div id="file-content" class="section level3">
+<h3 class="hasAnchor">
+<a href="#file-content" class="anchor"></a>File content</h3>
 <p>The <strong>INPUT</strong> file contains at least the 4 following objects strictly named as follows:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -281,14 +281,14 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p>The <strong>INPUT</strong> file is an output from the <code>run_isobxr</code> function and does not require the user intervention.</p>
 </div>
 </div>
-<div id="numerical-solver-num_slvr" class="section level3">
-<h3 class="hasAnchor">
-<a href="#numerical-solver-num_slvr" class="anchor"></a>Numerical solver (<code>num_slvr</code>)</h3>
+<div id="numerical-solver-num_slvr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#numerical-solver-num_slvr" class="anchor"></a>Numerical solver (<strong>num_slvr</strong>)</h2>
 <p>The numerical solver <code>num_slvr</code> iteratively integrates the derivatives of the box sizes (<span class="math inline">\(\frac{dm^X_i}{dt}\)</span>) and isotope ratios (<span class="math inline">\(\frac{dR_i}{dt}\)</span>) over the whole run duration.</p>
 <p>The <code>num_slvr</code> uses the <code>ode</code> ordinary differential equation integrating function from the <strong>deSolve</strong> package.</p>
-<div id="applicability" class="section level4">
-<h4 class="hasAnchor">
-<a href="#applicability" class="anchor"></a>Applicability</h4>
+<div id="applicability" class="section level3">
+<h3 class="hasAnchor">
+<a href="#applicability" class="anchor"></a>Applicability</h3>
 <p>This function solves the evolution of both the isotope ratios and the sizes of each box defined by user.</p>
 <p>The <code>num_slvr</code> function therefore can be used in <strong>two distinct cases</strong>:</p>
 <ol style="list-style-type: decimal">
@@ -311,9 +311,10 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p><strong>The use of this function is thus preferred in the case of unbalanced fluxes</strong>, where at least one box loses or accumulates the element <strong>X</strong> over time (case #2).</p>
 <p>It then allows to study the dynamic responses of a system to a perturbation of the flux balance for at least one box.</p>
 </div>
-<div id="using-num_slvr" class="section level4">
-<h4 class="hasAnchor">
-<a href="#using-num_slvr" class="anchor"></a>Using num_slvr</h4>
+<div id="using-num_slvr" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-num_slvr" class="anchor"></a>Using <strong>num_slvr</strong>
+</h3>
 <p><em>Remark</em>: The direct use of <code>num_slvr</code> function by user is not intended because this function is integrated in the global <code>run_isobxr</code> function described thereafter.</p>
 <p>The <code>num_slvr</code> function reads an <strong>INPUT</strong> file (file name structure: [ <strong>RUN name + INPUT.Rda</strong> ]) containing all commands for the required model run, namely:</p>
 <ul>
@@ -343,23 +344,24 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 </ul>
 </div>
 </div>
-<div id="analytical-solver-ana_slvr" class="section level3">
-<h3 class="hasAnchor">
-<a href="#analytical-solver-ana_slvr" class="anchor"></a>Analytical solver (<code>ana_slvr</code>)</h3>
+<div id="analytical-solver-ana_slvr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#analytical-solver-ana_slvr" class="anchor"></a>Analytical solver (<strong>ana_slvr</strong>)</h2>
 <p>The analytical solver <code>ana_slvr</code> calculates the analytical solutions of the system of ordinary differential equations (ODES) of stable isotope ratios for an element <strong>X</strong> in all boxes.</p>
 <p>It determines the eigenvalues, eigenvectors and constants defined by initial conditions associated to the ODES, and allows to determine the functions that describe the evolution of stable isotope ratios as a function of time.</p>
-<div id="applicability-1" class="section level4">
-<h4 class="hasAnchor">
-<a href="#applicability-1" class="anchor"></a>Applicability</h4>
+<div id="applicability-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#applicability-1" class="anchor"></a>Applicability</h3>
 <p>In this case, the box sizes are considered as constant because the solving of the system of differential equations only considers the isotope ratios as varying with time.</p>
 <p>In other words, in the case of <strong>balanced inward and outward fluxes</strong> for all finite boxes (<span class="math inline">\(\frac{dm^X_i}{dt} = 0\)</span>), this function allows to accurately determine the expression of the stable isotope ratio in a given box as a function of time.</p>
 <p>The function also edits a dataset of the evolution of isotope compositions in each box over the time range, with the time resolution determined by the user.</p>
 <p>The use of this function is thus <strong>not applicable in the case of unbalanced fluxes</strong> for one finite box or more.</p>
 <p>However, the <code>ana_slvr</code> function can be used in balanced open systems, with boxes defined as infinite and unbalanced sources or sinks, as described in the model design section thereafter.</p>
 </div>
-<div id="using-ana_slvr" class="section level4">
-<h4 class="hasAnchor">
-<a href="#using-ana_slvr" class="anchor"></a>Using ana_slvr</h4>
+<div id="using-ana_slvr" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-ana_slvr" class="anchor"></a>Using <strong>ana_slvr</strong>
+</h3>
 <p><em>Remark</em>: The direct use of <code>ana_slvr</code> function by user is not intended because this function is integrated in the global <code>run_isobxr</code> function described thereafter.</p>
 <p>The <code>ana_slvr</code> function reads an <strong>INPUT</strong> file (file name structure: [ <strong>RUN name + INPUT.Rda</strong> ]) containing all commands for the required model run, namely:</p>
 <ul>
@@ -391,7 +393,6 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <li>evD data: [ <strong>out_3_A_evD + RUN name + .csv</strong> ]</li>
 </ul>
 <hr>
-</div>
 </div>
 </div>
 </div>
