@@ -30,7 +30,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ## Calling the Shiny app
 The `runShinyPlots` function calls an **isobxr Shiny app** plotting interface (html interface accessible with any type of internet browser).
 
-This app is still in its' $\beta$ version but already allows to create many plots with a series of options for all outputs given by `compose_isobxr`, `sweep_steady` & `sweep_dyn` functions.
+This app allows to create many plots with a series of options for all outputs given by `compose_isobxr`, `sweep_steady` & `sweep_dyn` functions.
 
 This is notably very useful for the complex outputs of `sweep_steady` & `sweep_dyn` functions. 
 
