@@ -1,5 +1,5 @@
 ---
-title: "7 - runShinyPlots()"
+title: "7 - shinobxr_app()"
 author: "Théo Tacail"
 date: "`r Sys.Date()`" 
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{7 - runShinyPlots()}
+  %\VignetteIndexEntry{7 - shinobxr_app()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,9 +26,9 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 ----
 
-# Plots with **runShinyPlots** app
+# Plots with **shinobxr_app**
 ## Calling the Shiny app
-The `runShinyPlots` function calls an **isobxr Shiny app** plotting interface (html interface accessible with any type of internet browser).
+The `shinobxr_app` function calls a **shiny app** plotting interface (html interface accessible with any type of internet browser).
 
 This app allows to create many plots with a series of options for all outputs given by `compose_isobxr`, `sweep_steady` & `sweep_dyn` functions.
 
@@ -44,7 +44,7 @@ This app also allows to export a pdf version of the plot.
 workdir <- "~/1_ABC_tutorial"
 
 # Launch the shiny app
-runShinyPlots()
+shinobxr_app()
 ```
 
 

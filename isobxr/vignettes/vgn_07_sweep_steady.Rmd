@@ -329,11 +329,11 @@ The `sweep_steady` outputs are structured as shown in the [full package document
 
 ## Plotting **sweep_steady** outputs
 
-The outputs of the `sweep_steady` can be plotted using the `runShinyPlots` function. 
+The outputs of the `sweep_steady` can be plotted using the `shinobxr_app` function. 
 
-The `runShinyPlots` function launches an interactive html app allowing to edit and export graphical representation of the model runs. 
+The `shinobxr_app` function launches an interactive html app allowing to edit and export graphical representation of the model runs. 
 
-More on the use of the `runShinyPlots` function can be found on the [Shiny app page](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html). 
+More on the use of the `shinobxr_app` function can be found on the [Shiny app page](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html). 
 
 # Tutorial example
 
@@ -378,6 +378,6 @@ sweep_steady(workdir,
              to_STD_DIGEST_CSVs = T)
 ```
 
-You can explore the outputs by then using the [isobxr](https://ttacail.github.io/isobxr/) Shiny app (`runShinyPlots` function, presented below).
+You can explore the outputs by then using the [isobxr](https://ttacail.github.io/isobxr/) Shiny app (`shinobxr_app` function, presented below).
 
 ************************************************

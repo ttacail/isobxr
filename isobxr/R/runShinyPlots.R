@@ -19,7 +19,7 @@ usethis::use_package("qgraph")
 #' For instance: \cr
 #' workdir = "User/isobxr_working_directory"
 #' @export
-runShinyPlots <- function() {
+shinobxr_app <- function() {
   appDir <- system.file("shiny-examples", "plot_isobxr", package = "isobxr")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `isobxr`.", call. = FALSE)
