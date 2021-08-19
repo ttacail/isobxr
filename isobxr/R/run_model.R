@@ -140,7 +140,7 @@ usethis::use_package("rlang")
 #' between all boxes (structured as a square matrix)
 #' \item \strong{BOX_META_IN}: Dataframe documenting box metadata \cr
 #' (Box names, initial X masses and delta values, total inward and outward X fluxes in each box, \cr
-#' flux balance for each box, X residence time in each box, max run time before total emptying of each box, \cr
+#' flux balance for each box, X residence time for all balanced boxes, max run time before total emptying of each box, \cr
 #' box infinite/finite status, system diagram coordinates)
 #' }
 #'
