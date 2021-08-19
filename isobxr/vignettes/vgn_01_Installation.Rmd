@@ -66,12 +66,6 @@ install.packages("devtools")
 devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
 ```
 
-The [isobxr](https://ttacail.github.io/isobxr/) package is working under
-R 3.5.2 to 4.0.4 versions.
-
-It's portability has been proof checked for MacOS (10.12 and 10.13), 
-Linux (Ubuntu 20.04.1 LTS) and Windows (7 and 10).
-
 You can load the [isobxr](https://ttacail.github.io/isobxr/) package in R
 as follows:
 ```{r eval = FALSE}
