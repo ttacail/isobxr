@@ -51,7 +51,7 @@ The `sweep_dyn` function  is built as a 2 steps composite scenario.
 The main purpose of this `sweep_dyn` structure is:
 
 * to explore the influence of a pair of parameters over the dynamic evolution during run #2 of isotope compositions (and box sizes) in all boxes,
-* while starting this run #2 from a an initial state defined by run #1 that also depends on the sweeped parameters
+* while starting this run #2 from a an initial state defined by run #1 that also depends on the swept parameters
 * run #1 typically being for a balanced system, relaxed to it's steady state  
 
 #  Sweep dyn master file (xlsx)
@@ -62,11 +62,11 @@ requires a *sweep dyn master file*.
 The *sweep dyn master file* is the (xlsx) document containing all commands
 allowing `sweep_dyn` function to compose a scenario of 2 runs. 
 
-The two parameters to be sweeped over run #1 and #2 are defined by user directly in the function input, in the R console. 
+The two parameters to be swept over run #1 and #2 are defined by user directly in the function input, in the R console. 
 
 The format of the *sweep dyn master file* is the same as the *compose master file* and the *sweep steady master file*.
 
-It is where the user sets the design of their 2 runs scenario to be sweeped:
+It is where the user sets the design of their 2 runs scenario to be swept:
 
 * necessary: define the list of 2 runs composing the scenario (run durations, run resolutions, lists of fluxes, lists of coefficients).  
 * optional: define the forcings over one or both runs composing the scenario (FORCING_RAYLEIGH, FORCING_ALPHA, FORCING_DELTA, FORCING_SIZE).  
@@ -101,7 +101,7 @@ knitr::include_graphics('./07_std_01_RUN_LIST.png')
 
 The `sweep_dyn` function strictly requires a list of *2* successive runs.
 
-Both of these runs should be succesively described one by one on two rows of this sheet, with notably:  
+Both of these runs should be successively described one by one on two rows of this sheet, with notably:  
 
 1. the run number (COMPO_RUN_n column)  
 1. the run duration (t_lim_list column)  
@@ -145,7 +145,7 @@ The user needs to define the two runs composing the 2 steps scenario.
 
 1. The first run is typically used to let the system relax to its steady state used as an initial state in run #2.  
     i) The user should consider here a balanced system. The [isobxr](https://ttacail.github.io/isobxr/) functions will thus use the analytical solver (`ana_slvr`).
-    i) We thus recommand the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).  
+    i) We thus recommend the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).  
         This allows to only calculate the final state of the system, at the end of run #1.  
         This reduces the calculation time and data produced without affecting the accuracy of the calculation.  
 
@@ -155,7 +155,7 @@ The user needs to define the two runs composing the 2 steps scenario.
         A. The latter case (unbalanced system) could here constitute the perturbation of the system. The `sweep_dyn` function will here numerically solve the run #2 (`num_slvr`).
         A. In the case of a balanced system for run #2, the `sweep_dyn` function will analytically solve the run #2 (`ana_slvr`). 
         A. The user should here be aware that the sweeping of the space of parameters using either the `num_slvr` or `ana_slvr` can be time consuming and require a fair bit of calculating power.  
-            The user is advised to wisely define the space of parameters (which will define the number of $n \times m$ iterations) as well as the run resoluion of run #2 (nb_steps).
+            The user is advised to wisely define the space of parameters (which will define the number of $n \times m$ iterations) as well as the run resolution of run #2 (nb_steps).
 
 **remark**  
 :    The reason why the `sweep_dyn` function sweeps both initial run #1 and run #2 
@@ -164,11 +164,11 @@ The user needs to define the two runs composing the 2 steps scenario.
 **Forcings**   
 :    The user can define some forcings over the system (will affect both run #1 and run #2).  
     These forcings will overwrite the conditions set by the reading of the *isobxr master file*.  
-    These forcings will be overwritten by the sweeped parameters that affect run #1 and #2.
+    These forcings will be overwritten by the swept parameters that affect run #1 and #2.
 
 ## Required arguments
 
-In addition to all the usual input parameters required for the `sweep_dyn` function, the user has to define the two parameters to be sweeped.
+In addition to all the usual input parameters required for the `sweep_dyn` function, the user has to define the two parameters to be swept.
 
 There are 6 types of sweepable parameters (or that can be explored), which names are strictly defined as follows:
 
@@ -349,7 +349,7 @@ More on the use of the `shinobxr_app` function can be found on the [Shiny app pa
 
 Dynamic sweeping of the size of box B and one fractionation coefficient in a 3-boxes balanced open system after a change in the source isotope composition.
 
-Both run #1 and run #2 are performed with the *a1* coefficients list, the *Fx3_ABC_open_bal* flux list and the sweeping paramaters. 
+Both run #1 and run #2 are performed with the *a1* coefficients list, the *Fx3_ABC_open_bal* flux list and the sweeping parameters. 
 
 The system faces a perturbation: the source isotope composition is shifted from 0 to -1 ‰ using the FORCING_DELTA sheet of the *sweeping dynamic master file*.
 

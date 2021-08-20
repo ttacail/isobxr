@@ -89,7 +89,7 @@ The user is encouraged to:
 
 1. download the 
 [reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip).
-These files provide the user with formated master files, 
+These files provide the user with formatted master files, 
 used as entries to the functions and described in this vignette.
 
 2. download the [tutorial files](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip). 

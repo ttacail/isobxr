@@ -45,14 +45,14 @@ The `compose_isobxr` function calls a scenario defined in a compose master file 
 The `compose_isobxr` works by successively calling the `run_isobxr`function and performing runs each inheriting from the final state of the system as its own initial state.
 
 ## General principle
-The general principle of the `compose_isobxr` function is summarised in the cheatsheet below. 
+The general principle of the `compose_isobxr` function is summarized in the cheatsheet below. 
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./05_cps_01_principle.png')
 ```
 
 ## General workflow
-The general workflow of the `compose_isobxr` function is summarised in the cheatsheet below. 
+The general workflow of the `compose_isobxr` function is summarized in the cheatsheet below. 
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./05_cps_02_workflow.png')
@@ -116,7 +116,7 @@ All arguments definitions of the `compose_isobxr` function are accessible in its
 
 ## Required arguments
 
-The arguments required to run the `compose_isobxr` function are examplified and described here:
+The arguments required to run the `compose_isobxr` function are exemplified and described here:
 
 ```{r eval=FALSE}
 compose_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",

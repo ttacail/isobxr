@@ -58,7 +58,7 @@ knitr::include_graphics('./02_basics_01_sysdef.png')
 
 * `run_isobxr` is used to perform single runs of stable isotope box models of all types of systems.
 
-* The general workflow of the `run_isobxr` function is summarised in the cheatsheet below.
+* The general workflow of the `run_isobxr` function is summarized in the cheatsheet below.
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./02_basics_02_runisobxr_wflow.png')
@@ -68,7 +68,7 @@ knitr::include_graphics('./02_basics_02_runisobxr_wflow.png')
 
 # Box modelling equations  
 
-In this section we present the mathematic formalism used in isobxr stable isotope
+In this section we present the mathematical formalism used in isobxr stable isotope
 box modelling. 
 
 The theory and formalism shown in this section is derived 
@@ -83,9 +83,9 @@ We consider a system consisting of $n$ boxes $j$,
 exchanging an element **X** that has at least 
 two stable isotopes $M$ and $N$. Any box $i$ is defined by: 
 
-* $m^X_i$ the mass of element **X** in box $i$ - also refered to as **box size** thereafter
+* $m^X_i$ the mass of element **X** in box $i$ - also referred to as **box size** thereafter
 * $m^M_i$ and $m^N_i$ the masses of isotopes $M$ and $N$  in box $i$, respectively
-* $J_{i \mapsto j}^X$ is the massic flux of **X** from $i$ to $j$ (homogeneous to a mass per time unit)
+* $J_{i \mapsto j}^X$ is the mass flux of **X** from $i$ to $j$ (homogeneous to a mass per time unit)
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./02_basics_03_Box_model_principle.png')
@@ -103,7 +103,7 @@ Finally, we define $D_{i \mapsto j}^{M/N}$ the relative fractionation coefficien
 
 $$D_{i \mapsto j}^{M/N} = \dfrac{{J_{i \mapsto j}^M}/{J_{i \mapsto j}^N}}{m^M_i/m^N_i}$$
 
-The principe of modelling the system consists now in predicting the evolution of **box sizes** ($m^X_i$) during time and the evolution of the **isotope ratios** ($R_i$), knowing the fluxes, initial box sizes and fractionation coefficients. 
+The principle of modelling the system consists now in predicting the evolution of **box sizes** ($m^X_i$) during time and the evolution of the **isotope ratios** ($R_i$), knowing the fluxes, initial box sizes and fractionation coefficients. 
 
 ## Mass conservation of element X
 
@@ -165,9 +165,9 @@ $$\begin{array}{ccccc}
 
 These assumptions are valid for amplitude of stable isotope fractionations of the order of tens of ‰.
 
-These assumptions find their limitation in the case of ample stable isotope fractionations such as sometimes observed for isotopic systems of light elements (such as D/H). In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.
+These assumptions find their limitation in the case of ample stable isotope fractionations such as sometimes observed for isotopic systems of light elements (such as D/H). In these cases, the differences in reactivity can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.
 
-We thus have the following \strongr{system of first order differential equations}
+We thus have the following **system of first order differential equations**
 used thereafter: 
 
 $$
@@ -187,7 +187,7 @@ Two main situations can be distinguished here.
     The reconstruction of $R_i(t)$ only requires the solving of the system of
     ordinary first order differential equations.
     
-    This can be done analytically *via* the algebric inversion 
+    This can be done analytically *via* the algebraic inversion 
     of the equation system matrix. 
     This is what the `ana_slvr` core functions does.
     
@@ -219,7 +219,7 @@ These functions are called within broader functions (e.g., `run_isobxr`).
 
 Because these functions are the actual solvers 
 of the stable isotope box model equation systems,
-you will find here a description of their functionning and applicability.
+you will find here a description of their functioning and applicability.
 
 You can also refer to the documentation for these two functions 
 by typing the following code into your R console: 
@@ -255,7 +255,7 @@ strictly named as follows:
 1. **CONSTS_IN**: Dataframe documenting the constants  
 1. **INITIAL_IN**: Dataframe documenting the initial conditions of all box sizes 
 (even empty ones) and all initial delta values.
-1. **FLUXES_IN**: Dataframe documenting the massic fluxes of element X 
+1. **FLUXES_IN**: Dataframe documenting the mass fluxes of element X 
 between all boxes (structured as a square matrix)
 1. **COEFFS_IN**: Dataframe documenting the isotopic fractionation coefficients 
 between all boxes (structured as a square matrix)

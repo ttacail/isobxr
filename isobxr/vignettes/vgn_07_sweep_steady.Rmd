@@ -63,11 +63,11 @@ requires a *sweep steady master file*.
 The *sweep steady master file* is the (xlsx) document containing all commands
 allowing `sweep_steady` function to compose a scenario of 2 runs. 
 
-The two parameters to be sweeped over run #2 are defined by user directly in the function input, in the R console. 
+The two parameters to be swept over run #2 are defined by user directly in the function input, in the R console. 
 
 The format of the *sweep steady master file* is the same as the *compose master file* and the *sweep dynamic master file*.
 
-It is where the user sets the design of their 2 runs scenario to be sweeped:
+It is where the user sets the design of their 2 runs scenario to be swept:
 
 * necessary: define the list of 2 runs composing the scenario (run durations, run resolutions, lists of fluxes, lists of coefficients).  
 * optional: define the forcings over one or both runs composing the composite scenario (FORCING_RAYLEIGH, FORCING_ALPHA, FORCING_DELTA, FORCING_SIZE).  
@@ -102,7 +102,7 @@ knitr::include_graphics('./07_std_01_RUN_LIST.png')
 
 The `sweep_steady` function strictly requires a list of *2* successive runs.
 
-Both of these runs should be succesively described one by one on two rows of this sheet, with notably:  
+Both of these runs should be successively described one by one on two rows of this sheet, with notably:  
 
 1. the run number (COMPO_RUN_n column)  
 1. the run duration (t_lim_list column)  
@@ -146,7 +146,7 @@ The user needs to define the two runs composing the 2 steps scenario.
 
 1. The first run is used to let the system relax to its steady state used as an initial state in run #2.  
     i) The user should consider here a balanced system. The [isobxr](https://ttacail.github.io/isobxr/) functions will thus use the analytical solver (`ana_slvr`).
-    i) We thus recommand the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).  
+    i) We thus recommend the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).  
         This allows to only calculate the final state of the system, at the end of run #1.  
         This reduces the calculation time and data produced without affecting the accuracy of the calculation.  
 
@@ -155,7 +155,7 @@ The user needs to define the two runs composing the 2 steps scenario.
     i) It is therefore recommended to use the same balanced system over the second run, allowing to analytically solve the system (with `ana_slvr`).
     i) The use of the analytical solver will notably allow to map the final state at a high resolution of parameters #1 and #2  
         while minimizing the required calculation time as well as RAM and hard memory.  
-    i) We thus recommand the user to set the number of steps for run #2 (nb_steps) to 1 (its' minimum value).  
+    i) We thus recommend the user to set the number of steps for run #2 (nb_steps) to 1 (its' minimum value).  
         This allows to only calculate the final state of the system, at the end of run #2.  
         This reduces the calculation time and data produced without affecting the accuracy of the calculation.  
         
@@ -168,11 +168,11 @@ The user needs to define the two runs composing the 2 steps scenario.
 **Forcings**   
 :    The user can define some forcings over the system (will affect both run #1 and run #2).  
     These forcings will overwrite the conditions set by the reading of the *isobxr master file*.  
-    These forcings will be overwritten by the sweeped parameters that affect run #2.
+    These forcings will be overwritten by the swept parameters that affect run #2.
 
 ## Required arguments
 
-In addition to all the usual input parameters required for the `sweep_steady` function, the user has to define the two parameters to be sweeped.
+In addition to all the usual input parameters required for the `sweep_steady` function, the user has to define the two parameters to be swept.
 
 There are 6 types of sweepable parameters (or that can be explored), which names are strictly defined as follows:
 

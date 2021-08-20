@@ -63,7 +63,7 @@ The `run_isobxr` function allows to:
 
 1. provide user with the time evolutions of isotope compositions and masses of X in each box
 
-The general workflow of the `run_isobxr` function is summarised in the cheatsheet below:
+The general workflow of the `run_isobxr` function is summarized in the cheatsheet below:
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./02_basics_02_runisobxr_wflow.png')
@@ -108,7 +108,7 @@ The **isobxr master file** contains the 4 following sheet strictly named as foll
 
 1. **CONSTANTS**: Sheet defining the constants of the isotopic system
 1. **BOXES**: Sheet defining names and status of all boxes constituting the system
-1. **FLUXES**: Sheet defining the initial box sizes and massic fluxes of element X between boxes (structured as a column list)
+1. **FLUXES**: Sheet defining the initial box sizes and mass fluxes of element X between boxes (structured as a column list)
 1. **COEFFS**: Sheet defining the isotopic fractionation coefficients between all boxes (structured as a column list)
 
 The general rules for the filling in of the **isobxr master file** are shown in cheatsheet below:
@@ -203,7 +203,7 @@ All arguments definitions of the `run_isobxr` function are accessible in its doc
 
 ## Required arguments
 
-The arguments required to run the `run_isobxr` function are examplified and described here:
+The arguments required to run the `run_isobxr` function are exemplified and described here:
 
 ```{r eval=FALSE}
 run_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
@@ -386,7 +386,7 @@ We consider here the case of the loss of element X from a box A to a box C throu
 all possibly part of a bigger box model system.
 
 We suppose that the apparent fractionation coefficient $\alpha_{A \to C}$ associated to this flux $F_{A \to C}$ 
-results from a Rayleigh type distillation occuring during the fractional exchange of element X at the interface box B.
+results from a Rayleigh type distillation occurring during the fractional exchange of element X at the interface box B.
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics('./03_Run_isobxr_07_Rayleigh.png')
