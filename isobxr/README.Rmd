@@ -43,7 +43,7 @@ The [isobxr](https://ttacail.github.io/isobxr/) is available as a source package
 The package can be installed as follows:
 
 1. Download and install/update [R](https://cran.r-project.org/) and 
-[Rstudio](https://rstudio.com/products/rstudio/download/).
+[Rstudio](https://www.rstudio.com/products/rstudio/download/).
 
 2. Download and install package **devtools** as follows:
 

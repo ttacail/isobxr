@@ -52,7 +52,7 @@ from [GitHub](https://github.com/).
 The installation process can be done as follows:
 
 1. Download and install/update [R](https://cran.r-project.org/) and 
-[Rstudio](https://rstudio.com/products/rstudio/download/).
+[Rstudio](https://www.rstudio.com/products/rstudio/download/).
 
 2. Download and install package **devtools** as follows:
 
