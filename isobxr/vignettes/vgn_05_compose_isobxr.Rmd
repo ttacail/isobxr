@@ -52,19 +52,22 @@ knitr::include_graphics('./05_cps_01_principle.png')
 ```
 
 ## General workflow
-The general workflow of the `compose_isobxr` function is summarized in the cheatsheet below. 
+The general workflow of the `compose_isobxr` function is summarized in the cheatsheet available [here](https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html#12_General_workflow).  
 
-```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('./05_cps_02_workflow.png')
-```
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./05_cps_02_workflow.png') -->
+<!-- ``` -->
 
 
 ## How is the scenario defined ?
+
 The scenario is defined in the **compose master file** (xlsx file) which stores the following required and optional information.
 
-```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('./05_cps_03_scenario_definition.png')
-```
+An overview of the way the scenario is defined can be found [here](https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html#13_How_is_the_scenario_defined_).
+
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./05_cps_03_scenario_definition.png') -->
+<!-- ``` -->
 
 # Filling in compose master file (xlsx)
 
