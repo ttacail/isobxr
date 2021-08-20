@@ -6,4 +6,3 @@
 ^pkgdown$
 ^\.github$
 ^cran-comments\.md$
-^NEWS\.md$
