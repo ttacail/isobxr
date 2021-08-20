@@ -1,9 +1,9 @@
-usethis::use_package("stringr")
-usethis::use_package("readxl")
-usethis::use_package("dplyr")
-usethis::use_package("data.table")
-usethis::use_package("deSolve")
-usethis::use_package("rlang")
+# usethis::use_package("stringr")
+# usethis::use_package("readxl")
+# usethis::use_package("dplyr")
+# usethis::use_package("data.table")
+# usethis::use_package("deSolve")
+# usethis::use_package("rlang")
 
 #  #_________________________________________________________________________80char
 #' Numerically solve stable isotope box models
