@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">isobxr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -102,20 +102,43 @@
   <div class="contents col-md-9">
 <div id="isobxr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#isobxr" class="anchor"></a>isobxr</h1></div>
+<a href="#isobxr" class="anchor"></a>isobxr <img src="reference/figures/README-logo.png" align="right" height="200px">
+</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It allows users to develop and test isotopic box models of their system of interest, explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, as well as sweep the space of parameters in both static and dynamic modes.</p>
+<p>The <a href="https://ttacail.github.io/isobxr_web/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It allows users to develop and test isotopic box models of their system of interest, explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, as well as sweep the space of parameters in both static and dynamic modes.</p>
+<p>Check the <a href="https://ttacail.github.io/isobxr_web/">isobxr website</a> for more information on <a href="https://ttacail.github.io/isobxr_web/">isobxr</a> and introduction to its rationale.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>The <strong>isobxr</strong> is available as a source package from <a href="https://github.com/">GitHub</a>.</p>
-<p>The installation process can be found <a href="https://ttacail.github.io/isobxr_web/vgn_01_Installation.html">here</a>.</p>
+<!-- ## CRAN version -->
+<!-- You can install the released version of isobxr from [CRAN](https://CRAN.R-project.org) with: -->
+<!-- ``` r -->
+<!-- install.packages("isobxr") -->
+<!-- ``` -->
+<div id="development-version" class="section level3">
+<h3 class="hasAnchor">
+<a href="#development-version" class="anchor"></a>Development version</h3>
+<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> is available as a source package from <a href="https://github.com/">GitHub</a>.</p>
+<p>The package can be installed as follows:</p>
+<ol>
+<li><p>Download and install/update <a href="https://cran.r-project.org/">R</a> and <a href="https://rstudio.com/products/rstudio/download/">Rstudio</a>.</p></li>
+<li><p>Download and install package <strong>devtools</strong> as follows:</p></li>
+</ol>
+<div class="sourceCode"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></pre></div>
+<ol>
+<li>Download and install <a href="https://ttacail.github.io/isobxr/">isobxr</a> source package.</li>
+</ol>
+<div class="sourceCode"><pre class="downlit">
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ttacail/isobxr/isobxr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># FALSE if no pandoc/Rstudio </span></pre></div>
+<p>The full description of installation process can be found <a href="https://ttacail.github.io/isobxr_web/vgn_01_Installation.html">here</a>.</p>
+</div>
 </div>
 <div id="principles-and-tutorials" class="section level2">
 <h2 class="hasAnchor">
 <a href="#principles-and-tutorials" class="anchor"></a>Principles and tutorials</h2>
-<p>The documentation about underlying theory and isobxr utilization is made fully available to user in the <a href="https://ttacail.github.io/isobxr_web/index.html">package website</a>.</p>
+<p>The documentation about underlying theory and isobxr use is made fully available to user in the <a href="https://ttacail.github.io/isobxr_web/index.html">package website</a>.</p>
 <p>On this website you can find the following items.</p>
 <ol>
 <li><p><a href="https://ttacail.github.io/isobxr_web/vgn_01_Installation.html">How can I install isobxr and demo files?</a></p></li>
