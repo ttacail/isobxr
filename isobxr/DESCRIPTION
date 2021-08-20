@@ -1,8 +1,8 @@
 Package: isobxr
 Type: Package
 Title: Stable isotope box modelling in R
-Version: 0.1.0
-Authors@R: person("Theo", "Tacail", email = "theo.tacail@gmail.com", role = c("aut", "cre"))
+Version: 1.0.0
+Authors@R: person("Theo", "Tacail", email = "theo.tacail@protonmail.com", role = c("aut", "cre"))
 Description: A set of functions to run simple and composite box-models to describe the 
     dynamic or static distribution of stable isotopes in open 
     or closed systems. The package also allows the sweeping of many 
@@ -10,7 +10,7 @@ Description: A set of functions to run simple and composite box-models to descri
     with a post-run plotting interface built under shiny.
 Depends: R (>= 3.5.0)
 License: GPL-3
-URL: https://github.com/ttacail/isobxr
+URL: https://github.com/ttacail/isobxr, https://ttacail.github.io/isobxr_web/, https://ttacail.github.io/isobxr/
 BugReports: https://github.com/ttacail/isobxr/issues
 Encoding: UTF-8
 LazyData: false
