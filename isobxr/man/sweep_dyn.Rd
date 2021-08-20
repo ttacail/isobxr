@@ -51,10 +51,10 @@ Default is FALSE.}
 \value{
 Creates and stores all outputs in a dedicated dynamic steady SERIES directory
 located in working directory, with the following name structure: \cr
-\strong{\emph{4_DYN + SERIES_ID + YYY}}, where YYY is a sweep dynamic run number automically set between 001 and 999. \cr
+\strong{\emph{4_DYN + SERIES_ID + YYY}}, where YYY is a sweep dynamic run number automatically set between 001 and 999. \cr
 No overwriting of previous sweep dynamic run runs is possible.
 \enumerate{
-\item Calculates the number of single runs the sweeping will require depending on the sweeped parameters.
+\item Calculates the number of single runs the sweeping will require depending on the swept parameters.
 \item Asks the user confirmation to run \code{\link{sweep_dyn}},
 as the run calculation time depends on the number of successive sweeping runs.
 \item Writes the set of inputs and outputs for all successive \emph{n} sweeping runs, numbered from to 1 to \emph{n} in an XXXX format,

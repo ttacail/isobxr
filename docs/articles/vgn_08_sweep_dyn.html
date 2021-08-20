@@ -143,7 +143,7 @@
 <p>The main purpose of this <code>sweep_dyn</code> structure is:</p>
 <ul>
 <li>to explore the influence of a pair of parameters over the dynamic evolution during run #2 of isotope compositions (and box sizes) in all boxes,</li>
-<li>while starting this run #2 from a an initial state defined by run #1 that also depends on the sweeped parameters</li>
+<li>while starting this run #2 from a an initial state defined by run #1 that also depends on the swept parameters</li>
 <li>run #1 typically being for a balanced system, relaxed to it's steady state</li>
 </ul>
 </div>
@@ -152,9 +152,9 @@
 <a href="#sweep-dyn-master-file-xlsx" class="anchor"></a>Sweep dyn master file (xlsx)</h1>
 <p>In addition to the global <em>isobxr master file</em>, the <code>sweep_dyn</code> function requires a <em>sweep dyn master file</em>.</p>
 <p>The <em>sweep dyn master file</em> is the (xlsx) document containing all commands allowing <code>sweep_dyn</code> function to compose a scenario of 2 runs.</p>
-<p>The two parameters to be sweeped over run #1 and #2 are defined by user directly in the function input, in the R console.</p>
+<p>The two parameters to be swept over run #1 and #2 are defined by user directly in the function input, in the R console.</p>
 <p>The format of the <em>sweep dyn master file</em> is the same as the <em>compose master file</em> and the <em>sweep steady master file</em>.</p>
-<p>It is where the user sets the design of their 2 runs scenario to be sweeped:</p>
+<p>It is where the user sets the design of their 2 runs scenario to be swept:</p>
 <ul>
 <li>necessary: define the list of 2 runs composing the scenario (run durations, run resolutions, lists of fluxes, lists of coefficients).<br>
 </li>
@@ -199,7 +199,7 @@
 </h3>
 <p><img src="07_std_01_RUN_LIST.png" width="75%"></p>
 <p>The <code>sweep_dyn</code> function strictly requires a list of <em>2</em> successive runs.</p>
-<p>Both of these runs should be succesively described one by one on two rows of this sheet, with notably:</p>
+<p>Both of these runs should be successively described one by one on two rows of this sheet, with notably:</p>
 <ol style="list-style-type: decimal">
 <li>the run number (COMPO_RUN_n column)<br>
 </li>
@@ -255,7 +255,7 @@
 <li>The first run is typically used to let the system relax to its steady state used as an initial state in run #2.
 <ol style="list-style-type: lower-roman">
 <li>The user should consider here a balanced system. The <a href="https://ttacail.github.io/isobxr/">isobxr</a> functions will thus use the analytical solver (<code>ana_slvr</code>).</li>
-<li>We thus recommand the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).<br>
+<li>We thus recommend the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).<br>
 This allows to only calculate the final state of the system, at the end of run #1.<br>
 This reduces the calculation time and data produced without affecting the accuracy of the calculation.</li>
 </ol>
@@ -264,7 +264,7 @@ This reduces the calculation time and data produced without affecting the accura
 <ol style="list-style-type: lower-roman">
 <li>The main purpose of this function is to explore the influence of the 2 combined parameters over the time dependent response of a system that previously relaxed to it's steady state.</li>
 <li>The user has the choice to define a balanced or an unbalanced system in the run #2. A. The latter case (unbalanced system) could here constitute the perturbation of the system. The <code>sweep_dyn</code> function will here numerically solve the run #2 (<code>num_slvr</code>). A. In the case of a balanced system for run #2, the <code>sweep_dyn</code> function will analytically solve the run #2 (<code>ana_slvr</code>). A. The user should here be aware that the sweeping of the space of parameters using either the <code>num_slvr</code> or <code>ana_slvr</code> can be time consuming and require a fair bit of calculating power.<br>
-The user is advised to wisely define the space of parameters (which will define the number of <span class="math inline">\(n \times m\)</span> iterations) as well as the run resoluion of run #2 (nb_steps).</li>
+The user is advised to wisely define the space of parameters (which will define the number of <span class="math inline">\(n \times m\)</span> iterations) as well as the run resolution of run #2 (nb_steps).</li>
 </ol>
 </li>
 </ol>
@@ -275,14 +275,14 @@ The user is advised to wisely define the space of parameters (which will define 
 <dt><strong>Forcings</strong></dt>
 <dd>The user can define some forcings over the system (will affect both run #1 and run #2).<br>
 These forcings will overwrite the conditions set by the reading of the <em>isobxr master file</em>.<br>
-These forcings will be overwritten by the sweeped parameters that affect run #1 and #2.
+These forcings will be overwritten by the swept parameters that affect run #1 and #2.
 </dd>
 </dl>
 </div>
 <div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
-<p>In addition to all the usual input parameters required for the <code>sweep_dyn</code> function, the user has to define the two parameters to be sweeped.</p>
+<p>In addition to all the usual input parameters required for the <code>sweep_dyn</code> function, the user has to define the two parameters to be swept.</p>
 <p>There are 6 types of sweepable parameters (or that can be explored), which names are strictly defined as follows:</p>
 <pre><code>#&gt; [1] "EXPLO_n_FLUX_MATRICES"
 #&gt; [1] "EXPLO_n_ALPHA_MATRICES"
@@ -414,7 +414,7 @@ These forcings will be overwritten by the sweeped parameters that affect run #1 
 <h1 class="hasAnchor">
 <a href="#tutorial-example" class="anchor"></a>Tutorial example</h1>
 <p>Dynamic sweeping of the size of box B and one fractionation coefficient in a 3-boxes balanced open system after a change in the source isotope composition.</p>
-<p>Both run #1 and run #2 are performed with the <em>a1</em> coefficients list, the <em>Fx3_ABC_open_bal</em> flux list and the sweeping paramaters.</p>
+<p>Both run #1 and run #2 are performed with the <em>a1</em> coefficients list, the <em>Fx3_ABC_open_bal</em> flux list and the sweeping parameters.</p>
 <p>The system faces a perturbation: the source isotope composition is shifted from 0 to -1 ‰ using the FORCING_DELTA sheet of the <em>sweeping dynamic master file</em>.</p>
 <p>Here:</p>
 <ul>

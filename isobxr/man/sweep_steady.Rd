@@ -51,11 +51,11 @@ Default is FALSE.}
 \value{
 Creates and stores all outputs in a dedicated sweep steady SERIES directory
 located in working directory, with the following name structure: \cr
-\strong{\emph{4_STD + SERIES_ID + YYY}}, where YYY is a sweep steady run number automically set between 001 and 999. \cr
+\strong{\emph{4_STD + SERIES_ID + YYY}}, where YYY is a sweep steady run number automatically set between 001 and 999. \cr
 No overwriting of previous sweep steady run runs is possible.
 
 \enumerate{
-\item Calculates the number of single runs the sweeping will require depending on the sweeped parameters.
+\item Calculates the number of single runs the sweeping will require depending on the swept parameters.
 \item Asks the user confirmation to run \code{\link{sweep_steady}},
 as the run calculation time depends on the number of successive sweeping runs.
 \item Writes the set of inputs and outputs for the single initial run only with the following format: \cr

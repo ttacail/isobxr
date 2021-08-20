@@ -64,7 +64,7 @@ Default is FALSE.}
 \value{
 Creates and stores all outputs in a dedicated composite SERIES directory located in working directory,
 with the following name structure: \cr
-\strong{\emph{3_CPS + SERIES_ID + YYY}}, where YYY is a composite scenario number automically set between 001 and 999. \cr
+\strong{\emph{3_CPS + SERIES_ID + YYY}}, where YYY is a composite scenario number automatically set between 001 and 999. \cr
 No overwriting of previous composite runs is possible.
 
 \enumerate{

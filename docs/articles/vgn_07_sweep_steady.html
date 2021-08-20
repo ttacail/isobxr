@@ -153,9 +153,9 @@
 <a href="#sweep-steady-master-file-xlsx" class="anchor"></a>Sweep steady master file (xlsx)</h1>
 <p>In addition to the global <em>isobxr master file</em>, the <code>sweep_steady</code> function requires a <em>sweep steady master file</em>.</p>
 <p>The <em>sweep steady master file</em> is the (xlsx) document containing all commands allowing <code>sweep_steady</code> function to compose a scenario of 2 runs.</p>
-<p>The two parameters to be sweeped over run #2 are defined by user directly in the function input, in the R console.</p>
+<p>The two parameters to be swept over run #2 are defined by user directly in the function input, in the R console.</p>
 <p>The format of the <em>sweep steady master file</em> is the same as the <em>compose master file</em> and the <em>sweep dynamic master file</em>.</p>
-<p>It is where the user sets the design of their 2 runs scenario to be sweeped:</p>
+<p>It is where the user sets the design of their 2 runs scenario to be swept:</p>
 <ul>
 <li>necessary: define the list of 2 runs composing the scenario (run durations, run resolutions, lists of fluxes, lists of coefficients).<br>
 </li>
@@ -200,7 +200,7 @@
 </h3>
 <p><img src="07_std_01_RUN_LIST.png" width="75%"></p>
 <p>The <code>sweep_steady</code> function strictly requires a list of <em>2</em> successive runs.</p>
-<p>Both of these runs should be succesively described one by one on two rows of this sheet, with notably:</p>
+<p>Both of these runs should be successively described one by one on two rows of this sheet, with notably:</p>
 <ol style="list-style-type: decimal">
 <li>the run number (COMPO_RUN_n column)<br>
 </li>
@@ -256,7 +256,7 @@
 <li>The first run is used to let the system relax to its steady state used as an initial state in run #2.
 <ol style="list-style-type: lower-roman">
 <li>The user should consider here a balanced system. The <a href="https://ttacail.github.io/isobxr/">isobxr</a> functions will thus use the analytical solver (<code>ana_slvr</code>).</li>
-<li>We thus recommand the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).<br>
+<li>We thus recommend the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).<br>
 This allows to only calculate the final state of the system, at the end of run #1.<br>
 This reduces the calculation time and data produced without affecting the accuracy of the calculation.</li>
 </ol>
@@ -268,7 +268,7 @@ This reduces the calculation time and data produced without affecting the accura
 <li>The use of the analytical solver will notably allow to map the final state at a high resolution of parameters #1 and #2<br>
 while minimizing the required calculation time as well as RAM and hard memory.<br>
 </li>
-<li>We thus recommand the user to set the number of steps for run #2 (nb_steps) to 1 (its' minimum value).<br>
+<li>We thus recommend the user to set the number of steps for run #2 (nb_steps) to 1 (its' minimum value).<br>
 This allows to only calculate the final state of the system, at the end of run #2.<br>
 This reduces the calculation time and data produced without affecting the accuracy of the calculation.</li>
 </ol>
@@ -281,14 +281,14 @@ This reduces the calculation time and data produced without affecting the accura
 <dt><strong>Forcings</strong></dt>
 <dd>The user can define some forcings over the system (will affect both run #1 and run #2).<br>
 These forcings will overwrite the conditions set by the reading of the <em>isobxr master file</em>.<br>
-These forcings will be overwritten by the sweeped parameters that affect run #2.
+These forcings will be overwritten by the swept parameters that affect run #2.
 </dd>
 </dl>
 </div>
 <div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
-<p>In addition to all the usual input parameters required for the <code>sweep_steady</code> function, the user has to define the two parameters to be sweeped.</p>
+<p>In addition to all the usual input parameters required for the <code>sweep_steady</code> function, the user has to define the two parameters to be swept.</p>
 <p>There are 6 types of sweepable parameters (or that can be explored), which names are strictly defined as follows:</p>
 <pre><code>#&gt; [1] "EXPLO_n_FLUX_MATRICES"
 #&gt; [1] "EXPLO_n_ALPHA_MATRICES"

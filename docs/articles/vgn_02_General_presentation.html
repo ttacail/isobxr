@@ -132,7 +132,7 @@
 <ul>
 <li><p><code>run_isobxr</code> is the main function of the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package.</p></li>
 <li><p><code>run_isobxr</code> is used to perform single runs of stable isotope box models of all types of systems.</p></li>
-<li><p>The general workflow of the <code>run_isobxr</code> function is summarised in the cheatsheet below.</p></li>
+<li><p>The general workflow of the <code>run_isobxr</code> function is summarized in the cheatsheet below.</p></li>
 </ul>
 <p><img src="02_basics_02_runisobxr_wflow.png" width="100%"></p>
 <hr>
@@ -141,7 +141,7 @@
 <div id="box-modelling-equations" class="section level1">
 <h1 class="hasAnchor">
 <a href="#box-modelling-equations" class="anchor"></a>Box modelling equations</h1>
-<p>In this section we present the mathematic formalism used in isobxr stable isotope box modelling.</p>
+<p>In this section we present the mathematical formalism used in isobxr stable isotope box modelling.</p>
 <p>The theory and formalism shown in this section is derived from the chapter 7 (<em>Dynamic systems</em>) of</p>
 <p>: Albarède, F., 1995. Introduction to Geochemical Modelling. Cambridge University Press, Cambridge.<br><a href="https://doi.org/10.1017/CBO9780511622960" class="uri">https://doi.org/10.1017/CBO9780511622960</a></p>
 <div id="definitions" class="section level2">
@@ -150,11 +150,11 @@
 <p>We consider a system consisting of <span class="math inline">\(n\)</span> boxes <span class="math inline">\(j\)</span>, exchanging an element <strong>X</strong> that has at least two stable isotopes <span class="math inline">\(M\)</span> and <span class="math inline">\(N\)</span>. Any box <span class="math inline">\(i\)</span> is defined by:</p>
 <ul>
 <li>
-<span class="math inline">\(m^X_i\)</span> the mass of element <strong>X</strong> in box <span class="math inline">\(i\)</span> - also refered to as <strong>box size</strong> thereafter</li>
+<span class="math inline">\(m^X_i\)</span> the mass of element <strong>X</strong> in box <span class="math inline">\(i\)</span> - also referred to as <strong>box size</strong> thereafter</li>
 <li>
 <span class="math inline">\(m^M_i\)</span> and <span class="math inline">\(m^N_i\)</span> the masses of isotopes <span class="math inline">\(M\)</span> and <span class="math inline">\(N\)</span> in box <span class="math inline">\(i\)</span>, respectively</li>
 <li>
-<span class="math inline">\(J_{i \mapsto j}^X\)</span> is the massic flux of <strong>X</strong> from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> (homogeneous to a mass per time unit)</li>
+<span class="math inline">\(J_{i \mapsto j}^X\)</span> is the mass flux of <strong>X</strong> from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> (homogeneous to a mass per time unit)</li>
 </ul>
 <p><img src="02_basics_03_Box_model_principle.png" width="100%"></p>
 <p>We call <span class="math inline">\(R_i\)</span> the <span class="math inline">\(M/N\)</span> isotope abundance ratio: <span class="math display">\[R_i = \left(\dfrac{n^M}{n^N}\right)_i = \left(\dfrac{m^M}{m^N}\right)_i \times \left(\dfrac{M^N}{M^M}\right) =   \left(\dfrac{m^M}{m^N}\right)_i A \]</span> where</p>
@@ -170,7 +170,7 @@
 </ul>
 <p>Finally, we define <span class="math inline">\(D_{i \mapsto j}^{M/N}\)</span> the relative fractionation coefficient between M and N from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span>:</p>
 <p><span class="math display">\[D_{i \mapsto j}^{M/N} = \dfrac{{J_{i \mapsto j}^M}/{J_{i \mapsto j}^N}}{m^M_i/m^N_i}\]</span></p>
-<p>The principe of modelling the system consists now in predicting the evolution of <strong>box sizes</strong> (<span class="math inline">\(m^X_i\)</span>) during time and the evolution of the <strong>isotope ratios</strong> (<span class="math inline">\(R_i\)</span>), knowing the fluxes, initial box sizes and fractionation coefficients.</p>
+<p>The principle of modelling the system consists now in predicting the evolution of <strong>box sizes</strong> (<span class="math inline">\(m^X_i\)</span>) during time and the evolution of the <strong>isotope ratios</strong> (<span class="math inline">\(R_i\)</span>), knowing the fluxes, initial box sizes and fractionation coefficients.</p>
 </div>
 <div id="mass-conservation-of-element-x" class="section level2">
 <h2 class="hasAnchor">
@@ -210,8 +210,8 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^N}{m^N_i} \left(1- D_{i \maps
 \dfrac{m^N_j}{m^N_i} \simeq \dfrac{m^X_j}{m^X_i}
 \end{array}\]</span></p>
 <p>These assumptions are valid for amplitude of stable isotope fractionations of the order of tens of ‰.</p>
-<p>These assumptions find their limitation in the case of ample stable isotope fractionations such as sometimes observed for isotopic systems of light elements (such as D/H). In these cases, the differences in reactivities can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.</p>
-<p>We thus have the following  used thereafter:</p>
+<p>These assumptions find their limitation in the case of ample stable isotope fractionations such as sometimes observed for isotopic systems of light elements (such as D/H). In these cases, the differences in reactivity can be too great and amplitudes of stable isotope fractionations too marked for the assumptions to be applicable.</p>
+<p>We thus have the following <strong>system of first order differential equations</strong> used thereafter:</p>
 <p><span class="math display">\[
 \dfrac{dR_i}{dt} = 
 R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \mapsto j}^{M/N} \right) + \sum \limits_{j \neq i} \dfrac{J_{j \mapsto i}^X}{m^X_j} \left(D_{j \mapsto i}^{M/N} R_j - R_i \right) \dfrac{m^X_j}{m^X_i}
@@ -223,7 +223,7 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p><strong>The inward and outward fluxes of element X for any given box are balanced</strong></p>
 <p>In this case, all box sizes (<span class="math inline">\(m^X_i\)</span>) are constant, which means that <span class="math inline">\({dm^X_i}/{dt} = 0\)</span> for all boxes.</p>
 <p>The reconstruction of <span class="math inline">\(R_i(t)\)</span> only requires the solving of the system of ordinary first order differential equations.</p>
-<p>This can be done analytically <em>via</em> the algebric inversion of the equation system matrix. This is what the <code>ana_slvr</code> core functions does.</p>
+<p>This can be done analytically <em>via</em> the algebraic inversion of the equation system matrix. This is what the <code>ana_slvr</code> core functions does.</p>
 </li>
 <li>
 <p><strong>The inward and outward fluxes of element X for at least one box is unbalanced</strong></p>
@@ -242,7 +242,7 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package uses two core solver functions to solve the system of differential equations: <code>num_slvr</code> and <code>ana_slvr</code>.</p>
 <p>These functions are not intended to be directly called by users themselves, although this remains possible.</p>
 <p>These functions are called within broader functions (e.g., <code>run_isobxr</code>).</p>
-<p>Because these functions are the actual solvers of the stable isotope box model equation systems, you will find here a description of their functionning and applicability.</p>
+<p>Because these functions are the actual solvers of the stable isotope box model equation systems, you will find here a description of their functioning and applicability.</p>
 <p>You can also refer to the documentation for these two functions by typing the following code into your R console:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="op">?</span><span class="va">ana_slvr</span>
@@ -277,7 +277,7 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <li>
 <strong>INITIAL_IN</strong>: Dataframe documenting the initial conditions of all box sizes (even empty ones) and all initial delta values.</li>
 <li>
-<strong>FLUXES_IN</strong>: Dataframe documenting the massic fluxes of element X between all boxes (structured as a square matrix)</li>
+<strong>FLUXES_IN</strong>: Dataframe documenting the mass fluxes of element X between all boxes (structured as a square matrix)</li>
 <li>
 <strong>COEFFS_IN</strong>: Dataframe documenting the isotopic fractionation coefficients between all boxes (structured as a square matrix)</li>
 </ol>

@@ -167,7 +167,7 @@ This encompasses the following: \cr
 \item \strong{CONSTS_IN}: Dataframe documenting the constants (Element, isotopes, reference ratio)
 \item \strong{INITIAL_IN}:  Dataframe documenting the initial conditions of all box sizes (incl. empty boxes) \cr
 and all initial delta values.
-\item \strong{FLUXES_IN}: Dataframe documenting the massic fluxes of element X \cr
+\item \strong{FLUXES_IN}: Dataframe documenting the mass fluxes of element X \cr
 between all boxes (structured as a square matrix)
 \item \strong{COEFFS_IN}: Dataframe documenting the isotopic fractionation coefficients \cr
 between all boxes (structured as a square matrix)

@@ -142,7 +142,7 @@
 <li><p>automatically run <code>num_slvr</code> or <code>ana_slvr</code> solvers depending on the model design</p></li>
 <li><p>provide user with the time evolutions of isotope compositions and masses of X in each box</p></li>
 </ol>
-<p>The general workflow of the <code>run_isobxr</code> function is summarised in the cheatsheet below:</p>
+<p>The general workflow of the <code>run_isobxr</code> function is summarized in the cheatsheet below:</p>
 <p><img src="02_basics_02_runisobxr_wflow.png" width="100%"></p>
 <p>To find the detailed description of <code>run_isobxr</code> inputs and outputs, the user can always refer to its documentation:</p>
 <div class="sourceCode"><pre class="downlit">
@@ -181,7 +181,7 @@
 <li>
 <strong>BOXES</strong>: Sheet defining names and status of all boxes constituting the system</li>
 <li>
-<strong>FLUXES</strong>: Sheet defining the initial box sizes and massic fluxes of element X between boxes (structured as a column list)</li>
+<strong>FLUXES</strong>: Sheet defining the initial box sizes and mass fluxes of element X between boxes (structured as a column list)</li>
 <li>
 <strong>COEFFS</strong>: Sheet defining the isotopic fractionation coefficients between all boxes (structured as a column list)</li>
 </ol>
@@ -250,7 +250,7 @@
 <div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
-<p>The arguments required to run the <code>run_isobxr</code> function are examplified and described here:</p>
+<p>The arguments required to run the <code>run_isobxr</code> function are exemplified and described here:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
            SERIES_ID <span class="op">=</span> <span class="st">"Name_of_SERIES_ID"</span>, <span class="co"># defining the name of the SERIES of run</span>
@@ -407,7 +407,7 @@ It is done by defining a data frame structured as follows.</p>
 <a href="#rayleigh-distillation-models" class="anchor"></a>Rayleigh distillation models</h3>
 <p>It is possible to overwrite isotope fractionation coefficients by defining their values as the result of Rayleigh type isotope distillation in the context of a fractional exchange at an interface.</p>
 <p>We consider here the case of the loss of element X from a box A to a box C through an interface box B, all possibly part of a bigger box model system.</p>
-<p>We suppose that the apparent fractionation coefficient <span class="math inline">\(\alpha_{A \to C}\)</span> associated to this flux <span class="math inline">\(F_{A \to C}\)</span> results from a Rayleigh type distillation occuring during the fractional exchange of element X at the interface box B.</p>
+<p>We suppose that the apparent fractionation coefficient <span class="math inline">\(\alpha_{A \to C}\)</span> associated to this flux <span class="math inline">\(F_{A \to C}\)</span> results from a Rayleigh type distillation occurring during the fractional exchange of element X at the interface box B.</p>
 <p><img src="03_Run_isobxr_07_Rayleigh.png" width="100%"></p>
 <p>In this situation, the box A exchanges element X with box B (and possibly other boxes).</p>
 <p>This is a fractional exchange, <em>i.e.</em> during this exchange, box A sends more of element X to box B than B sends back (<span class="math inline">\(F_{A \to B} &gt; F_{B \to A}\)</span>).</p>

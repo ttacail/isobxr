@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{calculation_gauge}
 \alias{calculation_gauge}
-\title{Gauge of calcucation}
+\title{Gauge of calculation}
 \usage{
 calculation_gauge(i, len)
 }
