@@ -1,3 +1,10 @@
+## Resubmission
+This is a resubmission. In this version I have: 
+
+* Reduced the size of the tarball below 5 MB
+
+* inlcuded a doi reference to the Description field of DESCRIPTION.
+
 ## Test environments
 * local OS X install, R 4.0.3
 * Ubuntu Linux 20.04.1 LTS, R-devel, GCC
