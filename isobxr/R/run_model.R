@@ -115,6 +115,10 @@ NULL
 #' Logical value.  \cr
 #' Print evD plot with log10 time scale as x-axis. \cr
 #' Default is TRUE.
+#' @param print_evD_PLOT \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Plots the overview plots of the single model run (full evD and full evS) if TRUE. \cr
+#' Default is TRUE.
 #'
 #' @return If the function is run independently and if directory is not yet existing, \cr
 #' \code{\link{run_isobxr}} creates and stores all outputs in a \emph{SERIES} folder located in working directory,
@@ -209,7 +213,8 @@ run_isobxr <- function(workdir,
                        to_DIGEST_DIAGRAMS = TRUE,
                        to_DIGEST_evD_PLOT = TRUE,
                        to_DIGEST_CSV_XLS = FALSE,
-                       evD_PLOT_time_as_log = TRUE){
+                       evD_PLOT_time_as_log = TRUE,
+                       print_evD_PLOT = TRUE){
 
   # locally bind variables (fixing binding global variable issue)
   A_OUT <- N_evS <- A_evD <- N_evD <- NULL
@@ -831,7 +836,7 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# POST-RUN OUTPUTS
   #### CREATE PLOT (OPTION TO HIDE)
 
-  if (to_DIGEST_evD_PLOT == TRUE){
+  if (to_DIGEST_evD_PLOT == TRUE | print_evD_PLOT == TRUE){
 
     load(paste(folder_outdir, "OUT.Rda", sep = ""))
 
@@ -943,10 +948,16 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     }
 
     #### EXPORT PLOT
-    pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
-    dev.new()
-    pdf(pdf_path, width = 10, height = 10, pointsize = 1, useDingbats=FALSE)
-    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
-    graphics.off()
+    if (isTRUE(to_DIGEST_evD_PLOT)){
+      pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
+      dev.new()
+      pdf(pdf_path, width = 10, height = 10, pointsize = 1, useDingbats=FALSE)
+      suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
+      graphics.off()
+    }
+    ##### PRINT PLOT
+    if (isTRUE(print_evD_PLOT)){
+      print(suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1)))
+    }
   }
 }

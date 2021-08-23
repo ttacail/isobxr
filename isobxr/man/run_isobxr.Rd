@@ -26,7 +26,8 @@ run_isobxr(
   to_DIGEST_DIAGRAMS = TRUE,
   to_DIGEST_evD_PLOT = TRUE,
   to_DIGEST_CSV_XLS = FALSE,
-  evD_PLOT_time_as_log = TRUE
+  evD_PLOT_time_as_log = TRUE,
+  print_evD_PLOT = TRUE
 )
 }
 \arguments{
@@ -146,6 +147,11 @@ Default is FALSE.}
 \item{evD_PLOT_time_as_log}{\emph{OPTIONAL}\cr
 Logical value.  \cr
 Print evD plot with log10 time scale as x-axis. \cr
+Default is TRUE.}
+
+\item{print_evD_PLOT}{\emph{OPTIONAL} \cr
+Logical value. \cr
+Plots the overview plots of the single model run (full evD and full evS) if TRUE. \cr
 Default is TRUE.}
 }
 \value{
