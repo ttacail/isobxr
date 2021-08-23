@@ -57,6 +57,10 @@
 #' Logical value. \cr
 #' Exports all global csv outputs to \strong{\emph{0_CPS_DIGEST}} folder (full evD and full evS) if TRUE. \cr
 #' Default is FALSE.
+#' @param print_plots \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Plots the overview plots of the composite model (full evD and full evS) if TRUE. \cr
+#' Default is TRUE.
 #'
 #' @return Creates and stores all outputs in a dedicated composite SERIES directory located in working directory,
 #' with the following name structure: \cr
@@ -109,7 +113,8 @@ compose_isobxr <- function(workdir,
                            plot_HIDE_BOXES_delta = NULL,
                            plot_HIDE_BOXES_size = NULL,
                            EACH_RUN_DIGEST = FALSE,
-                           to_CPS_DIGEST_CSVs = FALSE){
+                           to_CPS_DIGEST_CSVs = FALSE,
+                           print_plots = TRUE){
 
   # locally bind variables (fixing binding global variable issue)
   INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
@@ -250,7 +255,8 @@ compose_isobxr <- function(workdir,
              HIDE_PRINTS = FALSE,
              to_DIGEST_DIAGRAMS = to_DIGEST_DIAGRAMS,
              to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
-             to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS)
+             to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS,
+             print_evD_PLOT = FALSE)
 
   calculation_gauge(0, length(t_lim_list))
   calculation_gauge(i, length(t_lim_list))
@@ -348,7 +354,8 @@ compose_isobxr <- function(workdir,
                HIDE_PRINTS = TRUE,
                to_DIGEST_DIAGRAMS = to_DIGEST_DIAGRAMS,
                to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
-               to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS)
+               to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS,
+               print_evD_PLOT = FALSE)
     calculation_gauge(i, length(t_lim_list))
     i <- i + 1
   }
@@ -691,6 +698,12 @@ compose_isobxr <- function(workdir,
   pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
   suppressWarnings(print(evS_plot_facet))
   graphics.off()
+
+  if(isTRUE(print_plots)){
+    suppressWarnings(print(evD_plot_facet))
+    suppressWarnings(print(evS_plot_facet))
+    print(multiplot(evD_plot, evS_plot, cols = 1))
+  }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# EDIT LOCAL COMPO MASTER XLSX #----
   # compo_master_excel_path <-  paste(path_out_COMPO, "_COMPO_MASTER.xlsx", sep = "")

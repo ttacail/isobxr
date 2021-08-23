@@ -12,7 +12,8 @@ compose_isobxr(
   plot_HIDE_BOXES_delta = NULL,
   plot_HIDE_BOXES_size = NULL,
   EACH_RUN_DIGEST = FALSE,
-  to_CPS_DIGEST_CSVs = FALSE
+  to_CPS_DIGEST_CSVs = FALSE,
+  print_plots = TRUE
 )
 }
 \arguments{
@@ -60,6 +61,11 @@ Default is FALSE.}
 Logical value. \cr
 Exports all global csv outputs to \strong{\emph{0_CPS_DIGEST}} folder (full evD and full evS) if TRUE. \cr
 Default is FALSE.}
+
+\item{print_plots}{\emph{OPTIONAL} \cr
+Logical value. \cr
+Plots the overview plots of the composite model (full evD and full evS) if TRUE. \cr
+Default is TRUE.}
 }
 \value{
 Creates and stores all outputs in a dedicated composite SERIES directory located in working directory,
