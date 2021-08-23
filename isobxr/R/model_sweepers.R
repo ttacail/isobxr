@@ -219,7 +219,8 @@ sweep_steady <- function(workdir,
              EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
              HIDE_PRINTS = FALSE,
              to_DIGEST_DIAGRAMS = TRUE,
-             to_DIGEST_evD_PLOT = TRUE)
+             to_DIGEST_evD_PLOT = TRUE,
+             print_evD_PLOT = FALSE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE SWEEP OF RUN 2/2 #----
   #************************************** PREPARE INPUTS for ISOPY_RUN with EXPLO_MASTER as default #----
@@ -508,7 +509,8 @@ sweep_steady <- function(workdir,
                          EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
                          HIDE_PRINTS = TRUE,
                          to_DIGEST_DIAGRAMS = FALSE,
-                         to_DIGEST_evD_PLOT = FALSE))
+                         to_DIGEST_evD_PLOT = FALSE,
+                         print_evD_PLOT = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         # calculation_gauge(clock, tot_run)
         utils::setTxtProgressBar(pb_cpt, clock)
@@ -1212,7 +1214,8 @@ sweep_dyn <- function(workdir,
                          EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
                          HIDE_PRINTS = TRUE,
                          to_DIGEST_DIAGRAMS = FALSE,
-                         to_DIGEST_evD_PLOT = FALSE))
+                         to_DIGEST_evD_PLOT = FALSE,
+                         print_evD_PLOT = FALSE))
 
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN 2/2, i in [1:n] #----
         i <- 2
@@ -1360,7 +1363,8 @@ sweep_dyn <- function(workdir,
                          EXPLO_SERIES_FAMILY = EXPLO_SERIES_FAMILY,
                          HIDE_PRINTS = TRUE,
                          to_DIGEST_DIAGRAMS = FALSE,
-                         to_DIGEST_evD_PLOT = FALSE))
+                         to_DIGEST_evD_PLOT = FALSE,
+                         print_evD_PLOT = FALSE))
 
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         utils::setTxtProgressBar(pb_cpt, clock)
