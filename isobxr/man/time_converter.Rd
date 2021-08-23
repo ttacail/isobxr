@@ -28,6 +28,9 @@ Can be identical to time_colname. \cr
 \item{new_unit}{new time unit. Character string amongst the following: \cr
 \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}}
 }
+\value{
+a dataframe with values converted to new time unit.
+}
 \description{
 Convert the time units in plots
 }

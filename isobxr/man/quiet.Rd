@@ -9,6 +9,9 @@ quiet(x)
 \arguments{
 \item{x}{function to quiet}
 }
+\value{
+No return value, called for side effects
+}
 \description{
 Preventing any console prints (for sweepers only)
 }

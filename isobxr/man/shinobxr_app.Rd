@@ -6,6 +6,9 @@
 \usage{
 shinobxr_app()
 }
+\value{
+No return value, called for launch of the html based shiny app.
+}
 \description{
 A function to call the isobxr plot shiny app to interactively plot outputs from \code{\link{compose_isobxr}},
 \code{\link{sweep_steady}} and \code{\link{sweep_dyn}}. \cr

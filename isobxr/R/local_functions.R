@@ -95,6 +95,7 @@ DF_verticalizer <- function(df_hor,      # horizontal dataframe
 #' @param file file
 #' @param cols number of columns for the facetting
 #' @param layout user defined matrix layout (numeric matrix). default is NULL.
+#' @return A plot composed of multiple subplots.
 #' @keywords internal
 #' @export
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -199,6 +200,7 @@ ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenv
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
 #' @param new_unit new time unit. Character string amongst the following: \cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
+#' @return a dataframe with values converted to new time unit.
 #' @keywords internal
 #' @export
 #' @examples
@@ -240,6 +242,7 @@ time_converter <- function(dataframe,
 #' Preventing any console prints (for sweepers only)
 #' @description Preventing any console prints (for sweepers only)
 #' @param x function to quiet
+#' @return No return value, called for side effects
 #' @keywords internal
 quiet <- function(x) {
   sink(tempfile())

@@ -17,6 +17,9 @@ multiplot(..., plotlist = NULL, file, cols = 1, layout = NULL)
 
 \item{layout}{user defined matrix layout (numeric matrix). default is NULL.}
 }
+\value{
+A plot composed of multiple subplots.
+}
 \description{
 Takes a list of ggplot objects and returns a single object with a grid of the ggplot objects.
 \cr ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)

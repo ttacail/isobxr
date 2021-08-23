@@ -10,7 +10,7 @@ silence_shiny_deps(param)
 \item{param}{param}
 }
 \value{
-param
+No return value, called for side effects.
 }
 \description{
 collect local platform/session/versions data for portability (for DEV only)

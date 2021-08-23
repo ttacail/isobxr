@@ -18,6 +18,7 @@
 #' This working directory needs to be defined as a character string and stored in a variable called workdir.
 #' For instance: \cr
 #' workdir = "User/isobxr_working_directory"
+#' @return No return value, called for launch of the html based shiny app.
 #' @export
 shinobxr_app <- function() {
   appDir <- system.file("shiny-examples", "plot_isobxr", package = "isobxr")
@@ -35,7 +36,7 @@ shinobxr_app <- function() {
 #' silently use packages called in shiny app / silence the warning "Namespaces in Imports field not imported from"
 #' @description collect local platform/session/versions data for portability (for DEV only)
 #' @param param param
-#' @return param
+#' @return No return value, called for side effects.
 #' @keywords internal
 silence_shiny_deps <- function(param){
 
