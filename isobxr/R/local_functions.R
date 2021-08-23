@@ -249,24 +249,3 @@ quiet <- function(x) {
   on.exit(sink())
   invisible(force(x))
 }
-
-#' Collect local portability data (for DEV only)
-#' @description collect local platform/session/versions data for portability (for DEV only)
-#' @param workdir directory where Rdata local summary will be exported
-#' @return a Rdata file with loc wd, version, sessionInfo, installed packages
-#' @keywords internal
-get_portability_data <- function(workdir){
-  loc_wd <- getwd()
-  loc_version <- version
-  loc_sessionInfo <- utils::sessionInfo()
-  loc_installed_packages <- utils::installed.packages()
-  workdir <- normalizePath(workdir, winslash = "/")
-  if (stringr::str_ends(workdir, pattern = "/")){
-    workdir <- paste(workdir, "/", sep = "")
-  } else {
-    workdir <- workdir
-  }
-  save(loc_wd, loc_version, loc_sessionInfo, loc_installed_packages, file = paste(workdir, "portability_data_", gsub(":","",gsub(" ", "_", date())), ".RData", sep = ""))
-}
-
-
