@@ -100,7 +100,7 @@ sweep_steady <- function(workdir,
 
 
   # Clear plots
-  if(!is.null(dev.list())) dev.off()
+  # if(!is.null(dev.list())) dev.off()
   # Clear console
   # cat("\014")
   # Clean workspace
@@ -886,7 +886,7 @@ sweep_dyn <- function(workdir,
   INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
 
   # Clear plots
-  if(!is.null(dev.list())) dev.off()
+  # if(!is.null(dev.list())) dev.off()
   # Clear console
   # cat("\014")
   # Clean workspace

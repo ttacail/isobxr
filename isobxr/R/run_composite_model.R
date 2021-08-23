@@ -125,7 +125,7 @@ compose_isobxr <- function(workdir,
 
   # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLEAR
   # Clear plots
-  if(!is.null(dev.list())) dev.off()
+  # if(!is.null(dev.list())) dev.off()
   # Clear console
   # cat("\014")
   # Clean workspace

@@ -595,7 +595,6 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     outdir <- paste("2_RUN_", SERIES_ID, sep = "")
   }
 
-
   #### Edit/Create outdir folder and check slash in outdir
   check_slash <- unlist(strsplit(outdir, ""))
   if (check_slash[length(check_slash)] != "/"){
@@ -653,8 +652,9 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     CONSTS_trad <- CONSTS
   }
 
-  #************************************** EDIT EXCEL INPUT FILE FOR CURRENT RUN #----
+  #************************************** EDIT INPUT FILE FOR CURRENT RUN #----
 
+  # EXPORTED AS XLSX OPTIONAL
   if (isTRUE(to_DIGEST_CSV_XLS)){
     trad_excel_path <-  paste(folder_outdir, "DIGEST/", "in_0_INPUTS_", SERIES_ID_RUN_ID, ".xlsx", sep = "")
     writexl::write_xlsx(list(CONSTS = CONSTS_trad,
@@ -666,6 +666,7 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
   }
 
 
+  # SAVE AS ...IN.Rda
   CONSTS_IN <- CONSTS_trad
   INITIAL_IN <- INITIAL_trad
   FLUXES_IN <- FLUXES_trad
@@ -834,7 +835,6 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# POST-RUN OUTPUTS
-  #### CREATE PLOT (OPTION TO HIDE)
 
   if (to_DIGEST_evD_PLOT == TRUE | print_evD_PLOT == TRUE){
 
