@@ -1,9 +1,3 @@
-# usethis::use_package("readxl")
-# usethis::use_package("metR")
-# usethis::use_package("data.table")
-# usethis::use_package("dplyr")
-# usethis::use_package("rlang")
-
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters at the final state of a run
 #' @description  A function to assess the influence of two parameters (varying
@@ -135,6 +129,8 @@ sweep_steady <- function(workdir,
   unlink(to_tmpdir(""), recursive = T)
   on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
 
+
+
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE #----
   #************************************** SET WORKING DIRECTORY #----
   LOC_workdir <- workdir
@@ -142,6 +138,8 @@ sweep_steady <- function(workdir,
   on.exit(setwd(old), add = TRUE)
   setwd(LOC_workdir)
 
+  rlang::inform("_______________________________________________________________________________")
+  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE ISOPYBOX ARGUMENTS FROM EXPLO_MASTER #----
   #************************************** DEFINE LOCAL FORCINGS AND CONSTANTS #----
   RUN_LIST <- as.data.frame(readxl::read_excel(EXPLO_MASTER, "RUN_LIST"))
@@ -932,11 +930,9 @@ before calculation is started.")
 
   #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
   rlang::inform("________________________________________________________________________________")
-  rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+  rlang::inform(message = paste("\U2139 Run outputs (stored in temporary directory):",
                                 sep = ""))
   fs::dir_tree(path = to_tmpdir(""), recurse = T)
-  rlang::inform("_______________________________________________________________________________")
-  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
   rlang::inform("________________________________________________________________________________")
   if(isFALSE(save_run_outputs)){
     rlang::inform("\U2757 Results were not saved to working directory (set save_run_outputs = TRUE to save results).")
@@ -1085,6 +1081,8 @@ sweep_dyn <- function(workdir,
   on.exit(setwd(old), add = TRUE)
   setwd(LOC_workdir)
 
+  rlang::inform("_______________________________________________________________________________")
+  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARING ISOPYBOX ARGUMENTS FROM EXPLO_MASTER  #----
   #************************************** DEFINE LOCAL FORCINGS AND CONSTANTS #----
   RUN_LIST <- as.data.frame(readxl::read_excel(EXPLO_MASTER, "RUN_LIST"))
@@ -1925,11 +1923,9 @@ before calculation is started.")
 
   #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
   rlang::inform("________________________________________________________________________________")
-  rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+  rlang::inform(message = paste("\U2139 Run outputs (stored in temporary directory):",
                                 sep = ""))
   fs::dir_tree(path = to_tmpdir(""), recurse = T)
-  rlang::inform("________________________________________________________________________________")
-  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
   rlang::inform("________________________________________________________________________________")
   if(isFALSE(save_run_outputs)){
     rlang::inform("\U2757 Results were not saved to working directory (set save_run_outputs = TRUE to save results).")

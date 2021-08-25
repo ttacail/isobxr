@@ -1,15 +1,3 @@
-# usethis::use_package("shiny")
-# usethis::use_package("shinyFiles")
-# usethis::use_package("shinythemes")
-# usethis::use_package("shinyjs")
-# usethis::use_package("DT")
-# usethis::use_package("data.table")
-# usethis::use_package("ggplot2")
-# usethis::use_package("readxl")
-# usethis::use_package("ggrepel")
-# usethis::use_package("metR")
-# usethis::use_package("qgraph")
-
 #************************************** LOCAL FUNCTIONS
 #' Call isobxr plot shiny app
 #' @description A function to call the isobxr plot shiny app to interactively plot outputs from \code{\link{compose_isobxr}},

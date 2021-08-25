@@ -1,9 +1,3 @@
-# usethis::use_package("readxl")
-# usethis::use_package("data.table")
-# usethis::use_package("ggplot2")
-# usethis::use_package("ggrepel")
-# usethis::use_package("rlang")
-
 #  #_________________________________________________________________________80char
 #' Compose a stable isotope box model scenario
 #' @description  A function to compose an isobxr box model scenario,
@@ -140,26 +134,6 @@ compose_isobxr <- function(workdir,
                            plot_results = TRUE,
                            save_run_outputs = FALSE){
 
-
-  # # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# DEV
-  #
-  # workdir <- workdir_ABCD # isobxr and compo master file work. dir.
-  # SERIES_ID <- "ABC_change_balance" # series ID of the set of compo runs
-  # time_units <- c("d", "d") # time units for run (days) and for plots (years)
-  # COMPO_MASTER <- "0_COMPO_MASTER_balance_change.xlsx" # compo master file name
-  # plot_HIDE_BOXES_delta <- c("SINK") # boxes to hide from evD plot
-  # plot_HIDE_BOXES_size <- c("SOURCE", "SINK") # boxes to hide from evS plot
-  # # workdir
-  # # SERIES_ID
-  # # time_units # WARNING, so far it only works from "days" (inherited by the units of the fluxes values) to "minutes", "hours", "days", "hours"
-  # # COMPO_MASTER # excel file
-  # # plot_HIDE_BOXES_delta = NULL
-  # # plot_HIDE_BOXES_size = NULL
-  # EACH_RUN_DIGEST = FALSE
-  # to_CPS_DIGEST_CSVs = FALSE
-  # plot_results = TRUE
-  # # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# DEV
-
   # locally bind variables (fixing binding global variable issue)
   INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
 
@@ -184,6 +158,9 @@ compose_isobxr <- function(workdir,
   old <- getwd()
   on.exit(setwd(old), add = TRUE)
   setwd(LOC_workdir)
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+
 
   plot_HIDE_RUNs_n <- c(1)
 
@@ -494,7 +471,6 @@ compose_isobxr <- function(workdir,
     data.table::fwrite(evS, file = paste(to_tmpdir(path_out_COMPO), "_evS.csv", sep = ""), row.names = F, quote = F)
   }
 
-
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PLOT COMPOSITE RUN
   #************************************** PLOT evD #----
   #### subset evD for plot (hide the first plot_HIDE_RUNs_n runs)
@@ -507,22 +483,6 @@ compose_isobxr <- function(workdir,
   #### reset time units
   initial_time_unit <- time_units[1]
   display_time_unit <- time_units[2]
-
-  # if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-  #   if (display_time_unit == "hours"){
-  #     evD$Time_plot <- evD$Time_plot*24
-  #   } else {
-  #     if (display_time_unit == "minutes"){
-  #       evD$Time_plot <- evD$Time_plot*24*60
-  #     } else {
-  #       if (display_time_unit == "years"){
-  #         evD$Time_plot <- evD$Time_plot/365
-  #       } else {
-  #         display_time_unit = initial_time_unit
-  #       }
-  #     }
-  #   }
-  # }
 
   evD <- time_converter(dataframe = evD, time_colname = "Time_plot",
                         conv_timecolname = "Time_plot_conv",
@@ -632,22 +592,6 @@ compose_isobxr <- function(workdir,
   #### reset time units
   initial_time_unit <- time_units[1]
   display_time_unit <- time_units[2]
-
-  # if (display_time_unit != initial_time_unit & initial_time_unit == "days"){
-  #   if (display_time_unit == "hours"){
-  #     evS$Time_plot <- evS$Time_plot*24
-  #   } else {
-  #     if (display_time_unit == "minutes"){
-  #       evS$Time_plot <- evS$Time_plot*24*60
-  #     } else {
-  #       if (display_time_unit == "years"){
-  #         evS$Time_plot <- evS$Time_plot/365
-  #       } else {
-  #         display_time_unit = initial_time_unit
-  #       }
-  #     }
-  #   }
-  # }
 
   evS <- time_converter(dataframe = evS, time_colname = "Time_plot",
                         conv_timecolname = "Time_plot_conv",
@@ -766,14 +710,11 @@ compose_isobxr <- function(workdir,
                       to_tmpdir(compo_master_excel_path))
   # beepr::beep(sound = 10)
 
-
   #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
   rlang::inform("________________________________________________________________________________")
-  rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+  rlang::inform(message = paste("\U2139 Run outputs (stored in temporary directory):",
                                 sep = ""))
   fs::dir_tree(path = to_tmpdir(""), recurse = T)
-  rlang::inform("________________________________________________________________________________")
-  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
   rlang::inform("________________________________________________________________________________")
   if(isFALSE(save_run_outputs)){
     rlang::inform("\U2757 Results were not saved to working directory (set save_run_outputs = TRUE to save results).")

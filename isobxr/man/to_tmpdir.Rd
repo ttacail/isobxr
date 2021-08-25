@@ -10,9 +10,9 @@ to_tmpdir(dir_or_file)
 \item{dir_or_file}{directory or file to address in temporary directory}
 }
 \value{
-path to temporary subdir/file
+name of subdirectory or file
 }
 \description{
-address_to_tmpdir
+makes path to a isobxr_temp_data directory located in temporary directory
 }
 \keyword{internal}

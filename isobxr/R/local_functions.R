@@ -1,7 +1,3 @@
-# usethis::use_package("grid")
-# usethis::use_package("devtools", "Suggests")
-# usethis::use_package("rlang")
-
 # clear a subset
 #' Clear a subset
 #' @description Takes a previously subsetted dataframe, clears its deleted levels and resets its row indexes.
@@ -141,7 +137,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 calculation_gauge <- function(i, len){
   stars <- paste(rep("*", round(i*50/len, 0)), collapse = "")
   straights <- paste(rep("-", 50-round(i*50/len, 0)), collapse = "")
-  perc <- paste(" (", round(i*50/len,0), "% of ", as.character(len), ")", sep = "")
+  perc <- paste(" (", round(i*100/len,0), "% of n = ", as.character(len), ")", sep = "")
   print(paste(stars, straights, perc, sep = ""), quote = F)
 }
 
@@ -251,26 +247,21 @@ quiet <- function(x) {
 }
 
 #' address_to_tmpdir
-#' @description address_to_tmpdir
+#' @description makes path to a isobxr_temp_data directory located in temporary directory
 #' @param dir_or_file directory or file to address in temporary directory
-#' @return path to temporary subdir/file
+#' @return name of subdirectory or file
 #' @keywords internal
 to_tmpdir <- function(dir_or_file){
   tmp_path <- paste(tempdir(), "isobxr_temp_data", sep = "/")
-
   if (dir.exists(tmp_path) == FALSE){
     dir.create(tmp_path)
   }
-
   tmp_path <- paste(tmp_path, dir_or_file, sep = "/")
-
-  # tmp_path <- paste(tempdir(), dir_or_file, sep = "/")
   return(tmp_path)
 }
 
-
 #' plot_diagram
-#' @description plot_diagram
+#' @description plot diagrams for fluxes and coefficients using the qgraph network function
 #' @param input matrix of fluxes or coefficients
 #' @param title title of diagram
 #' @param matrix_layout matrix of X,Y layout

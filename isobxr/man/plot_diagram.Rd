@@ -21,6 +21,6 @@ plot_diagram(input, title, matrix_layout, BOXES_master_loc, COEFF_FLUX)
 diagrams for console or pdf edition (not used in shinobxr)
 }
 \description{
-plot_diagram
+plot diagrams for fluxes and coefficients using the qgraph network function
 }
 \keyword{internal}
