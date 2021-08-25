@@ -4,16 +4,6 @@ NULL
 #' @importFrom utils head read.csv
 NULL
 
-# usethis::use_package("qgraph")
-# usethis::use_package("readxl")
-# usethis::use_package("writexl")
-# usethis::use_package("stringr")
-# usethis::use_package("dplyr")
-# usethis::use_package("data.table")
-# usethis::use_package("ggplot2")
-# usethis::use_package("ggrepel")
-# usethis::use_package("rlang")
-
 #  #_________________________________________________________________________80char
 #' Run isobxr stable isotope box model
 #' @description  A function to run the isobxr stable isotope box model,
@@ -220,17 +210,20 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   output_list <- A_OUT <- N_evS <- A_evD <- N_evD <- NULL
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
-  if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
-    unlink(to_tmpdir(""), recursive = T)
-    on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
-    rlang::inform("________________________________________________________________________________")
-  }
+
 
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()
   on.exit(setwd(old), add = TRUE)
   setwd(workdir)
   ISOPY_MASTER_file <- "0_ISOBXR_MASTER.xlsx"
+
+  if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
+    unlink(to_tmpdir(""), recursive = T)
+    on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  }
 
   Time <- VAR <- VAR_TYPE <- NULL
 
@@ -538,7 +531,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                         RUN_ID = NaN,
                         SERIES_RUN_ID = NaN,
                         RUN_STATUS = "WAITING",
-                        SERIES_ID = c(SERIES_ID),
+                        SERIES_ID = SERIES_ID,
                         DATE_TIME = c(chartr(old = "-: ", new = "___", Sys.time())),
                         COEFF_FLUX = c(paste(coeff_list_name_outdir , "__", flux_list_name, sep = "")),
                         FLUX_MASTER = c(flux_list_name),
@@ -621,12 +614,21 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   output_list <- c(output_list, outdir)
 
   #************************************** DEFINE RUN OUTDIR and RUN ID #----
-  #### DEFINE RUN number in the list of a given series, RUN_ID, SERIES_RUN_ID
+  ### DEFINE RUN number in the list of a given series, RUN_ID, SERIES_RUN_ID
   n_zeros <- 4
-  if (file.exists(dir_LOG) == FALSE){
-    LOG_loc$RUN_n <- 1
-    LOG_loc$RUN_ID <- paste(c(as.character(replicate(n_zeros-length(unlist(strsplit(as.character(LOG_loc$RUN_n), ""))),0)), as.character(LOG_loc$RUN_n)), collapse = "")
-    LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
+  if (!file.exists(dir_LOG)){
+    if (!file.exists(to_tmpdir(dir_LOG))){
+      LOG_loc$RUN_n <- 1
+    } else {
+      LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
+      if (SERIES_ID %in% levels(LOG$SERIES_ID)){
+        LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
+      } else {
+        LOG_loc$RUN_n <- 1
+      }
+      remove(LOG)
+    }
+
   } else {
     if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
       LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
@@ -636,18 +638,23 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
       } else {
         LOG_loc$RUN_n <- 1
       }
+      remove(LOG)
     } else {
-      LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
-      if (SERIES_ID %in% levels(LOG$SERIES_ID)){
-        LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
-      } else {
+      if (!file.exists(to_tmpdir(dir_LOG))){
         LOG_loc$RUN_n <- 1
+      } else {
+        LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
+        if (SERIES_ID %in% levels(LOG$SERIES_ID)){
+          LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
+        } else {
+          LOG_loc$RUN_n <- 1
+        }
+        remove(LOG)
       }
     }
-    remove(LOG)
-    LOG_loc$RUN_ID <- paste(c(as.character(replicate(n_zeros-length(unlist(strsplit(as.character(LOG_loc$RUN_n), ""))),0)), as.character(LOG_loc$RUN_n)), collapse = "")
-    LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
   }
+  LOG_loc$RUN_ID <- paste(c(as.character(replicate(n_zeros-length(unlist(strsplit(as.character(LOG_loc$RUN_n), ""))),0)), as.character(LOG_loc$RUN_n)), collapse = "")
+  LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
 
   #### CREATE A FILE WITH RUN ID FOR EACH RUN placed in SERIES FOLDER
   folder_outdir <- paste(outdir, SERIES_ID, "_", as.character(LOG_loc$RUN_ID), "_", sep = "")
@@ -807,12 +814,12 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   }
 
   #************************************** UPDATE LOG DATA FRAME, EDIT CSV #----
-  if (file.exists(to_tmpdir(dir_LOG)) == FALSE){
-    data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F)
-  } else {
-    data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F, append = T)
-  }
-
+  # if (!file.exists(to_tmpdir(dir_LOG))){
+  #   data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F)
+  # } else {
+  #   data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F, append = T)
+  # }
+  data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F, append = T)
   output_list <- c(output_list, dir_LOG)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN ISOBOXr #----
@@ -963,11 +970,10 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
   if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
     rlang::inform("________________________________________________________________________________")
-    rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+    rlang::inform(message = paste("\U2139 Run outputs (stored in temporary directory):",
                                   sep = ""))
     fs::dir_tree(path = to_tmpdir(""), recurse = T)
     rlang::inform("________________________________________________________________________________")
-    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
     if(isFALSE(save_run_outputs)){
       rlang::inform("\U2757 Results were not exported to working directory (set save_run_outputs = TRUE to save results).")
     } else if(isTRUE(save_run_outputs)){
