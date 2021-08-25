@@ -11,13 +11,15 @@ sweep_steady(
   EXPLO_MASTER,
   EXPLO_AXIS_1,
   EXPLO_AXIS_2,
-  to_STD_DIGEST_CSVs = FALSE
+  to_STD_DIGEST_CSVs = FALSE,
+  plot_results = TRUE,
+  save_run_outputs = FALSE
 )
 }
 \arguments{
 \item{workdir}{Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
 of the steady sweep master file (e.g., \strong{\emph{0_EXPLO_STEADY_MASTER.xlsx}}) \cr
-and where output files will be stored. \cr
+and where output files will be stored if exported by user. \cr
 (character string)}
 
 \item{SERIES_ID}{Name of the sweep series the run belongs to. \cr
@@ -29,7 +31,7 @@ and subsequent sweep runs can not overwrite a previous one.\cr
 \item{time_units}{Vector defining the initial time unit
 (identical to unit used in fluxes), \cr
 followed by the time unit used for the graphical output.\cr
-Character string, to be selected  amongst the following:\cr
+Character string, to be selected  among the following:\cr
 \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 e.g.,  c("d", "yr") to convert days into years}
 
@@ -47,13 +49,41 @@ See Vignette for further details.}
 Logical value. \cr
 Exports all global csv outputs to \strong{\emph{0_STD_DIGEST}} folder (full and final evD and evS) if TRUE. \cr
 Default is FALSE.}
+
+\item{plot_results}{\emph{OPTIONAL} \cr
+Logical value. \cr
+If TRUE, plots in R session the heatmaps of delta values of all system finite boxes in the 2D space of swept parameters. \cr
+Default is TRUE.}
+
+\item{save_run_outputs}{\emph{OPTIONAL} \cr
+Logical value. \cr
+Allows saving all run outputs to working directory (workdir). \cr
+By default, run outputs are stored in the temporary directory and are erased if not saved. \cr
+Default is FALSE.}
 }
 \value{
-Creates and stores all outputs in a dedicated sweep steady SERIES directory
-located in working directory, with the following name structure: \cr
-\strong{\emph{4_STD + SERIES_ID + YYY}}, where YYY is a sweep steady run number automatically set between 001 and 999. \cr
+Calculates the delta values and box sizes at final state of the sweeping of 2D space of parameters in all boxes.
+
+\code{\link{sweep_steady}} returns by default a heatmap plot of the isotope composition
+of each finite box in the 2D space defined by the two swept parameters
+(set plot_results = FALSE to mute the plots). \cr
+
+The graphical results of the sweep can be also interactively explored using the
+\code{\link{shinobxr_app}} function in case user saves the outputs to the working
+directory (save_run_outputs = TRUE).
+
+\code{\link{sweep_steady}} creates a series of isotope data and metadata,
+all of which are stored in a temporary directory. \cr
+The user can save all outputs described below to their working directory
+by setting save_run_outputs = TRUE (default is FALSE). \cr
+
+\code{\link{sweep_steady}} creates and stores all outputs in a dedicated SERIES directory
+with the following name structure: \cr
+\strong{\emph{4_STD + SERIES_ID + YYY}}, where YYY is a sweep steady run number automatically
+set between 001 and 999. \cr
 No overwriting of previous sweep steady run runs is possible.
 
+\code{\link{sweep_steady}} base workflow:
 \enumerate{
 \item Calculates the number of single runs the sweeping will require depending on the swept parameters.
 \item Asks the user confirmation to run \code{\link{sweep_steady}},

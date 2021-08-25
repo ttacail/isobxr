@@ -242,7 +242,7 @@ It determines the resolution of the run.
 :     
 * Vector defining the initial time unit (identical to unit used in fluxes), 
 followed by the time unit used for the graphical output
-* to be selected amongst the following: *micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr*
+* to be selected among the following: *micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr*
 * e.g., c("d", "yr") to convert days into years
 
 

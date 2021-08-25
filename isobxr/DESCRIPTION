@@ -19,8 +19,8 @@ Encoding: UTF-8
 LazyData: false
 Imports: 
     stringr, readxl, dplyr, data.table, deSolve, rlang, grid, metR, 
-    shiny, shinyFiles, shinythemes, shinyjs,
-    DT, ggplot2, ggrepel, qgraph, writexl
+    shiny, shinyFiles, shinythemes, shinyjs, DT, ggplot2, ggrepel,
+    qgraph, writexl, R.utils, fs
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

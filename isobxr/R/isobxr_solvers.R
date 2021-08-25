@@ -19,9 +19,17 @@
 #' (character string, file name structure: \strong{\emph{RUN name + _IN.Rda}})
 #' @param to_DIGEST_csv Edits csv outputs to the RUN DIGEST folder \cr
 #' (logical, default is FALSE)
+#'
+#' @param save_run_outputs  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Allows saving all run outputs to directory containing INPUT file. \cr
+#' By default, run outputs are stored in a temporary directory and are erased if not exported. \cr
+#' Default is FALSE.
+#'
 #' @return The function returns the numerically determined evolution of stable
 #' isotope compositions and mass of element X in all boxes over the run duration as
 #' specified in INPUT file. \cr  \cr
+#' By default (unless save_run_outputs = TRUE), run outputs are stored in the temporary directory and are not exported. \cr \cr
 #' The outputs of the run are stored in a Rda output file
 #' with the following file name structure:  \cr
 #' \strong{\emph{RUN name + _OUT.Rda}}
@@ -36,7 +44,9 @@
 #' }
 #' @export
 num_slvr <- function(input_path,
-                     to_DIGEST_csv = FALSE){
+                     to_DIGEST_csv = FALSE,
+                     save_run_outputs = FALSE
+                     ){
   # locally bind variables (fixing binding global variable issue)
   CONSTS_IN <- INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- NULL
 
@@ -53,6 +63,9 @@ num_slvr <- function(input_path,
   ############################## DEFINE outdir #####################
   run_dir <- paste(prefix, "_DIGEST", sep = "")
   outdir <- paste(cwd, "/", run_dir, "/", sep = "")
+  if (isTRUE(save_run_outputs)){
+    tmpoutdir <- paste(tempdir(), "/", run_dir, "/", sep = "")
+  }
 
   ############################## LOAD IN.Rda ###################################
   load(namefile)
@@ -162,17 +175,29 @@ num_slvr <- function(input_path,
   df <- dplyr::full_join(initial_f, df, by = "BOXES_ID")
 
   ############################## save outputs ##############################
-  if (isTRUE(to_DIGEST_csv)){
-    if (!dir.exists(outdir)){dir.create(outdir)}
-    data.table::fwrite(Delta_as_df, file = paste(outdir,  "out_3_N_evD_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
-    data.table::fwrite(Boxes_size_as_df, file = paste(outdir, "out_2_N_evS_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
-    data.table::fwrite(df, file = paste(outdir, "out_1_N_OUT_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+  if(isTRUE(save_run_outputs)){
+    if (isTRUE(to_DIGEST_csv)){
+      if (!dir.exists(outdir)){dir.create(outdir)}
+      data.table::fwrite(Delta_as_df, file = paste(outdir,  "out_3_N_evD_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+      data.table::fwrite(Boxes_size_as_df, file = paste(outdir, "out_2_N_evS_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+      data.table::fwrite(df, file = paste(outdir, "out_1_N_OUT_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+    }
+    N_evD <- Delta_as_df
+    N_evS <- Boxes_size_as_df
+    N_OUT <- df
+    save(N_OUT, N_evD, N_evS, file = paste(cwd, "/", prefix, "_OUT.Rda", sep = ""))
+  } else if (isFALSE(save_run_outputs)){
+    if (isTRUE(to_DIGEST_csv)){
+      if (!dir.exists(tmpoutdir)){dir.create(tmpoutdir)}
+      data.table::fwrite(Delta_as_df, file = paste(tmpoutdir,  "out_3_N_evD_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+      data.table::fwrite(Boxes_size_as_df, file = paste(tmpoutdir, "out_2_N_evS_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+      data.table::fwrite(df, file = paste(tmpoutdir, "out_1_N_OUT_", prefix,".csv", sep = ""), row.names = F, quote = F, sep = ",")
+    }
+    N_evD <- Delta_as_df
+    N_evS <- Boxes_size_as_df
+    N_OUT <- df
+    save(N_OUT, N_evD, N_evS, file = paste(tempdir(), "/", prefix, "_OUT.Rda", sep = ""))
   }
-
-  N_evD <- Delta_as_df
-  N_evS <- Boxes_size_as_df
-  N_OUT <- df
-  save(N_OUT, N_evD, N_evS, file = paste(cwd, "/", prefix, "_OUT.Rda", sep = ""))
 }
 
 #  #_________________________________________________________________________80char
@@ -188,8 +213,15 @@ num_slvr <- function(input_path,
 #' (character string, file name structure: \strong{\emph{RUN name + _IN.Rda}})
 #' @param to_DIGEST_csv edit csv outputs or not (logical) to the RUN DIGEST folder \cr
 #' (logical, default is FALSE)
+#' @param save_run_outputs  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Allows saving all run outputs to directory containing INPUT file. \cr
+#' By default, run outputs are stored in a temporary directory and are erased if not exported. \cr
+#' Default is FALSE.
+#'
 #' @return The function returns the analytically determined evolution of stable
 #' isotope compositions in all boxes over the run duration as specified in INPUT file. \cr \cr
+#' By default (unless save_run_outputs = TRUE), run outputs are stored in the temporary directory and are not exported. \cr \cr
 #' The outputs of the run are stored in a Rda output file
 #' with the following file name structure: \cr
 #' \strong{\emph{RUN name + _OUT.Rda}}
@@ -205,7 +237,8 @@ num_slvr <- function(input_path,
 #' }
 #' @export
 ana_slvr <- function(input_path,
-                     to_DIGEST_csv = FALSE){
+                     to_DIGEST_csv = FALSE,
+                     save_run_outputs = FALSE){
   # locally bind variables (fixing binding global variable issue)
   CONSTS_IN <- INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- NULL
 
@@ -222,6 +255,9 @@ ana_slvr <- function(input_path,
   ############################## DEFINE outdir #####################
   run_dir <- paste(prefix, "_DIGEST", sep = "")
   outdir <- paste(cwd, "/", run_dir, "/", sep = "")
+  if (isTRUE(save_run_outputs)){
+    tmpoutdir <- paste(tempdir(), "/", run_dir, "/", sep = "")
+  }
 
   ############################## LOAD IN.Rda ###################################
   load(namefile)
@@ -325,15 +361,28 @@ ana_slvr <- function(input_path,
   }
 
   ############################## save outputs ##############################
-  if (isTRUE(to_DIGEST_csv)){
-    if (!dir.exists(outdir)){dir.create(outdir)}
-    data.table::fwrite(results, file = paste(outdir, "out_1_A_OUT_", prefix, ".csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(ODE_SOLNs, file = paste(outdir, "out_2_A_ODE_SOLNs_", prefix, ".csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(d_t_all, file = paste(outdir, "out_3_A_evD_", prefix, ".csv", sep = ""), row.names = F, quote = F)
-  }
+  if(isTRUE(save_run_outputs)){
+    if (isTRUE(to_DIGEST_csv)){
+      if (!dir.exists(outdir)){dir.create(outdir)}
+      data.table::fwrite(results, file = paste(outdir, "out_1_A_OUT_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(ODE_SOLNs, file = paste(outdir, "out_2_A_ODE_SOLNs_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(d_t_all, file = paste(outdir, "out_3_A_evD_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+    }
 
-  A_evD <- d_t_all
-  A_ODE_SOLNs <- ODE_SOLNs
-  A_OUT <- results
-  save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(cwd, "/", prefix, "_OUT.Rda", sep = ""))
+    A_evD <- d_t_all
+    A_ODE_SOLNs <- ODE_SOLNs
+    A_OUT <- results
+    save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(cwd, "/", prefix, "_OUT.Rda", sep = ""))
+  } else if (isFALSE(save_run_outputs)){
+    if (isTRUE(to_DIGEST_csv)){
+      if (!dir.exists(tmpoutdir)){dir.create(tmpoutdir)}
+      data.table::fwrite(results, file = paste(tmpoutdir, "out_1_A_OUT_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(ODE_SOLNs, file = paste(tmpoutdir, "out_2_A_ODE_SOLNs_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(d_t_all, file = paste(tmpoutdir, "out_3_A_evD_", prefix, ".csv", sep = ""), row.names = F, quote = F)
+    }
+    A_evD <- d_t_all
+    A_ODE_SOLNs <- ODE_SOLNs
+    A_OUT <- results
+    save(A_OUT, A_evD, A_ODE_SOLNs, file = paste(tempdir(), "/", prefix, "_OUT.Rda", sep = ""))
+  }
 }

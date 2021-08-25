@@ -22,10 +22,10 @@ time_converter(
 Can be identical to time_colname. \cr
 (character string)}
 
-\item{former_unit}{former time unit. Character string amongst the following: \cr
+\item{former_unit}{former time unit. Character string among the following: \cr
 \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}}
 
-\item{new_unit}{new time unit. Character string amongst the following: \cr
+\item{new_unit}{new time unit. Character string among the following: \cr
 \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}}
 }
 \value{

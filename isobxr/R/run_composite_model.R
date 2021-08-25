@@ -22,7 +22,7 @@
 #' }
 #' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
 #' of the composite master file (e.g., \strong{\emph{0_COMPO_MASTER.xlsx}}) \cr
-#' and where output files will be stored. \cr
+#' and where output files will be stored if exported by user. \cr
 #' (character string)
 #' @param SERIES_ID Name of the composite model series the run belongs to. \cr
 #' It determines the folder in which the output files will be stored for this composite run.\cr
@@ -32,7 +32,7 @@
 #' @param time_units Vector defining the initial time unit
 #' (identical to unit used in fluxes), \cr
 #' followed by the time unit used for the graphical output.\cr
-#' Character string, to be selected  amongst the following:\cr
+#' Character string, to be selected  among the following:\cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 #' e.g.,  c("d", "yr") to convert days into years
 #' @param COMPO_MASTER Name of the composite master file (e.g., \strong{\emph{0_COMPO_MASTER.xlsx}}),
@@ -57,16 +57,39 @@
 #' Logical value. \cr
 #' Exports all global csv outputs to \strong{\emph{0_CPS_DIGEST}} folder (full evD and full evS) if TRUE. \cr
 #' Default is FALSE.
-#' @param print_plots \emph{OPTIONAL} \cr
+#' @param plot_results \emph{OPTIONAL} \cr
 #' Logical value. \cr
-#' Plots the overview plots of the composite model (full evD and full evS) if TRUE. \cr
+#' If TRUE, plots in R session the composite model run evolution of delta values and box sizes
+#' for boxes of interest
+#' (see plot_HIDE_BOXES_delta and plot_HIDE_BOXES_size parameters to remove boxes from plots). \cr
 #' Default is TRUE.
+#' @param save_run_outputs  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Allows saving all run outputs to working directory (workdir). \cr
+#' By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
+#' Default is FALSE.
 #'
-#' @return Creates and stores all outputs in a dedicated composite SERIES directory located in working directory,
+#' @return Calculates the time evolution of delta values and box sizes in all boxes throughout scenario.
+#'
+#' \code{\link{compose_isobxr}} returns by default a plot showing time evolution of delta values and box sizes
+#' for all boxes \cr
+#' (set plot_deltas = FALSE to mute the plots) \cr
+#'
+#' The graphical results of the composite run can be also interactively explored using the
+#' \code{\link{shinobxr_app}} function in case user saves the outputs to the working
+#' directory (save_run_outputs = TRUE).
+#'
+#' \code{\link{compose_isobxr}} creates a series of isotope data and metadata,
+#' all of which are stored in a temporary directory. \cr
+#' The user can save all outputs described below to their working directory
+#' by setting save_run_outputs = TRUE (default is FALSE). \cr
+#'
+#' \code{\link{compose_isobxr}} creates and stores all outputs in a dedicated dynamic steady SERIES directory
 #' with the following name structure: \cr
 #' \strong{\emph{3_CPS + SERIES_ID + YYY}}, where YYY is a composite scenario number automatically set between 001 and 999. \cr
 #' No overwriting of previous composite runs is possible.
 #'
+#' \code{\link{compose_isobxr}} base workflow:
 #' \enumerate{
 #' \item Creates the set of inputs and outputs for all successive \emph{n} runs,\cr
 #' numbered from to 1 to \emph{n} in an XXXX format with the following format: \cr
@@ -108,13 +131,34 @@
 #' @export
 compose_isobxr <- function(workdir,
                            SERIES_ID,
-                           time_units, # WARNING, so far it only works from "days" (inherited by the units of the fluxes values) to "minutes", "hours", "days", "hours"
-                           COMPO_MASTER, # excel file
+                           time_units,
+                           COMPO_MASTER,
                            plot_HIDE_BOXES_delta = NULL,
                            plot_HIDE_BOXES_size = NULL,
                            EACH_RUN_DIGEST = FALSE,
                            to_CPS_DIGEST_CSVs = FALSE,
-                           print_plots = TRUE){
+                           plot_results = TRUE,
+                           save_run_outputs = FALSE){
+
+
+  # # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# DEV
+  #
+  # workdir <- workdir_ABCD # isobxr and compo master file work. dir.
+  # SERIES_ID <- "ABC_change_balance" # series ID of the set of compo runs
+  # time_units <- c("d", "d") # time units for run (days) and for plots (years)
+  # COMPO_MASTER <- "0_COMPO_MASTER_balance_change.xlsx" # compo master file name
+  # plot_HIDE_BOXES_delta <- c("SINK") # boxes to hide from evD plot
+  # plot_HIDE_BOXES_size <- c("SOURCE", "SINK") # boxes to hide from evS plot
+  # # workdir
+  # # SERIES_ID
+  # # time_units # WARNING, so far it only works from "days" (inherited by the units of the fluxes values) to "minutes", "hours", "days", "hours"
+  # # COMPO_MASTER # excel file
+  # # plot_HIDE_BOXES_delta = NULL
+  # # plot_HIDE_BOXES_size = NULL
+  # EACH_RUN_DIGEST = FALSE
+  # to_CPS_DIGEST_CSVs = FALSE
+  # plot_results = TRUE
+  # # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# DEV
 
   # locally bind variables (fixing binding global variable issue)
   INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
@@ -130,6 +174,8 @@ compose_isobxr <- function(workdir,
   # cat("\014")
   # Clean workspace
   # rm(list=ls())
+  unlink(to_tmpdir(""), recursive = T)
+  on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
   Time_plot <- VAR <- VAR_TYPE <- NULL
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
@@ -180,7 +226,8 @@ compose_isobxr <- function(workdir,
   dir_LOG <- "1_LOG.csv"
   n_zeros <- 3
   if (file.exists(dir_LOG) == TRUE){
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    file.copy(from = dir_LOG, to = to_tmpdir(dir_LOG))
+    LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
     LOG_COMPO <- LOG[LOG$COMPOSITE == TRUE, ]
     remove(LOG)
     COMPO_SERIES_FAMILY <- paste("CPS", as.character(SERIES_ID), sep = "_")
@@ -198,7 +245,7 @@ compose_isobxr <- function(workdir,
     SERIES_ID <- paste("CPS", as.character(SERIES_ID), paste(as.character(c(replicate(n_zeros-1,0),1)), collapse = ""), sep = "_")
   }
 
-  #************************************** READ CONSTANTS FROM ISOPY_MASTER #----
+  # ************************************** READ CONSTANTS FROM ISOPY_MASTER #----
   ISOPY_MASTER_file <- "0_ISOBXR_MASTER.xlsx"
   CONSTANTS <- as.data.frame(readxl::read_excel(ISOPY_MASTER_file, "CONSTANTS"))
 
@@ -233,7 +280,8 @@ compose_isobxr <- function(workdir,
   }
 
   COMPOSITE <- TRUE
-  rlang::inform("* COMPUTING *")
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform("\U0001f535 COMPUTING ")
 
   run_isobxr(workdir = LOC_workdir,
              SERIES_ID = SERIES_ID,
@@ -256,7 +304,7 @@ compose_isobxr <- function(workdir,
              to_DIGEST_DIAGRAMS = to_DIGEST_DIAGRAMS,
              to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
              to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS,
-             print_evD_PLOT = FALSE)
+             plot_results = FALSE)
 
   calculation_gauge(0, length(t_lim_list))
   calculation_gauge(i, length(t_lim_list))
@@ -278,19 +326,19 @@ compose_isobxr <- function(workdir,
       LOC_RAYLEIGH <- NULL
     }
 
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
     LOG_last <- LOG[nrow(LOG),]
     remove(LOG)
 
     if (LOG_last$NUM_ANA == "ANA"){
-      load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+      load(to_tmpdir(paste(LOG_last$path_outdir, "OUT.Rda", sep = "")))
       OUT_last_final <- A_OUT
       OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
       OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
       names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
 
     } else {
-      load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+      load(to_tmpdir(paste(LOG_last$path_outdir, "OUT.Rda", sep = "")))
       OUT_last_final <- N_OUT
       OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
       names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
@@ -355,41 +403,41 @@ compose_isobxr <- function(workdir,
                to_DIGEST_DIAGRAMS = to_DIGEST_DIAGRAMS,
                to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
                to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS,
-               print_evD_PLOT = FALSE)
+               plot_results = FALSE)
     calculation_gauge(i, length(t_lim_list))
     i <- i + 1
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# LOAD/EDIT COMPOSITE SERIES LOG/OUT FILES and EDIT ANA evS
   #************************************** LOAD LOG/OUT FILES of CURRENT COMPO SERIES #----
-  LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+  LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
   LOG_SERIES <- LOG[LOG$SERIES_ID == SERIES_ID,]
   remove(LOG)
   LOG_SERIES <- clear_subset(LOG_SERIES)
   SERIES_RUN_ID_1 <- LOG_SERIES[1, "SERIES_RUN_ID"]
   path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "IN.Rda", sep = "")
-  load(path_to_input_1)
+  load(to_tmpdir(path_to_input_1))
   BOXES_IDs <- as.character(INITIAL_IN$BOXES_ID)
 
   #************************************** READ/BUILD/MERGE evS/evD for ANA/NUM WHOLE COMPOSITE RUN #----
   i <- 1
-
-  rlang::inform("* PREPARE RESULTS *")
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform("\U0001f535 PREPARING RESULTS")
   calculation_gauge(0, length(t_lim_list))
 
   for (i in 1:length(t_lim_list)){
     SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
     RUN_n_i <- LOG_SERIES[i, "RUN_n"]
     path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
-    path_to_INPUT_i <- paste(path_outdir_i, "IN.Rda", sep = "")
-    load(path_to_INPUT_i)
+    path_to_input_i <- paste(path_outdir_i, "IN.Rda", sep = "")
+    load(to_tmpdir(path_to_input_i))
     SIZE_INIT_i <- INITIAL_IN[,c("BOXES_ID", "SIZE_INIT")]
     DELTA_INIT_i <- INITIAL_IN[,c("BOXES_ID", "DELTA_INIT")]
     FLUXES_i <- FLUXES_IN
     COEFFS_i <- COEFFS_IN
 
     if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
-      load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+      load(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")))
       evD_i <- A_evD
       SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
       names(SIZE_INIT_i_hor) <- SIZE_INIT_i$BOXES_ID
@@ -402,7 +450,7 @@ compose_isobxr <- function(workdir,
       }
     } else {
       if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
-        load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+        load(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")))
         evD_i <- N_evD
         evS_i <- N_evS
       }
@@ -430,19 +478,20 @@ compose_isobxr <- function(workdir,
   }
 
   #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-  rlang::inform("* WRITE OUTPUTS *")
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform("\U0001f535 WRITING OUTPUTS")
 
   path_out_COMPO <- paste("3_", as.character(SERIES_ID), "/", "0_CPS_DIGEST/", sep = "")
-  if (!dir.exists(path_out_COMPO)){dir.create(path_out_COMPO)}
+  if (!dir.exists(to_tmpdir(path_out_COMPO))){dir.create(to_tmpdir(path_out_COMPO))}
   path_out_COMPO <- paste(path_out_COMPO, as.character(SERIES_ID), sep = "")
 
-  data.table::fwrite(LOG_SERIES, file = paste(path_out_COMPO, "_LOG.csv", sep = ""), row.names = F, quote = F)
-  saveRDS(object = evD, file = paste(path_out_COMPO, "_evD.RDS", sep = ""))
-  saveRDS(object = evS, file = paste(path_out_COMPO, "_evS.RDS", sep = ""))
+  data.table::fwrite(LOG_SERIES, file = paste(to_tmpdir(path_out_COMPO), "_LOG.csv", sep = ""), row.names = F, quote = F)
+  saveRDS(object = evD, file = paste(to_tmpdir(path_out_COMPO), "_evD.RDS", sep = ""))
+  saveRDS(object = evS, file = paste(to_tmpdir(path_out_COMPO), "_evS.RDS", sep = ""))
 
   if (isTRUE(to_CPS_DIGEST_CSVs)){
-    data.table::fwrite(evD, file = paste(path_out_COMPO, "_evD.csv", sep = ""), row.names = F, quote = F)
-    data.table::fwrite(evS, file = paste(path_out_COMPO, "_evS.csv", sep = ""), row.names = F, quote = F)
+    data.table::fwrite(evD, file = paste(to_tmpdir(path_out_COMPO), "_evD.csv", sep = ""), row.names = F, quote = F)
+    data.table::fwrite(evS, file = paste(to_tmpdir(path_out_COMPO), "_evS.csv", sep = ""), row.names = F, quote = F)
   }
 
 
@@ -476,9 +525,9 @@ compose_isobxr <- function(workdir,
   # }
 
   evD <- time_converter(dataframe = evD, time_colname = "Time_plot",
-                             conv_timecolname = "Time_plot_conv",
-                             former_unit = initial_time_unit,
-                             new_unit = display_time_unit)
+                        conv_timecolname = "Time_plot_conv",
+                        former_unit = initial_time_unit,
+                        new_unit = display_time_unit)
 
   evD$Time_plot <- evD$Time_plot_conv
 
@@ -566,7 +615,7 @@ compose_isobxr <- function(workdir,
 
   #### export evD facets pdf
   pdf_path <- paste(path_out_COMPO, "_pf_evD.pdf", sep = "")
-  pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
+  pdf(to_tmpdir(pdf_path), width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
   print(evD_plot_facet)
   dev.off()
 
@@ -668,7 +717,7 @@ compose_isobxr <- function(workdir,
   #### edit pdf of evD/evS multiplot
   pdf_path <- paste(path_out_COMPO, "_p_evDS.pdf", sep = "")
   dev.new()
-  pdf(pdf_path, width = 15, height = 15, pointsize = 1, useDingbats=FALSE)
+  pdf(to_tmpdir(pdf_path), width = 15, height = 15, pointsize = 1, useDingbats=FALSE)
   multiplot(evD_plot, evS_plot, cols = 1)
   graphics.off()
 
@@ -695,14 +744,14 @@ compose_isobxr <- function(workdir,
   #### export evS facets pdf
   pdf_path <- paste(path_out_COMPO, "_pf_evS.pdf", sep = "")
   dev.new()
-  pdf(pdf_path, width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
+  pdf(to_tmpdir(pdf_path), width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
   suppressWarnings(print(evS_plot_facet))
   graphics.off()
 
-  if(isTRUE(print_plots)){
-    suppressWarnings(print(evD_plot_facet))
-    suppressWarnings(print(evS_plot_facet))
-    print(multiplot(evD_plot, evS_plot, cols = 1))
+  if(isTRUE(plot_results)){
+    # suppressWarnings(evD_plot_facet)
+    # suppressWarnings(evS_plot_facet)
+    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# EDIT LOCAL COMPO MASTER XLSX #----
@@ -714,6 +763,26 @@ compose_isobxr <- function(workdir,
                            FORCING_SIZE = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_SIZE")),
                            FORCING_DELTA = as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_DELTA")),
                            FORCING_ALPHA =  as.data.frame(readxl::read_excel(COMPO_MASTER, "FORCING_ALPHA"))),
-                      compo_master_excel_path)
+                      to_tmpdir(compo_master_excel_path))
   # beepr::beep(sound = 10)
+
+
+  #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+                                sep = ""))
+  fs::dir_tree(path = to_tmpdir(""), recurse = T)
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  rlang::inform("________________________________________________________________________________")
+  if(isFALSE(save_run_outputs)){
+    rlang::inform("\U2757 Results were not saved to working directory (set save_run_outputs = TRUE to save results).")
+    rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function (requires saved outputs).")
+  } else if(isTRUE(save_run_outputs)){
+    R.utils::copyDirectory(to_tmpdir(""),
+                           getwd(),
+                           overwrite = T)
+    rlang::inform("\U2705 Results were successfully saved to working directory.")
+    rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function.")
+  }
 }
