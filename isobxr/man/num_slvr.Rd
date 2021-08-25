@@ -4,7 +4,7 @@
 \alias{num_slvr}
 \title{Numerically solve stable isotope box models}
 \usage{
-num_slvr(input_path, to_DIGEST_csv = FALSE)
+num_slvr(input_path, to_DIGEST_csv = FALSE, save_run_outputs = FALSE)
 }
 \arguments{
 \item{input_path}{path to the INPUT file containing all commands for the run \cr
@@ -12,11 +12,18 @@ num_slvr(input_path, to_DIGEST_csv = FALSE)
 
 \item{to_DIGEST_csv}{Edits csv outputs to the RUN DIGEST folder \cr
 (logical, default is FALSE)}
+
+\item{save_run_outputs}{\emph{OPTIONAL} \cr
+Logical value. \cr
+Allows saving all run outputs to directory containing INPUT file. \cr
+By default, run outputs are stored in a temporary directory and are erased if not exported. \cr
+Default is FALSE.}
 }
 \value{
 The function returns the numerically determined evolution of stable
 isotope compositions and mass of element X in all boxes over the run duration as
 specified in INPUT file. \cr  \cr
+By default (unless save_run_outputs = TRUE), run outputs are stored in the temporary directory and are not exported. \cr \cr
 The outputs of the run are stored in a Rda output file
 with the following file name structure:  \cr
 \strong{\emph{RUN name + _OUT.Rda}}

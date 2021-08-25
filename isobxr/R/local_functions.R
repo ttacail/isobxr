@@ -196,9 +196,9 @@ ANA_delta_t_Calculator <- function(t, ODE_Constants, ODE_Eigenvalues, ODE_Eigenv
 #' @param conv_timecolname name of the column after time units conversion.  \cr
 #' Can be identical to time_colname. \cr
 #' (character string)
-#' @param former_unit former time unit. Character string amongst the following: \cr
+#' @param former_unit former time unit. Character string among the following: \cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
-#' @param new_unit new time unit. Character string amongst the following: \cr
+#' @param new_unit new time unit. Character string among the following: \cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}
 #' @return a dataframe with values converted to new time unit.
 #' @keywords internal
@@ -227,11 +227,11 @@ time_converter <- function(dataframe,
                                       Gyr = c(3.15576000093333E+22, 3.15576000093333E+22, 31557600009333300, 525960000155555, 8766000002592.59, 365250000108.025, 52178571444.0035, 11975409840, 1000000000, 1000000, 1000, 1))
 
   if (!(former_unit %in% time_converting_table$UNIT)){
-    rlang::abort(paste("Native time unit should be amonst the following: ", paste(time_converting_table$UNIT, collapse = ", ")))
+    rlang::abort(paste("Native time unit should be among the following: ", paste(time_converting_table$UNIT, collapse = ", ")))
   }
 
   if (!(new_unit %in% time_converting_table$UNIT)){
-    rlang::abort(paste("Conversion time unit should be amonst the following: ", paste(time_converting_table$UNIT, collapse = ", ")))
+    rlang::abort(paste("Conversion time unit should be among the following: ", paste(time_converting_table$UNIT, collapse = ", ")))
   }
 
   dataframe$conv_timecolname <- dataframe[,time_colname]*time_converting_table[time_converting_table$UNIT == new_unit, former_unit]
@@ -249,3 +249,54 @@ quiet <- function(x) {
   on.exit(sink())
   invisible(force(x))
 }
+
+#' address_to_tmpdir
+#' @description address_to_tmpdir
+#' @param dir_or_file directory or file to address in temporary directory
+#' @return path to temporary subdir/file
+#' @keywords internal
+to_tmpdir <- function(dir_or_file){
+  tmp_path <- paste(tempdir(), "isobxr_temp_data", sep = "/")
+
+  if (dir.exists(tmp_path) == FALSE){
+    dir.create(tmp_path)
+  }
+
+  tmp_path <- paste(tmp_path, dir_or_file, sep = "/")
+
+  # tmp_path <- paste(tempdir(), dir_or_file, sep = "/")
+  return(tmp_path)
+}
+
+
+#' plot_diagram
+#' @description plot_diagram
+#' @param input matrix of fluxes or coefficients
+#' @param title title of diagram
+#' @param matrix_layout matrix of X,Y layout
+#' @param BOXES_master_loc BOXES_master_loc
+#' @param COEFF_FLUX "COEFF" or "FLUX"
+#' @return diagrams for console or pdf edition (not used in shinobxr)
+#' @keywords internal
+plot_diagram <- function(input, title, matrix_layout, BOXES_master_loc, COEFF_FLUX){
+  if(COEFF_FLUX == "COEFF"){edge_color = "brown4"} else if (COEFF_FLUX == "FLUX"){edge_color = "black"}
+  qgraph::qgraph(input = input,
+                 title = title,
+                 layout = matrix_layout,
+                 edge.labels = T,
+                 edge.label.color = "black",
+                 shape = "square",
+                 fade = F,
+                 groups = BOXES_master_loc$GROUP,
+                 color = rainbow(length(levels(BOXES_master_loc$GROUP)), s = 0.25),
+                 legend = F,
+                 edge.color = edge_color,
+                 edge.label.cex = 2.89*exp(-nrow(BOXES_master_loc)/19),
+                 edge.label.margin = 0.02,
+                 asize = 9*exp(-nrow(BOXES_master_loc)/20)+2,
+                 curve = 0.88*exp(-nrow(BOXES_master_loc)/17.54),
+                 curveAll = F,
+                 vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
+}
+
+

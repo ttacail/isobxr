@@ -27,12 +27,13 @@ run_isobxr(
   to_DIGEST_evD_PLOT = TRUE,
   to_DIGEST_CSV_XLS = FALSE,
   evD_PLOT_time_as_log = TRUE,
-  print_evD_PLOT = TRUE
+  plot_results = TRUE,
+  save_run_outputs = FALSE
 )
 }
 \arguments{
 \item{workdir}{Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file \cr
-and where output files will be stored. \cr
+and where output files will be stored if exported by user. \cr
 (character string)}
 
 \item{SERIES_ID}{Name of the model series the run belongs to. \cr
@@ -59,7 +60,7 @@ It determines the resolution of the run. \cr
 \item{time_units}{Vector defining the initial time unit
 (identical to unit used in fluxes), \cr
 followed by the time unit used for the graphical output.\cr
-Character string, to be selected  amongst the following:\cr
+Character string, to be selected  among the following:\cr
 \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 e.g.,  c("d", "yr") to convert days into years}
 
@@ -141,7 +142,8 @@ Default is TRUE.}
 
 \item{to_DIGEST_CSV_XLS}{\emph{OPTIONAL}\cr
 Logical value.  \cr
-Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}} or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
+Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}}
+or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
 Default is FALSE.}
 
 \item{evD_PLOT_time_as_log}{\emph{OPTIONAL}\cr
@@ -149,17 +151,33 @@ Logical value.  \cr
 Print evD plot with log10 time scale as x-axis. \cr
 Default is TRUE.}
 
-\item{print_evD_PLOT}{\emph{OPTIONAL} \cr
+\item{plot_results}{\emph{OPTIONAL} \cr
 Logical value. \cr
-Plots the overview plots of the single model run (full evD and full evS) if TRUE. \cr
+If TRUE, plots in R session the single model run evolution of delta values and box sizes for all boxes. \cr
 Default is TRUE.}
+
+\item{save_run_outputs}{\emph{OPTIONAL} \cr
+Logical value. \cr
+Allows saving all run outputs to working directory (workdir). \cr
+By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
+Default is FALSE.}
 }
 \value{
-If the function is run independently and if directory is not yet existing, \cr
-\code{\link{run_isobxr}} creates and stores all outputs in a \emph{SERIES} folder located in working directory,
+Calculates the time evolution of delta values and box sizes in all boxes.
+
+\code{\link{run_isobxr}} returns by default a plot showing time evolution of delta values and box sizes
+for all boxes (set plot_results = FALSE to mute the plots). \cr
+
+\code{\link{run_isobxr}} creates a series of isotope data and metadata,
+all of which are stored in a temporary directory. \cr
+The user can save all outputs described below to their working directory by setting save_run_outputs = TRUE (default is FALSE). \cr
+
+If \code{\link{run_isobxr}} is run independently,
+it creates and stores all outputs in a \emph{SERIES} folder,
 with the following name structure: \cr
 \strong{\emph{2_RUN + SERIES_ID}}
 
+\code{\link{run_isobxr}} base workflow:
 \enumerate{
 \item Automatically sets a XXXX run number between 0001 and 9999. \cr
 The outputs do not overwrite possible identical previously performed runs.
@@ -187,7 +205,7 @@ box infinite/finite status, system diagram coordinates)
 This file stores all data produced by the function. \cr
 (file name structure: \strong{\emph{SERIES_ID + XXXX + _OUT.Rda}})
 
-\item Updates the general log file, located in general working directory. \cr
+\item Updates the general log file. \cr
 (file name: \strong{\emph{1_LOG.csv}})
 }
 }

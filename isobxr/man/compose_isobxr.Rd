@@ -13,13 +13,14 @@ compose_isobxr(
   plot_HIDE_BOXES_size = NULL,
   EACH_RUN_DIGEST = FALSE,
   to_CPS_DIGEST_CSVs = FALSE,
-  print_plots = TRUE
+  plot_results = TRUE,
+  save_run_outputs = FALSE
 )
 }
 \arguments{
 \item{workdir}{Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
 of the composite master file (e.g., \strong{\emph{0_COMPO_MASTER.xlsx}}) \cr
-and where output files will be stored. \cr
+and where output files will be stored if exported by user. \cr
 (character string)}
 
 \item{SERIES_ID}{Name of the composite model series the run belongs to. \cr
@@ -31,7 +32,7 @@ subsequent runs can not overwrite a previous composite run.\cr
 \item{time_units}{Vector defining the initial time unit
 (identical to unit used in fluxes), \cr
 followed by the time unit used for the graphical output.\cr
-Character string, to be selected  amongst the following:\cr
+Character string, to be selected  among the following:\cr
 \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 e.g.,  c("d", "yr") to convert days into years}
 
@@ -62,17 +63,41 @@ Logical value. \cr
 Exports all global csv outputs to \strong{\emph{0_CPS_DIGEST}} folder (full evD and full evS) if TRUE. \cr
 Default is FALSE.}
 
-\item{print_plots}{\emph{OPTIONAL} \cr
+\item{plot_results}{\emph{OPTIONAL} \cr
 Logical value. \cr
-Plots the overview plots of the composite model (full evD and full evS) if TRUE. \cr
+If TRUE, plots in R session the composite model run evolution of delta values and box sizes
+for boxes of interest
+(see plot_HIDE_BOXES_delta and plot_HIDE_BOXES_size parameters to remove boxes from plots). \cr
 Default is TRUE.}
+
+\item{save_run_outputs}{\emph{OPTIONAL} \cr
+Logical value. \cr
+Allows saving all run outputs to working directory (workdir). \cr
+By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
+Default is FALSE.}
 }
 \value{
-Creates and stores all outputs in a dedicated composite SERIES directory located in working directory,
+Calculates the time evolution of delta values and box sizes in all boxes throughout scenario.
+
+\code{\link{compose_isobxr}} returns by default a plot showing time evolution of delta values and box sizes
+for all boxes \cr
+(set plot_deltas = FALSE to mute the plots) \cr
+
+The graphical results of the composite run can be also interactively explored using the
+\code{\link{shinobxr_app}} function in case user saves the outputs to the working
+directory (save_run_outputs = TRUE).
+
+\code{\link{compose_isobxr}} creates a series of isotope data and metadata,
+all of which are stored in a temporary directory. \cr
+The user can save all outputs described below to their working directory
+by setting save_run_outputs = TRUE (default is FALSE). \cr
+
+\code{\link{compose_isobxr}} creates and stores all outputs in a dedicated dynamic steady SERIES directory
 with the following name structure: \cr
 \strong{\emph{3_CPS + SERIES_ID + YYY}}, where YYY is a composite scenario number automatically set between 001 and 999. \cr
 No overwriting of previous composite runs is possible.
 
+\code{\link{compose_isobxr}} base workflow:
 \enumerate{
 \item Creates the set of inputs and outputs for all successive \emph{n} runs,\cr
 numbered from to 1 to \emph{n} in an XXXX format with the following format: \cr

@@ -20,7 +20,7 @@ NULL
 #' assessing the design of the model and automatically running \code{\link{num_slvr}}
 #' or \code{\link{ana_slvr}} depending on the conditions.
 #' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file \cr
-#' and where output files will be stored. \cr
+#' and where output files will be stored if exported by user. \cr
 #' (character string)
 #' @param SERIES_ID Name of the model series the run belongs to. \cr
 #' It determines the folder in which the output files will be stored.\cr
@@ -41,7 +41,7 @@ NULL
 #' @param time_units Vector defining the initial time unit
 #' (identical to unit used in fluxes), \cr
 #' followed by the time unit used for the graphical output.\cr
-#' Character string, to be selected  amongst the following:\cr
+#' Character string, to be selected  among the following:\cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 #' e.g.,  c("d", "yr") to convert days into years
 #' @param FORCING_RAYLEIGH \emph{OPTIONAL} \cr
@@ -109,22 +109,38 @@ NULL
 #' Default is TRUE.
 #' @param to_DIGEST_CSV_XLS \emph{OPTIONAL}\cr
 #' Logical value.  \cr
-#' Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}} or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
+#' Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all \code{\link{ana_slvr}}
+#' or \code{\link{num_slvr}} CSV output files in RUN DIGEST folder if TRUE. \cr
 #' Default is FALSE.
 #' @param evD_PLOT_time_as_log \emph{OPTIONAL}\cr
 #' Logical value.  \cr
 #' Print evD plot with log10 time scale as x-axis. \cr
 #' Default is TRUE.
-#' @param print_evD_PLOT \emph{OPTIONAL} \cr
+#' @param plot_results \emph{OPTIONAL} \cr
 #' Logical value. \cr
-#' Plots the overview plots of the single model run (full evD and full evS) if TRUE. \cr
+#' If TRUE, plots in R session the single model run evolution of delta values and box sizes for all boxes. \cr
 #' Default is TRUE.
+#' @param save_run_outputs  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Allows saving all run outputs to working directory (workdir). \cr
+#' By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
+#' Default is FALSE.
 #'
-#' @return If the function is run independently and if directory is not yet existing, \cr
-#' \code{\link{run_isobxr}} creates and stores all outputs in a \emph{SERIES} folder located in working directory,
+#' @return Calculates the time evolution of delta values and box sizes in all boxes.
+#'
+#' \code{\link{run_isobxr}} returns by default a plot showing time evolution of delta values and box sizes
+#' for all boxes (set plot_results = FALSE to mute the plots). \cr
+#'
+#' \code{\link{run_isobxr}} creates a series of isotope data and metadata,
+#' all of which are stored in a temporary directory. \cr
+#' The user can save all outputs described below to their working directory by setting save_run_outputs = TRUE (default is FALSE). \cr
+#'
+#' If \code{\link{run_isobxr}} is run independently,
+#' it creates and stores all outputs in a \emph{SERIES} folder,
 #' with the following name structure: \cr
 #' \strong{\emph{2_RUN + SERIES_ID}}
 #'
+#' \code{\link{run_isobxr}} base workflow:
 #' \enumerate{
 #' \item Automatically sets a XXXX run number between 0001 and 9999. \cr
 #' The outputs do not overwrite possible identical previously performed runs.
@@ -152,7 +168,7 @@ NULL
 #' This file stores all data produced by the function. \cr
 #' (file name structure: \strong{\emph{SERIES_ID + XXXX + _OUT.Rda}})
 #'
-#' \item Updates the general log file, located in general working directory. \cr
+#' \item Updates the general log file. \cr
 #' (file name: \strong{\emph{1_LOG.csv}})
 #' }
 #'
@@ -192,35 +208,24 @@ NULL
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
 #' @export
-run_isobxr <- function(workdir,
-                       SERIES_ID,
-                       flux_list_name,
-                       coeff_list_name,
-                       t_lim,
-                       nb_steps,
-                       time_units,
-                       FORCING_RAYLEIGH = NULL,
-                       FORCING_SIZE = NULL,
-                       FORCING_DELTA = NULL,
-                       FORCING_ALPHA = NULL,
-                       COMPOSITE = FALSE,
-                       COMPO_SERIES_n = NaN,
-                       COMPO_SERIES_FAMILY = NaN,
-                       EXPLORER = FALSE,
-                       EXPLO_SERIES_n = NaN,
-                       EXPLO_SERIES_FAMILY = NaN,
-                       HIDE_PRINTS = FALSE,
-                       to_DIGEST_DIAGRAMS = TRUE,
-                       to_DIGEST_evD_PLOT = TRUE,
-                       to_DIGEST_CSV_XLS = FALSE,
-                       evD_PLOT_time_as_log = TRUE,
-                       print_evD_PLOT = TRUE){
+run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_lim, nb_steps, time_units,
+                       FORCING_RAYLEIGH = NULL, FORCING_SIZE = NULL, FORCING_DELTA = NULL, FORCING_ALPHA = NULL,
+                       COMPOSITE = FALSE, COMPO_SERIES_n = NaN, COMPO_SERIES_FAMILY = NaN,
+                       EXPLORER = FALSE, EXPLO_SERIES_n = NaN, EXPLO_SERIES_FAMILY = NaN,
+                       HIDE_PRINTS = FALSE, to_DIGEST_DIAGRAMS = TRUE, to_DIGEST_evD_PLOT = TRUE, to_DIGEST_CSV_XLS = FALSE,
+                       evD_PLOT_time_as_log = TRUE,plot_results = TRUE,
+                       save_run_outputs = FALSE){
 
   # locally bind variables (fixing binding global variable issue)
-  A_OUT <- N_evS <- A_evD <- N_evD <- NULL
-
+  output_list <- A_OUT <- N_evS <- A_evD <- N_evD <- NULL
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
+  if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
+    unlink(to_tmpdir(""), recursive = T)
+    on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
+    rlang::inform("________________________________________________________________________________")
+  }
+
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()
   on.exit(setwd(old), add = TRUE)
@@ -274,12 +279,17 @@ run_isobxr <- function(workdir,
     INFINITE_BOXES <- NaN
   }
 
+
   # WARNING # warning for n > 2 inf bxes / for connected bxes only
   if ((all(!is.na(INFINITE_BOXES))) & length(INFINITE_BOXES) > 2){
-    rlang::warn(paste("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
-                      "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
-                      "The numerical outputs will be accurrate. ",
-                      "This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
+    # rlang::warn(paste("The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
+    #                   "You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
+    #                   "The numerical outputs will be accurrate. ",
+    #                   "This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
+    rlang::inform(paste("\U2757 The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
+                        "   You defined more than 2 infinite boxes: [",paste(INFINITE_BOXES, collapse = ", "), "] \n",
+                        "   The numerical outputs will be accurrate. \n",
+                        "   This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
   }
 
   #************************************** EXTRACT AND PREPARE LOCAL RUN INPUTS #----
@@ -328,9 +338,8 @@ run_isobxr <- function(workdir,
   # CHECK ALL BOXES DEFINED IN BOXES SHEET ARE HAVE DEFINED SIZES
   if (isFALSE(identical(stringr::str_sort(as.character(SIZE_INITIAL$BOXES_ID)),
                         stringr::str_sort(list_BOXES_master)))){
-    rlang::abort("
-The list of boxes with defined sizes (FLUXES sheet) does not match the list of boxes (BOXES sheet).
-Please fix this error in the 0_ISOBXR_MASTER.xlsx")
+    rlang::abort("The list of boxes with defined sizes (FLUXES sheet) does not match the list of boxes (BOXES sheet).
+                 Please fix this error in the 0_ISOBXR_MASTER.xlsx")
   }
 
   INITIAL <- data.frame(BOXES_ID = list_BOXES_master)
@@ -440,12 +449,12 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     if (is.na(INFINITE_BOXES[1]) == F){
       CONNECTED_INFINITE_BOXES <- INITIAL[INITIAL$FLUX_BALANCE != 0 & INITIAL$BOXES_ID %in% INFINITE_BOXES, "BOXES_ID"]
       if (length(CONNECTED_INFINITE_BOXES) != 0){
-        rlang::inform(message = paste("The INFINITE boxes are: ", paste(CONNECTED_INFINITE_BOXES,  collapse = ", "), sep = ""))
+        rlang::inform(message = paste("\U2013 The INFINITE boxes are: ", paste(CONNECTED_INFINITE_BOXES,  collapse = ", "), sep = ""))
       }  else {
-        rlang::inform(message = paste("All boxes are FINITE", sep = ""))
+        rlang::inform(message = paste("\U2013 All boxes are FINITE", sep = ""))
       }
     } else {
-      rlang::inform(message = paste("All boxes are FINITE", sep = ""))
+      rlang::inform(message = paste("\U2013 All boxes are FINITE", sep = ""))
     }
   }
 
@@ -470,10 +479,10 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
       UNBAL_FINITE_BOXES <- c(UNBAL_FINITE_BOXES, as.character(INITIAL[i,"BOXES_ID"]))
       if (HIDE_PRINTS == F){
         if (INITIAL[i, "FLUX_BALANCE"] < 0){
-          rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
+          rlang::inform(message = paste("\U2013 ", INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
                                         "is negative (max run: ", - INITIAL[i,"SIZE_INIT"]/INITIAL[i,"FLUX_BALANCE"], " t units)", sep = ""))
         } else {
-          rlang::inform(message = paste(INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
+          rlang::inform(message = paste("\U2013 ", INITIAL[i,"BOXES_ID"]," IN-OUT BALANCE ",
                                         "is positive", sep = ""))
         }
       }
@@ -483,9 +492,9 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
 
   if (HIDE_PRINTS == F){
     if (NUM_ANA == "NUM"){
-      rlang::inform(message = paste("Running num_slvr (unbalanced finite boxes)", sep = ""))
+      rlang::inform(message = paste("\U2013 Running num_slvr (unbalanced finite boxes)", sep = ""))
     } else {
-      rlang::inform(message = paste("Running ana_slvr (balanced finite boxes)", sep = ""))
+      rlang::inform(message = paste("\U2013 Running ana_slvr (balanced finite boxes)", sep = ""))
     }
   }
 
@@ -601,9 +610,15 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     outdir <- paste(outdir, "/", sep = "")
   }
 
-  if (dir.exists(outdir) == FALSE){
-    dir.create(outdir)
+  # if (dir.exists(outdir) == FALSE){
+  #   dir.create(outdir)
+  # }
+
+  if (dir.exists(to_tmpdir(outdir)) == FALSE){
+    dir.create(to_tmpdir(outdir))
   }
+
+  output_list <- c(output_list, outdir)
 
   #************************************** DEFINE RUN OUTDIR and RUN ID #----
   #### DEFINE RUN number in the list of a given series, RUN_ID, SERIES_RUN_ID
@@ -613,11 +628,21 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     LOG_loc$RUN_ID <- paste(c(as.character(replicate(n_zeros-length(unlist(strsplit(as.character(LOG_loc$RUN_n), ""))),0)), as.character(LOG_loc$RUN_n)), collapse = "")
     LOG_loc$SERIES_RUN_ID <- paste(SERIES_ID, LOG_loc$RUN_ID, sep = "_")
   } else {
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
-    if (SERIES_ID %in% levels(LOG$SERIES_ID)){
-      LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
+    if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
+      LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+      file.copy(from = dir_LOG, to = to_tmpdir(dir_LOG))
+      if (SERIES_ID %in% levels(LOG$SERIES_ID)){
+        LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
+      } else {
+        LOG_loc$RUN_n <- 1
+      }
     } else {
-      LOG_loc$RUN_n <- 1
+      LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
+      if (SERIES_ID %in% levels(LOG$SERIES_ID)){
+        LOG_loc$RUN_n <- max(LOG[LOG$SERIES_ID == SERIES_ID, "RUN_n"])+1
+      } else {
+        LOG_loc$RUN_n <- 1
+      }
     }
     remove(LOG)
     LOG_loc$RUN_ID <- paste(c(as.character(replicate(n_zeros-length(unlist(strsplit(as.character(LOG_loc$RUN_n), ""))),0)), as.character(LOG_loc$RUN_n)), collapse = "")
@@ -631,11 +656,12 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
 
   # CREATE folder OUTPUT directory for xlsx, csv, and pdf ouputs if necessary
   if (any(isTRUE(to_DIGEST_CSV_XLS), isTRUE(to_DIGEST_DIAGRAMS), isTRUE(to_DIGEST_evD_PLOT))){
-    if (!dir.exists(paste(folder_outdir, "DIGEST/", sep = ""))){
-      dir.create(paste(folder_outdir, "DIGEST/", sep = ""))
+    if (!dir.exists(to_tmpdir(paste(folder_outdir, "DIGEST/", sep = "")))){
+      dir.create(to_tmpdir(paste(folder_outdir, "DIGEST/", sep = "")))
     }
   }
 
+  output_list <- c(output_list, folder_outdir)
 
   #************************************** UPDATE TOTAL RUN TIME DEPENDING ON MOST UNBALANCED BOX (incl. "INFINITE") #----
   if (length(BOX_META_to_xls[BOX_META_to_xls$t_lim_run > 0, "t_lim_run"]) > 0){
@@ -647,7 +673,13 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
 
   if (t_lim > MIN_POS_t_lim_run){
     CONSTS[CONSTS$CONSTS_ID == "time", "CONSTS"] <- as.character(MIN_POS_t_lim_run)
-    rlang::warn(message = paste("Updated total run duration. Total run time has been changed from ", as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run), " (limiting box: ", MIN_POS_t_lim_run_BOX, ")" , sep = ""))
+    # rlang::warn(message = paste("Updated total run duration. Total run time has been changed from ",
+    #                             as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run),
+    #                             " (limiting box: ", MIN_POS_t_lim_run_BOX, ")" , sep = ""))
+    rlang::inform(message = paste("\U2757 ",
+                                "Updated total run duration. Total run time has been changed from ",
+                                as.character(t_lim), " to ", as.character(MIN_POS_t_lim_run),
+                                " (limiting box: ", MIN_POS_t_lim_run_BOX, ")" , sep = ""))
     LOG_loc$T_LIM <- MIN_POS_t_lim_run
     CONSTS_trad <- CONSTS
   }
@@ -662,7 +694,9 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
                              FLUXES = FLUXES_trad,
                              COEFFS = COEFFS_trad,
                              BOX_META = BOX_META_to_xls),
-                        trad_excel_path)
+                        to_tmpdir(trad_excel_path))
+
+    output_list <- c(output_list, trad_excel_path)
   }
 
 
@@ -679,7 +713,8 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
        FLUXES_IN,
        COEFFS_IN,
        BOX_META_IN,
-       file = trad_rda_path)
+       file = to_tmpdir(trad_rda_path))
+  output_list <- c(output_list, trad_rda_path)
 
   #************************************** NETWORK DIAGRAM OUTPUT #----
   #### REMOVE ISOLATED BOXES FOR NETWORK DIAGRAM
@@ -756,66 +791,29 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     NET_COEFFS_title <- paste(NET_COEFFS_title, " // Alpha forcing: ", LOG_loc$FORCING_ALPHA, sep = "")
   }
 
+  #### EDIT NETWORK DIAGRAM PDF
   if (to_DIGEST_DIAGRAMS == T){
-    #### EDIT NETWORK DIAGRAM PDF
     pdf_path <- paste(folder_outdir, "DIGEST/", "in_1_DIAG_FLUX_", SERIES_ID_RUN_ID, ".pdf", sep = "")
-    pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
-    NET_FLUXES <- qgraph::qgraph(FLUXES_adj,
-                                 title = NET_FLUXES_title,
-                                 layout = matrix_layout,
-                                 edge.labels = T,
-                                 edge.label.color = "black",
-                                 shape = "square",
-                                 fade = F,
-                                 groups = BOXES_master_loc$GROUP,
-                                 color = rainbow(length(levels(BOXES_master_loc$GROUP)), s = 0.25),
-                                 legend = F,
-                                 edge.color = "black",
-                                 # edge.label.cex = 2.5,
-                                 edge.label.cex = 2.89*exp(-nrow(BOXES_master_loc)/19),
-                                 edge.label.margin = 0.02,
-                                 # asize = 8,
-                                 asize = 9*exp(-nrow(BOXES_master_loc)/20)+2,
-                                 # curve = 0.7,
-                                 curve = 0.88*exp(-nrow(BOXES_master_loc)/17.54),
-                                 # curveScale = T,
-                                 curveAll = F,
-                                 vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
+    output_list <- c(output_list, pdf_path)
+    pdf(to_tmpdir(pdf_path), width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
+    plot_diagram(input = FLUXES_adj, title = NET_FLUXES_title, matrix_layout = matrix_layout, BOXES_master_loc = BOXES_master_loc, COEFF_FLUX = "FLUX")
     dev.off()
 
     pdf_path <- paste(folder_outdir, "DIGEST/", "in_2_DIAG_COEFF_", SERIES_ID_RUN_ID, ".pdf", sep = "")
-    pdf(pdf_path, width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
-    NET_COEFFS <- qgraph::qgraph(COEFFS_adj,
-                                 title = NET_COEFFS_title,
-                                 title.cex = 0.25,
-                                 layout = matrix_layout,
-                                 edge.labels = T,
-                                 edge.label.color = "black",
-                                 shape = "square",
-                                 fade = F,
-                                 groups = BOXES_master_loc$GROUP,
-                                 color = rainbow(length(levels(BOXES_master_loc$GROUP)), s = 0.25),
-                                 legend = F,
-                                 edge.color = "brown4",
-                                 # edge.label.cex = 2.5,
-                                 edge.label.cex = 2.89*exp(-nrow(BOXES_master_loc)/19),
-                                 edge.label.margin = 0.02,
-                                 # asize = 8,
-                                 asize = 9*exp(-nrow(BOXES_master_loc)/20)+2,
-                                 # curve = 0.7,
-                                 curve = 0.88*exp(-nrow(BOXES_master_loc)/17.54),
-                                 curveAll = F,
-                                 vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
-
+    output_list <- c(output_list, pdf_path)
+    pdf(to_tmpdir(pdf_path), width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
+    plot_diagram(input = COEFFS_adj, title = NET_COEFFS_title, matrix_layout = matrix_layout, BOXES_master_loc = BOXES_master_loc, COEFF_FLUX = "COEFF")
     dev.off()
   }
 
   #************************************** UPDATE LOG DATA FRAME, EDIT CSV #----
-  if (file.exists(dir_LOG) == FALSE){
-    data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F)
+  if (file.exists(to_tmpdir(dir_LOG)) == FALSE){
+    data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F)
   } else {
-    data.table::fwrite(LOG_loc, file = dir_LOG, row.names = F, quote = F, append = T)
+    data.table::fwrite(LOG_loc, file = to_tmpdir(dir_LOG), row.names = F, quote = F, append = T)
   }
+
+  output_list <- c(output_list, dir_LOG)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN ISOBOXr #----
   input_path <- paste(folder_outdir, "IN.Rda", sep = "")
@@ -827,18 +825,18 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
   }
 
   if (LOG_loc$NUM_ANA == "ANA"){
-    ana_slvr(input_path, to_DIGEST_csv = to_DIGEST_csv)
+    ana_slvr(to_tmpdir(input_path), to_DIGEST_csv = to_DIGEST_csv, save_run_outputs = TRUE)
   } else {
     if (LOG_loc$NUM_ANA == "NUM"){
-      num_slvr(input_path, to_DIGEST_csv = to_DIGEST_csv)
+      num_slvr(to_tmpdir(input_path), to_DIGEST_csv = to_DIGEST_csv, save_run_outputs = TRUE)
     }
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# POST-RUN OUTPUTS
 
-  if (to_DIGEST_evD_PLOT == TRUE | print_evD_PLOT == TRUE){
+  if (to_DIGEST_evD_PLOT == TRUE | plot_results == TRUE){
 
-    load(paste(folder_outdir, "OUT.Rda", sep = ""))
+    load(paste(to_tmpdir(folder_outdir), "OUT.Rda", sep = ""))
 
     #************************************** EXTRACT or COMPUTE TIME DEPENDENT EVOLUTION OF DELTA VALUES #----
     if (LOG_loc$NUM_ANA == "ANA"){ #### OFFLINE CALCULATION of EV D for ANA using EigenVec/Vals/Coeffs
@@ -946,18 +944,37 @@ Please fix this error in the 0_ISOBXR_MASTER.xlsx")
     if (evD_PLOT_time_as_log == T){
       evS_plot <- evS_plot + ggplot2::scale_x_log10()
     }
+  }
 
-    #### EXPORT PLOT
-    if (isTRUE(to_DIGEST_evD_PLOT)){
-      pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
-      dev.new()
-      pdf(pdf_path, width = 10, height = 10, pointsize = 1, useDingbats=FALSE)
-      suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
-      graphics.off()
-    }
-    ##### PRINT PLOT
-    if (isTRUE(print_evD_PLOT)){
-      print(suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1)))
+  #### EXPORT PLOT
+  if (isTRUE(to_DIGEST_evD_PLOT)){
+    pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
+    output_list <- c(output_list, pdf_path)
+    dev.new()
+    pdf(to_tmpdir(pdf_path), width = 10, height = 10, pointsize = 1, useDingbats=FALSE)
+    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
+    graphics.off()
+  }
+  ##### PRINT PLOTs
+  if (isTRUE(plot_results)){
+    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
+  }
+
+  #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
+  if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+                                  sep = ""))
+    fs::dir_tree(path = to_tmpdir(""), recurse = T)
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+    if(isFALSE(save_run_outputs)){
+      rlang::inform("\U2757 Results were not exported to working directory (set save_run_outputs = TRUE to save results).")
+    } else if(isTRUE(save_run_outputs)){
+      R.utils::copyDirectory(to_tmpdir(""),
+                             getwd(),
+                             overwrite = T)
+      rlang::inform("\U2705 Results were successfully exported to working directory.")
     }
   }
 }

@@ -11,7 +11,7 @@
 #'
 #' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
 #' of the steady sweep master file (e.g., \strong{\emph{0_EXPLO_STEADY_MASTER.xlsx}}) \cr
-#' and where output files will be stored. \cr
+#' and where output files will be stored if exported by user. \cr
 #' (character string)
 #'
 #' @param SERIES_ID Name of the sweep series the run belongs to. \cr
@@ -23,7 +23,7 @@
 #' @param time_units Vector defining the initial time unit
 #' (identical to unit used in fluxes), \cr
 #' followed by the time unit used for the graphical output.\cr
-#' Character string, to be selected  amongst the following:\cr
+#' Character string, to be selected  among the following:\cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 #' e.g.,  c("d", "yr") to convert days into years
 #'
@@ -42,12 +42,39 @@
 #' Exports all global csv outputs to \strong{\emph{0_STD_DIGEST}} folder (full and final evD and evS) if TRUE. \cr
 #' Default is FALSE.
 #'
+#' @param plot_results \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' If TRUE, plots in R session the heatmaps of delta values of all system finite boxes in the 2D space of swept parameters. \cr
+#' Default is TRUE.
 #'
-#' @return Creates and stores all outputs in a dedicated sweep steady SERIES directory
-#' located in working directory, with the following name structure: \cr
-#' \strong{\emph{4_STD + SERIES_ID + YYY}}, where YYY is a sweep steady run number automatically set between 001 and 999. \cr
+#' @param save_run_outputs  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Allows saving all run outputs to working directory (workdir). \cr
+#' By default, run outputs are stored in the temporary directory and are erased if not saved. \cr
+#' Default is FALSE.
+#'
+#' @return Calculates the delta values and box sizes at final state of the sweeping of 2D space of parameters in all boxes.
+#'
+#' \code{\link{sweep_steady}} returns by default a heatmap plot of the isotope composition
+#' of each finite box in the 2D space defined by the two swept parameters
+#' (set plot_results = FALSE to mute the plots). \cr
+#'
+#' The graphical results of the sweep can be also interactively explored using the
+#' \code{\link{shinobxr_app}} function in case user saves the outputs to the working
+#' directory (save_run_outputs = TRUE).
+#'
+#' \code{\link{sweep_steady}} creates a series of isotope data and metadata,
+#' all of which are stored in a temporary directory. \cr
+#' The user can save all outputs described below to their working directory
+#' by setting save_run_outputs = TRUE (default is FALSE). \cr
+#'
+#' \code{\link{sweep_steady}} creates and stores all outputs in a dedicated SERIES directory
+#' with the following name structure: \cr
+#' \strong{\emph{4_STD + SERIES_ID + YYY}}, where YYY is a sweep steady run number automatically
+#' set between 001 and 999. \cr
 #' No overwriting of previous sweep steady run runs is possible.
 #'
+#' \code{\link{sweep_steady}} base workflow:
 #' \enumerate{
 #' \item Calculates the number of single runs the sweeping will require depending on the swept parameters.
 #' \item Asks the user confirmation to run \code{\link{sweep_steady}},
@@ -93,11 +120,11 @@ sweep_steady <- function(workdir,
                          EXPLO_MASTER,
                          EXPLO_AXIS_1,
                          EXPLO_AXIS_2,
-                         to_STD_DIGEST_CSVs = FALSE){
-
+                         to_STD_DIGEST_CSVs = FALSE,
+                         plot_results = TRUE,
+                         save_run_outputs = FALSE){
   # locally bind variables (fixing binding global variable issue)
-  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
-
+  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- Time_plot <- Y <- Z <- NULL
 
   # Clear plots
   # if(!is.null(dev.list())) dev.off()
@@ -105,6 +132,8 @@ sweep_steady <- function(workdir,
   # cat("\014")
   # Clean workspace
   # rm(list=ls())
+  unlink(to_tmpdir(""), recursive = T)
+  on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE #----
   #************************************** SET WORKING DIRECTORY #----
@@ -143,7 +172,8 @@ sweep_steady <- function(workdir,
 
   n_zeros <- 4
   if (file.exists(dir_LOG) == TRUE){
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    file.copy(from = dir_LOG, to = to_tmpdir(dir_LOG))
+    LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
     LOG_EXPLO <- LOG[LOG$EXPLORER == TRUE, ]
     remove(LOG)
     EXPLO_SERIES_FAMILY <- paste("STD", as.character(SERIES_ID), sep = "_")
@@ -198,8 +228,8 @@ sweep_steady <- function(workdir,
   }
 
   COMPOSITE <- TRUE
-
-  rlang::inform("* COMPUTING RUN #1 (Initial relaxation) *")
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform("\U0001f535 COMPUTING RUN #1 (Initial relaxation) ")
   run_isobxr(workdir = LOC_workdir,
              SERIES_ID = SERIES_ID,
              flux_list_name = fx,
@@ -220,7 +250,7 @@ sweep_steady <- function(workdir,
              HIDE_PRINTS = FALSE,
              to_DIGEST_DIAGRAMS = TRUE,
              to_DIGEST_evD_PLOT = TRUE,
-             print_evD_PLOT = FALSE)
+             plot_results = FALSE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE SWEEP OF RUN 2/2 #----
   #************************************** PREPARE INPUTS for ISOPY_RUN with EXPLO_MASTER as default #----
@@ -237,18 +267,18 @@ sweep_steady <- function(workdir,
     LOC_RAYLEIGH <- NULL
   }
 
-  LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+  LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
   LOG_last <- LOG[nrow(LOG),]
   remove(LOG)
 
   if (LOG_last$NUM_ANA == "ANA"){
-    load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+    load(to_tmpdir(paste(LOG_last$path_outdir, "OUT.Rda", sep = "")))
     OUT_last_final <- A_OUT
     OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
     OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
     names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
   } else {
-    load(paste(LOG_last$path_outdir, "OUT.Rda"))
+    load(to_tmpdir(paste(LOG_last$path_outdir, "OUT.Rda", sep = "")))
     OUT_last_final <- N_OUT
     OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
     names(OUT_last_SIZE_FINAL) <- c("BOXES_ID", "SIZE_INIT")
@@ -410,18 +440,25 @@ sweep_steady <- function(workdir,
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
 
   STOP_GO <- FALSE
-
-  if (.Platform$OS.type == "windows"){
-    STOP_GO <- utils::askYesNo(paste("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ?"), default = TRUE)
+  rlang::inform("________________________________________________________________________________")
+  if(interactive()){
+    if (.Platform$OS.type == "windows"){
+      STOP_GO <- utils::askYesNo(paste("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on?"), default = TRUE)
+    } else {
+      STOP_GO <- utils::askYesNo(cat("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on? \n"), default = TRUE)
+    }
   } else {
-    STOP_GO <- utils::askYesNo(cat("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ? \n"), default = TRUE)
+    rlang::abort("This is not an interactive session, the function can not prompt questions.
+Please use an interactive session to review the number of independent runs the sweep represents
+before calculation is started.")
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (STOP_GO == FALSE){
-    rlang::warn("You probably want to reduce the number of iterations in each EXPLO axis.")
+    rlang::abort("\U2757 You probably want to reduce the number of iterations in each EXPLO axis.")
   } else {
-    rlang::inform("* COMPUTING SWEEP OF RUN #2 *")
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform("\U0001f535 COMPUTING SWEEP OF RUN #2")
     pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 50)
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP RUN 2/2 in [1:n] #----
     clock <- 1
@@ -510,7 +547,7 @@ sweep_steady <- function(workdir,
                          HIDE_PRINTS = TRUE,
                          to_DIGEST_DIAGRAMS = FALSE,
                          to_DIGEST_evD_PLOT = FALSE,
-                         print_evD_PLOT = FALSE))
+                         plot_results = FALSE))
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         # calculation_gauge(clock, tot_run)
         utils::setTxtProgressBar(pb_cpt, clock)
@@ -601,18 +638,19 @@ sweep_steady <- function(workdir,
     }
 
     #************************************** LOAD LOG/OUT FILES of CURRENT COMPO SERIES #----
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
     LOG_SERIES <- LOG[LOG$SERIES_ID == SERIES_ID,]
     remove(LOG)
     LOG_SERIES <- dplyr::full_join(LOG_SERIES, EXPLOG, by = "RUN_n")
     LOG_SERIES <- clear_subset(LOG_SERIES)
     SERIES_RUN_ID_1 <- LOG_SERIES[1, "SERIES_RUN_ID"]
     path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "IN.Rda", sep = "")
-    load(path_to_input_1)
+    load(to_tmpdir(path_to_input_1))
     BOXES_IDs <- as.character(INITIAL_IN$BOXES_ID)
 
     #************************************** READ/BUILD/MERGE evS/evD for ANA/NUM WHOLE COMPOSITE RUN #----
-    rlang::inform("* PREPARING RESULTS *")
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform("\U0001f535 PREPARING RESULTS")
     pb_prep <- utils::txtProgressBar(min = 1, max = tot_run+1, style = 3, width = 50)
 
     i <- 1
@@ -620,19 +658,19 @@ sweep_steady <- function(workdir,
       SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
       RUN_n_i <- LOG_SERIES[i, "RUN_n"]
       path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
-      path_to_INPUT_i <- paste(path_outdir_i, "IN.Rda", sep = "")
-      load(path_to_INPUT_i)
+      path_to_input_i <- paste(path_outdir_i, "IN.Rda", sep = "")
+      load(to_tmpdir(path_to_input_i))
       INIT_i <- INITIAL_IN
       SIZE_INIT_i <- INIT_i[,c("BOXES_ID", "SIZE_INIT")]
       DELTA_INIT_i <- INIT_i[,c("BOXES_ID", "DELTA_INIT")]
       FLUXES_i <- FLUXES_IN
       COEFFS_i <- COEFFS_IN
       if (i > 1){
-        unlink(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+        unlink(to_tmpdir(path_to_input_i)) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
       }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
-        load(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = ""))
+        load(to_tmpdir(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = "")))
         evD_i <- A_evD
         SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
         names(SIZE_INIT_i_hor) <- SIZE_INIT_i$BOXES_ID
@@ -643,16 +681,16 @@ sweep_steady <- function(workdir,
           evS_i[,BOXES_IDs[j]] <- SIZE_INIT_i_hor[1, BOXES_IDs[j]]
           j <- j + 1
         }
-        if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-          unlink(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = ""), recursive = T)
+        if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
+          unlink(to_tmpdir(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = "")), recursive = T)
         }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
-          load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+          load(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")))
           evD_i <- N_evD
           evS_i <- N_evS
-          if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
-            unlink(paste(path_outdir_i, "OUT.Rda", sep = ""), recursive = T)
+          if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
+            unlink(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")), recursive = T)
           }
         }
       }
@@ -763,27 +801,27 @@ sweep_steady <- function(workdir,
     evS_final <- evS[evS$Time == t_lim_list[2],]
 
     #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-    rlang::inform("* WRITING DIGEST *")
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform("\U0001f535 WRITING DIGEST")
 
     path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_STD_DIGEST/", sep = "")
-    if (!dir.exists(path_out_EXPLO)){dir.create(path_out_EXPLO)}
+    if (!dir.exists(to_tmpdir(path_out_EXPLO))){dir.create(to_tmpdir(path_out_EXPLO))}
     path_out_EXPLO <- paste(path_out_EXPLO, SERIES_ID, sep = "")
 
-    data.table::fwrite(LOG_SERIES, file = paste(path_out_EXPLO, "_LOG.csv", sep = ""), row.names = F, quote = F)
-    saveRDS(object = evD, file = paste(path_out_EXPLO, "_evD.RDS", sep = ""))
-    saveRDS(object = evS, file = paste(path_out_EXPLO, "_evS.RDS", sep = ""))
-    saveRDS(object = evD_final, file = paste(path_out_EXPLO, "_evD_final.RDS", sep = ""))
-    saveRDS(object = evS_final, file = paste(path_out_EXPLO, "_evS_final.RDS", sep = ""))
+    data.table::fwrite(LOG_SERIES, file = paste(to_tmpdir(path_out_EXPLO), "_LOG.csv", sep = ""), row.names = F, quote = F)
+    saveRDS(object = evD, file = paste(to_tmpdir(path_out_EXPLO), "_evD.RDS", sep = ""))
+    saveRDS(object = evS, file = paste(to_tmpdir(path_out_EXPLO), "_evS.RDS", sep = ""))
+    saveRDS(object = evD_final, file = paste(to_tmpdir(path_out_EXPLO), "_evD_final.RDS", sep = ""))
+    saveRDS(object = evS_final, file = paste(to_tmpdir(path_out_EXPLO), "_evS_final.RDS", sep = ""))
 
     if (isTRUE(to_STD_DIGEST_CSVs)){
-      data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
-      data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
-      data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
-      data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evD, file = paste(to_tmpdir(path_out_EXPLO), "_evD.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS, file = paste(to_tmpdir(path_out_EXPLO), "_evS.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evD_final, file = paste(to_tmpdir(path_out_EXPLO), "_evD_final.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS_final, file = paste(to_tmpdir(path_out_EXPLO), "_evS_final.csv", sep = ""), row.names = F, quote = F)
     }
 
-    explo_master_excel_path <-  paste(path_out_EXPLO, "_MASTER.xlsx" , sep = "")
-    # explo_master_excel_path <-  paste(path_out_EXPLO, "_" , EXPLO_MASTER, sep = "")
+    explo_master_excel_path <-  paste(to_tmpdir(path_out_EXPLO), "_MASTER.xlsx" , sep = "")
     writexl::write_xlsx(list(RUN_LIST = RUN_LIST,
                              FORCING_RAYLEIGH = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_RAYLEIGH")),
                              FORCING_SIZE = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_SIZE")),
@@ -793,9 +831,124 @@ sweep_steady <- function(workdir,
     explo_master_excel_path)
 
   }
-  # beepr::beep(sound = 10)
-}
 
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PLOT DEFAULT MAPS FROM TEMPDIR #----
+  heatmap_contour <- TRUE #DEFAULT not implemented
+  if (isTRUE(plot_results)){
+    SERIES_ID_plot <- LOG_SERIES[1,"SERIES_ID"]
+
+    # define box lists
+    BOXES <- unlist(stringr::str_split(LOG_SERIES[1,"BOXES_ID_list"], pattern = "_"))
+    BOXES_INFINITE <- unlist(stringr::str_split(LOG_SERIES[1,"INFINITE_BOXES_list"], pattern = "_"))
+    BOXES_DISCONNECTED <- unlist(stringr::str_split(LOG_SERIES[1,"DISCONNECTED_BOXES"], pattern = "_"))
+    BOXES_FINITE <- BOXES[!BOXES %in% BOXES_INFINITE]
+    BOXES_FINITE_CONNECTED <- BOXES_FINITE[!BOXES_FINITE %in% BOXES_DISCONNECTED]
+
+    for (i in 1:length(BOXES_FINITE_CONNECTED)){
+      loc_BOX <- BOXES_FINITE_CONNECTED[i] # check selected box exists
+      X <- "VAR_EXPLO_1"
+      Y <-  "VAR_EXPLO_2"
+
+      # DROP RUN 1
+      evD_final <- clear_subset(evD_final[evD_final$RUN_n != 1, ])
+
+      # VERTICALIZE
+      evD_final_vert <- DF_verticalizer(df_hor = evD_final, vert_col = BOXES)
+      DF <- evD_final_vert
+
+      # DEFINE TITLES
+      if (levels(DF$LEGEND_EXPLO_1) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
+      } else {
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1)), collapse = " to "), collapse = ", "), sep = "")
+      }
+
+      if (levels(DF$LEGEND_EXPLO_2) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
+      } else {
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
+      }
+
+      EXPLO_subtitle_0 = paste(SERIES_ID_plot,
+                               " (", min(LOG_SERIES$RUN_n),
+                               "-", max(LOG_SERIES$RUN_n),
+                               ") \n", "Hidden initial run: ",
+                               paste(LOG_SERIES[1, "COEFF_FLUX"], collapse = " / "),
+                               sep = "")
+
+      EXPLO_subtitle <- paste(EXPLO_subtitle_0, "\n",
+                              EXPLO_subtitle_1, "\n",
+                              EXPLO_subtitle_2, sep = "")
+
+
+      EXPLO_title <- paste("\u03B4", CONSTANTS$ELEMENT, " (", CONSTANTS$NUMERATOR, "/", CONSTANTS$DENOMINATOR,", \u2030", ") - [", loc_BOX, "]", sep = "")
+
+      ################################################ PLOT VAR_EXPLO_2 vs VAR_EXPLO_1
+      DF_map_1 <- DF
+
+      X_ID <- as.character(evD_final_vert[1,"LEGEND_EXPLO_1"])
+      X_ID_legend <- paste(as.character(evD_final_vert[1,"LEGEND_EXPLO_1"]), " (", as.character(evD_final_vert[1,X]), " to ",  as.character(evD_final_vert[nrow(evD_final_vert),X]), ")", sep ="")
+      DF_map_1$X_ID <- X_ID
+      DF_map_1$X <- DF_map_1[,X]
+
+      Y_ID <- as.character(evD_final_vert[1,"LEGEND_EXPLO_2"])
+      Y_ID_legend <- paste(as.character(evD_final_vert[1,"LEGEND_EXPLO_2"]), " (", as.character(evD_final_vert[1,Y]), " to ",  as.character(evD_final_vert[nrow(evD_final_vert),Y]), ")", sep ="")
+      DF_map_1$Y_ID <- Y_ID
+      DF_map_1$Y <- DF_map_1[,Y]
+
+      remove(evD_final_vert)
+
+      DF_map_1 <- DF_map_1[,c("X_ID", "X", "Y_ID", "Y", "VAR_TYPE", "VAR")]
+
+      names(DF_map_1) <- c("X_ID", "X", "Y_ID", "Y", "Z_ID", "Z")
+
+      DF_map_1_loc <- DF_map_1[DF_map_1$Z_ID == loc_BOX,]
+
+      map_1 <- ggplot2::ggplot(data = DF_map_1_loc, ggplot2::aes(x = as.numeric(X), y = as.numeric(Y), z = Z))+
+        ggplot2::geom_raster(ggplot2::aes(fill = Z), hjust=0.5, vjust=0.5, interpolate = F)+
+        ggplot2::scale_fill_gradientn(colors = rainbow(200))+
+        ggplot2::theme_bw()+
+        ggplot2::labs(y = Y_ID_legend,
+                      x = X_ID_legend,
+                      title = EXPLO_title,
+                      subtitle = EXPLO_subtitle)
+
+      if (isTRUE(heatmap_contour)){
+        ampl <- (max(DF_map_1_loc$Z) - min(DF_map_1_loc$Z))
+        n_bands <- 10
+        bins_exact <- ampl/n_bands
+        BINWIDTH_CONTOUR <- round(bins_exact, digits = -floor(log10(bins_exact)))
+        if (BINWIDTH_CONTOUR >= 1e-3){
+          breaks_loc <- metR::MakeBreaks(binwidth = as.numeric(BINWIDTH_CONTOUR))
+          map_1 <- map_1 +
+            metR::geom_contour_fill(ggplot2::aes(z = Z), alpha = 1, breaks = breaks_loc) +
+            metR::geom_contour2(ggplot2::aes(z = Z), breaks = breaks_loc) +
+            metR::geom_label_contour(ggplot2::aes(z = Z), breaks = breaks_loc, skip = 0)
+        }
+      }
+      print(map_1)
+    }
+  }
+
+  #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+                                sep = ""))
+  fs::dir_tree(path = to_tmpdir(""), recurse = T)
+  rlang::inform("_______________________________________________________________________________")
+  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  rlang::inform("________________________________________________________________________________")
+  if(isFALSE(save_run_outputs)){
+    rlang::inform("\U2757 Results were not saved to working directory (set save_run_outputs = TRUE to save results).")
+    rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function (requires saved outputs).")
+  } else if(isTRUE(save_run_outputs)){
+    R.utils::copyDirectory(to_tmpdir(""),
+                           getwd(),
+                           overwrite = T)
+    rlang::inform("\U2705 Results were successfully saved to working directory.")
+    rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function.")
+  }
+}
 
 #  #_________________________________________________________________________80char
 #' Sweep the space of two parameters during a dynamic run
@@ -804,7 +957,7 @@ sweep_steady <- function(workdir,
 #'
 #' @param workdir Working directory of \strong{\emph{0_ISOBXR_MASTER.xlsx}} master file, \cr
 #' of the dynamic sweep master file (e.g., \strong{\emph{0_EXPLO_DYN_MASTER.xlsx}}) \cr
-#' and where output files will be stored. \cr
+#' and where output files will be stored if saved by user. \cr
 #' (character string)
 #'
 #' @param SERIES_ID Name of the sweep series the run belongs to. \cr
@@ -816,7 +969,7 @@ sweep_steady <- function(workdir,
 #' @param time_units Vector defining the initial time unit
 #' (identical to unit used in fluxes), \cr
 #' followed by the time unit used for the graphical output.\cr
-#' Character string, to be selected  amongst the following:\cr
+#' Character string, to be selected  among the following:\cr
 #' \emph{micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr}\cr
 #' e.g.,  c("d", "yr") to convert days into years
 #'
@@ -835,11 +988,39 @@ sweep_steady <- function(workdir,
 #' Exports all global csv outputs to \strong{\emph{0_DYN_DIGEST}} folder (full evD and evS) if TRUE. \cr
 #' Default is FALSE.
 #'
-#' @return Creates and stores all outputs in a dedicated dynamic steady SERIES directory
-#' located in working directory, with the following name structure: \cr
+#' @param plot_results \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' If TRUE, plots in R session the evolution of deltas as a function of time with respect to parameters 1 and 2,
+#' for all system finite boxes. \cr
+#' Default is TRUE.
+#'
+#' @param save_run_outputs  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' Allows saving all run outputs to working directory (workdir). \cr
+#' By default, run outputs are stored in the temporary directory and are erased if not saved. \cr
+#' Default is FALSE.
+#'
+#' @return Calculates the delta values and box sizes at final state of the sweeping of 2D space of parameters in all boxes.
+#'
+#' \code{\link{sweep_dyn}} returns by default a plot showing time evolution of delta values of the isotope composition
+#' of each finite box in the 2D space defined by the two swept parameters
+#' (set plot_results = FALSE to mute the plots). \cr
+#'
+#' The graphical results of the sweep can be also interactively explored using the
+#' \code{\link{shinobxr_app}} function in case user saves the outputs to the working
+#' directory (save_run_outputs = TRUE).
+#'
+#' \code{\link{sweep_steady}} creates a series of isotope data and metadata,
+#' all of which are stored in a temporary directory. \cr
+#' The user can save all outputs described below to their working directory
+#' by setting save_run_outputs = TRUE (default is FALSE). \cr
+#'
+#' \code{\link{sweep_dyn}} creates and stores all outputs in a dedicated SERIES directory
+#' with the following name structure: \cr
 #' \strong{\emph{4_DYN + SERIES_ID + YYY}}, where YYY is a sweep dynamic run number automatically set between 001 and 999. \cr
 #' No overwriting of previous sweep dynamic run runs is possible.
-
+#'
+#' \code{\link{sweep_steady}} base workflow:
 #' \enumerate{
 #' \item Calculates the number of single runs the sweeping will require depending on the swept parameters.
 #' \item Asks the user confirmation to run \code{\link{sweep_dyn}},
@@ -880,10 +1061,13 @@ sweep_dyn <- function(workdir,
                       EXPLO_MASTER,
                       EXPLO_AXIS_1,
                       EXPLO_AXIS_2,
-                      to_DYN_DIGEST_CSVs = FALSE){
+                      to_DYN_DIGEST_CSVs = FALSE,
+                      plot_results = TRUE,
+                      save_run_outputs = FALSE
+                      ){
 
   # locally bind variables (fixing binding global variable issue)
-  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- NULL
+  INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- Time_plot <- Y <- Z <- NULL
 
   # Clear plots
   # if(!is.null(dev.list())) dev.off()
@@ -891,6 +1075,8 @@ sweep_dyn <- function(workdir,
   # cat("\014")
   # Clean workspace
   # rm(list=ls())
+  unlink(to_tmpdir(""), recursive = T)
+  on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY  #----
@@ -928,7 +1114,8 @@ sweep_dyn <- function(workdir,
   dir_LOG <- "1_LOG.csv"
   n_zeros <- 4
   if (file.exists(dir_LOG) == TRUE){
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    file.copy(from = dir_LOG, to = to_tmpdir(dir_LOG))
+    LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
     LOG_EXPLO <- LOG[LOG$EXPLORER == TRUE, ]
     remove(LOG)
     EXPLO_SERIES_FAMILY <- paste("DYN", as.character(SERIES_ID), sep = "_")
@@ -1063,18 +1250,25 @@ sweep_dyn <- function(workdir,
   tot_run <- EXPLO_AXIS_1_leng * EXPLO_AXIS_2_leng
 
   STOP_GO <- FALSE
-
-  if (.Platform$OS.type == "windows"){
-    STOP_GO <- utils::askYesNo(paste("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ? \n"), default = TRUE)
+  rlang::inform("________________________________________________________________________________")
+  if(interactive()){
+    if (.Platform$OS.type == "windows"){
+      STOP_GO <- utils::askYesNo(paste("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on? \n"), default = TRUE)
+    } else {
+      STOP_GO <- utils::askYesNo(cat("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on? \n"), default = TRUE)
+    }
   } else {
-    STOP_GO <- utils::askYesNo(cat("\n This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on ? \n"), default = TRUE)
+    rlang::abort("This is not an interactive session, the function can not prompt questions.
+Please use an interactive session to review the number of independent runs the sweep represents
+before calculation is started.")
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
   if (!isTRUE(STOP_GO)){
-    rlang::inform("* You probably want to reduce the number of iterations in each EXPLO axis. *")
+    rlang::abort("\U2757 You probably want to reduce the number of iterations in each EXPLO axis.")
   } else {
-    rlang::inform("* COMPUTING SWEEPING of RUN #1 & #2 *")
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform("\U0001f535 COMPUTING SWEEP of RUN #1 & #2 ")
     pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
     clock <- 1
     k <- 1
@@ -1215,7 +1409,7 @@ sweep_dyn <- function(workdir,
                          HIDE_PRINTS = TRUE,
                          to_DIGEST_DIAGRAMS = FALSE,
                          to_DIGEST_evD_PLOT = FALSE,
-                         print_evD_PLOT = FALSE))
+                         plot_results = FALSE))
 
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# RUN 2/2, i in [1:n] #----
         i <- 2
@@ -1231,19 +1425,19 @@ sweep_dyn <- function(workdir,
         } else {
           LOC_RAYLEIGH <- NULL
         }
-        LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+        LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
         LOG_last <- LOG[nrow(LOG),]
         remove(LOG)
 
         if (LOG_last$NUM_ANA == "ANA"){
-          load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+          load(to_tmpdir(paste(LOG_last$path_outdir, "OUT.Rda", sep = "")))
           OUT_last_final <- A_OUT
 
           OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_INIT")]
           OUT_last_DELTA_FINAL <- OUT_last_final[, c("BOXES_ID", "DELTA_FINAL")]
           names(OUT_last_DELTA_FINAL) <- c("BOXES_ID", "DELTA_INIT")
         } else {
-          load(paste(LOG_last$path_outdir, "OUT.Rda", sep = ""))
+          load(to_tmpdir(paste(LOG_last$path_outdir, "OUT.Rda", sep = "")))
           OUT_last_final <- N_OUT
 
           OUT_last_SIZE_FINAL <- OUT_last_final[, c("BOXES_ID", "SIZE_FINAL")]
@@ -1364,7 +1558,7 @@ sweep_dyn <- function(workdir,
                          HIDE_PRINTS = TRUE,
                          to_DIGEST_DIAGRAMS = FALSE,
                          to_DIGEST_evD_PLOT = FALSE,
-                         print_evD_PLOT = FALSE))
+                         plot_results = FALSE))
 
         #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLOCK #----
         utils::setTxtProgressBar(pb_cpt, clock)
@@ -1457,17 +1651,18 @@ sweep_dyn <- function(workdir,
 
     #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# LOAD/EDIT COMPOSITE SERIES LOG/OUT FILES and EDIT ANA evS
     #************************************** LOAD LOG/OUT FILES of CURRENT COMPO SERIES #----
-    LOG <- data.table::fread(dir_LOG, data.table = F, stringsAsFactors = T)
+    LOG <- data.table::fread(to_tmpdir(dir_LOG), data.table = F, stringsAsFactors = T)
     LOG_SERIES <- LOG[LOG$SERIES_ID == SERIES_ID,]
     remove(LOG)
     LOG_SERIES <- dplyr::full_join(LOG_SERIES, EXPLOG, by = "RUN_n")
     LOG_SERIES <- clear_subset(LOG_SERIES)
     path_to_input_1 <- paste(LOG_SERIES[1, "path_outdir"], "IN.Rda", sep = "")
-    load(path_to_input_1)
+    load(to_tmpdir(path_to_input_1))
     BOXES_IDs <- as.character(INITIAL_IN$BOXES_ID)
 
     #************************************** READ/BUILD/MERGE evS/D and evS/D final for ANA/NUM WHOLE COMPOSITE RUN #----
-    rlang::inform("* PREPARING RESULTS *")
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform("\U0001f535 PREPARING RESULTS")
     pb_prep <- utils::txtProgressBar(min = 1, max = 2*tot_run, style = 3, width = 60)
 
     # calculation_gauge(0, (tot_run))
@@ -1477,19 +1672,19 @@ sweep_dyn <- function(workdir,
       SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
       RUN_n_i <- LOG_SERIES[i, "RUN_n"]
       path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
-      path_to_INPUT_i <- paste(path_outdir_i, "IN.Rda", sep = "")
-      load(path_to_INPUT_i)
+      path_to_input_i <- paste(path_outdir_i, "IN.Rda", sep = "")
+      load(to_tmpdir(path_to_input_i))
       INIT_i <- INITIAL_IN
       SIZE_INIT_i <- INIT_i[,c("BOXES_ID", "SIZE_INIT")]
       DELTA_INIT_i <- INIT_i[,c("BOXES_ID", "DELTA_INIT")]
       FLUXES_i <- FLUXES_IN
       COEFFS_i <- COEFFS_IN
       # if (i > 1){
-      #   unlink(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option ?
+      #   unlink(to_tmpdir(path_to_INPUT_i) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
       # }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
-        load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+        load(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")))
         evD_i <- A_evD
         SIZE_INIT_i_hor <- as.data.frame(t(SIZE_INIT_i$SIZE_INIT))
         names(SIZE_INIT_i_hor) <- SIZE_INIT_i$BOXES_ID
@@ -1502,7 +1697,7 @@ sweep_dyn <- function(workdir,
         }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
-          load(paste(path_outdir_i, "OUT.Rda", sep = ""))
+          load(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")))
           evD_i <- N_evD
           evS_i <- N_evS
         }
@@ -1615,28 +1810,29 @@ sweep_dyn <- function(workdir,
     # evS_final <- evS[evS$Time == t_lim_list[2],]
 
     #************************************** EDIT CSV for WHOLE COMPOSITE RUN evS - evD - LOG - OUT #----
-    rlang::inform("* WRITING DIGEST *")
+    rlang::inform("________________________________________________________________________________")
+    rlang::inform("\U0001f535 WRITING DIGEST")
 
     path_out_EXPLO <- paste("4_", as.character(SERIES_ID), "/", "0_DYN_DIGEST/", sep = "")
-    if (!dir.exists(path_out_EXPLO)){dir.create(path_out_EXPLO)}
+    if (!dir.exists(to_tmpdir(path_out_EXPLO))){dir.create(to_tmpdir(path_out_EXPLO))}
     path_out_EXPLO <- paste(path_out_EXPLO, SERIES_ID, sep = "")
 
 
-    data.table::fwrite(LOG_SERIES, file = paste(path_out_EXPLO, "_LOG.csv", sep = ""), row.names = F, quote = F)
+    data.table::fwrite(LOG_SERIES, file = paste(to_tmpdir(path_out_EXPLO), "_LOG.csv", sep = ""), row.names = F, quote = F)
 
-    saveRDS(object = evD, file = paste(path_out_EXPLO, "_evD.RDS", sep = ""))
-    saveRDS(object = evS, file = paste(path_out_EXPLO, "_evS.RDS", sep = ""))
-    # saveRDS(object = evD_final, file = paste(path_out_EXPLO, "_evD_final.RDS", sep = ""))
-    # saveRDS(object = evS_final, file = paste(path_out_EXPLO, "_evS_final.RDS", sep = ""))
+    saveRDS(object = evD, file = paste(to_tmpdir(path_out_EXPLO), "_evD.RDS", sep = ""))
+    saveRDS(object = evS, file = paste(to_tmpdir(path_out_EXPLO), "_evS.RDS", sep = ""))
+    # saveRDS(object = evD_final, file = paste(to_tmpdir(path_out_EXPLO), "_evD_final.RDS", sep = ""))
+    # saveRDS(object = evS_final, file = paste(to_tmpdir(path_out_EXPLO), "_evS_final.RDS", sep = ""))
 
     if (isTRUE(to_DYN_DIGEST_CSVs)){
-      data.table::fwrite(evD, file = paste(path_out_EXPLO, "_evD.csv", sep = ""), row.names = F, quote = F)
-      data.table::fwrite(evS, file = paste(path_out_EXPLO, "_evS.csv", sep = ""), row.names = F, quote = F)
-      # data.table::fwrite(evD_final, file = paste(path_out_EXPLO, "_evD_final.csv", sep = ""), row.names = F, quote = F)
-      # data.table::fwrite(evS_final, file = paste(path_out_EXPLO, "_evS_final.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evD, file = paste(to_tmpdir(path_out_EXPLO), "_evD.csv", sep = ""), row.names = F, quote = F)
+      data.table::fwrite(evS, file = paste(to_tmpdir(path_out_EXPLO), "_evS.csv", sep = ""), row.names = F, quote = F)
+      # data.table::fwrite(evD_final, file = paste(to_tmpdir(path_out_EXPLO), "_evD_final.csv", sep = ""), row.names = F, quote = F)
+      # data.table::fwrite(evS_final, file = paste(to_tmpdir(path_out_EXPLO), "_evS_final.csv", sep = ""), row.names = F, quote = F)
     }
 
-    # explo_master_excel_path <-  paste(path_out_EXPLO, "_", EXPLO_MASTER, sep = "")
+    # explo_master_excel_path <-  paste(to_tmpdir(path_out_EXPLO), "_", EXPLO_MASTER, sep = "")
     explo_master_excel_path <-  paste(path_out_EXPLO, "_MASTER.xlsx", sep = "")
     writexl::write_xlsx(list(RUN_LIST = RUN_LIST,
                              FORCING_RAYLEIGH = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_RAYLEIGH")),
@@ -1644,7 +1840,105 @@ sweep_dyn <- function(workdir,
                              FORCING_DELTA = as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_DELTA")),
                              FORCING_ALPHA =  as.data.frame(readxl::read_excel(EXPLO_MASTER, "FORCING_ALPHA"))
     ),
-    explo_master_excel_path)
+    to_tmpdir(explo_master_excel_path))
   }
-  # beepr::beep(sound = 10)
+
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PLOT DEFAULT DELTAS FROM TEMPDIR #----
+
+  if(isTRUE(plot_results)){
+    # define plot function parameters
+    SERIES_ID_plot <- LOG_SERIES[1,"SERIES_ID"]
+
+    # define box lists
+    BOXES <- unlist(stringr::str_split(LOG_SERIES[1,"BOXES_ID_list"], pattern = "_"))
+    BOXES_INFINITE <- unlist(stringr::str_split(LOG_SERIES[1,"INFINITE_BOXES_list"], pattern = "_"))
+    BOXES_DISCONNECTED <- unlist(stringr::str_split(LOG_SERIES[1,"DISCONNECTED_BOXES"], pattern = "_"))
+    BOXES_FINITE <- BOXES[!BOXES %in% BOXES_INFINITE]
+    BOXES_FINITE_CONNECTED <- BOXES_FINITE[!BOXES_FINITE %in% BOXES_DISCONNECTED]
+
+    for (i in 1:length(BOXES_FINITE_CONNECTED)){
+      loc_BOX <- BOXES_FINITE_CONNECTED[i]
+      Z_ID <- paste("\u03B4", CONSTANTS$ELEMENT, " [", loc_BOX, "]", sep = "")
+      evD$Z_ID <- Z_ID
+      evD$Z <- evD[, loc_BOX]
+      X_ID <- as.character(evD[1,"LEGEND_EXPLO_1"])
+      evD$X_ID <- X_ID
+      evD$X <- evD[,"VAR_EXPLO_1"]
+      Y_ID <- as.character(evD[1,"LEGEND_EXPLO_2"])
+      evD$Y_ID <- Y_ID
+      evD$Y <- evD[,"VAR_EXPLO_2"]
+      DF <- evD
+
+      #### DEFINE TITLES
+      EXPLO_subtitle_0 = paste(SERIES_ID_plot,
+                               " (", min(LOG_SERIES$RUN_n),
+                               "-", max(LOG_SERIES$RUN_n),
+                               ") \n", "Hidden initial run: ",
+                               paste(LOG_SERIES[1, "COEFF_FLUX"], collapse = " / "),
+                               sep = "")
+
+      if (levels(DF$LEGEND_EXPLO_1) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", levels(DF$VAR_EXPLO_1)[1], " to ", levels(DF$VAR_EXPLO_1)[length(levels(DF$VAR_EXPLO_1))], sep = ""), sep = "")
+      } else {
+        EXPLO_subtitle_1 <- paste(paste("Sweep param. #1 - ", levels(DF$LEGEND_EXPLO_1), ": ", paste(c(min(DF$VAR_EXPLO_1), max(DF$VAR_EXPLO_1)), collapse = " to "), collapse = ", "), sep = "")
+      }
+
+      if (levels(DF$LEGEND_EXPLO_2) %in% c("EXPLO_n_FLUX_MATRICES", "EXPLO_n_ALPHA_MATRICES")){
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(levels(DF$VAR_EXPLO_2), collapse = ", "), sep = ""), sep = "")
+      } else {
+        EXPLO_subtitle_2 <- paste(paste("Sweep param. #2 - ", levels(DF$LEGEND_EXPLO_2), ": ", paste(c(min(DF$VAR_EXPLO_2), max(DF$VAR_EXPLO_2)), collapse = " to "), collapse = ", "), sep = "")
+      }
+
+      EXPLO_subtitle <- paste(EXPLO_subtitle_0, "\n",
+                              EXPLO_subtitle_1, "\n",
+                              EXPLO_subtitle_2, sep = "")
+
+      EXPLO_title <- paste("\u03B4", CONSTANTS$ELEMENT, " (", CONSTANTS$NUMERATOR, "/", CONSTANTS$DENOMINATOR,", \u2030", ") - [", loc_BOX, "]", sep = "")
+
+      #### PREPARE DF
+      DF <- DF[, c("Time", "X_ID", "X", "Y_ID", "Y", "Z_ID", "Z")]
+      initial_time_unit <- time_units[1]
+      display_time_unit <- time_units[2]
+      DF <- time_converter(dataframe <- DF,
+                           time_colname <- "Time",
+                           conv_timecolname <- "Time_plot",
+                           former_unit <- initial_time_unit, # "micros" "ms"     "s"      "min"    "h"      "d"      "wk"     "mo"     "yr"     "kyr"    "Myr"    "Gyr"
+                           new_unit <- display_time_unit)
+      X.labs <- paste(DF[1,"X_ID"], ": ", as.character(sort(unique(DF[,"X"]))), sep = "")
+      names(X.labs) <- as.character(sort(unique(DF[,"X"])))
+
+      ### PLOT
+      evD_plot <- ggplot2::ggplot(data = DF,  ggplot2::aes(x = Time_plot, y = Z, color = as.numeric(Y), group = as.numeric(Y)))+
+        ggplot2::geom_line()+
+        ggplot2::scale_color_gradientn(name = DF[1,"Y_ID"], colors = rainbow(100))+
+        ggplot2::facet_grid(. ~ X, labeller = ggplot2::labeller(X = X.labs))+
+        ggplot2::theme_bw()+
+        ggplot2::theme(strip.text = ggplot2::element_text(size = 12, colour = "white", face = "bold"),
+                       strip.background = ggplot2::element_rect(fill = "black"))+
+        ggplot2::labs(x = paste("Time (", time_units[2], ")", sep = ""),
+                      y = DF[1,"Z_ID"],
+                      title = EXPLO_title,
+                      subtitle = EXPLO_subtitle)
+      print(evD_plot)
+    }
+  }
+
+  #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform(message = paste("\U2139 The run outputs contain the following:",
+                                sep = ""))
+  fs::dir_tree(path = to_tmpdir(""), recurse = T)
+  rlang::inform("________________________________________________________________________________")
+  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  rlang::inform("________________________________________________________________________________")
+  if(isFALSE(save_run_outputs)){
+    rlang::inform("\U2757 Results were not saved to working directory (set save_run_outputs = TRUE to save results).")
+    rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function (requires saved outputs).")
+  } else if(isTRUE(save_run_outputs)){
+    R.utils::copyDirectory(to_tmpdir(""),
+                           getwd(),
+                           overwrite = T)
+    rlang::inform("\U2705 Results were successfully saved to working directory.")
+    rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function.")
+  }
 }
