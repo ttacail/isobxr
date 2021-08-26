@@ -107,6 +107,8 @@
 #' \item \strong{\emph{STD + SERIES_ID + YYY + evS_final.csv}}
 #' }
 #' }
+#' For examples, see:
+#' https://ttacail.github.io/isobxr_web/vgn_07_sweep_steady.html#4_Tutorial_example
 #' @export
 sweep_steady <- function(workdir,
                          SERIES_ID,
@@ -457,9 +459,8 @@ sweep_steady <- function(workdir,
       STOP_GO <- utils::askYesNo(cat("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on? \n"), default = TRUE)
     }
   } else {
-    rlang::abort("This is not an interactive session, the function can not prompt questions.
-Please use an interactive session to review the number of independent runs the sweep represents
-before calculation is started.")
+    rlang::inform(paste("\U2139 This sweep requires ", as.character(tot_run), " independent runs."))
+    STOP_GO <- TRUE
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----
@@ -1061,6 +1062,9 @@ before calculation is started.")
 #' \item \strong{\emph{DYN + SERIES_ID + YYY + evS.csv}}
 #' }
 #' }
+#' For examples, see
+#' https://ttacail.github.io/isobxr_web/vgn_08_sweep_dyn.html#4_Tutorial_example
+#'
 #' @export
 sweep_dyn <- function(workdir,
                       SERIES_ID,
@@ -1280,9 +1284,8 @@ sweep_dyn <- function(workdir,
       STOP_GO <- utils::askYesNo(cat("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on? \n"), default = TRUE)
     }
   } else {
-    rlang::abort("This is not an interactive session, the function can not prompt questions.
-Please use an interactive session to review the number of independent runs the sweep represents
-before calculation is started.")
+    rlang::inform(paste("\U2139 This sweep requires ", as.character(tot_run), " independent runs."))
+    STOP_GO <- TRUE
   }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# SWEEP THE SPACE OF PARAMETERS #----

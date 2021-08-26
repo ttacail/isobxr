@@ -379,7 +379,7 @@ sweep_steady(workdir = "/Users/username/Documents/1_ABC_tutorial",
                                        ALPHA_MAX = 1,
                                        ALPHA_STEPS = 0.00005,
                                        EXPLO_TYPES = "EXPLO_1_ALPHA"),
-             to_STD_DIGEST_CSVs = T)
+             to_STD_DIGEST_CSVs = TRUE)
 ```
 
 The `sweep_steady` will prompt a question to user checking if the number of iterative runs is validated. The higher this number is the longer the run is. 

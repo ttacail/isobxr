@@ -392,7 +392,7 @@ sweep_dyn(workdir = "/Users/username/Documents/1_ABC_tutorial",
                                      SIZE_MAX = 4000,
                                      SIZE_STEPS = 500,
                                      EXPLO_TYPES = "EXPLO_1_SIZE"),
-          to_DYN_DIGEST_CSVs = T)
+          to_DYN_DIGEST_CSVs = TRUE)
 ```
 
 

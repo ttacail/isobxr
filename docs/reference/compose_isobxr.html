@@ -333,6 +333,59 @@ and <strong><em>CPS + SERIES_ID + YYY + evS.csv</em></strong>)</p></li>
 
     <div class='dont-index'><p>Documentation on <code><a href='run_isobxr.html'>run_isobxr</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># Example 1: Changing intensity of fluxes</span>
+<span class='co'># for more information see tutorial at</span>
+<span class='co'># https://ttacail.github.io/isobxr_web/vgn_06_compose_isobxr_tutorial.html#34_Run_outputs</span>
+
+<span class='co'># This is an example using the tutorial files embedded in package data</span>
+<span class='co'># It can be run as such.</span>
+<span class='fu'>compose_isobxr</span><span class='op'>(</span>workdir <span class='op'>=</span> <span class='st'>"/Users/username/Documents/1_ABC_tutorial"</span>,
+               SERIES_ID <span class='op'>=</span> <span class='st'>"ABC_change_balance"</span>, <span class='co'># name of the series ID</span>
+               time_units <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"d"</span>, <span class='st'>"d"</span><span class='op'>)</span>, <span class='co'># in/out time units for pdf plots</span>
+               COMPO_MASTER <span class='op'>=</span> <span class='st'>"0_CPS_MASTER_changing_balance.xlsx"</span>,
+               plot_HIDE_BOXES_delta <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SINK"</span><span class='op'>)</span>, <span class='co'># hide in delta plots</span>
+               plot_HIDE_BOXES_size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SOURCE"</span>, <span class='st'>"SINK"</span><span class='op'>)</span>, <span class='co'># hide in size plots</span>
+               EACH_RUN_DIGEST <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='co'># export the DIGEST for each run</span>
+               to_CPS_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># export whole model to CSVs</span>
+</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 COMPUTING </span></div><div class='output co'>#&gt; <span class='message'>– The INFINITE boxes are: SOURCE, SINK</span></div><div class='output co'>#&gt; <span class='message'>– Running ana_slvr (balanced finite boxes)</span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 6)
+#&gt; [1] ********------------------------------------------ (17% of n = 6)
+#&gt; [1] *****************--------------------------------- (33% of n = 6)
+#&gt; [1] *************************------------------------- (50% of n = 6)
+#&gt; [1] *********************************----------------- (67% of n = 6)
+#&gt; [1] ******************************************-------- (83% of n = 6)
+#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 PREPARING RESULTS</span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 6)
+#&gt; [1] ********------------------------------------------ (17% of n = 6)
+#&gt; [1] *****************--------------------------------- (33% of n = 6)
+#&gt; [1] *************************------------------------- (50% of n = 6)
+#&gt; [1] *********************************----------------- (67% of n = 6)
+#&gt; [1] ******************************************-------- (83% of n = 6)
+#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 WRITING OUTPUTS</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ Run outputs (stored in temporary directory):</span></div><div class='output co'>#&gt; <span style='color: #0000BB; background-color: #00BB00;'>/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T//RtmpI9TEqP/isobxr_temp_data/</span>
+#&gt; ├── 1_LOG.csv
+#&gt; └── <span style='color: #0000BB; background-color: #00BB00;'>3_CPS_ABC_change_balance_001</span>
+#&gt;     ├── <span style='color: #0000BB; background-color: #00BB00;'>0_CPS_DIGEST</span>
+#&gt;     │   ├── CPS_ABC_change_balance_001_LOG.csv
+#&gt;     │   ├── CPS_ABC_change_balance_001_MASTER.xlsx
+#&gt;     │   ├── CPS_ABC_change_balance_001_evD.RDS
+#&gt;     │   ├── CPS_ABC_change_balance_001_evD.csv
+#&gt;     │   ├── CPS_ABC_change_balance_001_evS.RDS
+#&gt;     │   ├── CPS_ABC_change_balance_001_evS.csv
+#&gt;     │   ├── CPS_ABC_change_balance_001_p_evDS.pdf
+#&gt;     │   ├── CPS_ABC_change_balance_001_pf_evD.pdf
+#&gt;     │   └── CPS_ABC_change_balance_001_pf_evS.pdf
+#&gt;     ├── CPS_ABC_change_balance_001_0001_IN.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0001_OUT.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0002_IN.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0002_OUT.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0003_IN.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0003_OUT.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0004_IN.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0004_OUT.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0005_IN.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0005_OUT.Rda
+#&gt;     ├── CPS_ABC_change_balance_001_0006_IN.Rda
+#&gt;     └── CPS_ABC_change_balance_001_0006_OUT.Rda</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>❗ Results were not saved to working directory (set save_run_outputs = TRUE to save results).</span></div><div class='output co'>#&gt; <span class='message'>ℹ You can explore the results with more parameters by using the shinobxr_app() function (requires saved outputs).</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

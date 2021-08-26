@@ -127,5 +127,7 @@ edits csv versions of the sweep steady run datasets (full and final evD and evS)
 \item \strong{\emph{STD + SERIES_ID + YYY + evS_final.csv}}
 }
 }
+For examples, see:
+https://ttacail.github.io/isobxr_web/vgn_07_sweep_steady.html#4_Tutorial_example
 }
 

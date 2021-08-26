@@ -122,5 +122,7 @@ edits csv versions of the sweep dynamic run datasets (full evD and evS) with the
 \item \strong{\emph{DYN + SERIES_ID + YYY + evS.csv}}
 }
 }
+For examples, see
+https://ttacail.github.io/isobxr_web/vgn_08_sweep_dyn.html#4_Tutorial_example
 }
 

@@ -197,6 +197,23 @@ NULL
 #'
 #' }
 #' @seealso Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.
+#' @examples
+#' # Example 1. {ABC}, closed, balanced
+#' # for more information see tutorial at
+#' # https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#22_Run_the_model
+#'
+#' # This is an example using the tutorial files embedded in package data
+#' # It can be run as such.
+#' run_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
+#'            SERIES_ID = "ABC_closed_balanced", # series ID of the set of runs
+#'            flux_list_name = "Fx1_ABC_closed_bal", # which flux list from FLUXES sheet
+#'            coeff_list_name = "a1", # which coefficients list from COEFFS sheet
+#'            t_lim = 2500, # how long do I want to run
+#'            nb_steps = 250, # how many steps over this run duration
+#'            time_units = c("d", "yr"), # run time units (days), plot time units (years)
+#'            to_DIGEST_evD_PLOT = TRUE,
+#'            to_DIGEST_CSV_XLS = TRUE,
+#'            to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
 #' @export
 run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_lim, nb_steps, time_units,
                        FORCING_RAYLEIGH = NULL, FORCING_SIZE = NULL, FORCING_DELTA = NULL, FORCING_ALPHA = NULL,

@@ -122,6 +122,22 @@
 #' and \strong{\emph{CPS + SERIES_ID + YYY + evS.csv}})
 #' }
 #' @seealso Documentation on \code{\link{run_isobxr}}
+#' @examples
+#' # Example 1: Changing intensity of fluxes
+#' # for more information see tutorial at
+#' # https://ttacail.github.io/isobxr_web/vgn_06_compose_isobxr_tutorial.html#34_Run_outputs
+#'
+#' # This is an example using the tutorial files embedded in package data
+#' # It can be run as such.
+#' compose_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
+#'                SERIES_ID = "ABC_change_balance", # name of the series ID
+#'                time_units = c("d", "d"), # in/out time units for pdf plots
+#'                COMPO_MASTER = "0_CPS_MASTER_changing_balance.xlsx",
+#'                plot_HIDE_BOXES_delta = c("SINK"), # hide in delta plots
+#'                plot_HIDE_BOXES_size = c("SOURCE", "SINK"), # hide in size plots
+#'                EACH_RUN_DIGEST = FALSE, # export the DIGEST for each run
+#'                to_CPS_DIGEST_CSVs = TRUE) # export whole model to CSVs
+#'
 #' @export
 compose_isobxr <- function(workdir,
                            SERIES_ID,
