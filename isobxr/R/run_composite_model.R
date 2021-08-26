@@ -166,8 +166,11 @@ compose_isobxr <- function(workdir,
   on.exit(setwd(old), add = TRUE)
   setwd(LOC_workdir)
   rlang::inform("________________________________________________________________________________")
-  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
-
+  if (isTRUE(tuto_mode)){
+    rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))
+  } else {
+    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  }
 
   plot_HIDE_RUNs_n <- c(1)
 

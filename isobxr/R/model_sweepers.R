@@ -145,7 +145,12 @@ sweep_steady <- function(workdir,
   setwd(LOC_workdir)
 
   rlang::inform("_______________________________________________________________________________")
-  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  if (isTRUE(tuto_mode)){
+    rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))
+  } else {
+    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  }
+
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARE ISOPYBOX ARGUMENTS FROM EXPLO_MASTER #----
   #************************************** DEFINE LOCAL FORCINGS AND CONSTANTS #----
   RUN_LIST <- as.data.frame(readxl::read_excel(EXPLO_MASTER, "RUN_LIST"))
@@ -1096,7 +1101,12 @@ sweep_dyn <- function(workdir,
   setwd(LOC_workdir)
 
   rlang::inform("_______________________________________________________________________________")
-  rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  if (isTRUE(tuto_mode)){
+    rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))
+  } else {
+    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+  }
+
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# PREPARING ISOPYBOX ARGUMENTS FROM EXPLO_MASTER  #----
   #************************************** DEFINE LOCAL FORCINGS AND CONSTANTS #----
   RUN_LIST <- as.data.frame(readxl::read_excel(EXPLO_MASTER, "RUN_LIST"))

@@ -229,7 +229,12 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     unlink(to_tmpdir(""), recursive = T)
     on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
     rlang::inform("________________________________________________________________________________")
-    rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+    if (isTRUE(tuto_mode)){
+      rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))
+    } else {
+      rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
+    }
+    rlang::inform("________________________________________________________________________________")
   }
 
   Time <- VAR <- VAR_TYPE <- NULL
