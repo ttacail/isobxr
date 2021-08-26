@@ -290,4 +290,32 @@ plot_diagram <- function(input, title, matrix_layout, BOXES_master_loc, COEFF_FL
                  vsize = 14*exp(-nrow(BOXES_master_loc)/80)+1)
 }
 
-
+#' using_extdata_tutorial
+#' @description identifies workdir value refering to use of extdata tutorial files, returns correct workdir value, \cr
+#' prevents saving outputs locally (save_run_outputs = FALSE) \cr
+#' forces display of default graphical output to R session (plot_results = TRUE)
+#' @param workdir working directory value refering to extdata tutorial files, several options among the following: \cr
+#' c("/Users/username/Documents/1_ABC_tutorial",
+#' "use_isobxr_demonstration_files",
+#' system.file("extdata", package = "isobxr"),
+#' system.file("extdata", "0_ISOBXR_MASTER.xlsx", package = "isobxr"))
+#' @return a vector with a boolean stating whether this is a tutorial mode, a workdir value allowing reading of extdata tutorial files, save_run_outputs = FALSE, plot_results = TRUE
+#' @keywords internal
+using_extdata_tutorial <- function(workdir, save_run_outputs, plot_results){
+  workdir_to_extdata <- c("/Users/username/Documents/1_ABC_tutorial",
+                          "use_isobxr_demonstration_files",
+                          system.file("extdata", package = "isobxr"),
+                          system.file("extdata", "0_ISOBXR_MASTER.xlsx", package = "isobxr"))
+  if (workdir %in% workdir_to_extdata){
+    workdir <- system.file("extdata", package = "isobxr")
+    save_run_outputs = FALSE
+    plot_results = TRUE
+    tuto_mode = TRUE
+    # rlang::inform("You are using the external data embedded in the isobxr package for the tutorial.
+    # This will allow you to run the demonstration models but won't allow to save the outputs to your local working directory.
+    # In order to be able to do so, download and save the tutorial files to your working directory.")
+  } else {
+    tuto_mode = FALSE
+  }
+  return(c(tuto_mode, workdir, save_run_outputs, plot_results))
+}

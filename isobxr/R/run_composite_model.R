@@ -141,6 +141,13 @@ compose_isobxr <- function(workdir,
   # the FORCING_DELTA sheet :  when a delta value is forced at a stage it will be inherited in the next runs
   # FORCING_ALPHA sheet : not inherited from a run to another, back to previous value
 
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# set up extdata tutorial mode
+  tuto_setup <- using_extdata_tutorial(workdir = workdir, save_run_outputs = save_run_outputs, plot_results = plot_results)
+  tuto_mode <- as.logical(tuto_setup[1])
+  workdir <- tuto_setup[2]
+  save_run_outputs <- as.logical(tuto_setup[3])
+  plot_results <- as.logical(tuto_setup[4])
+
   # #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# CLEAR
   # Clear plots
   # if(!is.null(dev.list())) dev.off()

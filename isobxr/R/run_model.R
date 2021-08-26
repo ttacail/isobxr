@@ -203,15 +203,22 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                        COMPOSITE = FALSE, COMPO_SERIES_n = NaN, COMPO_SERIES_FAMILY = NaN,
                        EXPLORER = FALSE, EXPLO_SERIES_n = NaN, EXPLO_SERIES_FAMILY = NaN,
                        HIDE_PRINTS = FALSE, to_DIGEST_DIAGRAMS = TRUE, to_DIGEST_evD_PLOT = TRUE, to_DIGEST_CSV_XLS = FALSE,
-                       evD_PLOT_time_as_log = TRUE,plot_results = TRUE,
+                       evD_PLOT_time_as_log = TRUE, plot_results = TRUE,
                        save_run_outputs = FALSE){
 
   # locally bind variables (fixing binding global variable issue)
   output_list <- A_OUT <- N_evS <- A_evD <- N_evD <- NULL
 
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# set up extdata tutorial mode
+  tuto_setup <- using_extdata_tutorial(workdir = workdir, save_run_outputs = save_run_outputs, plot_results = plot_results)
+  tuto_mode <- as.logical(tuto_setup[1])
+  workdir <- tuto_setup[2]
+  if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
+    save_run_outputs <- as.logical(tuto_setup[3])
+    plot_results <- as.logical(tuto_setup[4])
+  }
+
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
-
-
   #************************************** SET WORKING DIRECTORY and DEFINE ISOPY_MASTER file #----
   old <- getwd()
   on.exit(setwd(old), add = TRUE)

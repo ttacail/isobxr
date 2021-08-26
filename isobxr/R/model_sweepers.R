@@ -120,6 +120,14 @@ sweep_steady <- function(workdir,
   # locally bind variables (fixing binding global variable issue)
   INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- Time_plot <- Y <- Z <- NULL
 
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# set up extdata tutorial mode
+  tuto_setup <- using_extdata_tutorial(workdir = workdir, save_run_outputs = save_run_outputs, plot_results = plot_results)
+  tuto_mode <- as.logical(tuto_setup[1])
+  workdir <- tuto_setup[2]
+  save_run_outputs <- as.logical(tuto_setup[3])
+  plot_results <- as.logical(tuto_setup[4])
+
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# clean up
   # Clear plots
   # if(!is.null(dev.list())) dev.off()
   # Clear console
@@ -128,8 +136,6 @@ sweep_steady <- function(workdir,
   # rm(list=ls())
   unlink(to_tmpdir(""), recursive = T)
   on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
-
-
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE #----
   #************************************** SET WORKING DIRECTORY #----
@@ -1065,6 +1071,14 @@ sweep_dyn <- function(workdir,
   # locally bind variables (fixing binding global variable issue)
   INITIAL_IN <- FLUXES_IN <- COEFFS_IN <- A_OUT <- N_OUT <- A_evD <- N_evD <- N_evS <- Time_plot <- Y <- Z <- NULL
 
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# set up extdata tutorial mode
+  tuto_setup <- using_extdata_tutorial(workdir = workdir, save_run_outputs = save_run_outputs, plot_results = plot_results)
+  tuto_mode <- as.logical(tuto_setup[1])
+  workdir <- tuto_setup[2]
+  save_run_outputs <- as.logical(tuto_setup[3])
+  plot_results <- as.logical(tuto_setup[4])
+
+  #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# clean up
   # Clear plots
   # if(!is.null(dev.list())) dev.off()
   # Clear console
