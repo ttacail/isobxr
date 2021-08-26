@@ -34,14 +34,16 @@ This app allows to create many plots with a series of options for all outputs gi
 
 This is notably very useful for the complex outputs of `sweep_steady` & `sweep_dyn` functions. 
 
-This app also allows to export a pdf version of the plot.
+<!-- This app also allows to export a pdf version of the plot. -->
 
+The `shinobxr_app` function needs to access the output data files produced by the aforementionned functions. These outputs thus need to be saved locally on a working directory, by setting the argument **save_run_outputs = TRUE** in the `compose_isobxr`, `sweep_steady` & `sweep_dyn` functions (default is FALSE).
 
 ```{r eval = FALSE, include=TRUE}
-# define workdir in which the SERIES directories are found 
-# (SERIES directories start with 3_CPS, 4_STD or 4_DYN) 
+# define workdir in which the output files were saved,
+# containing SERIES directories with names starting with:
+# 3_CPS, 4_STD or 4_DYN
 # for instance:
-workdir <- "~/1_ABC_tutorial"
+workdir <- "/Users/username/Documents/any_directory_of_your_choice/1_ABC_tutorial"
 
 # Launch the shiny app
 shinobxr_app()

@@ -326,10 +326,13 @@ data.frame(XFROM = "Box_B", # B>C flux at numerator (strings of char)
 ******************************************************
 
 ## Default and optional outputs
+By default, the `sweep_dyn` prints in the R session a series of default time evolution plots of the delta values of each system finite boxes in the 2D space of parameters. 
 
-The `sweep_dyn` outputs are stored in the working directory. 
+All `sweep_dyn` output data is stored in a temporary directory by default.
 
-The `sweep_dyn` outputs are structured as shown in the [full package documentation.](https://ttacail.github.io/isobxr_web/vgn_08_sweep_dyn.html#33_Default_and_optional_outputs)
+The user can save these outputs to their working directory by changing the **save_run_outputs** argument to **TRUE**.
+
+The `sweep_dyn` outputs are structured as as shown in the [full package documentation.](https://ttacail.github.io/isobxr_web/vgn_08_sweep_dyn.html#33_Default_and_optional_outputs).
 
 <!-- The `sweep_dyn` outputs are structured as follows: -->
 
@@ -339,9 +342,13 @@ The `sweep_dyn` outputs are structured as shown in the [full package documentati
 
 ## Plotting **sweep_dyn** outputs
 
-The outputs of the `sweep_dyn` can be plotted using the `shinobxr_app` function. 
+By default, the `sweep_dyn`  prints in the R session a series of default heatmap plots of the delta values of each system finite boxes at the final state of the run in the 2D space of parameters. 
 
-The `sweep_dyn` function launches an interactive html app allowing to edit and export graphical representation of the model runs. 
+The outputs of the `sweep_dyn` can be plotted using the `shinobxr_app` function.
+
+The `shinobxr_app` function launches an interactive html app allowing to edit and export graphical representation of the model runs.
+
+The `shinobxr_app` requires the user to save the `sweep_dyn` output files to a local working directory (by setting the argument **save_run_outputs = TRUE**).
 
 More on the use of the `shinobxr_app` function can be found on the [Shiny app page](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html). 
 
@@ -362,34 +369,43 @@ Here:
 
 No forcings other than the FORCING_DELTA on the SOURCE box are applied. 
 
-To do so, the `sweep_steady` function can be used as follows: 
+To do so, the `sweep_dyn` function can be used as follows: 
 
 ```{r eval=FALSE, include=TRUE}
-workdir <- workdir_ABC # isobxr and compo master file work. dir.
-SERIES_ID <- "ABC_change_source_sweep_dyn_demo1" # series ID of the set of compo runs
-time_units <- c("d", "yr") # time units for run (days) and for plots (years)
-EXPLO_MASTER <- "0_SWEEP_DYN_MASTER.xlsx" # compo master file name
-
-EXPLO_AXIS_1 <- data.frame(FROM = c("A"),
-                           TO = c("C"),
-                           ALPHA_MIN = 0.9988,
-                           ALPHA_MAX = 1,
-                           ALPHA_STEPS = 0.0004,
-                           EXPLO_TYPES = "EXPLO_1_ALPHA")
-
-EXPLO_AXIS_2 <- data.frame(BOXES_ID = c("B"),
-                           SIZE_MIN = 500,
-                           SIZE_MAX = 4000,
-                           SIZE_STEPS = 500,
-                           EXPLO_TYPES = "EXPLO_1_SIZE")
-
-sweep_dyn(workdir,
-          SERIES_ID,
-          time_units,
-          EXPLO_MASTER,
-          EXPLO_AXIS_1,
-          EXPLO_AXIS_2,
+sweep_dyn(workdir = "/Users/username/Documents/1_ABC_tutorial", 
+          # name of the series ID
+          SERIES_ID = "ABC_change_source_sweep_dyn_demo1", 
+          # in/out time units for pdf plots
+          time_units = c("d", "yr"), 
+          # name of sweep dyn master file
+          EXPLO_MASTER = "0_SWEEP_DYN_MASTER.xlsx",
+          # make alpha A to C vary between 0.9988 and 1
+          EXPLO_AXIS_1 = data.frame(FROM = c("A"), 
+                                    TO = c("C"),
+                                    ALPHA_MIN = 0.9988,
+                                    ALPHA_MAX = 1,
+                                    ALPHA_STEPS = 0.0004,
+                                    EXPLO_TYPES = "EXPLO_1_ALPHA"),
+           # make size of B vary between 500 and 4000
+          EXPLO_AXIS_2 =  data.frame(BOXES_ID = c("B"),
+                                     SIZE_MIN = 500,
+                                     SIZE_MAX = 4000,
+                                     SIZE_STEPS = 500,
+                                     EXPLO_TYPES = "EXPLO_1_SIZE"),
           to_DYN_DIGEST_CSVs = T)
 ```
+
+
+The `sweep_dyn` will prompt a question to user checking if the number of iterative runs is validated. The higher this number is the longer the run is. 
+
+This run will produce a series of time evolution plots of the delta values of each system finite boxes in the 2D space of parameters. 
+
+<!-- It will yield for example the following plot for the box C.  -->
+
+<!-- ```{r echo=FALSE, out.width='100%'} -->
+<!-- knitr::include_graphics('./img/08_dyn_z_box_C_map.png') -->
+<!-- ``` -->
+
+You can explore the outputs by then using the [isobxr](https://ttacail.github.io/isobxr/) Shiny app (`shinobxr_app` function, presented below).
 
 ************************************************

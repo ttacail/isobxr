@@ -103,7 +103,7 @@
       <h1 data-toc-skip>4 - compose_isobxr()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-08-23</h4>
+            <h4 class="date">2021-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_05_compose_isobxr.Rmd"><code>vignettes/vgn_05_compose_isobxr.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_05_compose_isobxr.Rmd</code></div>
@@ -117,7 +117,7 @@
 <hr>
 <p>In this vignette, the user will be introduced to the <code>compose_isobxr</code> function of <a href="https://ttacail.github.io/isobxr/">isobxr</a>.</p>
 <p>Here, we shortly present the principles and general usage of the <code>compose_isobxr</code> function.</p>
-<p>The user is then invited to follow and run a step-by-step tutorial presenting several typical runs <!-- [(6 - compose_isobxr: tutorial)](https://ttacail.github.io/isobxr/articles/vgn_06_compose_isobxr_tutorial.html). --></p>
+<p>The user is then invited to follow and run a step-by-step <a href="https://ttacail.github.io/isobxr_web/vgn_06_compose_isobxr_tutorial.html">tutorial</a> presenting several typical runs.</p>
 <hr>
 <div id="how-does-compose_isobxr-work" class="section level1">
 <h1 class="hasAnchor">
@@ -200,7 +200,7 @@
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
 <p>The arguments required to run the <code>compose_isobxr</code> function are exemplified and described here:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
+<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
                SERIES_ID <span class="op">=</span> <span class="st">"ABC_change_balance"</span>, <span class="co"># series ID of composite family</span>
                time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># plot results in years as time units</span>
                COMPO_MASTER <span class="op">=</span> <span class="st">"0_CPS_MASTER_changing_balance.xlsx"</span><span class="op">)</span> <span class="co"># composite master</span></pre></div>
@@ -214,7 +214,7 @@
 <dt><strong>time_units</strong></dt>
 <dd><ul>
 <li>Vector defining the initial time unit (identical to unit used in fluxes), followed by the time unit used for the graphical output</li>
-<li>to be selected amongst the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
+<li>to be selected among the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
 </li>
 <li>e.g., c("d", "yr") to convert days into years</li>
 </ul></dd>
@@ -226,7 +226,9 @@
 <div id="default-and-optional-outputs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#default-and-optional-outputs" class="anchor"></a>Default and optional outputs</h2>
-<p>The <code>compose_isobxr</code> outputs are stored in the working directory.</p>
+<p>By default, the <code>compose_isobxr</code> prints a summary plot of the run outputs (evolution of delta values and box sizes) in the R session.</p>
+<p>All <code>compose_isobxr</code> output data is stored in a temporary directory by default.</p>
+<p>The user can save these outputs to their working directory by changing the <strong>save_run_outputs</strong> argument to <strong>TRUE</strong>.</p>
 <p>The <code>compose_isobxr</code> outputs are structured as shown in the <a href="https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html">full package documentation.</a></p>
 <!-- The `compose_isobxr` outputs are structured as follows: -->
 <!-- ```{r echo=FALSE, out.width='100%'} -->
@@ -241,7 +243,7 @@
 </ul>
 <p>These arguments are called as follows:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
+<span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
                SERIES_ID <span class="op">=</span> <span class="st">"ABC_change_balance"</span>, <span class="co"># series ID of composite family</span>
                time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># plot results in years as time units</span>
                COMPO_MASTER <span class="op">=</span> <span class="st">"0_CPS_MASTER_changing_balance.xlsx"</span>, <span class="co"># composite master</span>

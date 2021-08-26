@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Analytically solve stable isotope box models — ana_slvr • isobxr</title>
+<title>using_extdata_tutorial — using_extdata_tutorial • isobxr</title>
 
 
 <!-- jquery -->
@@ -39,14 +39,10 @@
 
 
 
-<meta property="og:title" content="Analytically solve stable isotope box models — ana_slvr" />
-<meta property="og:description" content="An analytical solver of the system of ordinary differential
-equations (ODES) of stable isotope ratios of element X in all boxes. 
-Not intended for direct use although possible. 
-The analytical solver finds the eigenvalues and eigenvectors of the ODES. 
-Given the initial conditions as specified in IN.Rda file, it determines the
-set of analytical solutions that describes the evolution of isotope ratios
-in each box over time." />
+<meta property="og:title" content="using_extdata_tutorial — using_extdata_tutorial" />
+<meta property="og:description" content="identifies workdir value refering to use of extdata tutorial files, returns correct workdir value, 
+prevents saving outputs locally (save_run_outputs = FALSE) 
+forces display of default graphical output to R session (plot_results = TRUE)" />
 
 
 
@@ -147,68 +143,35 @@ in each box over time." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Analytically solve stable isotope box models</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ttacail/isobxr/blob/master/R/isobxr_solvers.R'><code>R/isobxr_solvers.R</code></a></small>
-    <div class="hidden name"><code>ana_slvr.Rd</code></div>
+    <h1>using_extdata_tutorial</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ttacail/isobxr/blob/master/R/local_functions.R'><code>R/local_functions.R</code></a></small>
+    <div class="hidden name"><code>using_extdata_tutorial.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An analytical solver of the system of ordinary differential
-equations (ODES) of stable isotope ratios of element X in all boxes. <br />
-Not intended for direct use although possible. <br />
-The analytical solver finds the eigenvalues and eigenvectors of the ODES. <br />
-Given the initial conditions as specified in IN.Rda file, it determines the
-set of analytical solutions that describes the evolution of isotope ratios
-in each box over time.</p>
+    <p>identifies workdir value refering to use of extdata tutorial files, returns correct workdir value, <br />
+prevents saving outputs locally (save_run_outputs = FALSE) <br />
+forces display of default graphical output to R session (plot_results = TRUE)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ana_slvr</span><span class='op'>(</span><span class='va'>input_path</span>, to_DIGEST_csv <span class='op'>=</span> <span class='cn'>FALSE</span>, save_run_outputs <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>using_extdata_tutorial</span><span class='op'>(</span><span class='va'>workdir</span>, <span class='va'>save_run_outputs</span>, <span class='va'>plot_results</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>input_path</th>
-      <td><p>path to the INPUT file containing all commands for the run <br />
-(character string, file name structure: <strong><em>RUN name + _IN.Rda</em></strong>)</p></td>
-    </tr>
-    <tr>
-      <th>to_DIGEST_csv</th>
-      <td><p>edit csv outputs or not (logical) to the RUN DIGEST folder <br />
-(logical, default is FALSE)</p></td>
-    </tr>
-    <tr>
-      <th>save_run_outputs</th>
-      <td><p><em>OPTIONAL</em> <br />
-Logical value. <br />
-Allows saving all run outputs to directory containing INPUT file. <br />
-By default, run outputs are stored in a temporary directory and are erased if not exported. <br />
-Default is FALSE.</p></td>
+      <th>workdir</th>
+      <td><p>working directory value refering to extdata tutorial files, several options among the following: <br />
+c("/Users/username/Documents/1_ABC_tutorial",
+"use_isobxr_demonstration_files",
+system.file("extdata", package = "isobxr"),
+system.file("extdata", "0_ISOBXR_MASTER.xlsx", package = "isobxr"))</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The function returns the analytically determined evolution of stable
-isotope compositions in all boxes over the run duration as specified in INPUT file. <br /> <br />
-By default (unless save_run_outputs = TRUE), run outputs are stored in the temporary directory and are not exported. <br /> <br />
-The outputs of the run are stored in a Rda output file
-with the following file name structure: <br />
-<strong><em>RUN name + _OUT.Rda</em></strong></p>
-    <h2 class="hasAnchor" id="optional-csv-outputs-to-the-digest-folder-are-as-follows"><a class="anchor" href="#optional-csv-outputs-to-the-digest-folder-are-as-follows"></a>Optional csv outputs to the DIGEST folder are as follows</h2>
-
-    
-
-<ol>
-<li><p>OUT data file with initial and final size and delta values in all boxes. <br />
-(file name structure: <strong><em>out_1_A_OUT + RUN name + .csv</em></strong>)</p></li>
-<li><p>ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES  <br />
-(eigenvalues, eigenvectors, relaxation times, constants according to initial conditions).  <br />
-(file name structure: <strong><em>out_2_A_ODE_SOLNs + RUN name + .csv</em></strong>)</p></li>
-<li><p>evD data file of the evolution with time of the delta values in all boxes.  <br />
-(file name structure: <strong><em>out_3_A_evD + RUN name + .csv</em></strong>)</p></li>
-</ol>
-
+    <p>a vector with a boolean stating whether this is a tutorial mode, a workdir value allowing reading of extdata tutorial files, save_run_outputs = FALSE, plot_results = TRUE</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

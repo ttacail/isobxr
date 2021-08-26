@@ -196,31 +196,30 @@ The `run_isobxr` function takes required and optional arguments that are describ
  
 All arguments definitions of the `run_isobxr` function are accessible in its documentation called as follows
 
-
 ```{r eval=FALSE}
 ?run_isobxr
 ```
 
 ## Required arguments
 
-The arguments required to run the `run_isobxr` function are exemplified and described here:
+The arguments required to run the `run_isobxr` function are exemplified and described here with the first tutorial example ([see tutorial here](https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#2_Ex_1:_{ABC},_closed,_balanced)):
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
-           SERIES_ID = "Name_of_SERIES_ID", # defining the name of the SERIES of run
-           flux_list_name = "Fx3_ABC_open_bal", # calling the list of fluxes
+run_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
+           SERIES_ID = "ABC_closed_balanced", # defining the name of the SERIES of run
+           flux_list_name = "Fx1_ABC_closed_bal", # calling the list of fluxes
            coeff_list_name = "a1", #  calling the list of coefficients
-           t_lim = 1000, # running model for 1000 time units
-           nb_steps = 100, # running model with 100 steps
+           t_lim = 2500, # running model for 1000 time units
+           nb_steps = 250, # running model with 100 steps
            time_units = c("d", "yr")) # plot results in years as time units.
 ```
 
 **workdir** 
-:     Working directory of 0_ISOBXR_MASTER.xlsx master file and where output files will be stored. 
+:     Working directory of 0_ISOBXR_MASTER.xlsx master file and where output files will be stored if saved by user (**save_run_outputs = TRUE**, default is **FALSE**).
 
 **SERIES_ID**	
 :     Name of the model series the run belongs to. 
-It determines the folder in which the output files will be stored.
+It determines the folder in which the output files will be stored if saved by user (**save_run_outputs = TRUE**, default is **FALSE**).
 
 **flux_list_name**
 :     Name of the list of fluxes and initial box sizes to be used for the run, 
@@ -248,7 +247,11 @@ followed by the time unit used for the graphical output
 
 ## Default and optional outputs
 
-The `run_isobxr` outputs are stored in the working directory. 
+By default, the `run_isobxr` prints a summary plot of the run outputs (evolution of delta values and box sizes) in the R session.
+
+All `run_isobxr` output data is stored in a temporary directory by default.
+
+The user can save these outputs to their working directory by changing the **save_run_outputs** argument to **TRUE**.
 
 The `run_isobxr` outputs are structured as shown in the [full package documentation.](https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html#42_Default_and_optional_outputs)
 
@@ -261,26 +264,28 @@ The `run_isobxr` outputs are structured as shown in the [full package documentat
 In addition to the default outputs,
 the `run_isobxr` function allows to: 
 
-* export system diagrams (as pdf, using the **to_DIGEST_DIAGRAMS = TRUE** argument)
-* export evolution of isotope compositions (as pdf, using the **to_DIGEST_evD_PLOT = TRUE** argument)
-* export input and output datasets (as csv and xlsx, using the **to_DIGEST_CSV_XLS = TRUE** argument)
+* export system diagrams (as pdf, using **to_DIGEST_DIAGRAMS = TRUE**)
+* export evolution of delta values (as pdf, using **to_DIGEST_evD_PLOT = TRUE**)
+* export input and output data (as csv and xlsx, using **to_DIGEST_CSV_XLS = TRUE**)
 
-These arguments are called as follows: 
-
+These arguments are called as follows (using example used in [tutorial](https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#2_Ex_1:_{ABC},_closed,_balanced)):
 
 ```{r eval=FALSE}
-run_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
-           SERIES_ID = "Name_of_SERIES_ID", 
-           flux_list_name = "Fx3_ABC_open_bal", 
+run_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
+           SERIES_ID = "ABC_closed_balanced",
+           flux_list_name = "Fx1_ABC_closed_bal",
            coeff_list_name = "a1", 
-           t_lim = 1000, 
-           nb_steps = 100, 
-           time_units = c("d", "yr"), 
+           t_lim = 2500,
+           nb_steps = 250,
+           time_units = c("d", "yr"),
            to_DIGEST_DIAGRAMS = TRUE, # default is TRUE
            to_DIGEST_evD_PLOT = TRUE, # default is TRUE
            to_DIGEST_CSV_XLS = TRUE  # default is FALSE
            )
 ```
+
+**Note**
+: All `run_isobxr` outputs are not saved by default. Set **save_run_outputs = TRUE** to save outputs to a local working directory.
 
 ## Additional forcing arguments
 

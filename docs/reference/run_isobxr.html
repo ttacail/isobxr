@@ -177,7 +177,8 @@ or <code><a href='ana_slvr.html'>ana_slvr</a></code> depending on the conditions
   to_DIGEST_evD_PLOT <span class='op'>=</span> <span class='cn'>TRUE</span>,
   to_DIGEST_CSV_XLS <span class='op'>=</span> <span class='cn'>FALSE</span>,
   evD_PLOT_time_as_log <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  print_evD_PLOT <span class='op'>=</span> <span class='cn'>TRUE</span>
+  plot_results <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  save_run_outputs <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -186,7 +187,7 @@ or <code><a href='ana_slvr.html'>ana_slvr</a></code> depending on the conditions
     <tr>
       <th>workdir</th>
       <td><p>Working directory of <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> master file <br />
-and where output files will be stored. <br />
+and where output files will be stored if exported by user. <br />
 (character string)</p></td>
     </tr>
     <tr>
@@ -225,7 +226,7 @@ It determines the resolution of the run. <br />
       <td><p>Vector defining the initial time unit
 (identical to unit used in fluxes), <br />
 followed by the time unit used for the graphical output.<br />
-Character string, to be selected  amongst the following:<br />
+Character string, to be selected  among the following:<br />
 <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em><br />
 e.g.,  c("d", "yr") to convert days into years</p></td>
     </tr>
@@ -335,7 +336,8 @@ Default is TRUE.</p></td>
       <th>to_DIGEST_CSV_XLS</th>
       <td><p><em>OPTIONAL</em><br />
 Logical value.  <br />
-Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all <code><a href='ana_slvr.html'>ana_slvr</a></code> or <code><a href='num_slvr.html'>num_slvr</a></code> CSV output files in RUN DIGEST folder if TRUE. <br />
+Edits xlsx version of the Rda input file (ending with _IN.xlsx) and all <code><a href='ana_slvr.html'>ana_slvr</a></code>
+or <code><a href='num_slvr.html'>num_slvr</a></code> CSV output files in RUN DIGEST folder if TRUE. <br />
 Default is FALSE.</p></td>
     </tr>
     <tr>
@@ -346,21 +348,35 @@ Print evD plot with log10 time scale as x-axis. <br />
 Default is TRUE.</p></td>
     </tr>
     <tr>
-      <th>print_evD_PLOT</th>
+      <th>plot_results</th>
       <td><p><em>OPTIONAL</em> <br />
 Logical value. <br />
-Plots the overview plots of the single model run (full evD and full evS) if TRUE. <br />
+If TRUE, plots in R session the single model run evolution of delta values and box sizes for all boxes. <br />
 Default is TRUE.</p></td>
+    </tr>
+    <tr>
+      <th>save_run_outputs</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value. <br />
+Allows saving all run outputs to working directory (workdir). <br />
+By default, run outputs are stored in the temporary directory and are erased if not exported. <br />
+Default is FALSE.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If the function is run independently and if directory is not yet existing, <br />
-<code>run_isobxr</code> creates and stores all outputs in a <em>SERIES</em> folder located in working directory,
+    <p>Calculates the time evolution of delta values and box sizes in all boxes.</p>
+<p><code>run_isobxr</code> returns by default a plot showing time evolution of delta values and box sizes
+for all boxes (set plot_results = FALSE to mute the plots). <br /></p>
+<p><code>run_isobxr</code> creates a series of isotope data and metadata,
+all of which are stored in a temporary directory. <br />
+The user can save all outputs described below to their working directory by setting save_run_outputs = TRUE (default is FALSE). <br /></p>
+<p>If <code>run_isobxr</code> is run independently,
+it creates and stores all outputs in a <em>SERIES</em> folder,
 with the following name structure: <br />
 <strong><em>2_RUN + SERIES_ID</em></strong></p>
-<ol>
+<p><code>run_isobxr</code> base workflow:</p><ol>
 <li><p>Automatically sets a XXXX run number between 0001 and 9999. <br />
 The outputs do not overwrite possible identical previously performed runs.</p></li>
 <li><p>Stores all run commands in a file with the Rda format. <br />
@@ -383,7 +399,7 @@ box infinite/finite status, system diagram coordinates)</p></li>
 <li><p>Stores all outputs in a file with the Rda format. <br />
 This file stores all data produced by the function. <br />
 (file name structure: <strong><em>SERIES_ID + XXXX + _OUT.Rda</em></strong>)</p></li>
-<li><p>Updates the general log file, located in general working directory. <br />
+<li><p>Updates the general log file. <br />
 (file name: <strong><em>1_LOG.csv</em></strong>)</p></li>
 </ol>
 

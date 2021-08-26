@@ -30,8 +30,7 @@ In this vignette, the user will be introduced to the `compose_isobxr` function o
 
 Here, we shortly present the principles and general usage of the `compose_isobxr` function. 
 
-The user is then invited to follow and run a step-by-step tutorial presenting several typical runs
-<!-- [(6 - compose_isobxr: tutorial)](https://ttacail.github.io/isobxr/articles/vgn_06_compose_isobxr_tutorial.html). -->
+The user is then invited to follow and run a step-by-step [tutorial](https://ttacail.github.io/isobxr_web/vgn_06_compose_isobxr_tutorial.html) presenting several typical runs.
 
 ----
 
@@ -122,7 +121,7 @@ All arguments definitions of the `compose_isobxr` function are accessible in its
 The arguments required to run the `compose_isobxr` function are exemplified and described here:
 
 ```{r eval=FALSE}
-compose_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
+compose_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
                SERIES_ID = "ABC_change_balance", # series ID of composite family
                time_units = c("d", "yr"), # plot results in years as time units
                COMPO_MASTER = "0_CPS_MASTER_changing_balance.xlsx") # composite master
@@ -147,7 +146,11 @@ followed by the time unit used for the graphical output
 
 ## Default and optional outputs
 
-The `compose_isobxr` outputs are stored in the working directory. 
+By default, the `compose_isobxr` prints a summary plot of the run outputs (evolution of delta values and box sizes) in the R session.
+
+All `compose_isobxr` output data is stored in a temporary directory by default.
+
+The user can save these outputs to their working directory by changing the **save_run_outputs** argument to **TRUE**.
 
 The `compose_isobxr` outputs are structured as shown in the [full package documentation.](https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html)
 
@@ -168,7 +171,7 @@ the `compose_isobxr` function allows to:
 These arguments are called as follows: 
 
 ```{r eval=FALSE}
-compose_isobxr(workdir = "/Users/username/1_isobxr_working_directory/",
+compose_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
                SERIES_ID = "ABC_change_balance", # series ID of composite family
                time_units = c("d", "yr"), # plot results in years as time units
                COMPO_MASTER = "0_CPS_MASTER_changing_balance.xlsx", # composite master

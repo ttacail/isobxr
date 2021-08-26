@@ -164,7 +164,7 @@ unbalanced outward and inward fluxes of element X in a given box
 resulting in the accumulation or loss of element X.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>num_slvr</span><span class='op'>(</span><span class='va'>input_path</span>, to_DIGEST_csv <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>num_slvr</span><span class='op'>(</span><span class='va'>input_path</span>, to_DIGEST_csv <span class='op'>=</span> <span class='cn'>FALSE</span>, save_run_outputs <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,6 +179,14 @@ resulting in the accumulation or loss of element X.</p>
       <td><p>Edits csv outputs to the RUN DIGEST folder <br />
 (logical, default is FALSE)</p></td>
     </tr>
+    <tr>
+      <th>save_run_outputs</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value. <br />
+Allows saving all run outputs to directory containing INPUT file. <br />
+By default, run outputs are stored in a temporary directory and are erased if not exported. <br />
+Default is FALSE.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -186,6 +194,7 @@ resulting in the accumulation or loss of element X.</p>
     <p>The function returns the numerically determined evolution of stable
 isotope compositions and mass of element X in all boxes over the run duration as
 specified in INPUT file. <br />  <br />
+By default (unless save_run_outputs = TRUE), run outputs are stored in the temporary directory and are not exported. <br /> <br />
 The outputs of the run are stored in a Rda output file
 with the following file name structure:  <br />
 <strong><em>RUN name + _OUT.Rda</em></strong></p>

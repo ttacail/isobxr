@@ -103,7 +103,7 @@
       <h1 data-toc-skip>7 - shinobxr_app()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-08-23</h4>
+            <h4 class="date">2021-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_09_runShinyPlots.Rmd"><code>vignettes/vgn_09_runShinyPlots.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_09_runShinyPlots.Rmd</code></div>
@@ -125,12 +125,14 @@
 <p>The <code>shinobxr_app</code> function calls a <strong>shiny app</strong> plotting interface (html interface accessible with any type of internet browser).</p>
 <p>This app allows to create many plots with a series of options for all outputs given by <code>compose_isobxr</code>, <code>sweep_steady</code> &amp; <code>sweep_dyn</code> functions.</p>
 <p>This is notably very useful for the complex outputs of <code>sweep_steady</code> &amp; <code>sweep_dyn</code> functions.</p>
-<p>This app also allows to export a pdf version of the plot.</p>
+<!-- This app also allows to export a pdf version of the plot. -->
+<p>The <code>shinobxr_app</code> function needs to access the output data files produced by the aforementionned functions. These outputs thus need to be saved locally on a working directory, by setting the argument <strong>save_run_outputs = TRUE</strong> in the <code>compose_isobxr</code>, <code>sweep_steady</code> &amp; <code>sweep_dyn</code> functions (default is FALSE).</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="co"># define workdir in which the SERIES directories are found </span>
-<span class="co"># (SERIES directories start with 3_CPS, 4_STD or 4_DYN) </span>
+<span class="co"># define workdir in which the output files were saved,</span>
+<span class="co"># containing SERIES directories with names starting with:</span>
+<span class="co"># 3_CPS, 4_STD or 4_DYN</span>
 <span class="co"># for instance:</span>
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"~/1_ABC_tutorial"</span>
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/any_directory_of_your_choice/1_ABC_tutorial"</span>
 
 <span class="co"># Launch the shiny app</span>
 <span class="fu"><a href="../reference/shinobxr_app.html">shinobxr_app</a></span><span class="op">(</span><span class="op">)</span></pre></div>

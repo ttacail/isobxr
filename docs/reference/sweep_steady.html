@@ -159,7 +159,9 @@ over a range of values) on the final state of a given model.</p>
   <span class='va'>EXPLO_MASTER</span>,
   <span class='va'>EXPLO_AXIS_1</span>,
   <span class='va'>EXPLO_AXIS_2</span>,
-  to_STD_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>FALSE</span>
+  to_STD_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  plot_results <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  save_run_outputs <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -169,7 +171,7 @@ over a range of values) on the final state of a given model.</p>
       <th>workdir</th>
       <td><p>Working directory of <strong><em>0_ISOBXR_MASTER.xlsx</em></strong> master file, <br />
 of the steady sweep master file (e.g., <strong><em>0_EXPLO_STEADY_MASTER.xlsx</em></strong>) <br />
-and where output files will be stored. <br />
+and where output files will be stored if exported by user. <br />
 (character string)</p></td>
     </tr>
     <tr>
@@ -185,7 +187,7 @@ and subsequent sweep runs can not overwrite a previous one.<br />
       <td><p>Vector defining the initial time unit
 (identical to unit used in fluxes), <br />
 followed by the time unit used for the graphical output.<br />
-Character string, to be selected  amongst the following:<br />
+Character string, to be selected  among the following:<br />
 <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em><br />
 e.g.,  c("d", "yr") to convert days into years</p></td>
     </tr>
@@ -212,15 +214,42 @@ Logical value. <br />
 Exports all global csv outputs to <strong><em>0_STD_DIGEST</em></strong> folder (full and final evD and evS) if TRUE. <br />
 Default is FALSE.</p></td>
     </tr>
+    <tr>
+      <th>plot_results</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value. <br />
+If TRUE, plots in R session the heatmaps of delta values of all system finite boxes in the 2D space of swept parameters. <br />
+Default is TRUE.</p></td>
+    </tr>
+    <tr>
+      <th>save_run_outputs</th>
+      <td><p><em>OPTIONAL</em> <br />
+Logical value. <br />
+Allows saving all run outputs to working directory (workdir). <br />
+By default, run outputs are stored in the temporary directory and are erased if not saved. <br />
+Default is FALSE.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Creates and stores all outputs in a dedicated sweep steady SERIES directory
-located in working directory, with the following name structure: <br />
-<strong><em>4_STD + SERIES_ID + YYY</em></strong>, where YYY is a sweep steady run number automatically set between 001 and 999. <br />
+    <p>Calculates the delta values and box sizes at final state of the sweeping of 2D space of parameters in all boxes.</p>
+<p><code>sweep_steady</code> returns by default a heatmap plot of the isotope composition
+of each finite box in the 2D space defined by the two swept parameters
+(set plot_results = FALSE to mute the plots). <br /></p>
+<p>The graphical results of the sweep can be also interactively explored using the
+<code><a href='shinobxr_app.html'>shinobxr_app</a></code> function in case user saves the outputs to the working
+directory (save_run_outputs = TRUE).</p>
+<p><code>sweep_steady</code> creates a series of isotope data and metadata,
+all of which are stored in a temporary directory. <br />
+The user can save all outputs described below to their working directory
+by setting save_run_outputs = TRUE (default is FALSE). <br /></p>
+<p><code>sweep_steady</code> creates and stores all outputs in a dedicated SERIES directory
+with the following name structure: <br />
+<strong><em>4_STD + SERIES_ID + YYY</em></strong>, where YYY is a sweep steady run number automatically
+set between 001 and 999. <br />
 No overwriting of previous sweep steady run runs is possible.</p>
-<ol>
+<p><code>sweep_steady</code> base workflow:</p><ol>
 <li><p>Calculates the number of single runs the sweeping will require depending on the swept parameters.</p></li>
 <li><p>Asks the user confirmation to run <code>sweep_steady</code>,
 as the run calculation time depends on the number of successive sweeping runs.</p></li>

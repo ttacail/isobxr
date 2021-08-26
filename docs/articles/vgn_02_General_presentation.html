@@ -103,7 +103,7 @@
       <h1 data-toc-skip>2 - General presentation</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-08-23</h4>
+            <h4 class="date">2021-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_02_General_presentation.Rmd"><code>vignettes/vgn_02_General_presentation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_02_General_presentation.Rmd</code></div>
@@ -338,7 +338,8 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <li>evS data file storing the evolution of the sizes (masses of element X) of each box</li>
 <li>evD data file storing the evolution of the delta values in each box</li>
 </ul>
-<p>The <strong>OUTPUT</strong> data are stored by default in a <strong>Rda</strong> output file (<strong>RUN name + OUT.Rda</strong>), in the same location as the input file.</p>
+<p>By default (save_run_outputs = FALSE), all <strong>OUTPUT</strong> data is stored in a temporary directory. If save_run_outputs = TRUE, the outputs are saved in the same directory as the input file.</p>
+<p>By default, all <strong>OUTPUT</strong> data is saved in a <strong>Rda</strong> output file (<strong>RUN name + OUT.Rda</strong>).</p>
 <p>The <code>num_slvr</code> function optionally allows user to edit the <strong>OUTPUT</strong> data as <strong>csv</strong> files stored in a DIGEST folder ([ <strong>RUN name + DIGEST</strong> ]) with the following name structures:</p>
 <ul>
 <li>OUT data: [ <strong>out_1_N_OUT + RUN name + .csv</strong> ]</li>
@@ -388,7 +389,8 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 </li>
 <li><p>evD data file storing the evolution of the delta values in each box</p></li>
 </ul>
-<p>The <strong>OUTPUT</strong> data are stored by default in a <strong>Rda</strong> output file (<strong>RUN name + OUT.Rda</strong>), in the same location as the input file.</p>
+<p>By default (save_run_outputs = FALSE), all <strong>OUTPUT</strong> data is stored in a temporary directory. If save_run_outputs = TRUE, the outputs are saved in the same directory as the input file.</p>
+<p>By default, all <strong>OUTPUT</strong> data is saved in a <strong>Rda</strong> output file (<strong>RUN name + OUT.Rda</strong>).</p>
 <p>The <code>ana_slvr</code> function optionally allows user to edit the <strong>OUTPUT</strong> data as <strong>csv</strong> files stored in a DIGEST folder ([ <strong>RUN name + DIGEST</strong> ]) with the following name structures:</p>
 <ul>
 <li>OUT data: [ <strong>out_1_A_OUT + RUN name + .csv</strong> ]</li>

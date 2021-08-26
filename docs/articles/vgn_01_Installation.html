@@ -103,7 +103,7 @@
       <h1 data-toc-skip>1 - Install isobxr</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-08-23</h4>
+            <h4 class="date">2021-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_01_Installation.Rmd"><code>vignettes/vgn_01_Installation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_01_Installation.Rmd</code></div>
@@ -149,7 +149,17 @@
 <div id="download-templates-and-tutorials" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-templates-and-tutorials" class="anchor"></a>Download templates and tutorials</h2>
-<p>The user is encouraged to:</p>
+<p>The tutorial can be run using the tutorial files embedded in the package extdata. The tutorial files are then called by setting the workdir argument as follows:</p>
+<div class="sourceCode"><pre class="downlit">
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>
+<span class="co"># or</span>
+<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"use_isobxr_demonstration_files"</span></pre></div>
+<dl>
+<dt>Note</dt>
+<dd>The tutorial mode will prevent you from saving the run outputs to a local working directory.
+</dd>
+</dl>
+<p>Alternatively, the user is encouraged to download and browse the input files:</p>
 <ol style="list-style-type: decimal">
 <li><p>download the <a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">reference templates</a>. These files provide the user with formatted master files, used as entries to the functions and described in this vignette.</p></li>
 <li><p>download the <a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">tutorial files</a>. These files provide the user with all master files and R commands used throughout all demonstrations shown in the vignettes.</p></li>

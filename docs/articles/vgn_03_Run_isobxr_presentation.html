@@ -103,7 +103,7 @@
       <h1 data-toc-skip>3 - run_isobxr()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-08-23</h4>
+            <h4 class="date">2021-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_03_Run_isobxr_presentation.Rmd"><code>vignettes/vgn_03_Run_isobxr_presentation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_03_Run_isobxr_presentation.Rmd</code></div>
@@ -250,21 +250,21 @@
 <div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
-<p>The arguments required to run the <code>run_isobxr</code> function are exemplified and described here:</p>
+<p>The arguments required to run the <code>run_isobxr</code> function are exemplified and described here with the first tutorial example (<a href="https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#2_Ex_1:_%7BABC%7D,_closed,_balanced">see tutorial here</a>):</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
-           SERIES_ID <span class="op">=</span> <span class="st">"Name_of_SERIES_ID"</span>, <span class="co"># defining the name of the SERIES of run</span>
-           flux_list_name <span class="op">=</span> <span class="st">"Fx3_ABC_open_bal"</span>, <span class="co"># calling the list of fluxes</span>
+<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>, <span class="co"># defining the name of the SERIES of run</span>
+           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>, <span class="co"># calling the list of fluxes</span>
            coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, <span class="co">#  calling the list of coefficients</span>
-           t_lim <span class="op">=</span> <span class="fl">1000</span>, <span class="co"># running model for 1000 time units</span>
-           nb_steps <span class="op">=</span> <span class="fl">100</span>, <span class="co"># running model with 100 steps</span>
+           t_lim <span class="op">=</span> <span class="fl">2500</span>, <span class="co"># running model for 1000 time units</span>
+           nb_steps <span class="op">=</span> <span class="fl">250</span>, <span class="co"># running model with 100 steps</span>
            time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span><span class="op">)</span> <span class="co"># plot results in years as time units.</span></pre></div>
 <dl>
 <dt><strong>workdir</strong></dt>
-<dd>Working directory of 0_ISOBXR_MASTER.xlsx master file and where output files will be stored.
+<dd>Working directory of 0_ISOBXR_MASTER.xlsx master file and where output files will be stored if saved by user (<strong>save_run_outputs = TRUE</strong>, default is <strong>FALSE</strong>).
 </dd>
 <dt><strong>SERIES_ID</strong></dt>
-<dd>Name of the model series the run belongs to. It determines the folder in which the output files will be stored.
+<dd>Name of the model series the run belongs to. It determines the folder in which the output files will be stored if saved by user (<strong>save_run_outputs = TRUE</strong>, default is <strong>FALSE</strong>).
 </dd>
 <dt><strong>flux_list_name</strong></dt>
 <dd>Name of the list of fluxes and initial box sizes to be used for the run, calling (by its header name) a single column of the FLUXES sheet of the 0_ISOBXR_MASTER.xlsx file.
@@ -281,7 +281,7 @@
 <dt><strong>time_units</strong></dt>
 <dd><ul>
 <li>Vector defining the initial time unit (identical to unit used in fluxes), followed by the time unit used for the graphical output</li>
-<li>to be selected amongst the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
+<li>to be selected among the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
 </li>
 <li>e.g., c("d", "yr") to convert days into years</li>
 </ul></dd>
@@ -290,7 +290,9 @@
 <div id="default-and-optional-outputs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#default-and-optional-outputs" class="anchor"></a>Default and optional outputs</h2>
-<p>The <code>run_isobxr</code> outputs are stored in the working directory.</p>
+<p>By default, the <code>run_isobxr</code> prints a summary plot of the run outputs (evolution of delta values and box sizes) in the R session.</p>
+<p>All <code>run_isobxr</code> output data is stored in a temporary directory by default.</p>
+<p>The user can save these outputs to their working directory by changing the <strong>save_run_outputs</strong> argument to <strong>TRUE</strong>.</p>
 <p>The <code>run_isobxr</code> outputs are structured as shown in the <a href="https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html#42_Default_and_optional_outputs">full package documentation.</a></p>
 <!-- The `run_isobxr` outputs are structured as follows: -->
 <!-- ```{r echo=FALSE, out.width='100%'} -->
@@ -298,23 +300,28 @@
 <!-- ``` -->
 <p>In addition to the default outputs, the <code>run_isobxr</code> function allows to:</p>
 <ul>
-<li>export system diagrams (as pdf, using the <strong>to_DIGEST_DIAGRAMS = TRUE</strong> argument)</li>
-<li>export evolution of isotope compositions (as pdf, using the <strong>to_DIGEST_evD_PLOT = TRUE</strong> argument)</li>
-<li>export input and output datasets (as csv and xlsx, using the <strong>to_DIGEST_CSV_XLS = TRUE</strong> argument)</li>
+<li>export system diagrams (as pdf, using <strong>to_DIGEST_DIAGRAMS = TRUE</strong>)</li>
+<li>export evolution of delta values (as pdf, using <strong>to_DIGEST_evD_PLOT = TRUE</strong>)</li>
+<li>export input and output data (as csv and xlsx, using <strong>to_DIGEST_CSV_XLS = TRUE</strong>)</li>
 </ul>
-<p>These arguments are called as follows:</p>
+<p>These arguments are called as follows (using example used in <a href="https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#2_Ex_1:_%7BABC%7D,_closed,_balanced">tutorial</a>):</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/1_isobxr_working_directory/"</span>,
-           SERIES_ID <span class="op">=</span> <span class="st">"Name_of_SERIES_ID"</span>, 
-           flux_list_name <span class="op">=</span> <span class="st">"Fx3_ABC_open_bal"</span>, 
+<span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
+           SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>,
+           flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>,
            coeff_list_name <span class="op">=</span> <span class="st">"a1"</span>, 
-           t_lim <span class="op">=</span> <span class="fl">1000</span>, 
-           nb_steps <span class="op">=</span> <span class="fl">100</span>, 
-           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, 
+           t_lim <span class="op">=</span> <span class="fl">2500</span>,
+           nb_steps <span class="op">=</span> <span class="fl">250</span>,
+           time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>,
            to_DIGEST_DIAGRAMS <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># default is TRUE</span>
            to_DIGEST_evD_PLOT <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># default is TRUE</span>
            to_DIGEST_CSV_XLS <span class="op">=</span> <span class="cn">TRUE</span>  <span class="co"># default is FALSE</span>
            <span class="op">)</span></pre></div>
+<dl>
+<dt><strong>Note</strong></dt>
+<dd>All <code>run_isobxr</code> outputs are not saved by default. Set <strong>save_run_outputs = TRUE</strong> to save outputs to a local working directory.
+</dd>
+</dl>
 </div>
 <div id="additional-forcing-arguments" class="section level2">
 <h2 class="hasAnchor">
