@@ -936,7 +936,13 @@ sweep_steady <- function(workdir,
             metR::geom_label_contour(ggplot2::aes(z = Z), breaks = breaks_loc, skip = 0)
         }
       }
-      print(map_1)
+      # print(map_1)
+      # print(evD_plot)
+      if (i == 1){
+        plot_list <- list(map_1)
+      } else {
+        plot_list <- list(plot_list, map_1)
+      }
     }
   }
 
@@ -955,6 +961,20 @@ sweep_steady <- function(workdir,
                            overwrite = T)
     rlang::inform("\U2705 Results were successfully saved to working directory.")
     rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function.")
+  }
+
+  in_silence <- function(...)
+  {
+    mc <- match.call()[-1]
+    a <- utils::capture.output(
+      tryCatch(
+        suppressMessages(suppressWarnings(
+          eval(as.list(mc)[[1]])
+        )), error = function(e) ""))
+  }
+
+  if(isTRUE(plot_results)){
+    return(in_silence(plot_list))
   }
 }
 
@@ -1944,7 +1964,13 @@ sweep_dyn <- function(workdir,
                       y = DF[1,"Z_ID"],
                       title = EXPLO_title,
                       subtitle = EXPLO_subtitle)
-      print(evD_plot)
+
+      # print(evD_plot)
+      if (i == 1){
+        plot_list <- list(evD_plot)
+      } else {
+        plot_list <- list(plot_list, evD_plot)
+      }
     }
   }
 
@@ -1963,5 +1989,19 @@ sweep_dyn <- function(workdir,
                            overwrite = T)
     rlang::inform("\U2705 Results were successfully saved to working directory.")
     rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function.")
+  }
+
+  in_silence <- function(...)
+  {
+    mc <- match.call()[-1]
+    a <- utils::capture.output(
+      tryCatch(
+        suppressMessages(suppressWarnings(
+          eval(as.list(mc)[[1]])
+        )), error = function(e) ""))
+  }
+
+  if(isTRUE(plot_results)){
+    return(in_silence(plot_list))
   }
 }

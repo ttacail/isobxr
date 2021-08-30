@@ -718,11 +718,11 @@ compose_isobxr <- function(workdir,
   suppressWarnings(print(evS_plot_facet))
   graphics.off()
 
-  if(isTRUE(plot_results)){
-    # suppressWarnings(evD_plot_facet)
-    # suppressWarnings(evS_plot_facet)
-    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
-  }
+  # if(isTRUE(plot_results)){
+  #   # suppressWarnings(evD_plot_facet)
+  #   # suppressWarnings(evS_plot_facet)
+  #   suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
+  # }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# EDIT LOCAL COMPO MASTER XLSX #----
   # compo_master_excel_path <-  paste(path_out_COMPO, "_COMPO_MASTER.xlsx", sep = "")
@@ -751,5 +751,9 @@ compose_isobxr <- function(workdir,
                            overwrite = T)
     rlang::inform("\U2705 Results were successfully saved to working directory.")
     rlang::inform("\U2139 You can explore the results with more parameters by using the shinobxr_app() function.")
+  }
+
+  if(isTRUE(plot_results)){
+    return(suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1)))
   }
 }

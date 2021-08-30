@@ -991,10 +991,10 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
     graphics.off()
   }
-  ##### PRINT PLOTs
-  if (isTRUE(plot_results)){
-    suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
-  }
+  # ##### PRINT PLOTs
+  # if (isTRUE(plot_results)){
+  #   suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1))
+  # }
 
   #----#----#----#----#----#----#----#----#----#---- save_run_outputs or not #----
   if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
@@ -1011,5 +1011,10 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                              overwrite = T)
       rlang::inform("\U2705 Results were successfully exported to working directory.")
     }
+  }
+
+  ##### PRINT PLOTs
+  if (isTRUE(plot_results)){
+    return(suppressWarnings(multiplot(evD_plot, evS_plot, cols = 1)))
   }
 }
