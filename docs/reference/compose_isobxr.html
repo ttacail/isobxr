@@ -346,30 +346,27 @@ and <strong><em>CPS + SERIES_ID + YYY + evS.csv</em></strong>)</p></li>
                COMPO_MASTER <span class='op'>=</span> <span class='st'>"0_CPS_MASTER_changing_balance.xlsx"</span>,
                plot_HIDE_BOXES_delta <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SINK"</span><span class='op'>)</span>, <span class='co'># hide in delta plots</span>
                plot_HIDE_BOXES_size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SOURCE"</span>, <span class='st'>"SINK"</span><span class='op'>)</span>, <span class='co'># hide in size plots</span>
-               EACH_RUN_DIGEST <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='co'># export the DIGEST for each run</span>
-               to_CPS_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># export whole model to CSVs</span>
-</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 COMPUTING </span></div><div class='output co'>#&gt; <span class='message'>– The INFINITE boxes are: SOURCE, SINK</span></div><div class='output co'>#&gt; <span class='message'>– Running ana_slvr (balanced finite boxes)</span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 6)
+               EACH_RUN_DIGEST <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='co'># do not export the DIGEST for each run</span>
+               to_CPS_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># do not export whole model to CSVs</span>
+</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 COMPUTING </span></div><div class='output co'>#&gt; <span class='message'>ℹ Running initial model: </span></div><div class='output co'>#&gt; <span class='message'>– The INFINITE boxes are: SOURCE, SINK</span></div><div class='output co'>#&gt; <span class='message'>– Running ana_slvr (balanced finite boxes)</span></div><div class='output co'>#&gt; <span class='message'>ℹ Running scenario models: </span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 5)
+#&gt; [1] **********---------------------------------------- (20% of n = 5)
+#&gt; [1] ********************------------------------------ (40% of n = 5)
+#&gt; [1] ******************************-------------------- (60% of n = 5)
+#&gt; [1] ****************************************---------- (80% of n = 5)
+#&gt; [1] ************************************************** (100% of n = 5)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 PREPARING RESULTS</span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 6)
 #&gt; [1] ********------------------------------------------ (17% of n = 6)
 #&gt; [1] *****************--------------------------------- (33% of n = 6)
 #&gt; [1] *************************------------------------- (50% of n = 6)
 #&gt; [1] *********************************----------------- (67% of n = 6)
 #&gt; [1] ******************************************-------- (83% of n = 6)
-#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 PREPARING RESULTS</span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 6)
-#&gt; [1] ********------------------------------------------ (17% of n = 6)
-#&gt; [1] *****************--------------------------------- (33% of n = 6)
-#&gt; [1] *************************------------------------- (50% of n = 6)
-#&gt; [1] *********************************----------------- (67% of n = 6)
-#&gt; [1] ******************************************-------- (83% of n = 6)
-#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 WRITING OUTPUTS</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ Run outputs (stored in temporary directory):</span></div><div class='output co'>#&gt; <span style='color: #0000BB; background-color: #00BB00;'>/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T//Rtmpw7PVF1/isobxr_temp_data/</span>
+#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 WRITING OUTPUTS</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ Run outputs (stored in temporary directory):</span></div><div class='output co'>#&gt; <span style='color: #0000BB; background-color: #00BB00;'>/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T//RtmpQdYPXE/isobxr_temp_data/</span>
 #&gt; ├── 1_LOG.csv
 #&gt; └── <span style='color: #0000BB; background-color: #00BB00;'>3_CPS_ABC_change_balance_001</span>
 #&gt;     ├── <span style='color: #0000BB; background-color: #00BB00;'>0_CPS_DIGEST</span>
 #&gt;     │   ├── CPS_ABC_change_balance_001_LOG.csv
 #&gt;     │   ├── CPS_ABC_change_balance_001_MASTER.xlsx
 #&gt;     │   ├── CPS_ABC_change_balance_001_evD.RDS
-#&gt;     │   ├── CPS_ABC_change_balance_001_evD.csv
 #&gt;     │   ├── CPS_ABC_change_balance_001_evS.RDS
-#&gt;     │   ├── CPS_ABC_change_balance_001_evS.csv
 #&gt;     │   ├── CPS_ABC_change_balance_001_p_evDS.pdf
 #&gt;     │   ├── CPS_ABC_change_balance_001_pf_evD.pdf
 #&gt;     │   └── CPS_ABC_change_balance_001_pf_evS.pdf

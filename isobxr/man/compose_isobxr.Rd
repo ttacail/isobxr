@@ -168,8 +168,8 @@ compose_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
                COMPO_MASTER = "0_CPS_MASTER_changing_balance.xlsx",
                plot_HIDE_BOXES_delta = c("SINK"), # hide in delta plots
                plot_HIDE_BOXES_size = c("SOURCE", "SINK"), # hide in size plots
-               EACH_RUN_DIGEST = FALSE, # export the DIGEST for each run
-               to_CPS_DIGEST_CSVs = TRUE) # export whole model to CSVs
+               EACH_RUN_DIGEST = FALSE, # do not export the DIGEST for each run
+               to_CPS_DIGEST_CSVs = FALSE) # do not export whole model to CSVs
 
 }
 \seealso{

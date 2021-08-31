@@ -135,8 +135,8 @@
 #'                COMPO_MASTER = "0_CPS_MASTER_changing_balance.xlsx",
 #'                plot_HIDE_BOXES_delta = c("SINK"), # hide in delta plots
 #'                plot_HIDE_BOXES_size = c("SOURCE", "SINK"), # hide in size plots
-#'                EACH_RUN_DIGEST = FALSE, # export the DIGEST for each run
-#'                to_CPS_DIGEST_CSVs = TRUE) # export whole model to CSVs
+#'                EACH_RUN_DIGEST = FALSE, # do not export the DIGEST for each run
+#'                to_CPS_DIGEST_CSVs = FALSE) # do not export whole model to CSVs
 #'
 #' @export
 compose_isobxr <- function(workdir,
@@ -285,7 +285,7 @@ compose_isobxr <- function(workdir,
   COMPOSITE <- TRUE
   rlang::inform("________________________________________________________________________________")
   rlang::inform("\U0001f535 COMPUTING ")
-
+  rlang::inform("\U2139 Running initial model: ")
   run_isobxr(workdir = LOC_workdir,
              SERIES_ID = SERIES_ID,
              flux_list_name = fx,
@@ -309,9 +309,9 @@ compose_isobxr <- function(workdir,
              to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS,
              plot_results = FALSE)
 
-  calculation_gauge(0, length(t_lim_list))
-  calculation_gauge(i, length(t_lim_list))
-
+  rlang::inform("\U2139 Running scenario models: ")
+  # calculation_gauge(0, length(t_lim_list)-1)
+  calculation_gauge(i-1, length(t_lim_list)-1)
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIAL ISOPYBOX RUN (i > 1) #----
   i <- i + 1
   # i
@@ -407,7 +407,7 @@ compose_isobxr <- function(workdir,
                to_DIGEST_evD_PLOT = to_DIGEST_evD_PLOT,
                to_DIGEST_CSV_XLS = to_DIGEST_CSV_XLS,
                plot_results = FALSE)
-    calculation_gauge(i, length(t_lim_list))
+    calculation_gauge(i-1, length(t_lim_list)-1)
     i <- i + 1
   }
 
