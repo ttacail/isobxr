@@ -1,13 +1,13 @@
 ## Resubmission 26/08/2021
 This is a resubmission. In this version I have: 
 
-* Added \value to all .Rd files and exlain the functions results, 
+* Added \value to all .Rd files and explained the functions results, 
     including the missing Rd-tags: 
       multiplot.Rd: \value
       quiet.Rd: \value
       shinobxr_app.Rd: \value
       time_converter.Rd: \value
-    and the newly created internal not exported functions: 
+    and the newly created internal, not exported functions: 
       using_extdata_tutorial.Rd
       plot_diagram.Rd
       to_tmpdir.Rd
