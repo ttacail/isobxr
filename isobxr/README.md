@@ -3,6 +3,7 @@
 # isobxr <img src="man/figures/README-logo.png" align="right" height="200px" />
 
 <!-- badges: start -->
+<!-- [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/isobxr?color=blue)](https://r-pkg.org/pkg/isobxr) -->
 <!-- badges: end -->
 The [isobxr](https://ttacail.github.io/isobxr_web/) package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It allows users to develop and test isotopic box models of their system of interest, explore the behavior of these systems in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, as well as sweep the space of parameters in both static and dynamic modes.
 
@@ -66,3 +67,10 @@ On this website you can find the following items.
 7.  Use the shiny offline html app to plot compose\_isobxr, sweep\_steady and sweep\_dyn outputs: [general presentation](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html)
 
 <!-- END copy/pasted from isobxr_website index page -->
+## Cite isobxr
+
+The isobxr should be cited when used in scientific publications. You can retrieve the citation formats by calling:
+
+``` r
+citation("isobxr")
+```
