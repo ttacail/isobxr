@@ -44,28 +44,40 @@ and dynamic modes.
 
 # Installation
 
-## Install isobxr
+## Released version
 
-The [isobxr](https://ttacail.github.io/isobxr/) is available as a source package 
-from [GitHub](https://github.com/).
+The isobxr package (1.0.0) was first released on September 2nd, 2021, on the [CRAN](https://cran.r-project.org/) (Comprehensive R Archive Network) 
+and can be found on its [isobxr CRAN page](https://cran.r-project.org/web/packages/isobxr/index.html). 
 
-The installation process can be done as follows:
+It is available as a released package and can be installed directly from CRAN by calling:
 
-1. Download and install/update [R](https://cran.r-project.org/) and 
-[Rstudio](https://www.rstudio.com/products/rstudio/download/).
+```{r eval = FALSE}
+install.packages("isobxr")
+```
 
-2. Download and install package **devtools** as follows:
+## Development version
+
+The [isobxr](https://ttacail.github.io/isobxr/) package is available as a source package in its development version
+from the [GitHub isobxr master repository](https://github.com/ttacail/isobxr).
+
+The isobxr development version can be installed as follows:
+
+* Download and install/update [R](https://cran.r-project.org/) and 
+[Rstudio](https://rstudio.com/products/rstudio/download/).
+
+* Download and install package **devtools** as follows:
 
 ```{r eval = FALSE}
 install.packages("devtools")
 ```
 
-3. Download and install [isobxr](https://ttacail.github.io/isobxr/) source package.
+* Download and install [isobxr](https://ttacail.github.io/isobxr/) source package.
 
 ```{r eval = FALSE}
 devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
 ```
 
+## Load **isobxr**
 You can load the [isobxr](https://ttacail.github.io/isobxr/) package in R
 as follows:
 ```{r eval = FALSE}
@@ -83,7 +95,7 @@ You can locally browse the vignettes as follows:
 browseVignettes("isobxr")
 ```
 
-## Download templates and tutorials
+# Download templates and tutorials
 
 The tutorial can be run using the tutorial files embedded in the package extdata. 
 The tutorial files are then called by setting the workdir argument as follows: 
