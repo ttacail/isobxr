@@ -1,7 +1,9 @@
-# isobxr 1.0.0.9000 devel Sep 2021
+# isobxr 1.0
 
-* under dev. source version
+## isobxr 1.0.0.9000 development source package 
 
-# isobxr 1.0 August 2021
+* fix temporary directory clearing for windows
+
+## isobxr 1.0.0 (Release date: 2021-09-02)
 
 * first released version
