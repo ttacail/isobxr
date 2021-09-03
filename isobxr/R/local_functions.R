@@ -256,7 +256,9 @@ to_tmpdir <- function(dir_or_file){
   if (dir.exists(tmp_path) == FALSE){
     dir.create(tmp_path)
   }
-  tmp_path <- paste(tmp_path, dir_or_file, sep = "/")
+  if(nchar(dir_or_file) != 0){
+    tmp_path <- paste(tmp_path, dir_or_file, sep = "/")
+  }
   return(tmp_path)
 }
 
