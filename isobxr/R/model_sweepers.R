@@ -136,8 +136,8 @@ sweep_steady <- function(workdir,
   # cat("\014")
   # Clean workspace
   # rm(list=ls())
-  unlink(to_tmpdir(""), recursive = T)
-  on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
+  unlink(to_tmpdir(""), recursive = TRUE)
+  on.exit(unlink(to_tmpdir(""), recursive = TRUE), add = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE #----
   #************************************** SET WORKING DIRECTORY #----
@@ -676,7 +676,7 @@ sweep_steady <- function(workdir,
       FLUXES_i <- FLUXES_IN
       COEFFS_i <- COEFFS_IN
       if (i > 1){
-        unlink(to_tmpdir(path_to_input_i)) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
+        unlink(to_tmpdir(path_to_input_i), recursive = TRUE) ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
       }
 
       if (LOG_SERIES[i, "NUM_ANA"] == "ANA"){
@@ -692,7 +692,7 @@ sweep_steady <- function(workdir,
           j <- j + 1
         }
         if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
-          unlink(to_tmpdir(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = "")), recursive = T)
+          unlink(to_tmpdir(paste(as.character(LOG_SERIES[i, "path_outdir"]), "OUT.Rda", sep = "")), recursive = TRUE)
         }
       } else {
         if (LOG_SERIES[i, "NUM_ANA"] == "NUM"){
@@ -700,7 +700,7 @@ sweep_steady <- function(workdir,
           evD_i <- N_evD
           evS_i <- N_evS
           if (i > 1){ ## delete all run_isobxr outputs after building summary except RUN #1 ### make it an option?
-            unlink(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")), recursive = T)
+            unlink(to_tmpdir(paste(path_outdir_i, "OUT.Rda", sep = "")), recursive = TRUE)
           }
         }
       }
@@ -1114,8 +1114,8 @@ sweep_dyn <- function(workdir,
   # cat("\014")
   # Clean workspace
   # rm(list=ls())
-  unlink(to_tmpdir(""), recursive = T)
-  on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
+  unlink(to_tmpdir(""), recursive = TRUE)
+  on.exit(unlink(to_tmpdir(""), recursive = TRUE), add = TRUE)
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
   #************************************** SET WORKING DIRECTORY  #----

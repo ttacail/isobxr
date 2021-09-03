@@ -243,8 +243,8 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   ISOPY_MASTER_file <- "0_ISOBXR_MASTER.xlsx"
 
   if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
-    unlink(to_tmpdir(""), recursive = T)
-    on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
+    unlink(to_tmpdir(""), recursive = TRUE)
+    on.exit(unlink(to_tmpdir(""), recursive = TRUE), add = TRUE)
     rlang::inform("________________________________________________________________________________")
     if (isTRUE(tuto_mode)){
       rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))

@@ -171,8 +171,8 @@ compose_isobxr <- function(workdir,
   # cat("\014")
   # Clean workspace
   # rm(list=ls())
-  unlink(to_tmpdir(""), recursive = T)
-  on.exit(unlink(to_tmpdir(""), recursive = T), add = TRUE)
+  unlink(to_tmpdir(""), recursive = TRUE)
+  on.exit(unlink(to_tmpdir(""), recursive = TRUE), add = TRUE)
   Time_plot <- VAR <- VAR_TYPE <- NULL
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# INITIALIZE
