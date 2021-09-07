@@ -183,7 +183,9 @@ compose_isobxr <- function(workdir,
   setwd(LOC_workdir)
   rlang::inform("________________________________________________________________________________")
   if (isTRUE(tuto_mode)){
-    rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))
+    rlang::inform(paste("\U2139 workdir: no workdir.
+  You are using the tutorial mode (isobxr embedded tutorial files).
+  The default outputs are limited and can't be exported.", sep = ""))
   } else {
     rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
   }
@@ -600,10 +602,13 @@ compose_isobxr <- function(workdir,
   }
 
   #### export evD facets pdf
-  pdf_path <- paste(path_out_COMPO, "_pf_evD.pdf", sep = "")
-  pdf(to_tmpdir(pdf_path), width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
-  print(evD_plot_facet)
-  dev.off()
+  if(isFALSE(tuto_mode)){
+    pdf_path <- paste(path_out_COMPO, "_pf_evD.pdf", sep = "")
+    # dev.new() needed?
+    pdf(to_tmpdir(pdf_path), width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
+    print(evD_plot_facet)
+    dev.off()
+  }
 
   #************************************** PLOT evS #----
   display_evS_plot = TRUE
@@ -685,11 +690,13 @@ compose_isobxr <- function(workdir,
   }
 
   #### edit pdf of evD/evS multiplot
-  pdf_path <- paste(path_out_COMPO, "_p_evDS.pdf", sep = "")
-  dev.new()
-  pdf(to_tmpdir(pdf_path), width = 15, height = 15, pointsize = 1, useDingbats=FALSE)
-  multiplot(evD_plot, evS_plot, cols = 1)
-  graphics.off()
+  if(isFALSE(tuto_mode)){
+    pdf_path <- paste(path_out_COMPO, "_p_evDS.pdf", sep = "")
+    dev.new()
+    pdf(to_tmpdir(pdf_path), width = 15, height = 15, pointsize = 1, useDingbats=FALSE)
+    multiplot(evD_plot, evS_plot, cols = 1)
+    graphics.off()
+  }
 
   #### plot evS facets
   evS_plot_facet <- ggplot2::ggplot(data = evS_vert, ggplot2::aes(x = Time_plot, y = VAR, color = VAR_TYPE))+
@@ -712,11 +719,13 @@ compose_isobxr <- function(workdir,
   }
 
   #### export evS facets pdf
-  pdf_path <- paste(path_out_COMPO, "_pf_evS.pdf", sep = "")
-  dev.new()
-  pdf(to_tmpdir(pdf_path), width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
-  suppressWarnings(print(evS_plot_facet))
-  graphics.off()
+  if(isFALSE(tuto_mode)){
+    pdf_path <- paste(path_out_COMPO, "_pf_evS.pdf", sep = "")
+    dev.new()
+    pdf(to_tmpdir(pdf_path), width = 15, height = 10, pointsize = 1, useDingbats = FALSE)
+    suppressWarnings(print(evS_plot_facet))
+    graphics.off()
+  }
 
   # if(isTRUE(plot_results)){
   #   # suppressWarnings(evD_plot_facet)
