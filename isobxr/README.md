@@ -14,7 +14,7 @@ Check the [isobxr website](https://ttacail.github.io/isobxr_web/) for more infor
 <!-- START copy/pasted from isobxr_website install instructions -->
 ### Released version
 
-The isobxr package (1.0.0) was first released on September 2nd, 2021, on the [CRAN](https://cran.r-project.org/) (Comprehensive R Archive Network) and can be found on its [isobxr CRAN page](https://cran.r-project.org/web/packages/isobxr/index.html).
+The isobxr package is now on the [CRAN](https://cran.r-project.org/) (Comprehensive R Archive Network) and can be found on its [isobxr CRAN page](https://CRAN.R-project.org/package=isobxr).
 
 It is available as a released package and can be installed directly from CRAN by calling:
 
@@ -28,7 +28,7 @@ The [isobxr](https://ttacail.github.io/isobxr/) package is available as a source
 
 The isobxr development version can be installed as follows:
 
--   Download and install/update [R](https://cran.r-project.org/) and [Rstudio](https://rstudio.com/products/rstudio/download/).
+-   Download and install/update [R](https://cran.r-project.org/) and [Rstudio](https://www.rstudio.com/products/rstudio/download/).
 
 -   Download and install package **devtools** as follows:
 
