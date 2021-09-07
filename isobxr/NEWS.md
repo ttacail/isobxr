@@ -1,9 +1,11 @@
-# isobxr 1.0
+# isobxr 1.0.1
 
-## isobxr 1.0.0.9000 development source package 
+## bug fixes
 
-* fix temporary directory clearing for windows
+* prevent writing of (pdf) files outside tempdir in all examples/vignettes/tests (debian systems issue)
 
-## isobxr 1.0.0 (Release date: 2021-09-02)
+* fixed addressing of tempdir, ensuring proper post-run clearing of tempdir including in windows systems
+
+# isobxr 1.0.0 (Released: 2021-09-02)
 
 * first released version
