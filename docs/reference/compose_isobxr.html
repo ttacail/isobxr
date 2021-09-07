@@ -85,7 +85,7 @@ isotope composition of a source box at initial state
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">isobxr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -348,7 +348,9 @@ and <strong><em>CPS + SERIES_ID + YYY + evS.csv</em></strong>)</p></li>
                plot_HIDE_BOXES_size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SOURCE"</span>, <span class='st'>"SINK"</span><span class='op'>)</span>, <span class='co'># hide in size plots</span>
                EACH_RUN_DIGEST <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='co'># do not export the DIGEST for each run</span>
                to_CPS_DIGEST_CSVs <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># do not export whole model to CSVs</span>
-</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 COMPUTING </span></div><div class='output co'>#&gt; <span class='message'>ℹ Running initial model: </span></div><div class='output co'>#&gt; <span class='message'>– The INFINITE boxes are: SOURCE, SINK</span></div><div class='output co'>#&gt; <span class='message'>– Running ana_slvr (balanced finite boxes)</span></div><div class='output co'>#&gt; <span class='message'>ℹ Running scenario models: </span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 5)
+</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ workdir: no workdir.</span>
+#&gt; <span class='message'>  You are using the tutorial mode (isobxr embedded tutorial files).</span>
+#&gt; <span class='message'>  The default outputs are limited and can't be exported.</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 COMPUTING </span></div><div class='output co'>#&gt; <span class='message'>ℹ Running initial model: </span></div><div class='output co'>#&gt; <span class='message'>– The INFINITE boxes are: SOURCE, SINK</span></div><div class='output co'>#&gt; <span class='message'>– Running ana_slvr (balanced finite boxes)</span></div><div class='output co'>#&gt; <span class='message'>ℹ Running scenario models: </span></div><div class='output co'>#&gt; [1] -------------------------------------------------- (0% of n = 5)
 #&gt; [1] **********---------------------------------------- (20% of n = 5)
 #&gt; [1] ********************------------------------------ (40% of n = 5)
 #&gt; [1] ******************************-------------------- (60% of n = 5)
@@ -359,17 +361,14 @@ and <strong><em>CPS + SERIES_ID + YYY + evS.csv</em></strong>)</p></li>
 #&gt; [1] *************************------------------------- (50% of n = 6)
 #&gt; [1] *********************************----------------- (67% of n = 6)
 #&gt; [1] ******************************************-------- (83% of n = 6)
-#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 WRITING OUTPUTS</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ Run outputs (stored in temporary directory):</span></div><div class='output co'>#&gt; <span style='color: #0000BB; background-color: #00BB00;'>/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T//RtmpKRGEsV/isobxr_temp_data</span>
+#&gt; [1] ************************************************** (100% of n = 6)</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>🔵 WRITING OUTPUTS</span></div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>ℹ Run outputs (stored in temporary directory):</span></div><div class='output co'>#&gt; <span style='color: #0000BB; background-color: #00BB00;'>/var/folders/bj/pyh7pv4922973yvnx5jyvps1f6vt0y/T//RtmpyWPKsU/isobxr_temp_data</span>
 #&gt; ├── 1_LOG.csv
 #&gt; └── <span style='color: #0000BB; background-color: #00BB00;'>3_CPS_ABC_change_balance_001</span>
 #&gt;     ├── <span style='color: #0000BB; background-color: #00BB00;'>0_CPS_DIGEST</span>
 #&gt;     │   ├── CPS_ABC_change_balance_001_LOG.csv
 #&gt;     │   ├── CPS_ABC_change_balance_001_MASTER.xlsx
 #&gt;     │   ├── CPS_ABC_change_balance_001_evD.RDS
-#&gt;     │   ├── CPS_ABC_change_balance_001_evS.RDS
-#&gt;     │   ├── CPS_ABC_change_balance_001_p_evDS.pdf
-#&gt;     │   ├── CPS_ABC_change_balance_001_pf_evD.pdf
-#&gt;     │   └── CPS_ABC_change_balance_001_pf_evS.pdf
+#&gt;     │   └── CPS_ABC_change_balance_001_evS.RDS
 #&gt;     ├── CPS_ABC_change_balance_001_0001_IN.Rda
 #&gt;     ├── CPS_ABC_change_balance_001_0001_OUT.Rda
 #&gt;     ├── CPS_ABC_change_balance_001_0002_IN.Rda
@@ -381,7 +380,7 @@ and <strong><em>CPS + SERIES_ID + YYY + evS.csv</em></strong>)</p></li>
 #&gt;     ├── CPS_ABC_change_balance_001_0005_IN.Rda
 #&gt;     ├── CPS_ABC_change_balance_001_0005_OUT.Rda
 #&gt;     ├── CPS_ABC_change_balance_001_0006_IN.Rda
-#&gt;     └── CPS_ABC_change_balance_001_0006_OUT.Rda</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>❗ Results were not saved to working directory (set save_run_outputs = TRUE to save results).</span></div><div class='output co'>#&gt; <span class='message'>ℹ You can explore the results with more parameters by using the shinobxr_app() function (requires saved outputs).</span></div><div class='input'>
+#&gt;     └── CPS_ABC_change_balance_001_0006_OUT.Rda</div><div class='output co'>#&gt; <span class='message'>________________________________________________________________________________</span></div><div class='output co'>#&gt; <span class='message'>❗ Results were not saved to working directory (set save_run_outputs = TRUE to save results).</span></div><div class='output co'>#&gt; <span class='message'>ℹ You can explore the results with more parameters by using the shinobxr_app() function (requires saved outputs).</span></div><div class='img'><img src='compose_isobxr-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
