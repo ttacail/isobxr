@@ -1,3 +1,7 @@
+# isobxr 1.0.1.9000
+
+* current development version
+
 # isobxr 1.0.1
 
 ## bug fixes
