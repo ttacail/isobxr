@@ -265,9 +265,9 @@ run_isobxr(workdir = "/Users/username/Documents/1_ABC_tutorial",
            t_lim = 2500, # how long do I want to run
            nb_steps = 250, # how many steps over this run duration
            time_units = c("d", "yr"), # run time units (days), plot time units (years)
-           to_DIGEST_evD_PLOT = TRUE,
-           to_DIGEST_CSV_XLS = TRUE,
-           to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
+           to_DIGEST_evD_PLOT = FALSE, # do not export plots as pdf files
+           to_DIGEST_CSV_XLS = FALSE, # do not export datasets as csv and xlsx files
+           to_DIGEST_DIAGRAMS = FALSE) # do not export diagrams as pdf files
 }
 \seealso{
 Documentation on \code{\link{num_slvr}} or \code{\link{ana_slvr}} functions.

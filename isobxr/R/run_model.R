@@ -211,9 +211,9 @@ NULL
 #'            t_lim = 2500, # how long do I want to run
 #'            nb_steps = 250, # how many steps over this run duration
 #'            time_units = c("d", "yr"), # run time units (days), plot time units (years)
-#'            to_DIGEST_evD_PLOT = TRUE,
-#'            to_DIGEST_CSV_XLS = TRUE,
-#'            to_DIGEST_DIAGRAMS = TRUE) # export plot as pdf
+#'            to_DIGEST_evD_PLOT = FALSE, # do not export plots as pdf files
+#'            to_DIGEST_CSV_XLS = FALSE, # do not export datasets as csv and xlsx files
+#'            to_DIGEST_DIAGRAMS = FALSE) # do not export diagrams as pdf files
 #' @export
 run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_lim, nb_steps, time_units,
                        FORCING_RAYLEIGH = NULL, FORCING_SIZE = NULL, FORCING_DELTA = NULL, FORCING_ALPHA = NULL,
@@ -247,7 +247,9 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     on.exit(unlink(to_tmpdir(""), recursive = TRUE), add = TRUE)
     rlang::inform("________________________________________________________________________________")
     if (isTRUE(tuto_mode)){
-      rlang::inform(paste("\U2139 workdir: no workdir. You are using the tutorial mode (isobxr embedded tutorial files)", sep = ""))
+      rlang::inform(paste("\U2139 workdir: no workdir.
+  You are using the tutorial mode (isobxr embedded tutorial files).
+  The default outputs are limited and can't be exported.", sep = ""))
     } else {
       rlang::inform(paste("\U2139 workdir: ", getwd(), sep = ""))
     }
@@ -828,7 +830,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   }
 
   #### EDIT NETWORK DIAGRAM PDF
-  if (to_DIGEST_DIAGRAMS == T){
+  if (to_DIGEST_DIAGRAMS == T & isFALSE(tuto_mode)){
     pdf_path <- paste(folder_outdir, "DIGEST/", "in_1_DIAG_FLUX_", SERIES_ID_RUN_ID, ".pdf", sep = "")
     output_list <- c(output_list, pdf_path)
     pdf(to_tmpdir(pdf_path), width = 3, height = 3, pointsize = 1, useDingbats=FALSE)
@@ -983,7 +985,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   }
 
   #### EXPORT PLOT
-  if (isTRUE(to_DIGEST_evD_PLOT)){
+  if (isTRUE(to_DIGEST_evD_PLOT) & isFALSE(tuto_mode)){
     pdf_path <- paste(folder_outdir, "DIGEST/", "out_0_PLOT_evD_", SERIES_ID_RUN_ID, ".pdf", sep = "")
     output_list <- c(output_list, pdf_path)
     dev.new()
