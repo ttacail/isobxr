@@ -3,8 +3,8 @@
 # isobxr <img src="man/figures/README-logo.png" align="right" height="200px" />
 
 <!-- badges: start -->
-<!-- [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/isobxr?color=blue)](https://r-pkg.org/pkg/isobxr) -->
-<!-- badges: end -->
+[![CRAN status](https://www.r-pkg.org/badges/version/isobxr)](https://CRAN.R-project.org/package=isobxr) [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/isobxr?color=blue)](https://r-pkg.org/pkg/isobxr) <!-- badges: end -->
+
 The [isobxr](https://ttacail.github.io/isobxr_web/) package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It allows users to develop and test isotopic box models of their system of interest, explore the behavior of these systems in both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in reaction to a perturbation), build complex scenarios, as well as sweep the space of parameters in both static and dynamic modes.
 
 Check the [isobxr website](https://ttacail.github.io/isobxr_web/) for more information on [isobxr](https://ttacail.github.io/isobxr_web/) and introduction to its rationale.
