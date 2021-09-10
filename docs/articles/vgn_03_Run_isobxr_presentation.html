@@ -97,13 +97,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="vgn_03_Run_isobxr_presentation_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3 - run_isobxr()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-09-08</h4>
+            <h4 class="date">2021-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_03_Run_isobxr_presentation.Rmd"><code>vignettes/vgn_03_Run_isobxr_presentation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_03_Run_isobxr_presentation.Rmd</code></div>
@@ -122,7 +122,7 @@
 <div id="system-definitions" class="section level1">
 <h1 class="hasAnchor">
 <a href="#system-definitions" class="anchor"></a>System definitions</h1>
-<p>As a reminder, the systems considered in the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package are described in the cheatsheet presented <a href="https://ttacail.github.io/isobxr_web/vgn_02_General_presentation.html">here</a> and in the "General presentation" vignette.</p>
+<p>As a reminder, the systems considered in the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package are described in the cheatsheet presented <a href="https://ttacail.github.io/isobxr_web/vgn_02_General_presentation.html">here</a> and in the “General presentation” vignette.</p>
 <!-- As a reminder, the systems considered in the [isobxr](https://ttacail.github.io/isobxr/) package  -->
 <!-- are described in the cheatsheet below: -->
 <!-- ```{r echo=FALSE, out.width='100%'} -->
@@ -145,7 +145,7 @@
 <p>The general workflow of the <code>run_isobxr</code> function is summarized in the cheatsheet below:</p>
 <p><img src="02_basics_02_runisobxr_wflow.png" width="100%"></p>
 <p>To find the detailed description of <code>run_isobxr</code> inputs and outputs, the user can always refer to its documentation:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="co"># To see documentation on run_isobxr function, type in console:</span>
 <span class="op">?</span><span class="va">run_isobxr</span></pre></div>
 <hr>
@@ -245,13 +245,13 @@
 <a href="#main-arguments-and-outputs" class="anchor"></a>Main arguments and outputs</h1>
 <p>The <code>run_isobxr</code> function takes required and optional arguments that are described in this section.</p>
 <p>All arguments definitions of the <code>run_isobxr</code> function are accessible in its documentation called as follows</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="op">?</span><span class="va">run_isobxr</span></pre></div>
 <div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
 <p>The arguments required to run the <code>run_isobxr</code> function are exemplified and described here with the first tutorial example (<a href="https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#2_Ex_1:_%7BABC%7D,_closed,_balanced">see tutorial here</a>):</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
            SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>, <span class="co"># defining the name of the SERIES of run</span>
            flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>, <span class="co"># calling the list of fluxes</span>
@@ -283,7 +283,7 @@
 <li>Vector defining the initial time unit (identical to unit used in fluxes), followed by the time unit used for the graphical output</li>
 <li>to be selected among the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
 </li>
-<li>e.g., c("d", "yr") to convert days into years</li>
+<li>e.g., c(“d”, “yr”) to convert days into years</li>
 </ul></dd>
 </dl>
 </div>
@@ -305,7 +305,7 @@
 <li>export input and output data (as csv and xlsx, using <strong>to_DIGEST_CSV_XLS = TRUE</strong>)</li>
 </ul>
 <p>These arguments are called as follows (using example used in <a href="https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html#2_Ex_1:_%7BABC%7D,_closed,_balanced">tutorial</a>):</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="fu"><a href="../reference/run_isobxr.html">run_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
            SERIES_ID <span class="op">=</span> <span class="st">"ABC_closed_balanced"</span>,
            flux_list_name <span class="op">=</span> <span class="st">"Fx1_ABC_closed_bal"</span>,
@@ -332,7 +332,7 @@
 <p>By default, <code>run_isobxr</code> sets the initial box sizes at the values found in the flux list.</p>
 <p>It is possible to manually overwrite the initial size of one, several or all boxes for a given run performed by <code>run_isobxr</code>.</p>
 <p>It is done by defining a data frame structured as follows.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="va">FORCING_SIZE</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BOX_1"</span>, <span class="st">"..."</span>, <span class="st">"BOX_i"</span>, <span class="st">"..."</span><span class="op">)</span>,
              SIZE_INIT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"updated_size_1"</span>, <span class="st">"..."</span>, <span class="st">"updated_size_i"</span>, <span class="st">"..."</span><span class="op">)</span><span class="op">)</span>
@@ -344,7 +344,7 @@
 <span class="co">#&gt; 3    BOX_i updated_size_i</span>
 <span class="co">#&gt; 4      ...            ...</span></pre></div>
 <p>For the 3-boxes closed system model (ABC), in order to change the size of box C from 2000 mg of Ca (default as specified in <strong>isobxr master file</strong> for all flux lists of <strong>FLUXES</strong> sheet) to 3000 mg of Ca, the data frame should be structured as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">FORCING_SIZE</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"C"</span><span class="op">)</span>,
              SIZE_INIT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3000</span><span class="op">)</span><span class="op">)</span>
@@ -359,7 +359,7 @@
 <p>By default, the <code>run_isobxr</code> function sets the initial delta values of all boxes at 0 ‰.</p>
 <p>It is possible to manually overwrite the initial delta values of one, several or all boxes for a given run performed by <code>run_isobxr</code>.<br>
 It is done by defining a data frame structured as follows.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="va">FORCING_DELTA</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BOX_1"</span>, <span class="st">"..."</span>, <span class="st">"BOX_i"</span>, <span class="st">"..."</span><span class="op">)</span>,
              DELTA_INIT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"updated_delta_1"</span>, <span class="st">"..."</span>, <span class="st">"updated_delta_i"</span>, <span class="st">"..."</span><span class="op">)</span><span class="op">)</span>
@@ -371,7 +371,7 @@ It is done by defining a data frame structured as follows.</p>
 <span class="co">#&gt; 3    BOX_i updated_delta_i</span>
 <span class="co">#&gt; 4      ...             ...</span></pre></div>
 <p>For the 3-boxes closed system model (ABC), in order to force initial isotope composition of box A to -1‰, and leave B and C initial values at 0‰, the data frame should be structured as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="va">FORCING_DELTA</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span>,
              DELTA_INIT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
@@ -386,7 +386,7 @@ It is done by defining a data frame structured as follows.</p>
 <p>By default, the <code>run_isobxr</code> function sets the isotope fractionation coefficients at the values found in the coefficients list specified by user.</p>
 <p>It is possible to manually overwrite the fractionation coefficients of one, several or all pairs of boxes for a given run performed by <code>run_isobxr</code>.<br>
 It is done by defining a data frame structured as follows.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="va">FORCING_ALPHA</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>FROM <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BOX_i"</span>, <span class="st">"..."</span><span class="op">)</span>,
              TO <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BOX_j"</span>, <span class="st">"..."</span><span class="op">)</span>,
@@ -398,7 +398,7 @@ It is done by defining a data frame structured as follows.</p>
 <span class="co">#&gt; 1 BOX_i BOX_j new_coeff_value BOX_i_BOX_j</span>
 <span class="co">#&gt; 2   ...   ...             ...         ...</span></pre></div>
 <p>For the 3-boxes closed system model (ABC), in order to force the fractionation coefficient associated to the flux of Ca from box A to B to the value of 1.02, the data frame should be structured as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="va">FORCING_ALPHA</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>FROM <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span>,
              TO <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B"</span><span class="op">)</span>,
@@ -428,7 +428,7 @@ It is done by defining a data frame structured as follows.</p>
 <p>We thus can write the following definition of <span class="math inline">\(\alpha_{B \to C}\)</span> (equivalent here to <span class="math inline">\(\alpha_{A \to C}\)</span>):</p>
 <p><span class="math inline">\(\alpha_{B \to C} = \dfrac{R_{C}}{R_{A}} = \dfrac{F_{B \to C}}{F_{A \to B}}^{\alpha^0 _{B \to A} - 1}\)</span></p>
 <p>The <code>run_isobxr</code> function here takes as an optional input the data frame structured as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="va">FORCING_RAYLEIGH</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>XFROM <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B"</span><span class="op">)</span>, <span class="co"># Define the B&gt;C flux at numerator</span>
              XTO <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"C"</span><span class="op">)</span>,

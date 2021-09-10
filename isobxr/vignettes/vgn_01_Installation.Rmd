@@ -110,14 +110,13 @@ Note
 
 Alternatively, the user is encouraged to download and browse the input files: 
 
-1. download the 
-[reference templates](https://ttacail.github.io/source/demos/0_excel_templates.zip).
+1. [Download xlsx templates](https://ttacail.github.io/source/demos/0_excel_templates.zip).
 These files provide the user with formatted master files, 
-used as entries to the functions and described in this vignette.
+used as arguments to isobxr functions, as explained in vignettes and on the [isobxr website](https://ttacail.github.io/isobxr_web/).
 
-2. download the [tutorial files](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip). 
+2. [Download tutorial files](https://ttacail.github.io/source/demos/1_ABC_tutorial.zip). 
 These files provide the user with all master files and R commands 
-used throughout all demonstrations shown in the vignettes.
+used throughout tutorials, as shown on the [isobxr website](https://ttacail.github.io/isobxr_web/).
 
 ----
 

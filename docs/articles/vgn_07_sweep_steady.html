@@ -97,13 +97,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="vgn_07_sweep_steady_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>5 - sweep_steady()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-09-08</h4>
+            <h4 class="date">2021-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_07_sweep_steady.Rmd"><code>vignettes/vgn_07_sweep_steady.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_07_sweep_steady.Rmd</code></div>
@@ -127,7 +127,8 @@
 <p>The <code>sweep_steady</code> function is built as a 2 steps composite scenario.</p>
 <ol style="list-style-type: decimal">
 <li><p>The first run (run #1) is used to force the initial conditions of the second run. It is run once only.</p></li>
-<li>The second run (run #2) is repeated for all the combinations of the two parameters values.
+<li>
+<p>The second run (run #2) is repeated for all the combinations of the two parameters values.</p>
 <ul>
 <li>Each parameter varies over a range of values defined by the user:
 <ul>
@@ -145,7 +146,7 @@
 </li>
 <li>while starting this run #2 from a common initial state, defined by run #1<br>
 </li>
-<li>run #1 typically being for a balanced system, relaxed to it's steady state</li>
+<li>run #1 typically being for a balanced system, relaxed to it’s steady state</li>
 </ul>
 </div>
 <div id="sweep-steady-master-file-xlsx" class="section level1">
@@ -256,19 +257,19 @@
 <li>The first run is used to let the system relax to its steady state used as an initial state in run #2.
 <ol style="list-style-type: lower-roman">
 <li>The user should consider here a balanced system. The <a href="https://ttacail.github.io/isobxr/">isobxr</a> functions will thus use the analytical solver (<code>ana_slvr</code>).</li>
-<li>We thus recommend the user to set the number of steps for run #1 (nb_steps) to 1 (its' minimum value).<br>
+<li>We thus recommend the user to set the number of steps for run #1 (nb_steps) to 1 (its’ minimum value).<br>
 This allows to only calculate the final state of the system, at the end of run #1.<br>
 This reduces the calculation time and data produced without affecting the accuracy of the calculation.</li>
 </ol>
 </li>
 <li>The second run is used to explore the final state of the system as a function of all combinations of parameters #1 and #2 values.
 <ol style="list-style-type: lower-roman">
-<li>The main purpose of this function is to explore the influence of the 2 combined parameters over the final state of a system that relaxed to it's steady state.</li>
+<li>The main purpose of this function is to explore the influence of the 2 combined parameters over the final state of a system that relaxed to it’s steady state.</li>
 <li>It is therefore recommended to use the same balanced system over the second run, allowing to analytically solve the system (with <code>ana_slvr</code>).</li>
 <li>The use of the analytical solver will notably allow to map the final state at a high resolution of parameters #1 and #2<br>
 while minimizing the required calculation time as well as RAM and hard memory.<br>
 </li>
-<li>We thus recommend the user to set the number of steps for run #2 (nb_steps) to 1 (its' minimum value).<br>
+<li>We thus recommend the user to set the number of steps for run #2 (nb_steps) to 1 (its’ minimum value).<br>
 This allows to only calculate the final state of the system, at the end of run #2.<br>
 This reduces the calculation time and data produced without affecting the accuracy of the calculation.</li>
 </ol>
@@ -276,7 +277,7 @@ This reduces the calculation time and data produced without affecting the accura
 </ol>
 <dl>
 <dt><strong>remark</strong></dt>
-<dd>The reason why the <code>sweep_steady</code> function begins with a run #1 which final state defines a common initial state for all repeated run #2 sweeps is that it can allow the user to sweep the final state of a system in the course transient/dynamic state of run #2, being in a balanced or unbalanced system. This needs however to be designed with care as depending on the defined or forced parameters on run #2 vs. run #1, the continuity of the conditions of run #1 and run #2 is not certain. It is then advised to use the better suited <code>sweep_dyn</code> function described thereafter.
+<dd>The reason why the <code>sweep_steady</code> function begins with a run #1 which final state defines a common initial state for all repeated run #2 sweeps is that it can allow the user to sweep the final state of a system in the course transient/dynamic state of run #2, being in a balanced or unbalanced system. This needs however to be designed with care as depending on the defined or forced parameters on run #2 vs. run #1, the continuity of the conditions of run #1 and run #2 is not certain. It is then advised to use the better suited <code>sweep_dyn</code> function described thereafter.
 </dd>
 <dt><strong>Forcings</strong></dt>
 <dd>The user can define some forcings over the system (will affect both run #1 and run #2).<br>
@@ -301,7 +302,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 <a href="#explo_n_flux_matrices" class="anchor"></a><strong>EXPLO_n_FLUX_MATRICES</strong>
 </h3>
 <p>This type of parameter allows to explore a series of flux lists as defined in <em>isobxr master file</em>.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>VALUES <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"flux_list_1"</span>,  <span class="co"># vector of n strings of characters</span>
                       <span class="st">"..."</span>, 
                       <span class="st">"flux_list_i"</span>, 
@@ -317,7 +318,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 <a href="#explo_n_alpha_matrices" class="anchor"></a><strong>EXPLO_n_ALPHA_MATRICES</strong>
 </h3>
 <p>This type of parameter allows to explore a series of lists of coefficients as defined in <em>isobxr master file</em>.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>VALUES <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"coeff_list_1"</span>, <span class="co"># vector of n strings of characters</span>
                       <span class="st">"..."</span>, 
                       <span class="st">"coeff_list_i"</span>, 
@@ -333,7 +334,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 <a href="#explo_1_size" class="anchor"></a><strong>EXPLO_1_SIZE</strong>
 </h3>
 <p>This type of parameter allows to explore a range of sizes for a given box.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="st">"BOX_i"</span>, <span class="co"># 1 string of char</span>
            SIZE_MIN <span class="op">=</span> <span class="st">"min_sweep_value"</span>, <span class="co"># 1 numerical value</span>
            SIZE_MAX <span class="op">=</span> <span class="st">"max_sweep_value"</span>, <span class="co"># 1 numerical value</span>
@@ -347,7 +348,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 <a href="#explo_1_delta" class="anchor"></a><strong>EXPLO_1_DELTA</strong>
 </h3>
 <p>This type of parameter allows to explore a range of delta values for a given box.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>BOXES_ID <span class="op">=</span> <span class="st">"BOX_i"</span>, <span class="co"># 1 string of char</span>
            DELTA_MIN <span class="op">=</span> <span class="st">"min_sweep_value"</span>, <span class="co"># 1 numerical value</span>
            DELTA_MAX <span class="op">=</span> <span class="st">"max_sweep_value"</span>, <span class="co"># 1 numerical value</span>
@@ -358,7 +359,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 <h3 class="hasAnchor">
 <a href="#explo_1_alpha" class="anchor"></a><strong>EXPLO_1_ALPHA</strong>:</h3>
 <p>This type of parameter allows to explore a range of alpha (coeff) values for a given flux.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>FROM <span class="op">=</span> <span class="st">"BOX_i"</span>, <span class="co"># 1 string of char</span>
            TO <span class="op">=</span> <span class="st">"BOX_j"</span>, <span class="co"># 1 string of char</span>
            ALPHA_MIN <span class="op">=</span> <span class="st">"min_sweep_value"</span>, <span class="co"># 1 numerical value</span>
@@ -370,7 +371,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 <h3 class="hasAnchor">
 <a href="#explo_1_rayleigh_alpha" class="anchor"></a><strong>EXPLO_1_RAYLEIGH_ALPHA</strong>:</h3>
 <p>This type of parameter allows to explore a range of incremental alpha values for a Rayleigh distillation model.</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>XFROM <span class="op">=</span> <span class="st">"Box_B"</span>, <span class="co"># B&gt;C flux at numerator (strings of char)</span>
            XTO <span class="op">=</span> <span class="st">"Box_C"</span>,
            YFROM <span class="op">=</span> <span class="st">"Box_A"</span>, <span class="co"># A&gt;B flux at denominator (strings of char)</span>
@@ -419,7 +420,7 @@ These forcings will be overwritten by the swept parameters that affect run #2.
 </ul>
 <p>No forcings are applied.</p>
 <p>To do so, the <code>sweep_steady</code> function can be called as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="fu"><a href="../reference/sweep_steady.html">sweep_steady</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
              <span class="co"># name of the series ID</span>
              SERIES_ID <span class="op">=</span> <span class="st">"ABC_sweep_steady_demo1"</span>, 

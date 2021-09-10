@@ -97,13 +97,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="vgn_05_compose_isobxr_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>4 - compose_isobxr()</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-09-08</h4>
+            <h4 class="date">2021-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_05_compose_isobxr.Rmd"><code>vignettes/vgn_05_compose_isobxr.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_05_compose_isobxr.Rmd</code></div>
@@ -193,13 +193,13 @@
 <a href="#main-arguments-and-outputs" class="anchor"></a>Main arguments and outputs</h1>
 <p>The <code>compose_isobxr</code> function takes required and optional arguments that are described in this section.</p>
 <p>All arguments definitions of the <code>compose_isobxr</code> function are accessible in its documentation called as follows</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="op">?</span><span class="va">compose_isobxr</span></pre></div>
 <div id="required-arguments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
 <p>The arguments required to run the <code>compose_isobxr</code> function are exemplified and described here:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
                SERIES_ID <span class="op">=</span> <span class="st">"ABC_change_balance"</span>, <span class="co"># series ID of composite family</span>
                time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># plot results in years as time units</span>
@@ -216,10 +216,10 @@
 <li>Vector defining the initial time unit (identical to unit used in fluxes), followed by the time unit used for the graphical output</li>
 <li>to be selected among the following: <em>micros, ms, s, min, h, d, wk, mo, yr, kyr, Myr, Gyr</em>
 </li>
-<li>e.g., c("d", "yr") to convert days into years</li>
+<li>e.g., c(“d”, “yr”) to convert days into years</li>
 </ul></dd>
 <dt><strong>COMPO_MASTER</strong></dt>
-<dd>Full name of the composite master file (finishing with ".xlsx")
+<dd>Full name of the composite master file (finishing with “.xlsx”)
 </dd>
 </dl>
 </div>
@@ -236,13 +236,13 @@
 <!-- ``` -->
 <p>In addition to the default outputs, the <code>compose_isobxr</code> function allows to:</p>
 <ul>
-<li>get each run's digest for all scenario steps (using the <strong>EACH_RUN_DIGEST = TRUE</strong> argument)</li>
+<li>get each run’s digest for all scenario steps (using the <strong>EACH_RUN_DIGEST = TRUE</strong> argument)</li>
 <li>get whole composite run data as csv files (using the <strong>to_CPS_DIGEST_CSVs = TRUE</strong> argument)</li>
-<li>hide boxes in the plots of evolution of delta values (<strong>plot_HIDE_BOXES_delta</strong> = c("BOX_TO_HID_1", "BOX_TO_HID_2"))</li>
-<li>hide boxes in the plots of evolution of box sizes (<strong>plot_HIDE_BOXES_size</strong> = c("BOX_TO_HID_1", "BOX_TO_HID_2"))</li>
+<li>hide boxes in the plots of evolution of delta values (<strong>plot_HIDE_BOXES_delta</strong> = c(“BOX_TO_HID_1”, “BOX_TO_HID_2”))</li>
+<li>hide boxes in the plots of evolution of box sizes (<strong>plot_HIDE_BOXES_size</strong> = c(“BOX_TO_HID_1”, “BOX_TO_HID_2”))</li>
 </ul>
 <p>These arguments are called as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="../reference/compose_isobxr.html">compose_isobxr</a></span><span class="op">(</span>workdir <span class="op">=</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>,
                SERIES_ID <span class="op">=</span> <span class="st">"ABC_change_balance"</span>, <span class="co"># series ID of composite family</span>
                time_units <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"yr"</span><span class="op">)</span>, <span class="co"># plot results in years as time units</span>

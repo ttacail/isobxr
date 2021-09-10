@@ -97,13 +97,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="vgn_02_General_presentation_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>2 - General presentation</h1>
                         <h4 class="author">Théo Tacail</h4>
             
-            <h4 class="date">2021-09-08</h4>
+            <h4 class="date">2021-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_02_General_presentation.Rmd"><code>vignettes/vgn_02_General_presentation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_02_General_presentation.Rmd</code></div>
@@ -244,7 +244,7 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p>These functions are called within broader functions (e.g., <code>run_isobxr</code>).</p>
 <p>Because these functions are the actual solvers of the stable isotope box model equation systems, you will find here a description of their functioning and applicability.</p>
 <p>You can also refer to the documentation for these two functions by typing the following code into your R console:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="op">?</span><span class="va">ana_slvr</span>
 <span class="op">?</span><span class="va">num_slvr</span></pre></div>
 <div id="input-file" class="section level2">
@@ -382,7 +382,7 @@ R_i \sum \limits_{j \neq i} \dfrac{J_{i \mapsto j}^X}{m^X_i} \left(1- D_{i \maps
 <p>The <code>ana_slvr</code> function returns the analytical solutions of the ODES which describes the stable isotope ratios in each box. The <code>ana_slvr</code> function also returns the evolution of the delta values in each box. (in ‰, relative to the reference material).</p>
 <p>The <code>ana_slvr</code> <strong>OUTPUT</strong> contains the following:</p>
 <ul>
-<li>OUT data file storing initial and final size and delta values in each box</li>
+<li><p>OUT data file storing initial and final size and delta values in each box</p></li>
 <li>
 <p>ODE_SOLNs data file summarizing outputs of the analytical solutions of the ODES</p>
 <p>(eigenvalues, eigenvectors, relaxation times, constants according to initial conditions)</p>
