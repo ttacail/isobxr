@@ -13,7 +13,8 @@ sweep_dyn(
   EXPLO_AXIS_2,
   to_DYN_DIGEST_CSVs = FALSE,
   plot_results = TRUE,
-  save_run_outputs = FALSE
+  save_run_outputs = FALSE,
+  ask_confirmation = TRUE
 )
 }
 \arguments{
@@ -61,6 +62,11 @@ Logical value. \cr
 Allows saving all run outputs to working directory (workdir). \cr
 By default, run outputs are stored in the temporary directory and are erased if not saved. \cr
 Default is FALSE.}
+
+\item{ask_confirmation}{\emph{OPTIONAL} \cr
+Logical value. \cr
+If FALSE, bypasses default run confirmation asked to user in interactive sessions. \cr
+Default is TRUE.}
 }
 \value{
 Calculates the delta values and box sizes at final state of the sweeping of 2D space of parameters in all boxes.
