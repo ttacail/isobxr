@@ -50,17 +50,17 @@ master repository](https://github.com/ttacail/isobxr).
 
 The isobxr development version can be installed as follows:
 
--   Download and install/update [R](https://cran.r-project.org/) and
-    [Rstudio](https://www.rstudio.com/products/rstudio/download/).
+- Download and install/update [R](https://cran.r-project.org/) and
+  [Rstudio](https://www.rstudio.com/products/rstudio/download/).
 
--   Download and install package **devtools** as follows:
+- Download and install package **devtools** as follows:
 
 ``` r
 install.packages("devtools")
 ```
 
--   Download and install [isobxr](https://ttacail.github.io/isobxr/)
-    source package.
+- Download and install [isobxr](https://ttacail.github.io/isobxr/)
+  source package.
 
 ``` r
 devtools::install_github("ttacail/isobxr/isobxr", build_vignettes = TRUE) # FALSE if no pandoc/Rstudio 
@@ -87,12 +87,12 @@ On this website you can find the following items.
 2.  [What is
     isobxr?](https://ttacail.github.io/isobxr_web/vgn_02_General_presentation.html)
 
-3.  Box models single runs with run\_isobxr: [general
+3.  Box models single runs with run_isobxr: [general
     presentation](https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html)
     and
     [tutorial](https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html)
 
-4.  Box models scenario runs with compose\_isobxr: [general
+4.  Box models scenario runs with compose_isobxr: [general
     presentation](https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html)
     and
     [tutorial](https://ttacail.github.io/isobxr_web/vgn_06_compose_isobxr_tutorial.html)
@@ -103,8 +103,8 @@ On this website you can find the following items.
 6.  Sweep parameters in response to perturbation: [general
     presentation](https://ttacail.github.io/isobxr_web/vgn_08_sweep_dyn.html)
 
-7.  Use the shiny offline html app to plot compose\_isobxr,
-    sweep\_steady and sweep\_dyn outputs: [general
+7.  Use the shiny offline html app to plot compose_isobxr, sweep_steady
+    and sweep_dyn outputs: [general
     presentation](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html)
 
 <!-- END copy/pasted from isobxr_website index page -->
