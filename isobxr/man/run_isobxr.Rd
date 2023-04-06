@@ -28,7 +28,9 @@ run_isobxr(
   to_DIGEST_CSV_XLS = FALSE,
   evD_PLOT_time_as_log = TRUE,
   plot_results = TRUE,
-  save_run_outputs = FALSE
+  save_run_outputs = FALSE,
+  n_zeros_RUN_IDs = 4,
+  ISOBXR_MASTER_file = "0_ISOBXR_MASTER.xlsx"
 )
 }
 \arguments{
@@ -161,6 +163,13 @@ Logical value. \cr
 Allows saving all run outputs to working directory (workdir). \cr
 By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
 Default is FALSE.}
+
+\item{n_zeros_RUN_IDs}{\emph{OPTIONAL} \cr
+Integer \cr
+Number of integers shown ahead of run number in string RUN ID. \cr
+Default is 4.}
+
+\item{ISOBXR_MASTER_file}{xlsx file (default is 0_ISOBXR_MASTER.xlsx)}
 }
 \value{
 Calculates the time evolution of delta values and box sizes in all boxes.

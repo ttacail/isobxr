@@ -115,7 +115,11 @@ NULL
 #' Allows saving all run outputs to working directory (workdir). \cr
 #' By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
 #' Default is FALSE.
-#'
+#' @param n_zeros_RUN_IDs \emph{OPTIONAL} \cr
+#' Integer \cr
+#' Number of integers shown ahead of run number in string RUN ID. \cr
+#' Default is 4.
+#' @param ISOBXR_MASTER_file xlsx file (default is 0_ISOBXR_MASTER.xlsx)
 #' @return Calculates the time evolution of delta values and box sizes in all boxes.
 #'
 #' \code{\link{run_isobxr}} returns by default a plot showing time evolution of delta values and box sizes
@@ -221,7 +225,9 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                        EXPLORER = FALSE, EXPLO_SERIES_n = NaN, EXPLO_SERIES_FAMILY = NaN,
                        HIDE_PRINTS = FALSE, to_DIGEST_DIAGRAMS = TRUE, to_DIGEST_evD_PLOT = TRUE, to_DIGEST_CSV_XLS = FALSE,
                        evD_PLOT_time_as_log = TRUE, plot_results = TRUE,
-                       save_run_outputs = FALSE){
+                       save_run_outputs = FALSE,
+                       n_zeros_RUN_IDs = 4,
+                       ISOBXR_MASTER_file = "0_ISOBXR_MASTER.xlsx"){
 
   # locally bind variables (fixing binding global variable issue)
   output_list <- A_OUT <- N_evS <- A_evD <- N_evD <- NULL
@@ -240,7 +246,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   old <- getwd()
   on.exit(setwd(old), add = TRUE)
   setwd(workdir)
-  ISOPY_MASTER_file <- "0_ISOBXR_MASTER.xlsx"
+  # ISOBXR_MASTER_file <- "0_ISOBXR_MASTER.xlsx"
 
   if(isFALSE(COMPOSITE) & isFALSE(EXPLORER)){
     unlink(to_tmpdir(""), recursive = TRUE)
@@ -261,16 +267,16 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# READ and PREPARE INPUTS
   #************************************** READ MODEL MASTER FILE #----
   #### CREATE CONSTS DF
-  CONSTANTS <- as.data.frame(readxl::read_excel(ISOPY_MASTER_file, "CONSTANTS"))
+  CONSTANTS <- as.data.frame(readxl::read_excel(ISOBXR_MASTER_file, "CONSTANTS"))
   CONSTS <- data.frame(CONSTS_ID = c("Element", "Numerator","Denominator", "Ratio_Standard", "time", "n_steps"),
                        CONSTS = c(CONSTANTS$ELEMENT, CONSTANTS$NUMERATOR, CONSTANTS$DENOMINATOR, CONSTANTS$RATIO_STANDARD, t_lim, nb_steps))
   CONSTS$CONSTS_ID <- as.character(CONSTS$CONSTS_ID)
   CONSTS$CONSTS <- as.character(CONSTS$CONSTS)
 
   #### IMPORT BOXES master, FLUXES master and COEFF master FROM MASTER EXCEL FILE
-  BOXES_master <- as.data.frame(readxl::read_excel(ISOPY_MASTER_file, "BOXES"))
-  FLUXES_master <- as.data.frame(readxl::read_excel(ISOPY_MASTER_file, "FLUXES"))
-  COEFFS_master <- as.data.frame(readxl::read_excel(ISOPY_MASTER_file, "COEFFS"))
+  BOXES_master <- as.data.frame(readxl::read_excel(ISOBXR_MASTER_file, "BOXES"))
+  FLUXES_master <- as.data.frame(readxl::read_excel(ISOBXR_MASTER_file, "FLUXES"))
+  COEFFS_master <- as.data.frame(readxl::read_excel(ISOBXR_MASTER_file, "COEFFS"))
 
   #### TURN TO FACTOR FACTOR COLUMNS / non numeric
   list_factor_COLS <- c("BOXES_ID", "INFINITE", "FROM", "TO", "ID", "STATUS")
@@ -319,7 +325,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   #************************************** EXTRACT AND PREPARE LOCAL RUN INPUTS #----
   #### EXTRACT LIST OF COEFF and FLUXES LIST names
   list_COEFFS_master <- colnames(COEFFS_master[, -which(colnames(COEFFS_master) %in% c("FROM", "TO"))])
-  list_FLUXES_master <- colnames(FLUXES_master[, -which(colnames(FLUXES_master) %in% c("FROM", "TO", "ID", "STATUT"))])
+  list_FLUXES_master <- colnames(FLUXES_master[, -which(colnames(FLUXES_master) %in% c("FROM", "TO", "ID", "STATUS"))])
   list_BOXES_master <- as.character(BOXES_master$BOXES_ID)
   all_flux_coeff_levels <- c(levels(FLUXES_master$FROM),
                              levels(FLUXES_master$TO),
@@ -332,7 +338,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   # ERROR # CHECK BOXES NAMES ARE SPECIAL CHARACTER FREE
   misnamed_boxes <- list_all_boxes[stringr::str_detect(list_all_boxes, pattern = "[ !@#$%^&*()_+}{\';|:/.,?><}]")]
   if (length(misnamed_boxes) > 0){
-    rlang::abort(paste("Box names (defined in ", as.character(ISOPY_MASTER_file), ") must not include any special characters. \n",
+    rlang::abort(paste("Box names (defined in ", as.character(ISOBXR_MASTER_file), ") must not include any special characters. \n",
                        "The following box names do not match the required format: \n",
                        "[", paste(misnamed_boxes, collapse = ", "), "]",
                        sep = ""))
@@ -346,7 +352,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   # ERROR # CHECK BOX NAMES CALLED IN FLUX AND COEFF LISTS are ALL DEFINED IN BOX LIST MASTER
   if (!(all(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN)))){
     rlang::abort(paste("Boxes called in flux and coefficient lists must be defined in the list of boxes ",
-               "(in ", as.character(ISOPY_MASTER_file), "). \n",
+               "(in ", as.character(ISOBXR_MASTER_file), "). \n",
                "The following boxes are not defined in the list of boxes: \n",
                "[", paste(all_flux_coeff_levels[!(all_flux_coeff_levels %in% c(list_BOXES_master, "NaN", NaN))], collapse = ", "), "]",
                sep = ""))
@@ -646,7 +652,7 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
 
   #************************************** DEFINE RUN OUTDIR and RUN ID #----
   ### DEFINE RUN number in the list of a given series, RUN_ID, SERIES_RUN_ID
-  n_zeros <- 4
+  n_zeros <- n_zeros_RUN_IDs
   if (!file.exists(dir_LOG)){
     if (!file.exists(to_tmpdir(dir_LOG))){
       LOG_loc$RUN_n <- 1
