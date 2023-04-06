@@ -1028,6 +1028,11 @@ sweep_steady <- function(workdir,
 #' By default, run outputs are stored in the temporary directory and are erased if not saved. \cr
 #' Default is FALSE.
 #'
+#' @param ask_confirmation  \emph{OPTIONAL} \cr
+#' Logical value. \cr
+#' If FALSE, bypasses default run confirmation asked to user in interactive sessions. \cr
+#' Default is TRUE.
+#'
 #' @return Calculates the delta values and box sizes at final state of the sweeping of 2D space of parameters in all boxes.
 #'
 #' \code{\link{sweep_dyn}} returns by default a plot showing time evolution of delta values of the isotope composition
@@ -1094,7 +1099,8 @@ sweep_dyn <- function(workdir,
                       EXPLO_AXIS_2,
                       to_DYN_DIGEST_CSVs = FALSE,
                       plot_results = TRUE,
-                      save_run_outputs = FALSE
+                      save_run_outputs = FALSE,
+                      ask_confirmation = TRUE
                       ){
 
   # locally bind variables (fixing binding global variable issue)
@@ -1297,7 +1303,7 @@ sweep_dyn <- function(workdir,
 
   STOP_GO <- FALSE
   rlang::inform("________________________________________________________________________________")
-  if(interactive()){
+  if(all(interactive() & ask_confirmation)){
     if (.Platform$OS.type == "windows"){
       STOP_GO <- utils::askYesNo(paste("? This sweep requires *", as.character(tot_run), "* independent runs, do you wish to carry on? \n"), default = TRUE)
     } else {
@@ -1834,7 +1840,7 @@ sweep_dyn <- function(workdir,
     flux_cols_to_drop <- NULL
     i <- 1
     for (i in 1:length(colnames_to_drop_check)){
-      if (sum(evD[, colnames_to_drop_check[i]]) == 0)
+      if (sum(as.numeric(evD[, colnames_to_drop_check[i]])) == 0)
         flux_cols_to_drop <- c(flux_cols_to_drop, colnames_to_drop_check[i])
       i <- i + 1
     }
@@ -1843,7 +1849,7 @@ sweep_dyn <- function(workdir,
     alpha_cols_to_drop <- NULL
     i <- 1
     for (i in 1:length(colnames_to_drop_check)){
-      if (sum(abs(evD[, colnames_to_drop_check[i]]-1)) == 0)
+      if (sum(abs(as.numeric(evD[, colnames_to_drop_check[i]])-1)) == 0)
         alpha_cols_to_drop <- c(alpha_cols_to_drop, colnames_to_drop_check[i])
       i <- i + 1
     }
