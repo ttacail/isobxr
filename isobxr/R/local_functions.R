@@ -48,6 +48,16 @@ dec_3 <- function(x) sprintf("%.3f", x)
 #' @keywords internal
 dec_4 <- function(x) sprintf("%.4f", x)
 
+#' Print a number with n decimal figures
+#' @description Takes a numerical value and returns a print with n decimal figures.
+#' @param x Numerical value
+#' @param n number of decimnals
+#' @return A character string with 4 decimal figures.
+#' @keywords internal
+dec_n <- function(x,n){
+  sprintf(paste0("%.", n, "f"), x)
+}
+
 #' Verticalizes a dataframe
 #' @description Takes a dataframe with a set of different columns containing numerical values to be verticalized,
 #' returns a vertical dataframe with all variables in a single column called "VAR" together with a "VAR_TYPE" column
@@ -157,6 +167,75 @@ del_NaN_rows <- function(dataframe, by_col, resetrows){ # not used in app, could
   dataframe <- subset(dataframe,!(is.na(dataframe[by_col])))
   if(resetrows == TRUE){rownames(dataframe) <- NULL}
   return(dataframe)
+}
+
+#' edits a full dataframe of significance symbols from a dataframe of p-values
+#' @description edits a full dataframe of significance symbols from a dataframe of p-values
+#' \cr Symbols as asterisks denote p-values lower than .0001, .001, .01, .05. ns refers to non significant (higher than .5).
+#' @param x a data frame column of p-values or a pvalues as double (alone or in vector).
+#' @return p-values symbols as dataframe or as string.
+#' @keywords internal
+significance_pval_df <- function(x){
+  symbols <- c("****", "***", "**", "*", "ns")
+  cut_points <- c(0, 0.0001, 0.001, 0.01, 0.05, 1)
+  if(is.data.frame(x)) {
+    x_symbols <- x %>%
+      dplyr::mutate(dplyr::across(dplyr::everything(),
+                                  ~ symbols[base::findInterval(., cut_points)]))
+  }
+  if(is.double(x)) x_symbols <- symbols[findInterval(x, cut_points)]
+  return(x_symbols)
+}
+
+#' corr_stats
+#' @description edits datafrane report of linear regression and correlation tests (pearson and spearman)
+#' @param data_lm a data frame with X and Y data
+#' @param X name of X variable column (character)
+#' @param Y name of Y variable column (character)
+#' @param as_character reports statistics formatted as characters. Default is FALSE.
+#' @param n number of digits to display in correlation coefficient/rho. Default is 3. Only used if as_character = T.
+#' @param m number of digits to display in regression equation parameters (slope, y-intercept). Default is 4. Only used if as_character = T.
+#' @return report of regression and correlation tests
+#' @keywords internal
+corr_stats <- function (data_lm, X, Y, as_character = F,  n = 3, m = 4){
+  if(!is.data.frame(data_lm)) stop("data_lm should be a dataframe")
+  if(!is.logical(as_character)) stop("as_character should be a logical")
+  data_lm$X <- data_lm[, X]
+  data_lm$Y <- data_lm[, Y]
+  pearson_all <- stats::cor.test(data_lm$X, data_lm$Y, method = "pearson")
+  pearson_regeq <- base::summary(stats::lm(Y ~ X, data = data_lm))
+  spearman_all <- stats::cor.test(data_lm$X, data_lm$Y, method = "spearman", exact = F)
+  if (isTRUE(as_character)){
+    lm_df <- data.frame(X = X,
+                        Y = Y,
+                        n = base::nrow(data_lm),
+                        pear.R2 = dec_n(pearson_all$estimate^2, n),
+                        pear.pval = base::formatC(pearson_all$p.value, digits = 1, format = "e"),
+                        pear.signif = significance_pval_df(pearson_all$p.value),
+                        pear.yint = dec_n(pearson_regeq$coefficients[1,1], m),
+                        pear.yint.2se = dec_n(2*pearson_regeq$coefficients[1,2], m),
+                        pear.slope = dec_n(pearson_regeq$coefficients[2,1], m),
+                        pear.slope.2se = dec_n(2*pearson_regeq$coefficients[2,2], m),
+                        spear.Rho = dec_n(spearman_all$estimate, n),
+                        spear.pval = base::formatC(spearman_all$p.value, digits = 1, format = "e"),
+                        spear.signif = significance_pval_df(spearman_all$p.value))
+  } else {
+    lm_df <- data.frame(X = X,
+                        Y = Y,
+                        n = base::nrow(data_lm),
+                        pear.R2 = pearson_all$estimate^2,
+                        pear.pval = pearson_all$p.value,
+                        pear.signif = significance_pval_df(pearson_all$p.value),
+                        pear.yint = pearson_regeq$coefficients[1,1],
+                        pear.yint.2se = 2*pearson_regeq$coefficients[1,2],
+                        pear.slope = pearson_regeq$coefficients[2,1],
+                        pear.slope.2se = 2*pearson_regeq$coefficients[2,2],
+                        spear.Rho = spearman_all$estimate,
+                        spear.pval = spearman_all$p.value,
+                        spear.signif = significance_pval_df(spearman_all$p.value))
+  }
+
+  return(lm_df)
 }
 
 #' Calculate delta values at t time with ODE solutions from \code{\link{ana_slvr}}
