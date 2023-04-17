@@ -115,6 +115,10 @@ NULL
 #' Allows saving all run outputs to working directory (workdir). \cr
 #' By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
 #' Default is FALSE.
+#' @param solver \emph{OPTIONAL} \cr
+#' require a specific solver to be used, either "analytical" or "numerical".
+#' Only used as a control in steady-state parameter sweeping functions.
+#' Default is "auto": run_isobxr automatically determines the best suited solver to use.
 #' @param n_zeros_RUN_IDs \emph{OPTIONAL} \cr
 #' Integer \cr
 #' Number of integers shown ahead of run number in string RUN ID. \cr
@@ -226,11 +230,19 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
                        HIDE_PRINTS = FALSE, to_DIGEST_DIAGRAMS = TRUE, to_DIGEST_evD_PLOT = TRUE, to_DIGEST_CSV_XLS = FALSE,
                        evD_PLOT_time_as_log = TRUE, plot_results = TRUE,
                        save_run_outputs = FALSE,
+                       solver = "auto",
                        n_zeros_RUN_IDs = 4,
                        ISOBXR_MASTER_file = "0_ISOBXR_MASTER.xlsx"){
 
   # locally bind variables (fixing binding global variable issue)
   output_list <- A_OUT <- N_evS <- A_evD <- N_evD <- NULL
+
+  # check arguments
+  solver.allowed <- c("auto", "analytical", "numerical")
+  if (!solver %in% solver.allowed){
+    rlang::abort(paste0("The solver argument can only take one of the following value: ",
+                        paste(as.character(solver.allowed), collapse = ", ")))
+  }
 
   #----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----#----# set up extdata tutorial mode
   tuto_setup <- using_extdata_tutorial(workdir = workdir, save_run_outputs = save_run_outputs, plot_results = plot_results)
@@ -868,11 +880,25 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
     to_DIGEST_csv = FALSE
   }
 
-  if (LOG_loc$NUM_ANA == "ANA"){
-    ana_slvr(to_tmpdir(input_path), to_DIGEST_csv = to_DIGEST_csv, save_run_outputs = TRUE)
+  if (LOG_loc$NUM_ANA == "NUM") {
+    solver.suited <- "numerical"
   } else {
-    if (LOG_loc$NUM_ANA == "NUM"){
-      num_slvr(to_tmpdir(input_path), to_DIGEST_csv = to_DIGEST_csv, save_run_outputs = TRUE)
+    solver.suited <- "analytical"
+  }
+
+  if (LOG_loc$NUM_ANA == "ANA" & solver %in% c("auto", "analytical")){
+    ana_slvr(to_tmpdir(input_path), to_DIGEST_csv = to_DIGEST_csv, save_run_outputs = TRUE)
+  } else if (LOG_loc$NUM_ANA == "NUM" & solver %in% c("auto", "numerical")){
+    num_slvr(to_tmpdir(input_path), to_DIGEST_csv = to_DIGEST_csv, save_run_outputs = TRUE)
+  } else {
+    if (solver == "analytical"){
+      rlang::abort(paste0("An analytical solution is required by user or sweeping function.",
+                          "\n ", " The system has unbalanced fluxes:",
+                          " only the numerical solver can be used."))
+    } else if (solver == "numerical"){
+      rlang::abort(paste0("The user requires a numerical solution but run_isobxr recommends the use of the analytical solver.",
+                          "\n ", " The current version of isobxr does not allow forcing the type of solver",
+                          "\n ", " because the accuracy of numerical solutions strongly depends on temporal resolution."))
     }
   }
 
