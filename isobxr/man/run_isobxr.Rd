@@ -29,6 +29,7 @@ run_isobxr(
   evD_PLOT_time_as_log = TRUE,
   plot_results = TRUE,
   save_run_outputs = FALSE,
+  solver = "auto",
   n_zeros_RUN_IDs = 4,
   ISOBXR_MASTER_file = "0_ISOBXR_MASTER.xlsx"
 )
@@ -163,6 +164,11 @@ Logical value. \cr
 Allows saving all run outputs to working directory (workdir). \cr
 By default, run outputs are stored in the temporary directory and are erased if not exported. \cr
 Default is FALSE.}
+
+\item{solver}{\emph{OPTIONAL} \cr
+require a specific solver to be used, either "analytical" or "numerical".
+Only used as a control in steady-state parameter sweeping functions.
+Default is "auto": run_isobxr automatically determines the best suited solver to use.}
 
 \item{n_zeros_RUN_IDs}{\emph{OPTIONAL} \cr
 Integer \cr
