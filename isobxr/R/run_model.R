@@ -802,8 +802,6 @@ run_isobxr <- function(workdir, SERIES_ID, flux_list_name, coeff_list_name, t_li
   COEFFS_adj <- COEFFS_adj[ , !(names(COEFFS_adj) %in% "BOXES_ID")]
   COEFFS_adj <- 1000*log(COEFFS_adj)
 
-  BOX_groups <- INITIAL_short$GROUPS
-
   if (length(BOXES_network_drop) > 0){
     BOXES_master_loc <- BOXES_master[-which(BOXES_master$BOXES_ID %in% BOXES_network_drop), c("BOXES_ID", "INFINITE", "LAYOUT_X", "LAYOUT_Y")]
   } else {
