@@ -6,8 +6,7 @@ Authors@R: person("Theo", "Tacail", email = "theo.tacail@protonmail.com", role =
 Description: A set of functions to run simple and composite box-models to describe the 
     dynamic or static distribution of stable isotopes in open 
     or closed systems. The package also allows the sweeping of many 
-    parameters in both static and dynamic conditions. It also comes 
-    with a post-run plotting interface built under shiny.
+    parameters in both static and dynamic conditions.
     The mathematical models used in this package are derived from Albarede, 1995, 
     Introduction to Geochemical Modelling, Cambridge University Press,
     Cambridge <doi:10.1017/CBO9780511622960>.
@@ -23,24 +22,27 @@ Imports:
     dplyr,
     data.table,
     deSolve,
-    rlang,
+    rlang (>= 0.4.11),
     grid,
-    metR,
-    shiny,
-    shinyFiles,
-    shinythemes,
-    shinyjs,
-    DT,
     ggplot2,
     ggrepel,
     qgraph,
     writexl,
     R.utils,
     fs,
-    magrittr
+    magrittr,
+    tidyr,
+    gridExtra,
+    purrr,
+    reshape2,
+    tictoc
 RoxygenNote: 7.2.1
 Suggests: 
     knitr,
     rmarkdown,
-    devtools
+    devtools,
+    MASS,
+    roxygen2,
+    tidyselect,
+    grDevices
 VignetteBuilder: knitr
