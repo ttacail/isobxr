@@ -15,11 +15,13 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/isobxr?color=blue)](htt
 
 The [isobxr](https://ttacail.github.io/isobxr_web/) package is a set of
 R tools designed to perform and explore stable isotope box modelling of
-open or closed systems. It allows users to develop and test isotopic box
-models of their system of interest, explore the behavior of these
-systems in both static (*e.g.*, at steady state) or dynamic modes
-(*e.g.*, in reaction to a perturbation), build complex scenarios, as
-well as sweep the space of parameters in both static and dynamic modes.
+open or closed systems. It allows users to develop isotopic box models
+of their system of interest, explore the behavior of these systems in
+both static (*e.g.*, at steady state) or dynamic modes (*e.g.*, in
+reaction to a perturbation) and build complex scenarios.  
+The package also comes with tools to sweep the space of parameters in
+both static and dynamic modes, and find the parameter values allowing to
+fit simulations with observations.
 
 Check the [isobxr website](https://ttacail.github.io/isobxr_web/) for
 more information on [isobxr](https://ttacail.github.io/isobxr_web/) and
@@ -51,7 +53,7 @@ master repository](https://github.com/ttacail/isobxr).
 The isobxr development version can be installed as follows:
 
 - Download and install/update [R](https://cran.r-project.org/) and
-  [Rstudio](https://www.rstudio.com/products/rstudio/download/).
+  [Rstudio](https://posit.co/download/rstudio-desktop/).
 
 - Download and install package **devtools** as follows:
 
