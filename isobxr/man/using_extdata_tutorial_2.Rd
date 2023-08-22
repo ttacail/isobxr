@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{using_extdata_tutorial_2}
 \alias{using_extdata_tutorial_2}
-\title{using_extdata_tutorial_}
+\title{using_extdata_tutorial_2}
 \usage{
 using_extdata_tutorial_2(workdir, save_outputs, plot_results)
 }
