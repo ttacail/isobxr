@@ -1,0 +1,7 @@
+﻿BOX_ID,delta.def,delta.ref,obs.delta,obs.CI,obs.CI.def,obs.file
+A,d2X,NaN,1.090059574,0.2,2se,NaN
+D,d2X,NaN,0.189463838,0.2,2se,NaN
+C,d2X,NaN,-0.000499667,0.2,2se,NaN
+B,d2X,NaN,1,0.2,2se,NaN
+SINK,d2X,NaN,5.00E-11,0.2,2se,NaN
+SOURCE,d2X,NaN,1,0.2,2se,NaN
