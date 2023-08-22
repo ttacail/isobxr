@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_functions.R
 \name{ANA_delta_t_Calculator}
 \alias{ANA_delta_t_Calculator}
-\title{Calculate delta values at t time with ODE solutions from \code{\link{ana_slvr}}}
+\title{Calculate delta values at t time with ODE solutions from ana_slvr}
 \usage{
 ANA_delta_t_Calculator(
   t,
@@ -26,7 +26,7 @@ ordinary differential equations (single column dataframe).}
 ordinary differential equations (multiple columns dataframe).}
 
 \item{BOXES_IDs}{Vector of character strings with the names of the boxes \cr
-in the same order as used in \code{\link{ana_slvr}}.}
+in the same order as used in ana_slvr.}
 
 \item{ratio_standard}{Isotope ratio of the reference material used to calculate the delta values.}
 }
@@ -35,8 +35,5 @@ Dataframe of the delta values in all boxes at t time.
 }
 \description{
 Calculate the delta values at t time using the ODE analytical solutions of the isotopic box model.
-}
-\seealso{
-\code{\link{ana_slvr}}
 }
 \keyword{internal}

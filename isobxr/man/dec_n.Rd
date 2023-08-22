@@ -9,7 +9,7 @@ dec_n(x, n)
 \arguments{
 \item{x}{Numerical value}
 
-\item{n}{number of decimnals}
+\item{n}{number of decimals}
 }
 \value{
 A character string with 4 decimal figures.

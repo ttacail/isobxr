@@ -15,7 +15,4 @@ Cleared dataframe.
 \description{
 Takes a previously subsetted dataframe, clears its deleted levels and resets its row indexes.
 }
-\examples{
-clear_subset(iris[iris$Species == "setosa" & iris$Sepal.Length > 5 ,])
-}
 \keyword{internal}
