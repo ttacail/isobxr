@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">isobxr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -55,24 +51,6 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="../articles/vgn_01_Installation.html">1 - Install isobxr</a>
-    </li>
-    <li>
-      <a href="../articles/vgn_02_General_presentation.html">2 - General presentation</a>
-    </li>
-    <li>
-      <a href="../articles/vgn_03_Run_isobxr_presentation.html">3 - run_isobxr()</a>
-    </li>
-    <li>
-      <a href="../articles/vgn_05_compose_isobxr.html">4 - compose_isobxr()</a>
-    </li>
-    <li>
-      <a href="../articles/vgn_07_sweep_steady.html">5 - sweep_steady()</a>
-    </li>
-    <li>
-      <a href="../articles/vgn_08_sweep_dyn.html">6 - sweep_dyn()</a>
-    </li>
-    <li>
-      <a href="../articles/vgn_09_runShinyPlots.html">7 - shinobxr_app()</a>
     </li>
   </ul>
 </li>
@@ -82,7 +60,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ttacail/isobxr/">
+  <a href="https://github.com/ttacail/isobxr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -97,15 +75,16 @@
 
       
 
-      </header><script src="vgn_01_Installation_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1 - Install isobxr</h1>
-                        <h4 class="author">Théo Tacail</h4>
+                        <h4 data-toc-skip class="author">Théo
+Tacail</h4>
             
-            <h4 class="date">2021-09-10</h4>
+            <h4 data-toc-skip class="date">2023-08-22</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/master/vignettes/vgn_01_Installation.Rmd"><code>vignettes/vgn_01_Installation.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ttacail/isobxr/blob/HEAD/vignettes/vgn_01_Installation.Rmd" class="external-link"><code>vignettes/vgn_01_Installation.Rmd</code></a></small>
       <div class="hidden name"><code>vgn_01_Installation.Rmd</code></div>
 
     </div>
@@ -113,70 +92,97 @@
     
     
 <hr>
-<p><a href="https://ttacail.github.io/isobxr_web/">Full documentation and tutorials can be found on the isobxr website.</a></p>
+<p><a href="https://ttacail.github.io/isobxr_web/" class="external-link">Full documentation
+and tutorials can be found on the isobxr website.</a></p>
 <hr>
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is a set of R tools designed to perform and explore stable isotope box modelling of open or closed systems. It provides a ready-to-use tool allowing users to develop and test isotopic box models of their system of interest. It allows the user to explore the behavior of these systems in both static (<em>e.g.</em>, at steady state) or dynamic modes (<em>e.g.</em>, in reaction to a perturbation), build complex scenarios, and sweep the space of parameters in both static and dynamic modes.</p>
+<p>The <a href="https://ttacail.github.io/isobxr/" class="external-link">isobxr</a> package is
+a set of R tools designed to perform and explore stable isotope box
+modelling of open or closed systems. It provides a ready-to-use tool
+allowing users to develop and test isotopic box models of their system
+of interest. It allows the user to explore the behavior of these systems
+in both static (<em>e.g.</em>, at steady state) or dynamic modes
+(<em>e.g.</em>, in reaction to a perturbation), build complex scenarios,
+and sweep the space of parameters in both static and dynamic modes.</p>
 <hr>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
-<div id="released-version" class="section level2">
-<h2 class="hasAnchor">
-<a href="#released-version" class="anchor"></a>Released version</h2>
-<p>The isobxr package is now on the <a href="https://cran.r-project.org/">CRAN</a> (Comprehensive R Archive Network) and can be found on its <a href="https://CRAN.R-project.org/package=isobxr">isobxr CRAN page</a>.</p>
-<p>It is available as a released package and can be installed directly from CRAN by calling:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="section level3">
+<h3 id="released-version">Released version<a class="anchor" aria-label="anchor" href="#released-version"></a>
+</h3>
+<p>The isobxr package is now on the <a href="https://cran.r-project.org/" class="external-link">CRAN</a> (Comprehensive R Archive
+Network) and can be found on its <a href="https://CRAN.R-project.org/package=isobxr" class="external-link">isobxr CRAN
+page</a>.</p>
+<p>It is available as a released package and can be installed directly
+from CRAN by calling:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="development-version" class="section level2">
-<h2 class="hasAnchor">
-<a href="#development-version" class="anchor"></a>Development version</h2>
-<p>The <a href="https://ttacail.github.io/isobxr/">isobxr</a> package is available as a source package in its development version from the <a href="https://github.com/ttacail/isobxr">GitHub isobxr master repository</a>.</p>
+<div class="section level3">
+<h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
+</h3>
+<p>The <a href="https://ttacail.github.io/isobxr/" class="external-link">isobxr</a> package is
+available as a source package in its development version from the <a href="https://github.com/ttacail/isobxr" class="external-link">GitHub isobxr master
+repository</a>.</p>
 <p>The isobxr development version can be installed as follows:</p>
 <ul>
-<li><p>Download and install/update <a href="https://cran.r-project.org/">R</a> and <a href="https://www.rstudio.com/products/rstudio/download/">Rstudio</a>.</p></li>
-<li><p>Download and install package <strong>devtools</strong> as follows:</p></li>
+<li><p>Download and install/update <a href="https://cran.r-project.org/" class="external-link">R</a> and <a href="https://posit.co/download/rstudio-desktop/" class="external-link">Rstudio</a>.</p></li>
+<li><p>Download and install package <strong>devtools</strong> as
+follows:</p></li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>Download and install <a href="https://ttacail.github.io/isobxr/">isobxr</a> source package.</li>
+<li>Download and install <a href="https://ttacail.github.io/isobxr/" class="external-link">isobxr</a> source package.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ttacail/isobxr/isobxr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># FALSE if no pandoc/Rstudio </span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ttacail/isobxr/isobxr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># FALSE if no pandoc/Rstudio </span></span></code></pre></div>
 </div>
-<div id="load-isobxr" class="section level2">
-<h2 class="hasAnchor">
-<a href="#load-isobxr" class="anchor"></a>Load <strong>isobxr</strong>
-</h2>
-<p>You can load the <a href="https://ttacail.github.io/isobxr/">isobxr</a> package in R as follows:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr">isobxr</a></span><span class="op">)</span></pre></div>
-<p>Here is the package description of the current version, where you can find the required minimal versions of dependencies:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageDescription</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
+<div class="section level3">
+<h3 id="load-isobxr">Load <strong>isobxr</strong><a class="anchor" aria-label="anchor" href="#load-isobxr"></a>
+</h3>
+<p>You can load the <a href="https://ttacail.github.io/isobxr/" class="external-link">isobxr</a> package in R as
+follows:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ttacail/isobxr" class="external-link">isobxr</a></span><span class="op">)</span></span></code></pre></div>
+<p>Here is the package description of the current version, where you can
+find the required minimal versions of dependencies:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageDescription</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></span></code></pre></div>
 <p>You can locally browse the vignettes as follows:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="st">"isobxr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div id="download-templates-and-tutorials" class="section level1">
-<h1 class="hasAnchor">
-<a href="#download-templates-and-tutorials" class="anchor"></a>Download templates and tutorials</h1>
-<p>The tutorial can be run using the tutorial files embedded in the package extdata. The tutorial files are then called by setting the workdir argument as follows:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span>
-<span class="co"># or</span>
-<span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"use_isobxr_demonstration_files"</span></pre></div>
+<div class="section level2">
+<h2 id="download-templates-and-tutorials">Download templates and tutorials<a class="anchor" aria-label="anchor" href="#download-templates-and-tutorials"></a>
+</h2>
+<p>The tutorial can be run using the tutorial files embedded in the
+package extdata. The tutorial files are then called by setting the
+workdir argument as follows:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"/Users/username/Documents/1_ABC_tutorial"</span></span>
+<span><span class="co"># or</span></span>
+<span><span class="va">workdir</span> <span class="op">&lt;-</span> <span class="st">"use_isobxr_demonstration_files"</span></span></code></pre></div>
 <dl>
 <dt>Note</dt>
-<dd>The tutorial mode will prevent you from saving the run outputs to a local working directory.
+<dd>
+The tutorial mode will prevent you from saving the run outputs to a
+local working directory.
 </dd>
 </dl>
-<p>Alternatively, the user is encouraged to download and browse the input files:</p>
+<p>Alternatively, the user is encouraged to download and browse the
+input files:</p>
 <ol style="list-style-type: decimal">
-<li><p><a href="https://ttacail.github.io/source/demos/0_excel_templates.zip">Download xlsx templates</a>. These files provide the user with formatted master files, used as arguments to isobxr functions, as explained in vignettes and on the <a href="https://ttacail.github.io/isobxr_web/">isobxr website</a>.</p></li>
-<li><p><a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip">Download tutorial files</a>. These files provide the user with all master files and R commands used throughout tutorials, as shown on the <a href="https://ttacail.github.io/isobxr_web/">isobxr website</a>.</p></li>
+<li><p><a href="https://ttacail.github.io/source/demos/0_excel_templates.zip" class="external-link">Download
+xlsx templates</a>. These files provide the user with formatted master
+files, used as arguments to isobxr functions, as explained in vignettes
+and on the <a href="https://ttacail.github.io/isobxr_web/" class="external-link">isobxr
+website</a>.</p></li>
+<li><p><a href="https://ttacail.github.io/source/demos/1_ABC_tutorial.zip" class="external-link">Download
+tutorial files</a>. These files provide the user with all master files
+and R commands used throughout tutorials, as shown on the <a href="https://ttacail.github.io/isobxr_web/" class="external-link">isobxr
+website</a>.</p></li>
 </ol>
 <hr>
 </div>
@@ -193,11 +199,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Theo Tacail.</p>
+  <p></p>
+<p>Developed by Theo Tacail.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -205,6 +213,8 @@
 
   
 
+
+  
 
   </body>
 </html>
