@@ -63,7 +63,7 @@ from the [GitHub isobxr master repository](https://github.com/ttacail/isobxr).
 The isobxr development version can be installed as follows:
 
 * Download and install/update [R](https://cran.r-project.org/) and 
-[Rstudio](https://www.rstudio.com/products/rstudio/download/).
+[Rstudio](https://posit.co/download/rstudio-desktop/).
 
 * Download and install package **devtools** as follows:
 
