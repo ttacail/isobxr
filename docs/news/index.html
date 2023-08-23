@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">isobxr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -58,8 +58,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.0.1.9000" id="isobxr-1019000">isobxr 1.0.1.9000<a class="anchor" aria-label="anchor" href="#isobxr-1019000"></a></h2>
-<ul><li>current development version</li>
+<h2 class="page-header" data-toc-text="2.0.0" id="isobxr-v200">isobxr v2.0.0<a class="anchor" aria-label="anchor" href="#isobxr-v200"></a></h2>
+<p>This is a new major release introducing new data management protocols and new functions. Old functions are replaced for sake of clarity.</p>
+<p>The following exported functions were replaced as follows:</p>
+<ul><li><p>ana_slvr() is replaced by solve_analytically()</p></li>
+<li><p>num_slvr() is replaced by solve_numerically()</p></li>
+<li><p>compose_isobxr() is replaced by sim.scenario()</p></li>
+<li><p>run_isobxr() is replaced by sim.single_run()</p></li>
+<li><p>sweep_dyn() is replaced by sweep.dyn_2D()</p></li>
+<li><p>sweep_steady() is replaced by sweep.final_nD()</p></li>
+</ul><p>The shinobxr_app() function was removed and replaced by new plotting functions:</p>
+<ul><li><p>plot_dyn_2D()</p></li>
+<li><p>plot_scenario()</p></li>
+</ul><p>Additionally, the following functions are now exported:</p>
+<ul><li><p>plot_relaxation()</p></li>
+<li><p>plot_single_run()</p></li>
+<li><p>read.dyn_2D_master()</p></li>
+<li><p>read.isobxr_master()</p></li>
+<li><p>read.scenario_master()</p></li>
+<li><p>read.final_nD_master()</p></li>
+<li><p>merge_FINnD_chunks()</p></li>
+<li><p>fit.final_space()</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="isobxr-101">isobxr 1.0.1<small>2021-09-07</small><a class="anchor" aria-label="anchor" href="#isobxr-101"></a></h2>
