@@ -177,7 +177,7 @@ significance_pval_df <- function(x){
 }
 
 #' corr_stats
-#' @description edits datafrane report of linear regression and correlation tests (pearson and spearman)
+#' @description edits dataframe report of linear regression and correlation tests (Pearson and Spearman)
 #' @param data_lm a data frame with X and Y data
 #' @param X name of X variable column (character)
 #' @param Y name of Y variable column (character)

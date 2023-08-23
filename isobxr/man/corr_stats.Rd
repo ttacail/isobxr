@@ -23,6 +23,6 @@ corr_stats(data_lm, X, Y, as_character = F, n = 3, m = 4)
 report of regression and correlation tests
 }
 \description{
-edits datafrane report of linear regression and correlation tests (pearson and spearman)
+edits dataframe report of linear regression and correlation tests (Pearson and Spearman)
 }
 \keyword{internal}
