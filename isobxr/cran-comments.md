@@ -1,3 +1,30 @@
+# isobxr v2.0.0
+
+This is a new major release introducing new data management protocols and new functions.
+Old functions are replaced for sake of clarity.
+
+The following exported functions were replaced as follows:
+* ana_slvr() is replaced by solve_analytically()
+* num_slvr() is replaced by solve_numerically()
+* compose_isobxr() is replaced by sim.scenario()
+* run_isobxr() is replaced by sim.single_run()
+* sweep_dyn() is replaced by sweep.dyn_2D()
+* sweep_steady() is replaced by sweep.final_nD()
+
+The shinobxr_app() function was removed and replaced by new plotting functions:
+* plot_dyn_2D()
+* plot_scenario()
+
+Additionally, the following functions are now exported:
+* plot_relaxation()
+* plot_single_run()
+* read.dyn_2D_master()
+* read.isobxr_master()
+* read.scenario_master()
+* read.final_nD_master()
+* merge_FINnD_chunks()
+* fit.final_space()
+
 # isobxr v1.0.1
 
 This is a new patch version fixing bugs. In this version I have made the following changes:

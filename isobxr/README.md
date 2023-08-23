@@ -77,37 +77,8 @@ The full description of installation process can be found
 
 <!-- START copy/pasted from isobxr_website index page -->
 
-The documentation about underlying theory and isobxr use is made fully
-available to user in the [package
-website](https://ttacail.github.io/isobxr_web/index.html).
-
-On this website you can find the following items.
-
-1.  [How can I install isobxr and demo
-    files?](https://ttacail.github.io/isobxr_web/vgn_01_Installation.html)
-
-2.  [What is
-    isobxr?](https://ttacail.github.io/isobxr_web/vgn_02_General_presentation.html)
-
-3.  Box models single runs with run_isobxr: [general
-    presentation](https://ttacail.github.io/isobxr_web/vgn_03_Run_isobxr_presentation.html)
-    and
-    [tutorial](https://ttacail.github.io/isobxr_web/vgn_04_Run_isobxr_tutorial.html)
-
-4.  Box models scenario runs with compose_isobxr: [general
-    presentation](https://ttacail.github.io/isobxr_web/vgn_05_compose_isobxr.html)
-    and
-    [tutorial](https://ttacail.github.io/isobxr_web/vgn_06_compose_isobxr_tutorial.html)
-
-5.  Sweep parameters at the final state: [general
-    presentation](https://ttacail.github.io/isobxr_web/vgn_07_sweep_steady.html)
-
-6.  Sweep parameters in response to perturbation: [general
-    presentation](https://ttacail.github.io/isobxr_web/vgn_08_sweep_dyn.html)
-
-7.  Use the shiny offline html app to plot compose_isobxr, sweep_steady
-    and sweep_dyn outputs: [general
-    presentation](https://ttacail.github.io/isobxr_web/vgn_09_runShinyPlots.html)
+The documentation about underlying theory and isobxr use is available at
+the [isobxr website](https://ttacail.github.io/isobxr_web/index.html).
 
 <!-- END copy/pasted from isobxr_website index page -->
 
