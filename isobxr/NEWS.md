@@ -1,4 +1,4 @@
-# isobxr v2.0.0
+# isobxr 2.0.0
 
 This is a new major release introducing new data management protocols and new functions.
 Old functions are replaced for sake of clarity.
