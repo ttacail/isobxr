@@ -13,7 +13,7 @@
 #' @param sweep_dir_to_complete Name of directory of previously halted sweep.final_nD
 #' run that the user wishes to continue. Starts with "4_FINnD". \cr
 #' Default is NULL.
-#' @param export.data_as_csv_xlsx If TRUE, exports chunk sweep result data as csv and xlsx fo full
+#' @param export.data_as_csv_xlsx If TRUE, exports chunk space of parameters as xlsx fo full
 #' to chunk digest directory. \cr
 #' Default is FALSE.
 #' @param isobxr_master_file Name of \strong{\emph{isobxr excel master file}}. \cr
@@ -73,6 +73,12 @@ sweep.final_nD <- function(workdir,
   # sweep_master_file = "0_SWEEP_FINnD_demo"
   # isobxr_master_file = "0_ISOBXR_MASTER"
   # save_outputs = TRUE
+
+  # workdir = paste0(CaCycle$paths$root_wd, "/", sweep_dir.loc)
+  # sweep_master_file = paste0("0_SWEEP_FINnD", ".xlsx")
+  # export.data_as_csv_xlsx = T
+  # isobxr_master_file = paste0("0_ISOBXR_MASTER", "_", flux_lists.n_sample, ".xlsx")
+  # save_outputs = T
 
   # I. check arguments ####
   args <- c(as.list(environment()))
@@ -417,7 +423,7 @@ sweep.final_nD <- function(workdir,
         data.table::fwrite(file = to_tmpdir(paths$LOG_file))
     }
 
-    ############################## START CHUNK LOOP ######
+    ############################## ____ START CHUNK LOOP ######
     # _b. chunk sweep for loop #####
     for (j in 1:nrow(param_space.loc)){
 
@@ -537,13 +543,13 @@ sweep.final_nD <- function(workdir,
       utils::setTxtProgressBar(pb_cpt, clock)
       clock <- clock + 1
     }
-    ############################## END CHUNK LOOP ######
+    ############################## ____ END CHUNK LOOP ######
 
     elapsed.sweep <- tictoc::toc(quiet = T)
     close(pb_cpt)
 
     # _c. read and merge all single run outputs from tempdir - local chunk ####
-    # LOG ####
+    # ____ LOG ####
     if (newLOG){
       LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
     } else {
@@ -757,20 +763,20 @@ sweep.final_nD <- function(workdir,
     paths$current.chunk.digest_root <- paste(paths$current.chunk_dir, SERIES_ID, sep = "")
 
     if (file.exists(paths$LOG_file)){
-      # LOG ####
+      # ____ LOG ####
       LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
       LOG <- dplyr::bind_rows(LOG, LOG_SERIES)
     } else {
       LOG <- LOG_SERIES
     }
 
-    # LOG ####
+    # ____ LOG ####
     data.table::fwrite(LOG_SERIES, file = paste(to_tmpdir(paths$current.chunk.digest_root), "_chunk_LOG.csv", sep = ""), row.names = F, quote = F)
     saveRDS(object = FINnD.results.chunk, file = paste(to_tmpdir(paths$current.chunk.digest_root), "_chunk_results.RDS", sep = ""))
     saveRDS(object = param_space.loc, file = paste(to_tmpdir(paths$current.chunk.digest_root), "_chunk_param_space.RDS", sep = ""))
 
     if (args$export.data_as_csv_xlsx){
-      data.table::fwrite(evD_final, file = paste(to_tmpdir(paths$current.chunk.digest_root), "_chunk_results.csv", sep = ""), row.names = F, quote = F)
+      # data.table::fwrite(evD_final, file = paste(to_tmpdir(paths$current.chunk.digest_root), "_chunk_results.csv", sep = ""), row.names = F, quote = F)
       data.table::fwrite(param_space.loc, file = paste(to_tmpdir(paths$current.chunk.digest_root), "_chunk_param_space.csv", sep = ""), row.names = F, quote = F)
     }
 
@@ -796,7 +802,7 @@ sweep.final_nD <- function(workdir,
       rlang::inform("\U2757 Results were not saved to working directory (set save_outputs = TRUE to save results).")
     } else if(args$save_outputs){
       R.utils::copyDirectory(to_tmpdir(""), getwd(), overwrite = T)
-      # LOG ####
+      # ____ LOG ####
       data.table::fwrite(LOG, file = "1_LOG.csv", row.names = F, quote = F)
       rlang::inform("\U2705 Results were successfully saved to working directory.")
       elapsed.all <- tictoc::toc(quiet = T)
@@ -808,7 +814,7 @@ sweep.final_nD <- function(workdir,
       chunk_LOG$elapsed.sweep.per_run <- chunk_LOG$elapsed.sweep/chunk_LOG$n_runs
       chunk_LOG$elapsed.prepare.per_run <- chunk_LOG$elapsed.prepare/chunk_LOG$n_runs
       saveRDS(chunk_LOG, file = paste0(paths$digest_dir, "/", paths$current.space_sweep.SERIES, "_chunk_log.RDS"))
-      # LOG ####
+      # ____ LOG ####
       data.table::fwrite(chunk_LOG, file = paste0(paths$digest_dir, "/", paths$current.space_sweep.SERIES, "_chunk_log.csv"))
       print(chunk_LOG[chunk_LOG$chunk_status == "complete",
                       (names(chunk_LOG) %in%
