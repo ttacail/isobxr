@@ -189,7 +189,8 @@ sim.single_run <-
            EXPLO_SERIES_n = NaN,
            EXPLO_SERIES_FAMILY = NaN,
            isobxr_master = NULL,
-           diagram_pdf.widh_height = NULL) {
+           diagram_pdf.widh_height = NULL,
+           manual_RUN_n = NULL) {
 
   # ########################################################
   # setwd("/Users/sz18642/isobxr/isobxr")
@@ -679,6 +680,7 @@ sim.single_run <-
   # _e. define run outdir and ID ####
   # DEFINE RUN number in the list of a given series, RUN_ID, SERIES_RUN_ID
   n_zeros <- args$n_zeros_RUN_IDs
+
   if (!file.exists(paths$LOG_file)){
     if (!file.exists(to_tmpdir(paths$LOG_file))){
       LOG_loc$RUN_n <- 1
@@ -693,7 +695,7 @@ sim.single_run <-
     }
 
   } else {
-    if(!args$COMPOSITE & !args$EXPLORER){
+    if (!args$COMPOSITE & !args$EXPLORER){
       LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
       file.copy(from = paths$LOG_file, to = to_tmpdir(paths$LOG_file))
       if (args$SERIES_ID %in% levels(LOG$SERIES_ID)){
@@ -716,6 +718,38 @@ sim.single_run <-
       }
     }
   }
+
+  # manual overwritting of RUN_n (used in parallel computation)
+  if(!is.null(args$manual_RUN_n)){
+    if (!is.numeric(args$manual_RUN_n)){
+      rlang::abort("The manual RUN_n value (manual_RUN_n) should be numeric.")
+    }
+
+    if(n_zeros <= ceiling(log10(args$manual_RUN_n))){
+      rlang::abort("The manual RUN_n value (manual_RUN_n) is higher than number of maximal runs.")
+    } else {
+      LOG_loc$RUN_n <- args$manual_RUN_n
+
+      if (!file.exists(to_tmpdir(paths$LOG_file))){
+        LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
+        previous_RUN_n_same_SERIES_ID <-
+          LOG %>% filter(SERIES_ID %in% args$SERIES_ID) %>% pull(RUN_n)
+        if (args$manual_RUN_n %in% previous_RUN_n_same_SERIES_ID){
+          rlang::abort("The manual RUN_n value already exists for the same SERIES_ID in LOG file.")
+        }
+      }
+
+      if (!file.exists(paths$LOG_file)){
+        LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
+        previous_RUN_n_same_SERIES_ID <-
+          LOG %>% filter(SERIES_ID %in% args$SERIES_ID) %>% pull(RUN_n)
+        if (args$manual_RUN_n %in% previous_RUN_n_same_SERIES_ID){
+          rlang::abort("The manual RUN_n value already exists for the same SERIES_ID in LOG file.")
+        }
+      }
+    }
+  }
+
   LOG_loc$RUN_ID <- paste(c(as.character(replicate(n_zeros-length(unlist(strsplit(as.character(LOG_loc$RUN_n), ""))),0)),
                             as.character(LOG_loc$RUN_n)), collapse = "")
   SERIES_ID_RUN_ID <- paste(args$SERIES_ID, "_", as.character(LOG_loc$RUN_ID), sep = "")
@@ -886,17 +920,19 @@ sim.single_run <-
   # _a. plot ####
   # _b. export plot as pdf ####
   if (args$export.delta_plot & !fun_mode$tuto_mode){
-    dev.new()
-    pdf(to_tmpdir(paths$plot_file),
-        width = 21/2.54, height = 29.7/2.54,
-        pointsize = 1, useDingbats=FALSE)
-    suppressWarnings(plot_single_run(workdir = to_tmpdir(""),
-                                     RUN_ID = paths$SERIES_RUN_ID,
-                                     time_as_log10 = args$plot.time_as_log10,
-                                     time_unit = args$plot.time_unit,
-                                     hidden_boxes = NULL,
-                                     return_as_print = TRUE))
-    graphics.off()
+    if(results$solution_type == "real"){
+      dev.new()
+      pdf(to_tmpdir(paths$plot_file),
+          width = 21/2.54, height = 29.7/2.54,
+          pointsize = 1, useDingbats=FALSE)
+      suppressWarnings(plot_single_run(workdir = to_tmpdir(""),
+                                       RUN_ID = paths$SERIES_RUN_ID,
+                                       time_as_log10 = args$plot.time_as_log10,
+                                       time_unit = args$plot.time_unit,
+                                       hidden_boxes = NULL,
+                                       return_as_print = TRUE))
+      graphics.off()
+    }
   }
 
   # XIX. final outputs ####
@@ -925,12 +961,14 @@ sim.single_run <-
 
   # _b. print plots on console ####
   if (args$show.delta_plot){
-    suppressWarnings(plot_single_run(workdir = to_tmpdir(""),
-                                     RUN_ID = paths$SERIES_RUN_ID,
-                                     time_as_log10 = args$plot.time_as_log10,
-                                     time_unit = args$plot.time_unit,
-                                     hidden_boxes = NULL,
-                                     return_as_print = TRUE))
+    if(results$solution_type == "real"){
+      suppressWarnings(plot_single_run(workdir = to_tmpdir(""),
+                                       RUN_ID = paths$SERIES_RUN_ID,
+                                       time_as_log10 = args$plot.time_as_log10,
+                                       time_unit = args$plot.time_unit,
+                                       hidden_boxes = NULL,
+                                       return_as_print = TRUE))
+    }
   }
 
   if(args$return_data){
