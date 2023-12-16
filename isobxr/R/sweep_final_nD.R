@@ -21,6 +21,11 @@
 #' @param save_outputs If TRUE, saves all run outputs to local working directory (workdir). \cr
 #' By default, run outputs are stored in a temporary directory and erased if not saved.
 #' Default is FALSE.
+#' @param parallelize If TRUE, will perform sweep calculation and result preparation by
+#' computing on multiple cores if available.
+#' Only compatible with unix devices (e.g., MacOS, Linux etc. but not windows).
+#' Default if FALSE.
+#' @param mc.cores Number of cores to be used when running parallel computation. Default is 4.
 #'
 #' @return Delta values and box sizes at final state of the system, in the n-dimensions space of parameters.
 #' sweep.final_nD outputs are saved to workdir if save_outputs = TRUE.
@@ -53,7 +58,9 @@ sweep.final_nD <- function(workdir,
                            sweep_dir_to_complete = NULL, # formerly dir.space_digest.to_complete / corresponds to the digest dir.
                            export.data_as_csv_xlsx = FALSE, # formerly to_STD_DIGEST_CSVs
                            isobxr_master_file = "0_ISOBXR_MASTER",
-                           save_outputs = FALSE # formerly save_run_outputs
+                           save_outputs = FALSE, # formerly save_run_outputs
+                           parallelize = FALSE,
+                           mc.cores = 4
 ){
 
   # # # 0. debug arguments ####
@@ -89,6 +96,14 @@ sweep.final_nD <- function(workdir,
   for (i in 1:length(args.allowed$logical)){
     if (!is.logical(eval(parse(text = paste0("args$", args.allowed$logical[i]))))){
       rlang::abort(paste0("\"", args.allowed$logical[i], "\" argument should be logical."))
+    }
+  }
+
+  # check if parallelization is possible
+  if (args$parallelize){
+    if(.Platform$OS.type != "unix"){
+      args$parallelize <- FALSE
+      rlang::warn("Parallelization not possible on non-unix OS.")
     }
   }
 
@@ -382,7 +397,8 @@ sweep.final_nD <- function(workdir,
       if(args$save_outputs){
         merge_FINnD_chunks(workdir = args$workdir,
                            FINnD_digest_dir.to_merge = paths$digest_dir,
-                           save_outputs = args$save_outputs)
+                           save_outputs = args$save_outputs,
+                           parallelize = args$parallelize)
       }
     }
   }, add = TRUE, after = TRUE)
@@ -394,7 +410,6 @@ sweep.final_nD <- function(workdir,
 
     # _a. prepare local chunk ####
 
-    # tempdir? ####
     # unlink(to_tmpdir(""), recursive = TRUE)
     # on.exit(unlink(to_tmpdir(""), recursive = TRUE), add = TRUE)
 
@@ -408,11 +423,9 @@ sweep.final_nD <- function(workdir,
     SERIES_ID <- paste0(paths$current.space_sweep.SERIES,"_",
                         sprintf(paste0("%0", n_zeros_CHUNKS, "d"), chunk.loc[ , "chunk_n"]))
 
-
     rlang::inform("\U0001f535 SWEEPING")
     tictoc::tic("chunk sweep:")
-    pb_cpt <- utils::txtProgressBar(min = 0, max = tot_run.loc, style = 3, width = 50)
-    clock <- 1
+
     j <- 1
 
     if (chunk.loc[ , "chunk_n"] == 1){
@@ -423,132 +436,298 @@ sweep.final_nD <- function(workdir,
         data.table::fwrite(file = to_tmpdir(paths$LOG_file))
     }
 
-    ############################## ____ START CHUNK LOOP ######
-    # _b. chunk sweep for loop #####
-    for (j in 1:nrow(param_space.loc)){
+    if(!args$parallelize){
+      # _b. FOR_LOOP chunk sweep #####
 
-      # __i. prepare single run ####
+      pb_cpt <- utils::txtProgressBar(min = 0, max = tot_run.loc, style = 3, width = 50)
+      clock <- 1
 
-      FORCING_RAYLEIGH <- FORCING_SIZE <- FORCING_DELTA <- FORCING_ALPHA <- NULL
+      for (j in 1:nrow(param_space.loc)){
 
-      for (i in 1:length(master.sweep$sweep_lists_ids)){
-        name_loc <- master.sweep$sweep_lists_ids[i]
+        # __i. prepare single run ####
 
-        if(stringr::str_starts(name_loc, pattern = "A.")){
-          name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "A."), pattern = "_")[[1]]
-          FORCING_ALPHA_loc <-
-            data.frame(FROM = name_loc_vector[1],
-                       TO = name_loc_vector[2],
-                       ALPHA = param_space.loc[j, name_loc ],
-                       FROM_TO = paste(name_loc_vector, collapse = "_"))
+        FORCING_RAYLEIGH <- FORCING_SIZE <- FORCING_DELTA <- FORCING_ALPHA <- NULL
 
-          if(is.null(FORCING_ALPHA)){
-            FORCING_ALPHA <- FORCING_ALPHA_loc
-          } else {
-            FORCING_ALPHA <- dplyr::bind_rows(FORCING_ALPHA, FORCING_ALPHA_loc)
+        for (i in 1:length(master.sweep$sweep_lists_ids)){
+          name_loc <- master.sweep$sweep_lists_ids[i]
+
+          if(stringr::str_starts(name_loc, pattern = "A.")){
+            name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "A."), pattern = "_")[[1]]
+            FORCING_ALPHA_loc <-
+              data.frame(FROM = name_loc_vector[1],
+                         TO = name_loc_vector[2],
+                         ALPHA = param_space.loc[j, name_loc ],
+                         FROM_TO = paste(name_loc_vector, collapse = "_"))
+
+            if(is.null(FORCING_ALPHA)){
+              FORCING_ALPHA <- FORCING_ALPHA_loc
+            } else {
+              FORCING_ALPHA <- dplyr::bind_rows(FORCING_ALPHA, FORCING_ALPHA_loc)
+            }
+          }
+
+          if(stringr::str_starts(name_loc, pattern = "D.")){
+            name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "D."), pattern = "_")[[1]]
+            FORCING_DELTA_loc <-
+              data.frame(BOX_ID = name_loc_vector[1],
+                         DELTA.t0 = param_space.loc[j, name_loc ])
+
+            if(is.null(FORCING_DELTA)){
+              FORCING_DELTA <- FORCING_DELTA_loc
+            } else {
+              FORCING_DELTA <- dplyr::bind_rows(FORCING_DELTA, FORCING_DELTA_loc)
+            }
+          }
+
+          if(stringr::str_starts(name_loc, pattern = "S.")){
+            name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "S."), pattern = "_")[[1]]
+            FORCING_SIZE_loc <-
+              data.frame(BOX_ID = name_loc_vector[1],
+                         SIZE.t0 = param_space.loc[j, name_loc ])
+
+            if(is.null(FORCING_DELTA)){
+              FORCING_SIZE <- FORCING_SIZE_loc
+            } else {
+              FORCING_SIZE <- dplyr::bind_rows(FORCING_SIZE, FORCING_SIZE_loc)
+            }
+          }
+
+          if(stringr::str_starts(name_loc, pattern = "R.")){
+            box_fluxes_loc <- strsplit(x = stringr::str_remove(name_loc, pattern = "R."),
+                                       split = ".",
+                                       fixed = T)[[1]]
+
+            FORCING_RAYLEIGH_loc <- data.frame(XFROM = unlist(strsplit(box_fluxes_loc[1], "_", fixed = T))[1],
+                                               XTO = unlist(strsplit(box_fluxes_loc[1], "_", fixed = T))[2],
+                                               YFROM = unlist(strsplit(box_fluxes_loc[2], "_", fixed = T))[1],
+                                               YTO = unlist(strsplit(box_fluxes_loc[2], "_", fixed = T))[2],
+                                               AFROM = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[1],
+                                               ATO = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[2],
+                                               ALPHA_0 = param_space.loc[j, name_loc ])
+
+            if(is.null(FORCING_ALPHA)){
+              FORCING_RAYLEIGH <- FORCING_RAYLEIGH_loc
+            } else {
+              FORCING_RAYLEIGH <- dplyr::bind_rows(FORCING_RAYLEIGH, FORCING_RAYLEIGH_loc)
+            }
+          }
+
+          if(name_loc == "flux_list_name"){
+            flux_list_name <- as.character(param_space.loc[j, name_loc ])
+          }
+
+          if(name_loc == "coeff_list_name"){
+            coeff_list_name <- as.character(param_space.loc[j, name_loc ])
           }
         }
 
-        if(stringr::str_starts(name_loc, pattern = "D.")){
-          name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "D."), pattern = "_")[[1]]
-          FORCING_DELTA_loc <-
-            data.frame(BOX_ID = name_loc_vector[1],
-                       DELTA.t0 = param_space.loc[j, name_loc ])
+        # __ii. run sim.single_run ####
+        sim.single_run(
+          # workdir = args$workdir,
+          workdir = to_tmpdir(""),
+          SERIES_ID = SERIES_ID,
+          flux_list = flux_list_name,
+          coeff_list = coeff_list_name,
+          t_max = t_max,
+          n_steps = 1,
+          # isobxr_master_file = args$isobxr_master_file,
+          isobxr_master = master.isobxr,
+          suppress_messages = T,
+          export.diagrams = F,
+          export.delta_plot = F,
+          export.data_as_csv_xlsx = F,
+          plot.time_as_log10 = F,
+          plot.time_unit = NULL,
+          show.delta_plot = F,
+          inspect_inputs = F,
+          save_outputs = F,
+          return_data = F,
+          solver = "analytical",
+          n_zeros_RUN_IDs = 5,
+          FORCING_RAYLEIGH = FORCING_RAYLEIGH,
+          FORCING_SIZE = FORCING_SIZE,
+          FORCING_DELTA = FORCING_DELTA,
+          FORCING_ALPHA = FORCING_ALPHA,
+          COMPOSITE = FALSE,
+          COMPO_SERIES_n = NaN,
+          COMPO_SERIES_FAMILY = NaN,
+          EXPLORER = TRUE,
+          EXPLO_SERIES_n = chunk.loc[, "chunk_n"],
+          EXPLO_SERIES_FAMILY = paths$current.space_sweep.SERIES
+        )
 
-          if(is.null(FORCING_DELTA)){
-            FORCING_DELTA <- FORCING_DELTA_loc
-          } else {
-            FORCING_DELTA <- dplyr::bind_rows(FORCING_DELTA, FORCING_DELTA_loc)
-          }
-        }
-
-        if(stringr::str_starts(name_loc, pattern = "S.")){
-          name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "S."), pattern = "_")[[1]]
-          FORCING_SIZE_loc <-
-            data.frame(BOX_ID = name_loc_vector[1],
-                       SIZE.t0 = param_space.loc[j, name_loc ])
-
-          if(is.null(FORCING_DELTA)){
-            FORCING_SIZE <- FORCING_SIZE_loc
-          } else {
-            FORCING_SIZE <- dplyr::bind_rows(FORCING_SIZE, FORCING_SIZE_loc)
-          }
-        }
-
-        if(stringr::str_starts(name_loc, pattern = "R.")){
-          box_fluxes_loc <- strsplit(x = stringr::str_remove(name_loc, pattern = "R."),
-                                     split = ".",
-                                     fixed = T)[[1]]
-
-          FORCING_RAYLEIGH_loc <- data.frame(XFROM = unlist(strsplit(box_fluxes_loc[1], "_", fixed = T))[1],
-                                             XTO = unlist(strsplit(box_fluxes_loc[1], "_", fixed = T))[2],
-                                             YFROM = unlist(strsplit(box_fluxes_loc[2], "_", fixed = T))[1],
-                                             YTO = unlist(strsplit(box_fluxes_loc[2], "_", fixed = T))[2],
-                                             AFROM = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[1],
-                                             ATO = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[2],
-                                             ALPHA_0 = param_space.loc[j, name_loc ])
-
-          if(is.null(FORCING_ALPHA)){
-            FORCING_RAYLEIGH <- FORCING_RAYLEIGH_loc
-          } else {
-            FORCING_RAYLEIGH <- dplyr::bind_rows(FORCING_RAYLEIGH, FORCING_RAYLEIGH_loc)
-          }
-        }
-
-        if(name_loc == "flux_list_name"){
-          flux_list_name <- as.character(param_space.loc[j, name_loc ])
-        }
-
-        if(name_loc == "coeff_list_name"){
-          coeff_list_name <- as.character(param_space.loc[j, name_loc ])
-        }
+        # calculation_gauge(clock, tot_run)
+        utils::setTxtProgressBar(pb_cpt, clock)
+        clock <- clock + 1
       }
 
-      # __ii. run sim.single_run ####
-      sim.single_run(
-        # workdir = args$workdir,
-        workdir = to_tmpdir(""),
-        SERIES_ID = SERIES_ID,
-        flux_list = flux_list_name,
-        coeff_list = coeff_list_name,
-        t_max = t_max,
-        n_steps = 1,
-        # isobxr_master_file = args$isobxr_master_file,
-        isobxr_master = master.isobxr,
-        suppress_messages = T,
-        export.diagrams = F,
-        export.delta_plot = F,
-        export.data_as_csv_xlsx = F,
-        plot.time_as_log10 = F,
-        plot.time_unit = NULL,
-        show.delta_plot = F,
-        inspect_inputs = F,
-        save_outputs = F,
-        return_data = F,
-        solver = "analytical",
-        n_zeros_RUN_IDs = 5,
-        FORCING_RAYLEIGH = FORCING_RAYLEIGH,
-        FORCING_SIZE = FORCING_SIZE,
-        FORCING_DELTA = FORCING_DELTA,
-        FORCING_ALPHA = FORCING_ALPHA,
-        COMPOSITE = FALSE,
-        COMPO_SERIES_n = NaN,
-        COMPO_SERIES_FAMILY = NaN,
-        EXPLORER = TRUE,
-        EXPLO_SERIES_n = chunk.loc[, "chunk_n"],
-        EXPLO_SERIES_FAMILY = paths$current.space_sweep.SERIES
-      )
+      elapsed.sweep <- tictoc::toc(quiet = T)
+      close(pb_cpt)
 
-      # calculation_gauge(clock, tot_run)
-      utils::setTxtProgressBar(pb_cpt, clock)
-      clock <- clock + 1
+    } else if (args$parallelize){
+
+      # _c. PARALLELIZED chunk sweep #####
+
+      mc.list.param_space.loc <-
+        param_space.loc %>%
+        dplyr::mutate(RUN_n = dplyr::row_number()) %>%
+        dplyr::mutate(mc.group_by = 1 + (dplyr::row_number()-1) %/% (dplyr::n()/args$mc.cores)) %>%
+        dplyr::mutate(mc.group = mc.group_by) %>%
+        dplyr::group_by(mc.group_by) %>%
+        tidyr::nest() %>%
+        dplyr::pull(data)
+
+      results.list <- parallel::mclapply(mc.list.param_space.loc,
+                                         mc.cores = args$mc.cores,
+                                         function(df.mc) {
+
+                                           sc.list.param_space.loc <-
+                                             df.mc %>%
+                                             dplyr::mutate(row = dplyr::row_number()) %>%
+                                             dplyr::group_split(row)
+
+                                           # sc.list.param_space.loc <-
+                                           #   mc.list.param_space.loc[[1]] %>%
+                                           #   dplyr::mutate(row = dplyr::row_number()) %>%
+                                           #   dplyr::group_split(row)
+
+                                           results.list.sc <- lapply(sc.list.param_space.loc,
+
+                                                                     function(df.sc){
+
+                                                                       param_space.loc <- df.sc %>% as.data.frame()
+
+                                                                       # __i. prepare single run ####
+                                                                       j <- 1
+                                                                       FORCING_RAYLEIGH <- FORCING_SIZE <- FORCING_DELTA <- FORCING_ALPHA <- NULL
+
+                                                                       for (i in 1:length(master.sweep$sweep_lists_ids)){ # master.sweep
+                                                                         name_loc <- master.sweep$sweep_lists_ids[i] # name_loc
+
+                                                                         if(stringr::str_starts(name_loc, pattern = "A.")){
+                                                                           name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "A."), pattern = "_")[[1]]
+                                                                           FORCING_ALPHA_loc <-
+                                                                             data.frame(FROM = name_loc_vector[1],
+                                                                                        TO = name_loc_vector[2],
+                                                                                        ALPHA = param_space.loc[j, name_loc ], #################### param_space.loc j
+                                                                                        FROM_TO = paste(name_loc_vector, collapse = "_"))
+
+                                                                           if(is.null(FORCING_ALPHA)){
+                                                                             FORCING_ALPHA <- FORCING_ALPHA_loc
+                                                                           } else {
+                                                                             FORCING_ALPHA <- dplyr::bind_rows(FORCING_ALPHA, FORCING_ALPHA_loc)
+                                                                           }
+                                                                         }
+
+                                                                         if(stringr::str_starts(name_loc, pattern = "D.")){
+                                                                           name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "D."), pattern = "_")[[1]]
+                                                                           FORCING_DELTA_loc <-
+                                                                             data.frame(BOX_ID = name_loc_vector[1],
+                                                                                        DELTA.t0 = param_space.loc[j, name_loc ]) #################### param_space.loc j
+
+                                                                           if(is.null(FORCING_DELTA)){
+                                                                             FORCING_DELTA <- FORCING_DELTA_loc
+                                                                           } else {
+                                                                             FORCING_DELTA <- dplyr::bind_rows(FORCING_DELTA, FORCING_DELTA_loc)
+                                                                           }
+                                                                         }
+
+                                                                         if(stringr::str_starts(name_loc, pattern = "S.")){
+                                                                           name_loc_vector <- stringr::str_split(stringr::str_remove(name_loc, pattern = "S."), pattern = "_")[[1]]
+                                                                           FORCING_SIZE_loc <-
+                                                                             data.frame(BOX_ID = name_loc_vector[1],
+                                                                                        SIZE.t0 = param_space.loc[j, name_loc ]) #################### param_space.loc j
+
+                                                                           if(is.null(FORCING_DELTA)){
+                                                                             FORCING_SIZE <- FORCING_SIZE_loc
+                                                                           } else {
+                                                                             FORCING_SIZE <- dplyr::bind_rows(FORCING_SIZE, FORCING_SIZE_loc)
+                                                                           }
+                                                                         }
+
+                                                                         if(stringr::str_starts(name_loc, pattern = "R.")){
+                                                                           box_fluxes_loc <- strsplit(x = stringr::str_remove(name_loc, pattern = "R."),
+                                                                                                      split = ".",
+                                                                                                      fixed = T)[[1]]
+
+                                                                           FORCING_RAYLEIGH_loc <- data.frame(XFROM = unlist(strsplit(box_fluxes_loc[1], "_", fixed = T))[1],
+                                                                                                              XTO = unlist(strsplit(box_fluxes_loc[1], "_", fixed = T))[2],
+                                                                                                              YFROM = unlist(strsplit(box_fluxes_loc[2], "_", fixed = T))[1],
+                                                                                                              YTO = unlist(strsplit(box_fluxes_loc[2], "_", fixed = T))[2],
+                                                                                                              AFROM = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[1],
+                                                                                                              ATO = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[2],
+                                                                                                              ALPHA_0 = param_space.loc[j, name_loc ]) #################### param_space.loc j
+
+                                                                           if(is.null(FORCING_ALPHA)){
+                                                                             FORCING_RAYLEIGH <- FORCING_RAYLEIGH_loc
+                                                                           } else {
+                                                                             FORCING_RAYLEIGH <- dplyr::bind_rows(FORCING_RAYLEIGH, FORCING_RAYLEIGH_loc)
+                                                                           }
+                                                                         }
+
+                                                                         if(name_loc == "flux_list_name"){
+                                                                           flux_list_name <- as.character(param_space.loc[j, name_loc ]) #################### param_space.loc j
+                                                                         }
+
+                                                                         if(name_loc == "coeff_list_name"){
+                                                                           coeff_list_name <- as.character(param_space.loc[j, name_loc ]) #################### param_space.loc j
+                                                                         }
+                                                                       }
+
+                                                                       # __ii. run sim.single_run ####
+                                                                       results <- sim.single_run(
+                                                                         # workdir = args$workdir,
+                                                                         workdir = to_tmpdir(""),
+                                                                         SERIES_ID = SERIES_ID,
+                                                                         flux_list = flux_list_name, # chunk loop
+                                                                         coeff_list = coeff_list_name, # chunk loop
+                                                                         t_max = t_max,
+                                                                         n_steps = 1,
+                                                                         # isobxr_master_file = args$isobxr_master_file,
+                                                                         isobxr_master = master.isobxr,
+                                                                         suppress_messages = T,
+                                                                         export.diagrams = F,
+                                                                         export.delta_plot = F,
+                                                                         export.data_as_csv_xlsx = F,
+                                                                         plot.time_as_log10 = F,
+                                                                         plot.time_unit = NULL,
+                                                                         show.delta_plot = F,
+                                                                         inspect_inputs = F,
+                                                                         save_outputs = F,
+                                                                         return_data = F,
+                                                                         solver = "analytical",
+                                                                         n_zeros_RUN_IDs = 5,
+                                                                         FORCING_RAYLEIGH = FORCING_RAYLEIGH, # chunk loop
+                                                                         FORCING_SIZE = FORCING_SIZE, # chunk loop
+                                                                         FORCING_DELTA = FORCING_DELTA, # chunk loop
+                                                                         FORCING_ALPHA = FORCING_ALPHA, # chunk loop
+                                                                         COMPOSITE = FALSE,
+                                                                         COMPO_SERIES_n = NaN,
+                                                                         COMPO_SERIES_FAMILY = NaN,
+                                                                         EXPLORER = TRUE,
+                                                                         EXPLO_SERIES_n = chunk.loc[, "chunk_n"],
+                                                                         EXPLO_SERIES_FAMILY = paths$current.space_sweep.SERIES,
+                                                                         manual_RUN_n = param_space.loc[j, "RUN_n"])
+                                                                     })
+                                         })
+
+      LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
+
+      SERIES_ID.loc <- SERIES_ID
+
+      LOG <- dplyr::bind_rows(LOG %>%
+                                dplyr::filter(SERIES_ID != SERIES_ID.loc),
+                              LOG %>%
+                                dplyr::filter(SERIES_ID == SERIES_ID.loc) %>%
+                                dplyr::arrange(RUN_n))
+
+      data.table::fwrite(x = LOG, file = to_tmpdir(paths$LOG_file), row.names = F, quote = F)
+      remove(SERIES_ID.loc)
+      elapsed.sweep <- tictoc::toc(quiet = T)
+
     }
-    ############################## ____ END CHUNK LOOP ######
 
-    elapsed.sweep <- tictoc::toc(quiet = T)
-    close(pb_cpt)
-
-    # _c. read and merge all single run outputs from tempdir - local chunk ####
+    # _d. read and merge all single run outputs from tempdir - local chunk ####
     # ____ LOG ####
     if (newLOG){
       LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
@@ -562,173 +741,218 @@ sweep.final_nD <- function(workdir,
     rlang::inform("\U0001f535 PREPARING RESULTS")
     tictoc::tic("chunk result preparation:")
 
-    # paths$paths_all_rds <- LOG_SERIES$path_outdir %>% as.character()
-    #
-    # # used for reading single outputs from a single chunk in sweep.final_nD prior to merging
-    # # TO MOVE OUTSIDE #
-    # read_single_run_output_for_FINnD <- function(path_to_rds){
-    #   header_sep <- "." ### change to . in the future
-    #
-    #   run_rds <- path_to_rds %>%
-    #     paste0(".rds") %>%
-    #     to_tmpdir() %>%
-    #     readRDS()
-    #
-    #   run_rds %>%
-    #     .$outputs %>%
-    #     .$delta_vs_t %>%
-    #     tail(1) %>%
-    #     dplyr::bind_cols(run_rds %>%
-    #                        .$inputs %>%
-    #                        .$LOG %>%
-    #                        dplyr::select(SERIES_RUN_ID, RUN_n)) %>%
-    #     dplyr::bind_cols(run_rds %>%
-    #                        magrittr::extract2("inputs") %>%
-    #                        magrittr::extract2("INITIAL") %>%
-    #                        dplyr::rename("m0" = "SIZE.t0",
-    #                                      "d0" = "DELTA.t0") %>%
-    #                        tidyr::pivot_wider(names_from = BOX_ID,
-    #                                           values_from = c(d0, m0),
-    #                                           names_sep = header_sep) %>%
-    #                        as.data.frame()
-    #     ) %>%
-    #     dplyr::bind_cols(run_rds %>%
-    #                        magrittr::extract2("inputs") %>%
-    #                        magrittr::extract2("FLUXES") %>%
-    #                        tidyr::pivot_longer(cols = stringr::str_split(LOG_SERIES$BOXES_ID_list[1], pattern = "_") %>% unlist()) %>%
-    #                        dplyr::rename("FROM" = "BOX_ID",
-    #                                      "TO" = "name") %>%
-    #                        dplyr::filter(value != 0) %>%
-    #                        tidyr::unite(col = "FROM_TO", FROM, TO, sep = "_") %>%
-    #                        dplyr::mutate(FROM_TO = paste("f", FROM_TO, sep = header_sep)) %>%
-    #                        tidyr::pivot_wider(values_from = value,
-    #                                           names_from = FROM_TO) %>%
-    #                        as.data.frame()) %>%
-    #     dplyr::bind_cols(run_rds %>%
-    #                        magrittr::extract2("inputs") %>%
-    #                        magrittr::extract2("COEFFS") %>%
-    #                        tidyr::pivot_longer(cols = stringr::str_split(LOG_SERIES$BOXES_ID_list[1], pattern = "_") %>% unlist()) %>%
-    #                        dplyr::rename("FROM" = "BOX_ID",
-    #                                      "TO" = "name") %>%
-    #                        dplyr::filter(value != 1) %>%
-    #                        tidyr::unite(col = "FROM_TO", FROM, TO, sep = "_") %>%
-    #                        dplyr::mutate(FROM_TO = paste("a", FROM_TO, sep = header_sep)) %>%
-    #                        tidyr::pivot_wider(values_from = value,
-    #                                           names_from = FROM_TO) %>%
-    #                        as.data.frame())
-    # }
-    #
-    # pb_cpt <- utils::txtProgressBar(min = 0, max = tot_run.loc, style = 3, width = 50)
-    # clock <- 1
-    #
-    # for (i in 1:length(paths$paths_all_rds)){
-    #   if (i == 1){
-    #     FINnD.results.chunk <- read_single_run_output_for_FINnD(paths$paths_all_rds[i])
-    #   } else {
-    #     FINnD.results.chunk <- dplyr::bind_rows(FINnD.results.chunk, read_single_run_output_for_FINnD(paths$paths_all_rds[i]))
-    #   }
-    #   utils::setTxtProgressBar(pb_cpt, clock)
-    #   clock <- clock + 1
-    # }
-    #
-    # # FINnD.results.chunk <- paths$paths_all_rds %>%
-    # #   purrr::map(read_single_run_output_for_FINnD) %>%
-    # #   purrr::reduce(dplyr::bind_rows)
-    #
-    # elapsed.prepare <- tictoc::toc(quiet = T)
-    # close(pb_cpt)
+    if(!args$parallelize){
+      # __i. FOR_LOOP chunk prep #####
 
-    pb_prep <- utils::txtProgressBar(min = 0, max = tot_run.loc, style = 3, width = 50)
+      pb_prep <- utils::txtProgressBar(min = 0, max = tot_run.loc, style = 3, width = 50)
 
-    i <- 1
-    for (i in 1:(tot_run.loc)){
-      SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
-      RUN_n_i <- LOG_SERIES[i, "RUN_n"]
-      path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
+      i <- 1
+      for (i in 1:(tot_run.loc)){
+        SERIES_RUN_ID_i <- LOG_SERIES[i, "SERIES_RUN_ID"]
+        RUN_n_i <- LOG_SERIES[i, "RUN_n"]
+        path_outdir_i <- as.character(LOG_SERIES[i, "path_outdir"])
 
-      run_rds <- path_outdir_i %>%
-        paste0(".rds") %>%
-        to_tmpdir() %>%
-        readRDS()
+        run_rds <- path_outdir_i %>%
+          paste0(".rds") %>%
+          to_tmpdir() %>%
+          readRDS()
 
-      SIZE_INIT_i <- run_rds$inputs$INITIAL[,c("BOX_ID", "SIZE.t0")]
-      DELTA_INIT_i <- run_rds$inputs$INITIAL[,c("BOX_ID", "DELTA.t0")]
-      FLUXES_i <- run_rds$inputs$FLUXES
-      COEFFS_i <- run_rds$inputs$COEFFS
-      unlink(to_tmpdir(path_outdir_i %>% paste0(".rds")), recursive = TRUE)
-      evD_i <- run_rds$outputs$delta_vs_t %>% utils::tail(1)
+        SIZE_INIT_i <- run_rds$inputs$INITIAL[,c("BOX_ID", "SIZE.t0")]
+        DELTA_INIT_i <- run_rds$inputs$INITIAL[,c("BOX_ID", "DELTA.t0")]
+        FLUXES_i <- run_rds$inputs$FLUXES
+        COEFFS_i <- run_rds$inputs$COEFFS
+        unlink(to_tmpdir(path_outdir_i %>% paste0(".rds")), recursive = TRUE)
+        evD_i <- run_rds$outputs$delta_vs_t %>% utils::tail(1)
 
-      FLUXES_i_colnames <- names(FLUXES_i)
-      FLUXES_i_vert <- data.frame(VAR_TYPE = "FLUX",
-                                  VARIABLE = NaN,
-                                  VALUE = NaN)
-      FLUXES_i_vert_loc <- FLUXES_i_vert
-      j <- i
-      for (j in 1:nrow(FLUXES_i)){
-        k <- 1
-        for (k in 1:(length(FLUXES_i)-1)){
-          FLUXES_i_vert_loc$VALUE = FLUXES_i[j,k+1]
-          FLUXES_i_vert_loc$VARIABLE = paste("f", paste0(FLUXES_i[j, "BOX_ID"], "_", FLUXES_i_colnames[k+1]), sep = ".")
-          FLUXES_i_vert <- rbind(FLUXES_i_vert, FLUXES_i_vert_loc)
+        FLUXES_i_colnames <- names(FLUXES_i)
+        FLUXES_i_vert <- data.frame(VAR_TYPE = "FLUX",
+                                    VARIABLE = NaN,
+                                    VALUE = NaN)
+        FLUXES_i_vert_loc <- FLUXES_i_vert
+        j <- i
+        for (j in 1:nrow(FLUXES_i)){
+          k <- 1
+          for (k in 1:(length(FLUXES_i)-1)){
+            FLUXES_i_vert_loc$VALUE = FLUXES_i[j,k+1]
+            FLUXES_i_vert_loc$VARIABLE = paste("f", paste0(FLUXES_i[j, "BOX_ID"], "_", FLUXES_i_colnames[k+1]), sep = ".")
+            FLUXES_i_vert <- rbind(FLUXES_i_vert, FLUXES_i_vert_loc)
+          }
         }
-      }
-      FLUXES_i_vert <- FLUXES_i_vert[2:nrow(FLUXES_i_vert),]
+        FLUXES_i_vert <- FLUXES_i_vert[2:nrow(FLUXES_i_vert),]
 
-      COEFFS_i_colnames <- names(COEFFS_i)
-      COEFFS_i_vert <- data.frame(VAR_TYPE = "COEFF",
-                                  VARIABLE = NaN,
-                                  VALUE = NaN)
-      COEFFS_i_vert_loc <- COEFFS_i_vert
-      j <- i
-      for (j in 1:nrow(COEFFS_i)){
-        k <- 1
-        for (k in 1:(length(COEFFS_i)-1)){
-          COEFFS_i_vert_loc$VALUE = COEFFS_i[j,k+1]
-          COEFFS_i_vert_loc$VARIABLE = paste("a", paste0(COEFFS_i[j, "BOX_ID"], "_", COEFFS_i_colnames[k+1]), sep = ".")
-          COEFFS_i_vert <- rbind(COEFFS_i_vert, COEFFS_i_vert_loc)
+        COEFFS_i_colnames <- names(COEFFS_i)
+        COEFFS_i_vert <- data.frame(VAR_TYPE = "COEFF",
+                                    VARIABLE = NaN,
+                                    VALUE = NaN)
+        COEFFS_i_vert_loc <- COEFFS_i_vert
+        j <- i
+        for (j in 1:nrow(COEFFS_i)){
+          k <- 1
+          for (k in 1:(length(COEFFS_i)-1)){
+            COEFFS_i_vert_loc$VALUE = COEFFS_i[j,k+1]
+            COEFFS_i_vert_loc$VARIABLE = paste("a", paste0(COEFFS_i[j, "BOX_ID"], "_", COEFFS_i_colnames[k+1]), sep = ".")
+            COEFFS_i_vert <- rbind(COEFFS_i_vert, COEFFS_i_vert_loc)
+          }
         }
+        COEFFS_i_vert <- COEFFS_i_vert[2:nrow(COEFFS_i_vert),]
+
+        SIZE_INIT_i_vert <- SIZE_INIT_i
+        DELTA_INIT_i_vert <- DELTA_INIT_i
+        SIZE_INIT_i_vert$VAR_TYPE <- "SIZE.t0"
+        DELTA_INIT_i_vert$VAR_TYPE <- "DELTA.t0"
+        SIZE_INIT_i_vert$VARIABLE <- paste("m0", paste(SIZE_INIT_i_vert$BOX_ID, sep = "_"), sep = ".")
+        DELTA_INIT_i_vert$VARIABLE <- paste("d0", paste(DELTA_INIT_i_vert$BOX_ID, sep = "_"), sep = ".")
+        SIZE_INIT_i_vert$VALUE <- SIZE_INIT_i_vert$SIZE.t0
+        DELTA_INIT_i_vert$VALUE <- DELTA_INIT_i_vert$DELTA.t0
+        SIZE_INIT_i_vert <- SIZE_INIT_i_vert[,c("VAR_TYPE", "VARIABLE", "VALUE")]
+        DELTA_INIT_i_vert <- DELTA_INIT_i_vert[,c("VAR_TYPE", "VARIABLE", "VALUE")]
+
+        meta_RUN_i <- rbind(SIZE_INIT_i_vert, DELTA_INIT_i_vert)
+        meta_RUN_i <- rbind(meta_RUN_i, FLUXES_i_vert)
+        meta_RUN_i <- rbind(meta_RUN_i, COEFFS_i_vert)
+        meta_RUN_i_short <- meta_RUN_i[,c("VARIABLE", "VALUE")]
+        meta_RUN_i_horiz <- as.data.frame(t(meta_RUN_i_short$VALUE))
+        names(meta_RUN_i_horiz) <- meta_RUN_i$VARIABLE
+
+        evD_i$SERIES_RUN_ID <- SERIES_RUN_ID_i
+        evD_i$RUN_n <- RUN_n_i
+
+        meta_RUN_i_evD_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evD_i))))
+
+        evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
+
+        if (i == 1){
+          evD <- evD_i
+        } else {
+          evD <- rbind(evD, evD_i[1:nrow(evD_i),])
+        }
+        utils::setTxtProgressBar(pb_prep, i)
+        i <- i + 1
       }
-      COEFFS_i_vert <- COEFFS_i_vert[2:nrow(COEFFS_i_vert),]
 
-      SIZE_INIT_i_vert <- SIZE_INIT_i
-      DELTA_INIT_i_vert <- DELTA_INIT_i
-      SIZE_INIT_i_vert$VAR_TYPE <- "SIZE.t0"
-      DELTA_INIT_i_vert$VAR_TYPE <- "DELTA.t0"
-      SIZE_INIT_i_vert$VARIABLE <- paste("m0", paste(SIZE_INIT_i_vert$BOX_ID, sep = "_"), sep = ".")
-      DELTA_INIT_i_vert$VARIABLE <- paste("d0", paste(DELTA_INIT_i_vert$BOX_ID, sep = "_"), sep = ".")
-      SIZE_INIT_i_vert$VALUE <- SIZE_INIT_i_vert$SIZE.t0
-      DELTA_INIT_i_vert$VALUE <- DELTA_INIT_i_vert$DELTA.t0
-      SIZE_INIT_i_vert <- SIZE_INIT_i_vert[,c("VAR_TYPE", "VARIABLE", "VALUE")]
-      DELTA_INIT_i_vert <- DELTA_INIT_i_vert[,c("VAR_TYPE", "VARIABLE", "VALUE")]
+      close(pb_prep)
 
-      meta_RUN_i <- rbind(SIZE_INIT_i_vert, DELTA_INIT_i_vert)
-      meta_RUN_i <- rbind(meta_RUN_i, FLUXES_i_vert)
-      meta_RUN_i <- rbind(meta_RUN_i, COEFFS_i_vert)
-      meta_RUN_i_short <- meta_RUN_i[,c("VARIABLE", "VALUE")]
-      meta_RUN_i_horiz <- as.data.frame(t(meta_RUN_i_short$VALUE))
-      names(meta_RUN_i_horiz) <- meta_RUN_i$VARIABLE
+    } else if (args$parallelize){
 
-      evD_i$SERIES_RUN_ID <- SERIES_RUN_ID_i
-      evD_i$RUN_n <- RUN_n_i
+      # __ii. PARALLELIZED chunk prep #####
+      mc.list.LOG_SERIES <-
+        LOG_SERIES %>%
+        dplyr::mutate(RUN_n = dplyr::row_number()) %>%
+        dplyr::mutate(mc.group_by = 1 + (dplyr::row_number()-1) %/% (dplyr::n()/args$mc.cores)) %>%
+        dplyr::mutate(mc.group = mc.group_by) %>%
+        dplyr::group_by(mc.group_by) %>%
+        tidyr::nest() %>%
+        dplyr::pull(data)
 
-      meta_RUN_i_evD_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evD_i))))
+      results.list <- parallel::mclapply(mc.list.LOG_SERIES,
+                                         mc.cores = args$mc.cores,
+                                         function(df.mc) {
 
-      evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
+                                           sc.list.LOG_SERIES <-
+                                             df.mc %>%
+                                             dplyr::mutate(row = dplyr::row_number()) %>%
+                                             dplyr::group_split(row)
 
-      if (i == 1){
-        evD <- evD_i
-      } else {
-        evD <- rbind(evD, evD_i[1:nrow(evD_i),])
-      }
-      utils::setTxtProgressBar(pb_prep, i)
-      i <- i + 1
+                                           # sc.list.LOG_SERIES <-
+                                           #   mc.list.LOG_SERIES[[1]] %>%
+                                           #   dplyr::mutate(row = dplyr::row_number()) %>%
+                                           #   dplyr::group_split(row)
+
+                                           results.list.sc <- lapply(sc.list.LOG_SERIES,
+
+                                                                     function(df.sc){
+
+                                                                       LOG_SERIES.loc <- df.sc %>% as.data.frame()
+
+                                                                       i <- 1
+
+                                                                       SERIES_RUN_ID_i <- LOG_SERIES.loc[i, "SERIES_RUN_ID"]
+                                                                       RUN_n_i <- LOG_SERIES.loc[i, "RUN_n"]
+                                                                       path_outdir_i <- as.character(LOG_SERIES.loc[i, "path_outdir"])
+
+                                                                       run_rds <- path_outdir_i %>%
+                                                                         paste0(".rds") %>%
+                                                                         to_tmpdir() %>%
+                                                                         readRDS()
+
+                                                                       SIZE_INIT_i <- run_rds$inputs$INITIAL[,c("BOX_ID", "SIZE.t0")]
+                                                                       DELTA_INIT_i <- run_rds$inputs$INITIAL[,c("BOX_ID", "DELTA.t0")]
+                                                                       FLUXES_i <- run_rds$inputs$FLUXES
+                                                                       COEFFS_i <- run_rds$inputs$COEFFS
+                                                                       unlink(to_tmpdir(path_outdir_i %>% paste0(".rds")), recursive = TRUE)
+                                                                       evD_i <- run_rds$outputs$delta_vs_t %>% utils::tail(1)
+
+                                                                       FLUXES_i_colnames <- names(FLUXES_i)
+                                                                       FLUXES_i_vert <- data.frame(VAR_TYPE = "FLUX",
+                                                                                                   VARIABLE = NaN,
+                                                                                                   VALUE = NaN)
+                                                                       FLUXES_i_vert_loc <- FLUXES_i_vert
+                                                                       j <- i
+                                                                       for (j in 1:nrow(FLUXES_i)){
+                                                                         k <- 1
+                                                                         for (k in 1:(length(FLUXES_i)-1)){
+                                                                           FLUXES_i_vert_loc$VALUE = FLUXES_i[j,k+1]
+                                                                           FLUXES_i_vert_loc$VARIABLE = paste("f", paste0(FLUXES_i[j, "BOX_ID"], "_", FLUXES_i_colnames[k+1]), sep = ".")
+                                                                           FLUXES_i_vert <- rbind(FLUXES_i_vert, FLUXES_i_vert_loc)
+                                                                         }
+                                                                       }
+                                                                       FLUXES_i_vert <- FLUXES_i_vert[2:nrow(FLUXES_i_vert),]
+
+                                                                       COEFFS_i_colnames <- names(COEFFS_i)
+                                                                       COEFFS_i_vert <- data.frame(VAR_TYPE = "COEFF",
+                                                                                                   VARIABLE = NaN,
+                                                                                                   VALUE = NaN)
+                                                                       COEFFS_i_vert_loc <- COEFFS_i_vert
+                                                                       j <- i
+                                                                       for (j in 1:nrow(COEFFS_i)){
+                                                                         k <- 1
+                                                                         for (k in 1:(length(COEFFS_i)-1)){
+                                                                           COEFFS_i_vert_loc$VALUE = COEFFS_i[j,k+1]
+                                                                           COEFFS_i_vert_loc$VARIABLE = paste("a", paste0(COEFFS_i[j, "BOX_ID"], "_", COEFFS_i_colnames[k+1]), sep = ".")
+                                                                           COEFFS_i_vert <- rbind(COEFFS_i_vert, COEFFS_i_vert_loc)
+                                                                         }
+                                                                       }
+                                                                       COEFFS_i_vert <- COEFFS_i_vert[2:nrow(COEFFS_i_vert),]
+
+                                                                       SIZE_INIT_i_vert <- SIZE_INIT_i
+                                                                       DELTA_INIT_i_vert <- DELTA_INIT_i
+                                                                       SIZE_INIT_i_vert$VAR_TYPE <- "SIZE.t0"
+                                                                       DELTA_INIT_i_vert$VAR_TYPE <- "DELTA.t0"
+                                                                       SIZE_INIT_i_vert$VARIABLE <- paste("m0", paste(SIZE_INIT_i_vert$BOX_ID, sep = "_"), sep = ".")
+                                                                       DELTA_INIT_i_vert$VARIABLE <- paste("d0", paste(DELTA_INIT_i_vert$BOX_ID, sep = "_"), sep = ".")
+                                                                       SIZE_INIT_i_vert$VALUE <- SIZE_INIT_i_vert$SIZE.t0
+                                                                       DELTA_INIT_i_vert$VALUE <- DELTA_INIT_i_vert$DELTA.t0
+                                                                       SIZE_INIT_i_vert <- SIZE_INIT_i_vert[,c("VAR_TYPE", "VARIABLE", "VALUE")]
+                                                                       DELTA_INIT_i_vert <- DELTA_INIT_i_vert[,c("VAR_TYPE", "VARIABLE", "VALUE")]
+
+                                                                       meta_RUN_i <- rbind(SIZE_INIT_i_vert, DELTA_INIT_i_vert)
+                                                                       meta_RUN_i <- rbind(meta_RUN_i, FLUXES_i_vert)
+                                                                       meta_RUN_i <- rbind(meta_RUN_i, COEFFS_i_vert)
+                                                                       meta_RUN_i_short <- meta_RUN_i[,c("VARIABLE", "VALUE")]
+                                                                       meta_RUN_i_horiz <- as.data.frame(t(meta_RUN_i_short$VALUE))
+                                                                       names(meta_RUN_i_horiz) <- meta_RUN_i$VARIABLE
+
+                                                                       evD_i$SERIES_RUN_ID <- SERIES_RUN_ID_i
+                                                                       evD_i$RUN_n <- RUN_n_i
+
+                                                                       meta_RUN_i_evD_df <- as.data.frame(dplyr::slice(meta_RUN_i_horiz, rep(1:dplyr::n(), each = nrow(evD_i))))
+
+                                                                       evD_i <- cbind(evD_i, meta_RUN_i_evD_df)
+                                                                       return(evD_i)
+                                                                     })
+
+                                           results.list.sc <- results.list.sc %>% dplyr::bind_rows()
+                                           return(results.list.sc)
+                                         })
+
+      evD <- results.list %>% dplyr::bind_rows() %>% dplyr::arrange(RUN_n)
+
     }
 
     FINnD.results.chunk <- evD
     remove(evD)
 
     elapsed.prepare <- tictoc::toc(quiet = T)
-    close(pb_prep)
 
     colnames_to_drop_check <- names(FINnD.results.chunk)[names(FINnD.results.chunk) %>% stringr::str_starts(pattern = "f.")]
     if (length(colnames_to_drop_check) > 0){
@@ -754,7 +978,7 @@ sweep.final_nD <- function(workdir,
       }
     }
 
-    # _d. edit chunk output : RDS and CSV ####
+    # _e. edit chunk output : RDS and CSV ####
 
     paths$current.chunk_dir <- paste("4_", as.character(SERIES_ID), "/", sep = "")
 
@@ -793,9 +1017,9 @@ sweep.final_nD <- function(workdir,
 
     # VI. save outputs ####
 
-    rlang::inform("________________________________________________________________________________")
-    rlang::inform(message = paste("\U2139 Run outputs (stored in temporary directory):", sep = ""))
-    fs::dir_tree(path = to_tmpdir(""), recurse = T)
+    # rlang::inform("________________________________________________________________________________")
+    # rlang::inform(message = paste("\U2139 Run outputs (stored in temporary directory):", sep = ""))
+    # fs::dir_tree(path = to_tmpdir(""), recurse = T)
     rlang::inform("________________________________________________________________________________")
 
     if(!args$save_outputs){

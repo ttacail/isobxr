@@ -11,16 +11,29 @@
 #' to which current chunks should be merged. \cr
 #' For instance: "4_FINnD_0_SWEEP_FINnD_demo_001_000_digest"
 #' @param save_outputs If TRUE, saves merged chunks outputs to sweep.final_nD digest directory.
+#' @param parallelize  If TRUE, will perform merging by computing on multiple cores if available.
+#' Only compatible with unix devices (e.g., MacOS, Linux etc. but not windows).
+#' Default if FALSE.
 #' @return Merged chunks sweep.final_nD outputs, including results, chunk logs, chunked parameter spaces.
 #'
 #' @export
 merge_FINnD_chunks <- function(workdir,
                                FINnD_digest_dir.to_merge,
-                               save_outputs = FALSE){
+                               save_outputs = FALSE,
+                               parallelize = FALSE){
 
-  # workdir <- "/Users/sz18642/isobxr Gd 2023/5_human_iK_final_nD/"
-  # FINnD_digest_dir.to_merge = "4_FINnD_0_SWEEP_FINnD_demo_001_000_digest"
+  # workdir <- "/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/1_isobxr_V2/1_ABCD_dev"
+  # FINnD_digest_dir.to_merge = "4_FINnD_0_SWEEP_FINnD_demo_008_000_digest"
   # save_outputs = TRUE
+  # parallelize = TRUE
+
+  # check if parallelization is possible
+  if (parallelize){
+    if(.Platform$OS.type != "unix"){
+      parallelize <- FALSE
+      rlang::warn("Parallelization not possible on non-unix OS.")
+    }
+  }
 
   variable <- value <- sweeped_fraction_perc <- NULL
 
@@ -62,17 +75,53 @@ merge_FINnD_chunks <- function(workdir,
 
   space_digest_name_root <- space_digest_name_root[!stringr::str_ends(space_digest_name_root, pattern = "_merged")]
 
-  merged_results <- path.evD %>%
-    purrr::map(base::readRDS) %>%
-    purrr::reduce(dplyr::bind_rows)
+  if (!parallelize){
+    merged_results <- path.evD %>%
+      purrr::map(base::readRDS) %>%
+      purrr::reduce(dplyr::bind_rows) %>%
+      dplyr::arrange(SERIES_RUN_ID) %>%
+      as.data.frame() %>%
+      clear_subset()
 
-  merged_LOG <- path.LOG %>%
-    purrr::map(data.table::fread) %>%
-    purrr::reduce(dplyr::bind_rows)
+    merged_LOG <- path.LOG %>%
+      purrr::map(data.table::fread) %>%
+      purrr::reduce(dplyr::bind_rows) %>%
+      as.data.frame() %>%
+      clear_subset()
+
+  } else {
+    merged_results <-
+      parallel::mclapply(path.evD,
+                         # mc.cores = args$mc.cores,
+                         function(path.evD.mc) {
+                           res_loc <- base::readRDS(path.evD.mc)
+                           return(res_loc)
+                         }) %>%
+      purrr::reduce(dplyr::bind_rows) %>%
+      dplyr::arrange(SERIES_RUN_ID) %>%
+      as.data.frame() %>%
+      clear_subset()
+
+
+    merged_LOG <-
+      parallel::mclapply(path.LOG,
+                         # mc.cores = args$mc.cores,
+                         function(path.LOG.mc) {
+                           res_loc <- data.table::fread(path.LOG.mc)
+                           return(res_loc)
+                         }) %>%
+      purrr::reduce(dplyr::bind_rows) %>%
+      dplyr::arrange(SERIES_ID) %>%
+      as.data.frame() %>%
+      clear_subset()
+
+  }
 
   merged_param_space <- path.param_space %>%
     purrr::map(base::readRDS) %>%
-    purrr::reduce(dplyr::bind_rows)
+    purrr::reduce(dplyr::bind_rows) %>%
+    as.data.frame() %>%
+    clear_subset()
 
   # plot sweep progress
   pspace.merged <- merged_param_space
@@ -155,8 +204,6 @@ merge_FINnD_chunks <- function(workdir,
   {
     rlang::inform("\U2139 Merged chunks results were not exported. \n Set save_outputs = TRUE to export.")
   }
-
-
 
 }
 
