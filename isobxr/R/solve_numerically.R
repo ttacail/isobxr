@@ -157,6 +157,7 @@ solve_numerically <- function(IN,
 
   # save RDS/RDA ####
   outputs <- list(solver = "numerical",
+                  solution_type = "real",
                   final_state = N_OUT,
                   delta_vs_t = N_evD,
                   size_vs_t = N_evS)
