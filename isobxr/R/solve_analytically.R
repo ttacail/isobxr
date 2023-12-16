@@ -80,6 +80,13 @@ solve_analytically <- function(IN,
  # SOLVING SYSTEM ####
   MatSystem=InitSystem(VecM,MatJ,MatD)
   eigenval <- eigen(MatSystem)$values
+  if(is.complex(eigenval)){
+    rlang::warn("\u2757 Analytical solver finds complex solution.")
+    solution_type <- "complex"
+  } else {
+    solution_type <- "real"
+  }
+
   eigenval_as_df <- as.data.frame(eigenval)
   colnames(eigenval_as_df) <- "Eigenvalues"
   eigenvec <- eigen(MatSystem)$vectors
@@ -158,6 +165,7 @@ solve_analytically <- function(IN,
 
   # save RDA/RDS ####
   outputs <- list(solver = "analytical",
+                  solution_type = solution_type,
                   final_state = A_OUT,
                   delta_vs_t = A_evD,
                   size_vs_t = A_evS,
