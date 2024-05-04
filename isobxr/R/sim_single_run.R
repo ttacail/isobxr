@@ -730,7 +730,7 @@ sim.single_run <-
     } else {
       LOG_loc$RUN_n <- args$manual_RUN_n
 
-      if (!file.exists(to_tmpdir(paths$LOG_file))){
+      if (file.exists(to_tmpdir(paths$LOG_file))){
         LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
         previous_RUN_n_same_SERIES_ID <-
           LOG %>% filter(SERIES_ID %in% args$SERIES_ID) %>% pull(RUN_n)
@@ -739,7 +739,7 @@ sim.single_run <-
         }
       }
 
-      if (!file.exists(paths$LOG_file)){
+      if (file.exists(paths$LOG_file)){
         LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
         previous_RUN_n_same_SERIES_ID <-
           LOG %>% filter(SERIES_ID %in% args$SERIES_ID) %>% pull(RUN_n)
