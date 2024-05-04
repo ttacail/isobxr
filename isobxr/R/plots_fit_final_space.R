@@ -6,11 +6,17 @@
 #' @param DF fit.final_space data frame
 #' @param names.swp.ADSR names of swept ADSR parameters (alpha, delta, size, rayleigh, custom expressions), as vector
 #' @param parameter_subsets parameter subsets passed from fit.final_space
+#' @param custom.n_bins number of bins for custom variables. Default is NULL.
 #'
 #' @return A frequency plot of fitted parameter values.
 #'
 #' @keywords internal
-plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets){
+plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins = NULL){
+
+  # DF = DF
+  # names.swp.ADSR = names.swp.ADSR
+  # parameter_subsets = parameter_subsets
+  # custom.n_bins = 15
 
   . <- in.all.subset_param <- n <- swp.ADSR.value <- swp.ADSR.name <-
     label <- swp.center <- swp.2se <- swp.mean <- swp.50 <- swp.75 <-
@@ -33,7 +39,8 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets){
       dplyr::summarise(swp.ADSR.value = unique(swp.ADSR.value), .groups = "drop_last") %>%
       as.data.frame()
 
-    swp.ADSR.subset_range <- as.data.frame(parameter_subsets[names(parameter_subsets) %in% names.swp.ADSR])
+    swp.ADSR.subset_range <- as.data.frame(parameter_subsets[names(parameter_subsets) %in%
+                                                               names.swp.ADSR])
     DF.swp.ADSR$in.parameter_subsets <- TRUE
 
     for (i in 1:ncol(swp.ADSR.subset_range)){
@@ -61,6 +68,50 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets){
     dplyr::summarise(n = dplyr::n(), .groups = 'drop_last') %>%
     dplyr::mutate(freq = 100*n/sum(n)) %>%
     as.data.frame()
+
+  # custom.n_bins <- 15
+
+  custom.caption_warning <- ""
+
+  if (!is.null(custom.n_bins)){
+    if (names.swp.ADSR[stringr::str_starts(names.swp.ADSR, pattern = "custom.")] %>% length() > 0){
+      custom.names <- names.swp.ADSR[stringr::str_starts(names.swp.ADSR, pattern = "custom.")]
+
+      for (i in 1:length(custom.names)){
+
+      custom.loc.intervals <-
+        molten.DF.CI_fitted %>%
+        dplyr::filter(swp.ADSR.name == custom.names[i] ) %>%
+        dplyr::count(ggplot2::cut_interval(swp.ADSR.value, n = custom.n_bins))
+
+      names(custom.loc.intervals) <- c("interval", "n")
+
+      custom.loc.intervals <-
+        custom.loc.intervals %>%
+        tidyr::separate(interval, sep = ",", into = c("min", "max")) %>%
+        dplyr::mutate(min = stringr::str_remove_all(min, pattern = "\\[")) %>%
+        dplyr::mutate(min = stringr::str_remove_all(min, pattern = "\\(")) %>%
+        dplyr::mutate(max = stringr::str_remove_all(max, pattern = "\\)")) %>%
+        dplyr::mutate(max = stringr::str_remove_all(max, pattern = "\\]")) %>%
+        dplyr::mutate(min = as.numeric(min)) %>%
+        dplyr::mutate(max = as.numeric(max)) %>%
+        dplyr::mutate(swp.ADSR.value = .5*(min + max)) %>%
+        dplyr::mutate(freq = 100*n/sum(n)) %>%
+        dplyr::mutate(swp.ADSR.name = as.factor(custom.names[i]))
+
+
+      freq.molten.DF.CI_fitted <-
+        freq.molten.DF.CI_fitted %>%
+        dplyr::filter(swp.ADSR.name != custom.names[i]) %>%
+        dplyr::bind_rows(custom.loc.intervals %>% select(!c(min, max)))
+
+      }
+
+      custom.caption_warning <-
+        paste0("\n", "ATTENTION: Frequency distributions ",
+               "in custom variables are divided in ", custom.n_bins, " bins.")
+    }
+  }
 
   molten.DF <- reshape2::melt(DF[, c(names.swp.ADSR, "in.all.subset_param")],
                               id.vars = "in.all.subset_param",
@@ -206,9 +257,13 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets){
           # plot.caption.position =  "plot"
     )+
     ggplot2::facet_wrap(. ~ swp.ADSR.name,
-               scales = "free_x",
-               ncol = round(1.1*length(levels(freq.molten$swp.ADSR.name))/2)
+                        scales = "free_x",
+                        ncol = round(1.1*length(levels(freq.molten$swp.ADSR.name))/2)
     )+
+    # ggplot2::facet_grid(. ~ swp.ADSR.name,
+    #                     scales = "free"
+    #                     # cols = round(1.1*length(levels(freq.molten$swp.ADSR.name))/2)
+    # ) +
     ggplot2::labs(title = "Frequency distributions of CI fitted quantitative parameter ",
          y = "frequence of runs within observed CIs of all boxes (\u0025)",
          x = "sweeped parameter values",
@@ -218,6 +273,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets){
            "(mid) Horizontal mean with 1sd and 2se error bar; ",
            "\n", "(down) Value of mean \u00B1 1sd (2se).",
            "\n", "Crosses mark values standing outside a parameter subset.",
+           custom.caption_warning,
            sep = "")
     )+
     ggplot2::geom_errorbarh(data = stats.molten.DF.CI_fitted, # boxplot / 2SD / 2SE
@@ -290,6 +346,8 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets){
   #                           ggplot2::aes(x = swp.ADSR.value,
   #                               y = freq.in,
   #                               label = freq_max.label))
+
+  # plot.freq_ADSR
 
   if (exists("DF.swp.ADSR")){
     plot.freq_ADSR <- plot.freq_ADSR +

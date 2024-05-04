@@ -49,6 +49,8 @@
 #' By default, run outputs are stored in a temporary directory and erased if not saved.
 #' Default is FALSE.
 #' @param export_fit_data If TRUE, exports fitted data as csv and rds files.
+#' @param custom.n_bins number of bins for custom variables in frequency distributions plots.
+#' Default is NULL.
 #'
 #' @return A observation fit graphical report, in R session or exported as pdf, and a data report as R list or xlsx if required.
 #'
@@ -66,7 +68,8 @@ fit.final_space <- function(workdir,
                             parameter_subsets = NULL,
                             custom_expressions = NULL,
                             save_outputs = FALSE,
-                            export_fit_data = FALSE){
+                            export_fit_data = FALSE,
+                            custom.n_bins = NULL){
 
   # # ###### 0. clear workspace ######
   # if(!is.null(dev.list())) dev.off()
@@ -103,8 +106,25 @@ fit.final_space <- function(workdir,
   # custom_expressions = NULL
   # save_outputs = FALSE
   # export_fit_data = FALSE
+  #
+  #
+  # workdir = "/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ENos dCa/0_ENOS_boxmod/3_ENOS_R/2_models/2_sweep_FINnD_human_NIR_3"
+  # obs_file_name = "observations_SWEEP_FINnD_demo_true_final.csv"
+  # sweep_space_digest_folders = "4_FINnD_0_SWEEP_FINnD_001_000_digest"
+  # # fit_name = NULL,
+  # # output_dir = NULL,
+  # delta_reference_box = "DIET"
+  # excluded_boxes = c("WASTE", "DIET", "FEC", "GIT", "ITG", "KDN", "PLAp", "rBNE", "ST")
+  # print_correlogram = FALSE
+  # # print_lda = FALSE,
+  # # print_LS_surfaces = TRUE,
+  # parameter_subsets =  list(swp.R.KDN_UR.PLAf_KDN.KDN_UR = c(0.99972, 0.99974))
+  # custom_expressions = c("a.KDN_UR", "100*f.KDN_UR/f.PLAf_KDN")
+  # save_outputs = TRUE
+  # # export_fit_data = FALSE
 
   ###### 1. initiate ######
+  tictoc::tic("1. initiate")
   # source("/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/0_sweep_space_functions/fit_sweep_space_plot_fns.R")
 
   # store arguments
@@ -164,6 +184,9 @@ fit.final_space <- function(workdir,
   }
 
   ##### 2. import / format data #####
+  elapsed.1 <- tictoc::toc(quiet = T)
+  tictoc::tic("2a")
+
   ##### _ a. import observations for delta.ref######
   observations <- data.table::fread(file = file.observations, stringsAsFactors = T, data.table = F)
   names.obs <- c("BOX_ID", "delta.def", "delta.ref", "obs.delta", "obs.CI", "obs.CI.def", "obs.file")
@@ -178,6 +201,8 @@ fit.final_space <- function(workdir,
   names(observations)[names(observations) %in% c("AV")] <- c("obs.delta")
   remove(file.observations)
 
+  elapsed.2a <- tictoc::toc(quiet = T)
+  tictoc::tic("2b")
   ##### _ b. import sweep_space sims ######
   # optional for later release: merging multiple sweeped spaces.
   # would require verification of compatibility
@@ -203,7 +228,8 @@ fit.final_space <- function(workdir,
   }
 
   DF.loc <- readRDS(file = file.sweep_std)
-  DF.loc[sapply(DF.loc, is.character)] <- lapply(DF.loc[sapply(DF.loc, is.character)], as.factor)
+  DF.loc[sapply(DF.loc, is.character)] <-
+    parallel::mclapply(DF.loc[sapply(DF.loc, is.character)], as.factor) ## para ####
   sweeped_space <- readRDS(file = file.sweep_space)
   names(sweeped_space) <- paste0("swp.", names(sweeped_space))
   DF.loc <- cbind(DF.loc, sweeped_space)
@@ -230,6 +256,9 @@ fit.final_space <- function(workdir,
                    value.name = "sim.delta")
   DF.loc.vert$delta.ref <- as.character("NaN")
 
+  # too long # simplify or PAR #####
+  elapsed.1 <- tictoc::toc(quiet = T)
+  tictoc::tic("2. import / format data")
   if (!is.null(delta.ref) & !is.na(delta.ref) & !is.nan(delta.ref)){
 
     if (!is.character(delta.ref)) rlang::abort("delta.ref should be a string.")
@@ -254,8 +283,10 @@ fit.final_space <- function(workdir,
          file.log, file.sweep_space, file.sweep_std,
          dir.sweep_space_digest.loc)
   # }
-
+  elapsed.2b <- tictoc::toc(quiet = T)
+  tictoc::tic("2dc")
   ##### _ d. keep existing BOXES & matching delta.ref ######
+  # too long # simplify or PAR #####
   DF <- clear_subset(DF[DF$BOX_ID %in% bx.sim$all & DF$delta.ref == delta.ref ,])
   quiet(gc())
 
@@ -272,11 +303,12 @@ fit.final_space <- function(workdir,
   # DF <- DF %>% dplyr::mutate(dplyr::across(tidyselect::where(is.character), factor))
   DF <- DF %>% unclass() %>% as.data.frame(stringsAsFactors = TRUE)
 
-
+  elapsed.2dc <- tictoc::toc(quiet = T)
+  tictoc::tic("2f")
   ##### _ f. subset parameters ######
   names.parameter_subsets <- names(parameter_subsets)
 
-  if (!is.null(parameter_subsets)){
+  if (!is.null(parameter_subsets)){ # too long # simplify or PAR #####
     for (i in 1:length(parameter_subsets)){
       name.parameter_subsets.loc <- names.parameter_subsets[i]
       parameter_subsets.loc <- parameter_subsets[[i]]
@@ -318,6 +350,7 @@ fit.final_space <- function(workdir,
     unlist() %>%
     as.character()
 
+
   if (nrow(DF[DF$SERIES_RUN_ID %in% in.all.subset_param.SERIES_RUN_ID, ]) == 0){
     rlang::abort("No intersection between parameter subsets within CI fitted runs. \n Redefine parameter_subsets.")
   } else {
@@ -327,6 +360,8 @@ fit.final_space <- function(workdir,
   remove(in.all.subset_param.SERIES_RUN_ID)
   quiet(gc())
 
+  elapsed.2f <- tictoc::toc(quiet = T)
+  # tictoc::tic("2f")
   ##### _ g. merge sim and obs DFs ######
   if (is.nan(delta.ref)){
     DF$delta.ref <- "NaN"
@@ -528,7 +563,8 @@ fit.final_space <- function(workdir,
   if (length(names.swp.ADSR) != 0){
     plot.freq_ADSR <- plot_freq_ADSR(DF = DF,
                                      names.swp.ADSR = names.swp.ADSR,
-                                     parameter_subsets = parameter_subsets)
+                                     parameter_subsets = parameter_subsets,
+                                     custom.n_bins = custom.n_bins)
   }
 
   ##### _ b. plot flux series CI fit frequencies ####
