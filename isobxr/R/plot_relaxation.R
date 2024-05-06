@@ -68,6 +68,8 @@ plot_relaxation <- function(
   # show.facets = FALSE
   # time_landmarks = NULL
   # time_as_log10 = TRUE
+  # isobxr_master_file = "0_ISOBXR_MASTER"
+  # time.resolution_cut = NULL
   #
   # workdir = paste("/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/1_isobxr_V2/",
   #                 "1_ABCD_dev", sep = "")
@@ -157,7 +159,7 @@ plot_relaxation <- function(
 
   restime_FIN <- run.solve$inputs$BOX_META %>%
     dplyr::select(BOX_ID, INFINITE, RES_TIME) %>%
-    dplyr::filter(INFINITE == "FINITE") %>%
+    dplyr::filter(INFINITE != "INFINITE") %>%
     dplyr::filter(! BOX_ID %in% run.solve$inputs$bx.groups$disconnected)
 
   # __iii. relaxation times ####
