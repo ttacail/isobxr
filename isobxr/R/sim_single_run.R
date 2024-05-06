@@ -465,15 +465,15 @@ sim.single_run <-
   bx.groups$infinite <- master$BOXES[master$BOXES$INFINITE == "INFINITE", "BOX_ID"] %>%
     as.character()
 
-  # __ii. warn if > 2 inf. bx  ####
-  if (args$inspect_inputs){
-    if(length(bx.groups$infinite) > 2){
-      rlang::inform(paste("\U2757 The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
-                          "   You defined more than 2 infinite boxes: [",paste(bx.groups$infinite, collapse = ", "), "] \n",
-                          "   The numerical outputs will be accurrate. \n",
-                          "   This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
-    }
-  }
+  # # __ii. warn if > 2 inf. bx  ####
+  # if (args$inspect_inputs){
+  #   if(length(bx.groups$infinite) > 2){
+  #     rlang::inform(paste("\U2757 The modelling of open systems with isobxr best works with no more than 2 infinite boxes. \n",
+  #                         "   You defined more than 2 infinite boxes: [",paste(bx.groups$infinite, collapse = ", "), "] \n",
+  #                         "   The numerical outputs will be accurrate. \n",
+  #                         "   This type of design is however currently not supported by the plot editing shiny app.", sep = ""))
+  #   }
+  # }
 
   # __iii. inform user of inf. boxes ####
   if (args$suppress_messages == F){
