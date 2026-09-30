@@ -368,9 +368,12 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
 
   stats.report <- stats.molten.DF.CI_fitted
 
+  # return(list(plot = plot.freq_ADSR,
+  #             stats = stats.molten.DF.CI_fitted,
+  #             freqs = stats.report)
   return(list(plot = plot.freq_ADSR,
               stats = stats.molten.DF.CI_fitted,
-              freqs = stats.report))
+              freqs = freq.molten.export))
 }
 
 #  #_________________________________________________________________________80char

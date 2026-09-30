@@ -39,6 +39,9 @@
 #' @param print_LS_surfaces If TRUE, includes surfaces of least squarred residuals
 #' to final report when applicable. \cr
 #' Default is FALSE.
+#' @param print_density_distributions If TRUE, includes density (violin) plot of all
+#' and fitted simulations together with observed ranges. \cr
+#' Default is FALSE.
 #' @param parameter_subsets List of limits vectors for parameters to subset before fit. \cr
 #' For instance: list(swp.A.A_B = c(1, 1.00001))
 #' to subset the swept fractionation factor from box A to B between 1 and 1.00001.
@@ -65,6 +68,7 @@ fit.final_space <- function(workdir,
                             print_correlogram = FALSE,
                             print_lda = FALSE,
                             print_LS_surfaces = FALSE,
+                            print_density_distributions = FALSE,
                             parameter_subsets = NULL,
                             custom_expressions = NULL,
                             save_outputs = FALSE,
@@ -203,6 +207,7 @@ fit.final_space <- function(workdir,
 
   elapsed.2a <- tictoc::toc(quiet = T)
   tictoc::tic("2b")
+
   ##### _ b. import sweep_space sims ######
   # optional for later release: merging multiple sweeped spaces.
   # would require verification of compatibility
@@ -270,7 +275,11 @@ fit.final_space <- function(workdir,
                      variable.name = "BOX_ID",
                      value.name = "sim.delta")
     NORM.DF.loc.vert$delta.ref <- delta.ref
-    DF.loc.vert <- dplyr::bind_rows(DF.loc.vert, NORM.DF.loc.vert)
+    # following is commented because
+    # it exhausts memory in large sweeps,
+    # and delta.ref DF is the only one required after if different from NaN.
+    # DF.loc.vert <- dplyr::bind_rows(DF.loc.vert, NORM.DF.loc.vert)
+    DF.loc.vert <- NORM.DF.loc.vert
     remove(NORM.DF.loc, NORM.DF.loc.vert)
   }
 
@@ -287,7 +296,8 @@ fit.final_space <- function(workdir,
   tictoc::tic("2dc")
   ##### _ d. keep existing BOXES & matching delta.ref ######
   # too long # simplify or PAR #####
-  DF <- clear_subset(DF[DF$BOX_ID %in% bx.sim$all & DF$delta.ref == delta.ref ,])
+  # DF <- clear_subset(DF[DF$BOX_ID %in% bx.sim$all & DF$delta.ref == delta.ref ,]) # REDUNDANT delta.ref filter
+  DF <- clear_subset(DF[DF$BOX_ID %in% bx.sim$all ,])
   quiet(gc())
 
   ##### _ c. run custom calculations ######
@@ -327,14 +337,14 @@ fit.final_space <- function(workdir,
           if (nrow(DF[DF$subset_param > min(parameter_subsets.loc) & DF$subset_param < max(parameter_subsets.loc),]) == 0){
             rlang::abort(paste0("Subset for ", name.parameter_subsets.loc, " is out of bound."))
           } else {
-            DF[DF$subset_param >= min(parameter_subsets.loc) &DF$subset_param <= max(parameter_subsets.loc),
+            DF[DF$subset_param >= min(parameter_subsets.loc) & DF$subset_param <= max(parameter_subsets.loc),
                colname_subset_param.in_range] <- TRUE
           }
         }
         DF <- DF[,!names(DF) %in% c("subset_param")]
       } else {
         rlang::abort(paste("The ", names(parameter_subsets.loc),
-                           " parameter_subsets name was not found in current sweeped space."))
+                           " parameter_subsets name was not found in current swept space."))
       }
     }
     remove(parameter_subsets.loc, name.parameter_subsets.loc,
@@ -349,7 +359,6 @@ fit.final_space <- function(workdir,
     as.vector() %>%
     unlist() %>%
     as.character()
-
 
   if (nrow(DF[DF$SERIES_RUN_ID %in% in.all.subset_param.SERIES_RUN_ID, ]) == 0){
     rlang::abort("No intersection between parameter subsets within CI fitted runs. \n Redefine parameter_subsets.")
@@ -585,8 +594,10 @@ fit.final_space <- function(workdir,
   plot.sim_obs <- plot_sim_obs(DF, bx.fit, fit.counts)
   quiet(gc())
 
-  plot.sim_distrib <- plot_sim_distrib(DF, fit.counts, observations, bx.fit)
-  quiet(gc())
+  if (print_density_distributions){
+    plot.sim_distrib <- plot_sim_distrib(DF, fit.counts, observations, bx.fit)
+    quiet(gc())
+  }
 
   #### 5. analyse least squares surfaces ####
   if (print_LS_surfaces){
@@ -753,14 +764,16 @@ fit.final_space <- function(workdir,
       }
 
       #### ____ p3 : simulation distribution plot ####
-      page_title <- "Distributions of simulated isotope compositions"
-      gridExtra::grid.arrange(top = grid::textGrob( page_title,
-                                                    gp = grid::gpar(fontface = "bold", col = message_color)),
-                              plot.sim_distrib
-                              # gridExtra::arrangeGrob(plot.sim_distrib$all,
-                              #             plot.sim_distrib$CI_fit, ncol = 1)
-      )
 
+      if (all(c("plot.sim_distrib") %in% ls())){
+        page_title <- "Distributions of simulated isotope compositions"
+        gridExtra::grid.arrange(top = grid::textGrob( page_title,
+                                                      gp = grid::gpar(fontface = "bold", col = message_color)),
+                                plot.sim_distrib
+                                # gridExtra::arrangeGrob(plot.sim_distrib$all,
+                                #             plot.sim_distrib$CI_fit, ncol = 1)
+        )
+      }
 
       #### ____ p4a-b : qp surface plots / all and CI ####
       if (all(c("plots.LS_surfaces_lists", "plots.LS_surfaces_ADSR") %in% ls())){

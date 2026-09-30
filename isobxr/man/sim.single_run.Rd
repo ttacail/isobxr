@@ -35,7 +35,8 @@ sim.single_run(
   EXPLO_SERIES_n = NaN,
   EXPLO_SERIES_FAMILY = NaN,
   isobxr_master = NULL,
-  diagram_pdf.widh_height = NULL
+  diagram_pdf.widh_height = NULL,
+  manual_RUN_n = NULL
 )
 }
 \arguments{

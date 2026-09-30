@@ -123,24 +123,26 @@ sweep.dyn_2D <- function(workdir,
   # )
   #
   #
-  # workdir = "/Users/sz18642/isobxr Gd 2023/3_human_dCa"
-  # SERIES_ID = "sweep_dyn_bone_loss"
-  # plot.time_unit = "yr"
-  # isobxr_master_file = "0_ISOBXR_MASTER_Ca"
-  # sweep_master_file = "0_SWEEP_DYN_bone_loss"
-  # swept_param_1 = data.frame(VALUES_1 = rep("INTAKE_004.000", length(list_of_fluxes)),
-  #                            VALUES_2 = list_of_fluxes,
-  #                            EXPLO_TYPES = "EXPLO_n_FLUX_MATRICES")
-  # swept_param_2 = data.frame(FROM = "ECF",
-  #                            TO = "BONE",
-  #                            ALPHA_MAX = 1,
-  #                            ALPHA_MIN = .9994,
-  #                            ALPHA_STEPS = .0003,
-  #                            EXPLO_TYPES = "EXPLO_1_ALPHA")
+  # workdir = projdat$paths$run_sheep_NIR
+  # SERIES_ID = sweep_ID
+  # plot.time_unit = "d"
+  # isobxr_master_file = paste0("0_ISOBXR_MASTER", "_", sweep_ID)
+  # sweep_master_file = paste0("0_SWEEP_DYN", "_", sweep_ID)
+  # swept_param_1 =
+  #   data.frame(VALUES_1 = isobxr_master$FLUXES %>% select(-c(SIZE_or_FLUX, FROM, TO, BOX_ID)) %>% names(),
+  #              VALUES_2 =  isobxr_master$FLUXES %>% select(-c(SIZE_or_FLUX, FROM, TO, BOX_ID)) %>% names(),
+  #              EXPLO_TYPES = "EXPLO_n_FLUX_MATRICES")
+  # swept_param_2 =
+  #   data.frame(FROM = "BNW",
+  #              TO = "BW",
+  #              ALPHA_MAX = 1,
+  #              ALPHA_MIN = 1,
+  #              ALPHA_STEPS = .0001,
+  #              EXPLO_TYPES = "EXPLO_1_ALPHA")
   # export.data_as_csv_xlsx = TRUE
   # show.delta_plot = TRUE
   # save_outputs = TRUE
-  # ask_confirmation = TRUE
+  # ask_confirmation = FALSE
   # keep_single_run_rds = FALSE
 
   # I. check arguments ####

@@ -9,6 +9,7 @@ sim.scenario(
   SERIES_ID,
   scenario_master_file,
   isobxr_master_file = "0_ISOBXR_MASTER",
+  plot.export = TRUE,
   plot.hidden_boxes = NULL,
   plot.time_unit = NULL,
   export.single_run_digests = FALSE,
@@ -29,6 +30,8 @@ It determines the folder in which the output files will be stored inside workdir
 
 \item{isobxr_master_file}{Name of \strong{\emph{isobxr excel master file}}. \cr
 Default is "0_ISOBXR_MASTER".}
+
+\item{plot.export}{export plot as pdf. Default is TRUE.}
 
 \item{plot.hidden_boxes}{list of box names (BOX_ID) to hide in scenario plot.}
 

@@ -4,7 +4,7 @@
 \alias{plot_freq_ADSR}
 \title{plot_freq_ADSR}
 \usage{
-plot_freq_ADSR(DF, names.swp.ADSR, parameter_subsets)
+plot_freq_ADSR(DF, names.swp.ADSR, parameter_subsets, custom.n_bins = NULL)
 }
 \arguments{
 \item{DF}{fit.final_space data frame}
@@ -12,6 +12,8 @@ plot_freq_ADSR(DF, names.swp.ADSR, parameter_subsets)
 \item{names.swp.ADSR}{names of swept ADSR parameters (alpha, delta, size, rayleigh, custom expressions), as vector}
 
 \item{parameter_subsets}{parameter subsets passed from fit.final_space}
+
+\item{custom.n_bins}{number of bins for custom variables. Default is NULL.}
 }
 \value{
 A frequency plot of fitted parameter values.

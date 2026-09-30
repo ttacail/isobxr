@@ -26,13 +26,12 @@ read.dyn_2D_master <- function(workdir, dyn_2D_master_file, isobxr_master_file){
   # gc()
   # devtools::load_all(".")
   #
-  # workdir_root <- "/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/1_isobxr_V2/"
-  # workdir <- paste(workdir_root, "1_ABCD_dev", sep = "")
-  # dyn_2D_master_file <- "0_SWEEP_DYN_MASTER_demo1"
-  # isobxr_master_file <- "0_ISOBXR_MASTER"
-  # workdir = args$workdir
-  # dyn_2D_master_file = args$sweep_master_file
-  # isobxr_master_file = args$isobxr_master_file
+  # workdir <- paste0(projdat$paths$run_sheep_NIR)
+  # dyn_2D_master_file <- paste0("0_SWEEP_DYN", "_", sweep_ID)
+  # isobxr_master_file <- paste0("0_ISOBXR_MASTER", "_", sweep_ID, ".xlsx")
+  # # workdir = args$workdir
+  # # dyn_2D_master_file = args$sweep_master_file
+  # # isobxr_master_file = args$isobxr_master_file
 
   # 0. tuto mode ####
   tuto_setup <- using_extdata_tutorial_2(workdir = workdir,

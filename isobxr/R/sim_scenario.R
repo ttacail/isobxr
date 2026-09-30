@@ -22,6 +22,7 @@
 #' @param scenario_master_file Name of \strong{\emph{scenario excel master file}}.
 #' @param isobxr_master_file Name of \strong{\emph{isobxr excel master file}}. \cr
 #' Default is "0_ISOBXR_MASTER".
+#' @param plot.export export plot as pdf. Default is TRUE.
 #' @param plot.hidden_boxes list of box names (BOX_ID) to hide in scenario plot.
 #' @param plot.time_unit Time unit to use on plot if different from native time unit. \cr
 #' Character string, to be selected among the following:\cr
@@ -77,6 +78,7 @@ sim.scenario <- function(workdir,
                          SERIES_ID,
                          scenario_master_file,
                          isobxr_master_file = "0_ISOBXR_MASTER",
+                         plot.export = TRUE,
                          plot.hidden_boxes = NULL,
                          plot.time_unit = NULL,
                          export.single_run_digests = FALSE,
@@ -549,19 +551,21 @@ sim.scenario <- function(workdir,
   # VII. plot scenario ####
   #### edit pdf of evD/evS multiplot
   if(!(fun_mode$tuto_mode)){
-    pdf_path <- paste(paths$digest_root, "_plot_all_vs_t.pdf", sep = "")
-    dev.new()
-    pdf(to_tmpdir(pdf_path),
-        width = 21/2.54, height = 29.7/2.54,
-        pointsize = 1, useDingbats=FALSE)
-    suppressWarnings(plot_scenario(workdir = to_tmpdir(""),
-                                   scenario_dir_name = paths$outdir,
-                                   shown_runs = NULL,
-                                   time_unit = args$plot.time_unit,
-                                   hidden_boxes = args$plot.hidden_boxes,
-                                   return_as_print = TRUE,
-                                   show.run_separations = isFALSE(long_scenario)))
-    graphics.off()
+    if (args$plot.export){
+      pdf_path <- paste(paths$digest_root, "_plot_all_vs_t.pdf", sep = "")
+      dev.new()
+      pdf(to_tmpdir(pdf_path),
+          width = 21/2.54, height = 29.7/2.54,
+          pointsize = 1, useDingbats=FALSE)
+      suppressWarnings(plot_scenario(workdir = to_tmpdir(""),
+                                     scenario_dir_name = paths$outdir,
+                                     shown_runs = NULL,
+                                     time_unit = args$plot.time_unit,
+                                     hidden_boxes = args$plot.hidden_boxes,
+                                     return_as_print = TRUE,
+                                     show.run_separations = isFALSE(long_scenario)))
+      graphics.off()
+    }
   }
 
   # X. save_outputs ####

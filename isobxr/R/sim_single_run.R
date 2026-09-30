@@ -198,6 +198,13 @@ sim.single_run <-
   # gc()
   # devtools::load_all(".")
   # ########################################################
+  #
+  # # workdir
+  # # SERIES_ID
+  # # flux_list
+  # # coeff_list
+  # # t_max
+  # # n_steps
   # isobxr_master_file = "0_ISOBXR_MASTER"
   # suppress_messages = FALSE
   # export.diagrams = FALSE
@@ -221,27 +228,25 @@ sim.single_run <-
   # EXPLORER = FALSE
   # EXPLO_SERIES_n = NaN
   # EXPLO_SERIES_FAMILY = NaN
+  # isobxr_master = NULL
+  # diagram_pdf.widh_height = NULL
+  # manual_RUN_n = NULL
   # ########################################################
-  #
-  # workdir_ABCD <- paste("/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/1_isobxr_V2/",
-  #                       "1_ABCD_dev", sep = "")
-  # workdir = workdir_ABCD
-  # SERIES_ID = "3_ABC_balanced_open"
-  # flux_list = "Fx6_ABC_open_bal"
-  # coeff_list = "a0"
-  # t_max = 10000
-  # n_steps = 1000
-  # plot.time_unit = "d"
-  # FORCING_DELTA = data.frame(BOX_ID = c("SINK"),
-  #                            DELTA.t0 = c(-1))
-  # export.delta_plot = T
-  # plot.time_as_log10 = T
+  # workdir = "/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ENos dCa/0_ENOS_boxmod/3_ENOS_R/3_TOEPFER"
+  # SERIES_ID = "Toepfer_1"
+  # flux_list = "flux_1"
+  # coeff_list = "a1"
+  # t_max = 150
+  # n_steps = 150
+  # isobxr_master_file = "0_ISOBXR_MASTER"
   # export.diagrams = T
+  # export.delta_plot = F
   # export.data_as_csv_xlsx = T
+  # plot.time_unit = "h"
+  # show.delta_plot = F
   # save_outputs = T
-  # return_data = T
-  #
-  ########################################################
+  # ########################################################
+
   # I. check arguments ####
   args <- c(as.list(environment()))
   rm(list=ls()[ls() != "args"])
