@@ -10,7 +10,7 @@ Description: A set of functions to run simple and composite box-models to descri
     The mathematical models used in this package are derived from Albarede, 1995, 
     Introduction to Geochemical Modelling, Cambridge University Press,
     Cambridge <doi:10.1017/CBO9780511622960>.
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 License: GPL-3
 URL: https://github.com/ttacail/isobxr, https://ttacail.github.io/isobxr_web/, https://ttacail.github.io/isobxr/
 BugReports: https://github.com/ttacail/isobxr/issues
@@ -35,8 +35,10 @@ Imports:
     gridExtra,
     purrr,
     reshape2,
-    tictoc
-RoxygenNote: 7.2.1
+    tictoc,
+    lubridate,
+    stats,
+    utils
 Suggests: 
     knitr,
     rmarkdown,
@@ -46,3 +48,4 @@ Suggests:
     tidyselect,
     grDevices
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.0

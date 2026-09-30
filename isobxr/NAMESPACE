@@ -19,18 +19,24 @@ export(solve_numerically)
 export(sweep.dyn_2D)
 export(sweep.final_nD)
 export(sweep.final_nD.2)
-importFrom(grDevices,dev.list)
-importFrom(grDevices,dev.new)
-importFrom(grDevices,dev.off)
-importFrom(grDevices,graphics.off)
-importFrom(grDevices,pdf)
-importFrom(grDevices,rainbow)
+importFrom(grDevices,
+  dev.list,
+  dev.new,
+  dev.off,
+  graphics.off,
+  pdf,
+  rainbow
+)
 importFrom(magrittr,"%>%")
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(rlang,as_label)
-importFrom(rlang,as_name)
-importFrom(rlang,enquo)
-importFrom(rlang,enquos)
-importFrom(utils,head)
-importFrom(utils,read.csv)
+importFrom(rlang,
+  ":=",
+  .data,
+  as_label,
+  as_name,
+  enquo,
+  enquos
+)
+importFrom(utils,
+  head,
+  read.csv
+)

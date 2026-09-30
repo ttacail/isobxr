@@ -179,6 +179,12 @@ Overwrites isobxr_master_file.
 Default is NULL.}
 
 \item{diagram_pdf.widh_height}{Vector of width and height in inches of the pdf diagrams.}
+
+\item{manual_RUN_n}{\emph{OPTIONAL} \cr
+Numeric. Forces the run number (RUN_n) instead of incrementing it automatically
+(used in parallel computation). Must fit within n_zeros_RUN_IDs digits and must not
+already exist for the same SERIES_ID in the LOG file. \cr
+Default is NULL.}
 }
 \value{
 A results data set as a list containing the following components:

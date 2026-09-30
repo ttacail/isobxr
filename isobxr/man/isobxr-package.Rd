@@ -21,5 +21,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Theo Tacail \email{theo.tacail@protonmail.com}
 
+Authors:
+\itemize{
+  \item Theo Tacail \email{theo.tacail@protonmail.com}
+}
+
 }
 \keyword{internal}

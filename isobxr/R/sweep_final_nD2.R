@@ -814,10 +814,10 @@ sweep.final_nD.2 <- function(workdir,
 
     chunk_LOG <-
       chunk_LOG %>%
-      mutate(cumulated.n_runs  = cumsum(n_runs)) %>%
-      dplyr::mutate(elapsed.all.calc.s.POSIXct = difftime(complete.time, lag(complete.time), units = "secs")) %>%
+      dplyr::mutate(cumulated.n_runs  = cumsum(n_runs)) %>%
+      dplyr::mutate(elapsed.all.calc.s.POSIXct = difftime(complete.time, dplyr::lag(complete.time), units = "secs")) %>%
       dplyr::mutate(elapsed.all.calc.s = as.numeric(elapsed.all.calc.s.POSIXct)) %>%
-      mutate(elapsed.all.calc.s =
+      dplyr::mutate(elapsed.all.calc.s =
                ifelse(chunk_status == "complete",
                       ifelse(is.na(elapsed.all.calc.s), 0, elapsed.all.calc.s),
                       NA)) %>%
@@ -829,14 +829,14 @@ sweep.final_nD.2 <- function(workdir,
     elapsed.time.stats <-
       chunk_LOG %>%
       dplyr::filter(chunk_status == "complete") %>%
-      filter(chunk_n > n_of_first_due_chunk) %>%
-      summarise(mean.elapsed.all.calc.s = mean(elapsed.all.calc.s),
-                sd2.elapsed.all.calc.s  = 2*sd(elapsed.all.calc.s),
-                n.elapsed.all.calc.s = n())
+      dplyr::filter(chunk_n > n_of_first_due_chunk) %>%
+      dplyr::summarise(mean.elapsed.all.calc.s = mean(elapsed.all.calc.s),
+                sd2.elapsed.all.calc.s  = 2*stats::sd(elapsed.all.calc.s),
+                n.elapsed.all.calc.s = dplyr::n())
 
     remaining_time <-
       (chunk_LOG %>%
-         filter(chunk_status == "due") %>%
+         dplyr::filter(chunk_status == "due") %>%
          nrow()) *
       elapsed.time.stats$mean.elapsed.all.calc.s
 
@@ -847,32 +847,32 @@ sweep.final_nD.2 <- function(workdir,
 
     last_complete.time <-
       chunk_LOG %>%
-      filter(chunk_status == "complete") %>%
-      tail(1) %>%
-      pull(complete.time)
+      dplyr::filter(chunk_status == "complete") %>%
+      utils::tail(1) %>%
+      dplyr::pull(complete.time)
 
     last_cumulated.time <-
       chunk_LOG %>%
-      filter(chunk_status == "complete") %>%
-      tail(1) %>%
-      pull(cumulated.all.calc.s)
+      dplyr::filter(chunk_status == "complete") %>%
+      utils::tail(1) %>%
+      dplyr::pull(cumulated.all.calc.s)
 
     chunk_LOG <-
       chunk_LOG %>%
-      mutate(elapsed.all.calc.s = ifelse(chunk_status == "due",
+      dplyr::mutate(elapsed.all.calc.s = ifelse(chunk_status == "due",
                                          elapsed.time.stats$mean.elapsed.all.calc.s,
                                          elapsed.all.calc.s)) %>%
-      mutate(cumulated.all.calc.s = cumsum(elapsed.all.calc.s)) %>%
-      mutate(predicted.cumulated.calc.s =
+      dplyr::mutate(cumulated.all.calc.s = cumsum(elapsed.all.calc.s)) %>%
+      dplyr::mutate(predicted.cumulated.calc.s =
                ifelse(chunk_status == "due",
                       cumulated.all.calc.s - last_cumulated.time,
                       NA)) %>%
-      mutate(complete.time.predicted =
+      dplyr::mutate(complete.time.predicted =
                ifelse(chunk_status == "due",
                       last_complete.time + lubridate::seconds(predicted.cumulated.calc.s),
                       complete.time)) %>%
-      mutate(complete.time.predicted = complete.time.predicted %>%  as.numeric() %>% as.POSIXct(origin = "1970-01-01")) %>%
-      mutate(perc.cumulated.n_runs = cumulated.n_runs*100/max(cumulated.n_runs))
+      dplyr::mutate(complete.time.predicted = complete.time.predicted %>%  as.numeric() %>% as.POSIXct(origin = "1970-01-01")) %>%
+      dplyr::mutate(perc.cumulated.n_runs = cumulated.n_runs*100/max(cumulated.n_runs))
 
     # if (chunk_LOG %>% dplyr::filter(chunk_status != "complete") %>% nrow() > 0){
 
@@ -882,80 +882,80 @@ sweep.final_nD.2 <- function(workdir,
     names(gauge_color) <- c("complete", "due")
 
     computation_gauge <-
-      ggplot(data = chunk_LOG,
-             aes(x = perc.cumulated.n_runs,
+      ggplot2::ggplot(data = chunk_LOG,
+             ggplot2::aes(x = perc.cumulated.n_runs,
                  y = 1)) +
       # geom_line(color = "orangered3", size = .5) +
-      geom_point(size = .5, shape = 15, color = "orangered3")+
+      ggplot2::geom_point(size = .5, shape = 15, color = "orangered3")+
       # geom_line(inherit.aes = F,
       #           data  = chunk_LOG %>% filter(chunk_status == "complete"),
       #           aes(x = perc.cumulated.n_runs, y = 1),
       #           color = "green4", size = 3) +
-      geom_point(inherit.aes = F,
-                 data  = chunk_LOG %>% filter(chunk_status == "complete"),
-                 aes(x = perc.cumulated.n_runs, y = 1),
+      ggplot2::geom_point(inherit.aes = F,
+                 data  = chunk_LOG %>% dplyr::filter(chunk_status == "complete"),
+                 ggplot2::aes(x = perc.cumulated.n_runs, y = 1),
                  size = 4, shape = 15, color = "green4")+
-      theme_linedraw() +
-      theme(legend.position = "None",
-            axis.text.y = element_blank(),
-            axis.title.y = element_blank(),
-            panel.grid = element_blank(),
-            axis.line.x = element_line(color = "black"),
-            panel.border = element_blank(),
-            axis.ticks.y = element_blank()) +
-      coord_cartesian(xlim = c(0,100), clip = "on") +
-      labs(title = paste0("Remaining : ", formated.remaining_time,
-                          " [", "End : ", chunk_LOG %>% tail(1) %>% pull(complete.time.predicted), "]"),
-           subtitle = paste0("Chunks complete : ", chunk_LOG %>% filter(chunk_status == "complete") %>% nrow() %>% dec_0(),
+      ggplot2::theme_linedraw() +
+      ggplot2::theme(legend.position = "None",
+            axis.text.y = ggplot2::element_blank(),
+            axis.title.y = ggplot2::element_blank(),
+            panel.grid = ggplot2::element_blank(),
+            axis.line.x = ggplot2::element_line(color = "black"),
+            panel.border = ggplot2::element_blank(),
+            axis.ticks.y = ggplot2::element_blank()) +
+      ggplot2::coord_cartesian(xlim = c(0,100), clip = "on") +
+      ggplot2::labs(title = paste0("Remaining : ", formated.remaining_time,
+                          " [", "End : ", chunk_LOG %>% utils::tail(1) %>% dplyr::pull(complete.time.predicted), "]"),
+           subtitle = paste0("Chunks complete : ", chunk_LOG %>% dplyr::filter(chunk_status == "complete") %>% nrow() %>% dec_0(),
                              "/", chunk_LOG %>% nrow() %>% dec_0(),
-                             " (", dec_0(100*(chunk_LOG %>% filter(chunk_status == "complete") %>% nrow()) / (chunk_LOG %>% nrow())), "%)",
-                             " - Runs complete : ", chunk_LOG %>% filter(chunk_status == "complete") %>% pull(cumulated.n_runs) %>% max() %>% dec_0(),
-                             "/", chunk_LOG %>% pull(cumulated.n_runs) %>% max() %>% dec_0()
+                             " (", dec_0(100*(chunk_LOG %>% dplyr::filter(chunk_status == "complete") %>% nrow()) / (chunk_LOG %>% nrow())), "%)",
+                             " - Runs complete : ", chunk_LOG %>% dplyr::filter(chunk_status == "complete") %>% dplyr::pull(cumulated.n_runs) %>% max() %>% dec_0(),
+                             "/", chunk_LOG %>% dplyr::pull(cumulated.n_runs) %>% max() %>% dec_0()
                              ),
            x = "Progress (%)")+
-      scale_x_continuous(expand = c(0, 0), limits = c(0, 100))
+      ggplot2::scale_x_continuous(expand = c(0, 0), limits = c(0, 100))
 
     # computation_gauge
 
     chunk_LOG.loc <-
       chunk_LOG %>%
-      group_by(sweep.session) %>%
-      summarise(min.chunk_n = min(chunk_n),
+      dplyr::group_by(sweep.session) %>%
+      dplyr::summarise(min.chunk_n = min(chunk_n),
                 max.chunk_n = max(chunk_n),
                 mean.elapsed.per_run = mean(elapsed.all.per_run, na.rm = T)) %>%
-      pivot_longer(cols = c(min.chunk_n, max.chunk_n)) %>%
+      tidyr::pivot_longer(cols = c(min.chunk_n, max.chunk_n)) %>%
       as.data.frame()
 
     # chunk_LOG.loc %>%
 
     calculation_time_per_run <-
-      ggplot(data = chunk_LOG,
-             aes(x = chunk_n,
+      ggplot2::ggplot(data = chunk_LOG,
+             ggplot2::aes(x = chunk_n,
                  y = 1e3*elapsed.all.per_run,
                  color = elapsed.all.per_run)) +
-      geom_line(color = "gray50") +
+      ggplot2::geom_line(color = "gray50") +
       ggplot2:: scale_colour_gradient(low = "green4", high = "orangered3", na.value = NA)+
-      geom_point(size = 2) +
+      ggplot2::geom_point(size = 2) +
       # geom_point(inherit.aes = F,
       #            data = chunk_LOG.loc,
       #            aes(x = value,
       #                y = 1e3*mean.elapsed.per_run),
       #            color = "blue",
       #            shape = 45, size = 5) +
-      geom_line(data = chunk_LOG.loc,
+      ggplot2::geom_line(data = chunk_LOG.loc,
                 inherit.aes = F,
                 color = "blue",
-                aes(x = value, y = 1e3*mean.elapsed.per_run, group = sweep.session), linetype = 1) +
-      theme_linedraw() +
-      theme(legend.position = "None") +
+                ggplot2::aes(x = value, y = 1e3*mean.elapsed.per_run, group = sweep.session), linetype = 1) +
+      ggplot2::theme_linedraw() +
+      ggplot2::theme(legend.position = "None") +
       # geom_hline(yintercept = 1e3*(chunk_LOG %>% pull(elapsed.all.per_run) %>% mean(na.rm = T)),
       #            linetype = 2) +
-      labs(title = "Mean run durations (ms)",
-           subtitle = paste0("Mean : " , dec_0(1e3*(chunk_LOG %>% pull(elapsed.all.per_run) %>% mean(na.rm = T))), " ms/run",
-                             " (", dec_0(1e3*(chunk_LOG.loc %>% tail(1) %>% pull(mean.elapsed.per_run))), " ms/run in current session)"),
+      ggplot2::labs(title = "Mean run durations (ms)",
+           subtitle = paste0("Mean : " , dec_0(1e3*(chunk_LOG %>% dplyr::pull(elapsed.all.per_run) %>% mean(na.rm = T))), " ms/run",
+                             " (", dec_0(1e3*(chunk_LOG.loc %>% utils::tail(1) %>% dplyr::pull(mean.elapsed.per_run))), " ms/run in current session)"),
            x = "Chunk n",
            y = "Single run duration (ms) ") +
-      coord_cartesian(ylim = c(0, 1e3*(chunk_LOG %>% pull(elapsed.all.per_run) %>% max(na.rm = T))))
+      ggplot2::coord_cartesian(ylim = c(0, 1e3*(chunk_LOG %>% dplyr::pull(elapsed.all.per_run) %>% max(na.rm = T))))
 
     # calculation_time_per_run
 
@@ -975,7 +975,7 @@ sweep.final_nD.2 <- function(workdir,
                           n_runs,
                           elapsed.all,
                           elapsed.all.per_run) %>%
-            tail(5))
+            utils::tail(5))
 
     # save outputs
     if(!args$save_outputs){

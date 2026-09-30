@@ -39,9 +39,6 @@
 #' @param print_LS_surfaces If TRUE, includes surfaces of least squarred residuals
 #' to final report when applicable. \cr
 #' Default is FALSE.
-#' @param print_density_distributions If TRUE, includes density (violin) plot of all
-#' and fitted simulations together with observed ranges. \cr
-#' Default is FALSE.
 #' @param parameter_subsets List of limits vectors for parameters to subset before fit. \cr
 #' For instance: list(swp.A.A_B = c(1, 1.00001))
 #' to subset the swept fractionation factor from box A to B between 1 and 1.00001.
@@ -159,8 +156,8 @@ fit.final_space_3 <- function(workdir,
   if (is.null(file.output)) {
     file.output <- paste0(
       "CI_fit_",
-      str_replace_all(Sys.time(), " ", "_") |>
-        str_replace_all(":", "") |> str_replace_all("-", "")
+      stringr::str_replace_all(Sys.time(), " ", "_") |>
+        stringr::str_replace_all(":", "") |> stringr::str_replace_all("-", "")
     )
   }
 
@@ -424,9 +421,9 @@ fit.final_space_3 <- function(workdir,
 
   ci_by_run <-
     DF_long %>%
-    filter(in.obs.CI & in.boxes_to_fit & in.all.subset_param) %>%
-    group_by(SERIES_RUN_ID) %>%
-    summarise(CI_fitted.boxes.n = n(),
+    dplyr::filter(in.obs.CI & in.boxes_to_fit & in.all.subset_param) %>%
+    dplyr::group_by(SERIES_RUN_ID) %>%
+    dplyr::summarise(CI_fitted.boxes.n = dplyr::n(),
               CI_fitted.boxes.IDs = paste(sort(unique(BOX_ID)), collapse = ", ")) %>%
     data.table::as.data.table()
 
@@ -442,11 +439,11 @@ fit.final_space_3 <- function(workdir,
     if (nrow(ci_by_run) > 0) {
 
       top <- ci_by_run %>%
-        group_by(CI_fitted.boxes.IDs) %>%
-        summarise(CI_fitted.boxes.IDs = unique(CI_fitted.boxes.IDs),
+        dplyr::group_by(CI_fitted.boxes.IDs) %>%
+        dplyr::summarise(CI_fitted.boxes.IDs = unique(CI_fitted.boxes.IDs),
                   CI_fitted.boxes.n = unique(CI_fitted.boxes.n),
-                  n.fits = n()) %>%
-        arrange(-CI_fitted.boxes.n)
+                  n.fits = dplyr::n()) %>%
+        dplyr::arrange(-CI_fitted.boxes.n)
 
       print(top %>% as.data.frame())
 
@@ -465,8 +462,8 @@ fit.final_space_3 <- function(workdir,
       print(paste0("Selected: ", paste0(bx.fit.successful, collapse = ", ")))
 
       sel_runs <- ci_by_run %>%
-        filter(CI_fitted.boxes.IDs == paste0(bx.fit.successful, collapse = ", ")) %>%
-        pull(SERIES_RUN_ID) %>%
+        dplyr::filter(CI_fitted.boxes.IDs == paste0(bx.fit.successful, collapse = ", ")) %>%
+        dplyr::pull(SERIES_RUN_ID) %>%
         as.character()
 
     } else {
@@ -488,9 +485,9 @@ fit.final_space_3 <- function(workdir,
   if (length(bx.fit.successful) > 0) {
     SSR_by_run <-
       DF_long %>%
-      filter(BOX_ID %in% bx.fit.successful) %>%
-      group_by(SERIES_RUN_ID) %>%
-      summarise(SSR = sum((sim.delta - obs.delta)^2)) %>% data.table::as.data.table()
+      dplyr::filter(BOX_ID %in% bx.fit.successful) %>%
+      dplyr::group_by(SERIES_RUN_ID) %>%
+      dplyr::summarise(SSR = sum((sim.delta - obs.delta)^2)) %>% data.table::as.data.table()
 
     # Merge (keeps DF_long order; no keys required)
     DF_long <- merge(DF_long, SSR_by_run, by = "SERIES_RUN_ID", all.x = TRUE, sort = FALSE)
@@ -506,27 +503,27 @@ fit.final_space_3 <- function(workdir,
   if (!exists("dec_n")) dec_n <- function(x, n) round(x, n)  # fallback
 
   report.sim_obs <- DF_long %>% as.data.frame() %>%
-    filter(in.all_fit_boxes.obs.CI == TRUE & in.all.subset_param == TRUE) %>%
-    group_by(BOX_ID, in.boxes_to_fit) %>%
-    summarise(fitted.boxes = unique(in.boxes_to_fit),
+    dplyr::filter(in.all_fit_boxes.obs.CI == TRUE & in.all.subset_param == TRUE) %>%
+    dplyr::group_by(BOX_ID, in.boxes_to_fit) %>%
+    dplyr::summarise(fitted.boxes = unique(in.boxes_to_fit),
               delta.def    = unique(delta.def),
               delta.ref    = unique(delta.ref),
               obs.delta    = suppressWarnings(mean(obs.delta, na.rm = TRUE)),
               obs.CI       = dec_n(mean(obs.CI, na.rm = TRUE), 3),
               sim_obs.abs_offset = dec_n(abs(mean(sim.delta, na.rm = TRUE) -
                                                suppressWarnings(mean(obs.delta, na.rm = TRUE))), 3),
-              sim.n   = n(),
-              sim.05  = dec_n(quantile(sim.delta, .05, na.rm = TRUE), 3),
-              sim.25  = dec_n(quantile(sim.delta, .25, na.rm = TRUE), 3),
-              sim.50  = dec_n(quantile(sim.delta, .50, na.rm = TRUE), 3),
-              sim.75  = dec_n(quantile(sim.delta, .75, na.rm = TRUE), 3),
-              sim.95  = dec_n(quantile(sim.delta, .95, na.rm = TRUE), 3),
+              sim.n   = dplyr::n(),
+              sim.05  = dec_n(stats::quantile(sim.delta, .05, na.rm = TRUE), 3),
+              sim.25  = dec_n(stats::quantile(sim.delta, .25, na.rm = TRUE), 3),
+              sim.50  = dec_n(stats::quantile(sim.delta, .50, na.rm = TRUE), 3),
+              sim.75  = dec_n(stats::quantile(sim.delta, .75, na.rm = TRUE), 3),
+              sim.95  = dec_n(stats::quantile(sim.delta, .95, na.rm = TRUE), 3),
               sim.min = dec_n(min(sim.delta, na.rm = TRUE), 3),
               sim.mean= dec_n(mean(sim.delta, na.rm = TRUE), 3),
               sim.max = dec_n(max(sim.delta, na.rm = TRUE), 3),
               sim.2sd = dec_n(2 * stats::sd(sim.delta, na.rm = TRUE), 3),
               sim.2se = dec_n(as.numeric(sim.2sd) / sqrt(sim.n), 4)) %>%
-    arrange(sim_obs.abs_offset) %>% data.table::as.data.table()
+    dplyr::arrange(sim_obs.abs_offset) %>% data.table::as.data.table()
 
   ## J) Add fitted-box flags (no :=)
   report.sim_obs$fitted.boxes <- FALSE
@@ -679,10 +676,10 @@ fit.final_space_3 <- function(workdir,
     as.data.frame() %>%
     dplyr::mutate(dplyr::across(dplyr::everything(), as.character)) %>% t() %>%
     as.data.frame() %>%
-    rename(value = V1)
+    dplyr::rename(value = V1)
 
   data.report$arguments <- data.report$arguments %>%
-    mutate(argument = rownames(data.report$arguments), .before = "value") %>%
+    dplyr::mutate(argument = rownames(data.report$arguments), .before = "value") %>%
     clear_subset()
 
   if (save_outputs){

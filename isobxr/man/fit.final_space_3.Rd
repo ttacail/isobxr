@@ -15,7 +15,6 @@ fit.final_space_3(
   print_correlogram = FALSE,
   print_lda = FALSE,
   print_LS_surfaces = FALSE,
-  print_density_distributions = FALSE,
   parameter_subsets = NULL,
   custom_expressions = NULL,
   save_outputs = FALSE,
@@ -67,10 +66,6 @@ Default is FALSE.}
 
 \item{print_LS_surfaces}{If TRUE, includes surfaces of least squarred residuals
 to final report when applicable. \cr
-Default is FALSE.}
-
-\item{print_density_distributions}{If TRUE, includes density (violin) plot of all
-and fitted simulations together with observed ranges. \cr
 Default is FALSE.}
 
 \item{parameter_subsets}{List of limits vectors for parameters to subset before fit. \cr

@@ -103,7 +103,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
       freq.molten.DF.CI_fitted <-
         freq.molten.DF.CI_fitted %>%
         dplyr::filter(swp.ADSR.name != custom.names[i]) %>%
-        dplyr::bind_rows(custom.loc.intervals %>% select(!c(min, max)))
+        dplyr::bind_rows(custom.loc.intervals %>% dplyr::select(!c(min, max)))
 
       }
 

@@ -119,6 +119,11 @@ NULL
 #' Overwrites isobxr_master_file.
 #' Default is NULL.
 #' @param diagram_pdf.widh_height Vector of width and height in inches of the pdf diagrams.
+#' @param manual_RUN_n \emph{OPTIONAL} \cr
+#' Numeric. Forces the run number (RUN_n) instead of incrementing it automatically
+#' (used in parallel computation). Must fit within n_zeros_RUN_IDs digits and must not
+#' already exist for the same SERIES_ID in the LOG file. \cr
+#' Default is NULL.
 #'
 #' @return A results data set as a list containing the following components:
 #' \enumerate{
@@ -738,7 +743,7 @@ sim.single_run <-
       if (file.exists(to_tmpdir(paths$LOG_file))){
         LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
         previous_RUN_n_same_SERIES_ID <-
-          LOG %>% filter(SERIES_ID %in% args$SERIES_ID) %>% pull(RUN_n)
+          LOG %>% dplyr::filter(SERIES_ID %in% args$SERIES_ID) %>% dplyr::pull(RUN_n)
         if (args$manual_RUN_n %in% previous_RUN_n_same_SERIES_ID){
           rlang::abort("The manual RUN_n value already exists for the same SERIES_ID in LOG file.")
         }
@@ -747,7 +752,7 @@ sim.single_run <-
       if (file.exists(paths$LOG_file)){
         LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
         previous_RUN_n_same_SERIES_ID <-
-          LOG %>% filter(SERIES_ID %in% args$SERIES_ID) %>% pull(RUN_n)
+          LOG %>% dplyr::filter(SERIES_ID %in% args$SERIES_ID) %>% dplyr::pull(RUN_n)
         if (args$manual_RUN_n %in% previous_RUN_n_same_SERIES_ID){
           rlang::abort("The manual RUN_n value already exists for the same SERIES_ID in LOG file.")
         }
