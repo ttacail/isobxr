@@ -932,19 +932,6 @@ sweep.final_nD <- function(workdir,
       )
       dev.off()
 
-      pdf(width = 7, height = 5,
-      file = paste0("/Users/sz18642/Library/Mobile Documents/com~apple~CloudDocs/iCloud docs", "/",
-                    paths$current.space_sweep.SERIES, "_chunk_time_stats.pdf"))
-      gridExtra::grid.arrange(
-        gridExtra::arrangeGrob(
-          calculation_time_per_run,
-          computation_gauge,
-          ncol = 1,
-          heights = c(1,.35)
-        )
-      )
-      dev.off()
-
     }
 
     n_chunks.complete <- n_chunks.complete + 1
