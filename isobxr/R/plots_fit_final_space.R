@@ -589,10 +589,7 @@ plot_sim_obs <- function(DF, bx.fit, fit.counts){
     dplyr::count() %>%
     as.data.frame() %>%
     dplyr::count(in.all_fit_boxes.obs.CI, in.all.subset_param) %>%
-    dplyr::summarise(in.all_fit_boxes.obs.CI = in.all_fit_boxes.obs.CI,
-              in.all.subset_param = in.all.subset_param,
-              n = n,
-              freq = 100*n/sum(n), .groups = "drop_last")
+    dplyr::mutate(freq = 100*n/sum(n))
 
   frac_of_runs_in_CI_parameter_subsets <-
     run_fit_proportions[run_fit_proportions$in.all_fit_boxes.obs.CI == TRUE &
