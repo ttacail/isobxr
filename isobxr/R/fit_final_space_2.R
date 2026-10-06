@@ -76,40 +76,40 @@ fit.final_space_2 <- function(workdir,
                             custom.n_bins = NULL){
 
     ####### 0. clear workspace ######
-    if(!is.null(dev.list())) dev.off()
+    # if(!is.null(dev.list())) dev.off()
     ## Clear console
     ## cat("\014")
     ## Clean workspace
-    rm(list=ls())
-    gc()
+    # rm(list=ls())
+    # gc()
 
     # # ###### 0b. debug arguments ######
-    fit_name = NULL
-    output_dir = NULL
-    delta_reference_box = NaN
-    excluded_boxes = NULL
-    print_correlogram = FALSE
-    print_lda = FALSE
-    print_LS_surfaces = FALSE
-    parameter_subsets = NULL
-    custom_expressions = NULL
-    save_outputs = FALSE
-    export_fit_data = FALSE
-    custom.n_bins = NULL
-    print_density_distributions = FALSE
-
-    workdir = "/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ENos dCa/0_ENOS_boxmod/3_ENOS_R/2_models/2_sweep_FINnD_human_NIR_1"
-    obs_file_name = "obs_matrix_all.csv"
-    sweep_space_digest_folders = "4_FINnD_0_SWEEP_FINnD_001_000_digest"
-    fit_name = "2_obs_matrix_all_vDIET_BNE_UR_FEC_DIET_excr100300"
+    # fit_name = NULL
     # output_dir = NULL
-    delta_reference_box = "PLAf"
-    excluded_boxes = c("WASTE", "PLAf", "GIT", "ITG", "KDN", "PLAp", "rBNE", "ST")
-    print_correlogram = FALSE
+    # delta_reference_box = NaN
+    # excluded_boxes = NULL
+    # print_correlogram = FALSE
+    # print_lda = FALSE
+    # print_LS_surfaces = FALSE
+    # parameter_subsets = NULL
+    # custom_expressions = NULL
+    # save_outputs = FALSE
+    # export_fit_data = FALSE
+    # custom.n_bins = NULL
+    # print_density_distributions = FALSE
+
+    # workdir = "/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ENos dCa/0_ENOS_boxmod/3_ENOS_R/2_models/2_sweep_FINnD_human_NIR_1"
+    # obs_file_name = "obs_matrix_all.csv"
+    # sweep_space_digest_folders = "4_FINnD_0_SWEEP_FINnD_001_000_digest"
+    # fit_name = "2_obs_matrix_all_vDIET_BNE_UR_FEC_DIET_excr100300"
+    # output_dir = NULL
+    # delta_reference_box = "PLAf"
+    # excluded_boxes = c("WASTE", "PLAf", "GIT", "ITG", "KDN", "PLAp", "rBNE", "ST")
+    # print_correlogram = FALSE
     # print_lda = FALSE
     # print_LS_surfaces = TRUE
-    custom_expressions = c("f.KDN_UR", "100*f.KDN_UR/f.PLAf_KDN", "f.PLAf_GIT")
-    save_outputs = TRUE
+    # custom_expressions = c("f.KDN_UR", "100*f.KDN_UR/f.PLAf_KDN", "f.PLAf_GIT")
+    # save_outputs = TRUE
     # export_fit_data = FALSE
 
     ###### 1. initiate ######
