@@ -36,7 +36,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
                      variable.name = "swp.ADSR.name",
                      value.name = "swp.ADSR.value") %>%
       dplyr::group_by(swp.ADSR.name) %>%
-      dplyr::summarise(swp.ADSR.value = unique(swp.ADSR.value), .groups = "drop_last") %>%
+      dplyr::reframe(swp.ADSR.value = unique(swp.ADSR.value)) %>%
       as.data.frame()
 
     swp.ADSR.subset_range <- as.data.frame(parameter_subsets[names(parameter_subsets) %in%
