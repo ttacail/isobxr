@@ -360,7 +360,7 @@ sim.single_run <-
   # _c. set INITIAL state ####
   INITIAL <- master$FLUXES[master$FLUXES$SIZE_or_FLUX == "SIZE", c("BOX_ID", args$flux_list)] %>%
     clear_subset() %>%
-    dplyr::arrange(BOX_ID)
+    dplyr::arrange(match(as.character(BOX_ID), bx.groups$all))   # same order as the flux and coefficient matrices (bx.groups$all)
 
   names(INITIAL) <- c("BOX_ID", "SIZE.t0")
 
@@ -370,7 +370,7 @@ sim.single_run <-
     INITIAL <- INITIAL %>%
       dplyr::filter(! BOX_ID %in% args$FORCING_SIZE$BOX_ID) %>%
       dplyr::bind_rows(args$FORCING_SIZE) %>%
-      dplyr::arrange(BOX_ID)
+      dplyr::arrange(match(as.character(BOX_ID), bx.groups$all))   # same order as the flux and coefficient matrices (bx.groups$all)
   }
 
   # __ii. set DELTA.t0 ####
