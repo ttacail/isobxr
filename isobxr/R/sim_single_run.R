@@ -545,7 +545,7 @@ sim.single_run <-
   # depending on most unblalanced box (incl. "INFINITE")
   # build BOX_META_IN
   BOX_META_IN <-  dplyr::full_join(INITIAL, master$BOXES, by = "BOX_ID") %>%
-    dplyr::arrange(BOX_ID)
+    dplyr::arrange(match(as.character(BOX_ID), bx.groups$all))   # same order as BOXES_ID_list in the LOG (bx.groups$all)
 
   if (length(BOX_META_IN[BOX_META_IN$t_max_run > 0, "t_max_run"]) > 0){
     MIN_POS_t_max_run <- min(BOX_META_IN[BOX_META_IN$t_max_run > 0, "t_max_run"])
