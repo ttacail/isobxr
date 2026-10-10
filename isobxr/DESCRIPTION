@@ -38,7 +38,8 @@ Imports:
     tictoc,
     lubridate,
     stats,
-    utils
+    utils,
+    parallel
 Suggests: 
     knitr,
     rmarkdown,

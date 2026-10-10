@@ -18,7 +18,6 @@ export(solve_analytically)
 export(solve_numerically)
 export(sweep.dyn_2D)
 export(sweep.final_nD)
-export(sweep.final_nD.2)
 importFrom(grDevices,
   dev.list,
   dev.new,

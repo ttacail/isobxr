@@ -11,7 +11,8 @@ sweep.final_nD(
   export.data_as_csv_xlsx = FALSE,
   isobxr_master_file = "0_ISOBXR_MASTER",
   save_outputs = FALSE,
-  ask_confirmation = TRUE
+  ask_confirmation = TRUE,
+  mc.cores = NULL
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ Default is FALSE.}
 
 \item{ask_confirmation}{If TRUE, asks confirmation to run in interactive sessions. \cr
 Default is TRUE.}
+
+\item{mc.cores}{Number of cores used to compute the runs and merge the chunks (macOS and Linux). \cr
+Default is NULL: all cores but one. 1 runs the sweep on one core. On Windows, runs always use one core.}
 }
 \value{
 Delta values and box sizes at final state of the system, in the n-dimensions space of parameters.
@@ -47,7 +51,8 @@ sweep.final_nD outputs are saved to workdir if save_outputs = TRUE.
 }
 \description{
 A function to assess the influence of n parameters (varying
-over a range of values) on the final state of a system.
+over a range of values) on the final state of a system. Runs are computed in parallel
+on macOS and Linux (forked processes), on one core on Windows.
 }
 \section{sweep.final_nD outputs}{
 
