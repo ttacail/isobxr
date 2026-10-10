@@ -436,28 +436,23 @@ sweep.final_nD <- function(workdir,
 
     j <- 1
 
-    if (chunk.loc[ , "chunk_n"] == 1){
-      file.copy(from = paths$LOG_file, to = to_tmpdir(paths$LOG_file))
-    } else {
-      data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T) %>%
-        utils::tail(1) %>%
-        data.table::fwrite(file = to_tmpdir(paths$LOG_file))
-    }
+    # temporary LOG of the chunk: only the runs of this chunk (the workdir LOG is not read)
+    unlink(to_tmpdir(paths$LOG_file))
 
     # _c. PARALLELIZED chunk sweep #####
 
+    # the first run is computed here, before the parallel runs: it creates the temporary LOG and its header,
+    # which parallel workers creating the file at the same time could otherwise write several times
+    param_space.loc.RUN_n <- param_space.loc %>% dplyr::mutate(RUN_n = dplyr::row_number())
     mc.list.param_space.loc <-
-      param_space.loc %>%
-      dplyr::mutate(RUN_n = dplyr::row_number()) %>%
+      param_space.loc.RUN_n[-1, ] %>%
       dplyr::mutate(mc.group_by = 1 + (dplyr::row_number()-1) %/% (dplyr::n()/args$mc.cores)) %>%
       dplyr::mutate(mc.group = mc.group_by) %>%
       dplyr::group_by(mc.group_by) %>%
       tidyr::nest() %>%
       dplyr::pull(data)
 
-    results.list <- parallel::mclapply(mc.list.param_space.loc,
-                                       mc.cores = args$mc.cores,
-                                       function(df.mc) {
+    run_rows <- function(df.mc) {
 
                                          sc.list.param_space.loc <-
                                            df.mc %>%
@@ -587,7 +582,11 @@ sweep.final_nD <- function(workdir,
                                                                        EXPLO_SERIES_FAMILY = paths$current.space_sweep.SERIES,
                                                                        manual_RUN_n = param_space.loc[j, "RUN_n"])
                                                                    })
-                                       })
+                                       }
+
+    first_run    <- try(run_rows(param_space.loc.RUN_n[1, ]), silent = TRUE)
+    results.list <- c(list(first_run),
+                      parallel::mclapply(mc.list.param_space.loc, mc.cores = args$mc.cores, run_rows))
 
     # check that every worker delivered (a failed worker would otherwise leave runs silently missing)
     failed_workers <- vapply(results.list, function(x) is.null(x) || inherits(x, "try-error"), logical(1))
@@ -615,11 +614,7 @@ sweep.final_nD <- function(workdir,
 
     # _d. read and merge all single run outputs from tempdir - local chunk ####
     # ____ LOG ####
-    if (newLOG){
-      LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
-    } else {
-      LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T) %>% dplyr::slice(-1)
-    }
+    LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
     LOG_SERIES <- LOG_SERIES[LOG_SERIES$SERIES_ID == SERIES_ID, ]
 
     # check that every planned run of the chunk is in the log
@@ -797,12 +792,18 @@ sweep.final_nD <- function(workdir,
 
     paths$current.chunk.digest_root <- paste(paths$current.chunk_dir, SERIES_ID, sep = "")
 
-    if (file.exists(paths$LOG_file)){
-      # ____ LOG ####
-      LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
-      LOG <- dplyr::bind_rows(LOG, LOG_SERIES)
-    } else {
-      LOG <- LOG_SERIES
+    # ____ LOG ####
+    # rows of this chunk are appended to the workdir LOG when it has the same columns (only its header is read);
+    # otherwise the whole LOG is read, completed and rewritten
+    LOG_append <- file.exists(paths$LOG_file) &&
+      identical(names(data.table::fread(paths$LOG_file, nrows = 0)), names(LOG_SERIES))
+    if (!LOG_append){
+      if (file.exists(paths$LOG_file)){
+        LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
+        LOG <- dplyr::bind_rows(LOG, LOG_SERIES)
+      } else {
+        LOG <- LOG_SERIES
+      }
     }
 
     # ____ LOG ####
@@ -1021,8 +1022,13 @@ sweep.final_nD <- function(workdir,
     if(!args$save_outputs){
       rlang::inform("\U2757 Results were not saved to working directory (set save_outputs = TRUE to save results).")
     } else if(args$save_outputs){
+      unlink(to_tmpdir(paths$LOG_file))   # the workdir LOG is updated below, not replaced by the temporary one
       R.utils::copyDirectory(to_tmpdir(""), getwd(), overwrite = T)
-      data.table::fwrite(LOG, file = "1_LOG.csv", row.names = F, quote = F)# ____ LOG ####
+      if (LOG_append){
+        data.table::fwrite(LOG_SERIES, file = paths$LOG_file, row.names = F, quote = F, append = TRUE)
+      } else {
+        data.table::fwrite(LOG, file = paths$LOG_file, row.names = F, quote = F)
+      }
       rlang::inform("\U2705 Results were successfully saved to working directory.")
       saveRDS(chunk_LOG, file = paste0(paths$digest_dir, "/", paths$current.space_sweep.SERIES, "_chunk_log.RDS"))
       data.table::fwrite(chunk_LOG, file = paste0(paths$digest_dir, "/", paths$current.space_sweep.SERIES, "_chunk_log.csv"))# ____ LOG ####
