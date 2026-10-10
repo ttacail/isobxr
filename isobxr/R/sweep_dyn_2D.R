@@ -415,6 +415,7 @@ sweep.dyn_2D <- function(workdir,
     rlang::inform("\U0001f535 COMPUTING SWEEP of RUN #1 & #2 ")
     pb_cpt <- utils::txtProgressBar(min = 1, max = tot_run, style = 3, width = 60)
     clock <- 1
+    run_n.loc <- 0   # run number in the sweep series (new series: 1, 2, ... in the order of the runs)
     k <- 1
 
     for (k in 1:par1$leng){
@@ -546,7 +547,8 @@ sweep.dyn_2D <- function(workdir,
         }
 
         # __ RUN  #----
-        quiet(
+        run_n.loc <- run_n.loc + 1
+        LOG_last <- quiet(
           sim.single_run(workdir = args$workdir,
                          SERIES_ID = args$SERIES_ID,
                          flux_list = args_run$flux_list,
@@ -573,7 +575,8 @@ sweep.dyn_2D <- function(workdir,
                          COMPO_SERIES_FAMILY = NaN,
                          EXPLORER = TRUE,
                          EXPLO_SERIES_n = paths$EXPLO_SERIES_n,
-                         EXPLO_SERIES_FAMILY = paths$EXPLO_SERIES_FAMILY)
+                         EXPLO_SERIES_FAMILY = paths$EXPLO_SERIES_FAMILY,
+                         manual_RUN_n = run_n.loc)
         )
 
         # _b. RUN 2/2, i in [1:n] #----
@@ -585,9 +588,7 @@ sweep.dyn_2D <- function(workdir,
         args_run$t_max <- master.sweep$RUN_SEQUENCE$t_max[i]
         args_run$n_steps <- master.sweep$RUN_SEQUENCE$n_steps[i]
 
-        LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
-        LOG_last <- LOG[nrow(LOG),]
-        remove(LOG)
+        # LOG_last: LOG row returned by run 1 (its output path)
 
         # FORCING_DELTA from previous run
         args_run$FORCING_DELTA <- readRDS(to_tmpdir(paste(LOG_last$path_outdir, ".rds", sep = "")))$outputs$final_state %>%
@@ -809,7 +810,8 @@ sweep.dyn_2D <- function(workdir,
         #                  plot_results = FALSE))
 
         # __ RUN  #----
-        quiet(
+        run_n.loc <- run_n.loc + 1
+        LOG_last <- quiet(
           sim.single_run(workdir = args$workdir,
                          SERIES_ID = args$SERIES_ID,
                          flux_list = args_run$flux_list,
@@ -836,7 +838,8 @@ sweep.dyn_2D <- function(workdir,
                          COMPO_SERIES_FAMILY = NaN,
                          EXPLORER = TRUE,
                          EXPLO_SERIES_n = paths$EXPLO_SERIES_n,
-                         EXPLO_SERIES_FAMILY = paths$EXPLO_SERIES_FAMILY)
+                         EXPLO_SERIES_FAMILY = paths$EXPLO_SERIES_FAMILY,
+                         manual_RUN_n = run_n.loc)
         )
 
         # __ CLOCK #----

@@ -298,7 +298,7 @@ sim.scenario <- function(workdir,
   rlang::inform("\U0001f535 COMPUTING ")
   rlang::inform("\U2139 Running initial simulation: ")
 
-  sim.single_run(workdir = args$workdir,
+  LOG_last <- sim.single_run(workdir = args$workdir,
                  SERIES_ID = args$SERIES_ID,
                  flux_list = args_run$flux_list,
                  coeff_list = args_run$coeff_list,
@@ -324,7 +324,8 @@ sim.scenario <- function(workdir,
                  COMPO_SERIES_FAMILY = paths$COMPO_SERIES_FAMILY,
                  EXPLORER = FALSE,
                  EXPLO_SERIES_n = NaN,
-                 EXPLO_SERIES_FAMILY = NaN)
+                 EXPLO_SERIES_FAMILY = NaN,
+                 manual_RUN_n = i)   # new series for each scenario: runs 1 to n
 
   rlang::inform("\U2139 Running scenario models: ")
 
@@ -347,10 +348,7 @@ sim.scenario <- function(workdir,
     args_run$t_max <- master.sce$RUN_SEQUENCE$t_max[i]
     args_run$n_steps <- master.sce$RUN_SEQUENCE$n_steps[i]
 
-    LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
-    LOG_last <- LOG[nrow(LOG),]
-    remove(LOG)
-
+    # LOG_last: LOG row returned by the previous run (its output path)
     args_run$SIZE.t0 <- readRDS(to_tmpdir(paste(LOG_last$path_outdir, ".rds", sep = "")))$outputs$final_state %>%
       dplyr::select(BOX_ID, SIZE.t_max) %>%
       dplyr::rename("SIZE.t0" = "SIZE.t_max") %>%
@@ -407,7 +405,7 @@ sim.scenario <- function(workdir,
     }
 
     # _f. run sim.single_run ####
-    sim.single_run(workdir = args$workdir,
+    LOG_last <- sim.single_run(workdir = args$workdir,
                    SERIES_ID = args$SERIES_ID,
                    flux_list = args_run$flux_list,
                    coeff_list = args_run$coeff_list,
@@ -433,7 +431,8 @@ sim.scenario <- function(workdir,
                    COMPO_SERIES_FAMILY = paths$COMPO_SERIES_FAMILY,
                    EXPLORER = FALSE,
                    EXPLO_SERIES_n = NaN,
-                   EXPLO_SERIES_FAMILY = NaN)
+                   EXPLO_SERIES_FAMILY = NaN,
+                   manual_RUN_n = i)
 
     if (long_scenario){
       utils::setTxtProgressBar(pb_cpt, clock)

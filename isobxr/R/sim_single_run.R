@@ -123,9 +123,12 @@ NULL
 #' Numeric. Forces the run number (RUN_n) instead of incrementing it automatically
 #' (used in parallel computation). Must fit within n_zeros_RUN_IDs digits and must not
 #' already exist for the same SERIES_ID in the LOG file. \cr
+#' When the run is part of a scenario or a sweep (COMPOSITE or EXPLORER = TRUE), the
+#' number is set by the calling function and the LOG file is not read. \cr
 #' Default is NULL.
 #'
-#' @return A results data set as a list containing the following components:
+#' @return If return_data = TRUE, a results data set as a list containing the following components
+#' (otherwise, the run's LOG row, invisibly):
 #' \enumerate{
 #' \item \strong{inputs} input data:
 #' \enumerate{
@@ -691,7 +694,12 @@ sim.single_run <-
   # DEFINE RUN number in the list of a given series, RUN_ID, SERIES_RUN_ID
   n_zeros <- args$n_zeros_RUN_IDs
 
-  if (!file.exists(paths$LOG_file)){
+  # run number set by sim.scenario / sweep.dyn_2D / sweep.final_nD: free by construction, LOG not read
+  RUN_n.set_by_caller <- !is.null(args$manual_RUN_n) && (isTRUE(args$COMPOSITE) || isTRUE(args$EXPLORER))
+
+  if (RUN_n.set_by_caller){
+    LOG_loc$RUN_n <- NaN   # set below from manual_RUN_n
+  } else if (!file.exists(paths$LOG_file)){
     if (!file.exists(to_tmpdir(paths$LOG_file))){
       LOG_loc$RUN_n <- 1
     } else {
@@ -735,12 +743,12 @@ sim.single_run <-
       rlang::abort("The manual RUN_n value (manual_RUN_n) should be numeric.")
     }
 
-    if(n_zeros <= ceiling(log10(args$manual_RUN_n))){
+    if(nchar(format(args$manual_RUN_n, scientific = FALSE)) > n_zeros){   # RUN_ID has n_zeros digits
       rlang::abort("The manual RUN_n value (manual_RUN_n) is higher than number of maximal runs.")
     } else {
       LOG_loc$RUN_n <- args$manual_RUN_n
 
-      if (file.exists(to_tmpdir(paths$LOG_file))){
+      if (!RUN_n.set_by_caller && file.exists(to_tmpdir(paths$LOG_file))){
         LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
         previous_RUN_n_same_SERIES_ID <-
           LOG %>% dplyr::filter(SERIES_ID %in% args$SERIES_ID) %>% dplyr::pull(RUN_n)
@@ -749,7 +757,7 @@ sim.single_run <-
         }
       }
 
-      if (file.exists(paths$LOG_file)){
+      if (!RUN_n.set_by_caller && file.exists(paths$LOG_file)){
         LOG <- data.table::fread(paths$LOG_file, data.table = F, stringsAsFactors = T)
         previous_RUN_n_same_SERIES_ID <-
           LOG %>% dplyr::filter(SERIES_ID %in% args$SERIES_ID) %>% dplyr::pull(RUN_n)
@@ -819,6 +827,7 @@ sim.single_run <-
                      file = to_tmpdir(paths$LOG_file), row.names = F, quote = F, append = T)
 
   IN$LOG <- LOG_loc
+  LOG_row <- LOG_loc   # returned (invisibly) when return_data = FALSE: callers get the run number and output path without reading the LOG
 
   # _h. create plot path ####
   if (args$export.delta_plot & !fun_mode$tuto_mode){
@@ -983,5 +992,7 @@ sim.single_run <-
 
   if(args$return_data){
     return(list(inputs = IN, outputs = results, paths = paths))
+  } else {
+    return(invisible(LOG_row))
   }
 }
