@@ -21,6 +21,8 @@
 #' @param save_outputs If TRUE, saves all run outputs to local working directory (workdir). \cr
 #' By default, run outputs are stored in a temporary directory and erased if not saved.
 #' Default is FALSE.
+#' @param ask_confirmation If TRUE, asks confirmation to run in interactive sessions. \cr
+#' Default is TRUE.
 #'
 #' @return Delta values and box sizes at final state of the system, in the n-dimensions space of parameters.
 #' sweep.final_nD outputs are saved to workdir if save_outputs = TRUE.
@@ -53,7 +55,8 @@ sweep.final_nD <- function(workdir,
                            sweep_dir_to_complete = NULL, # formerly dir.space_digest.to_complete / corresponds to the digest dir.
                            export.data_as_csv_xlsx = FALSE, # formerly to_STD_DIGEST_CSVs
                            isobxr_master_file = "0_ISOBXR_MASTER",
-                           save_outputs = FALSE # formerly save_run_outputs
+                           save_outputs = FALSE, # formerly save_run_outputs
+                           ask_confirmation = TRUE
 ){
 
   # # # 0. debug arguments ####
@@ -84,7 +87,7 @@ sweep.final_nD <- function(workdir,
   args <- c(as.list(environment()))
   rm(list=ls()[ls() != "args"])
 
-  args.allowed <- list(logical = c("export.data_as_csv_xlsx"))
+  args.allowed <- list(logical = c("export.data_as_csv_xlsx", "ask_confirmation"))
 
   for (i in 1:length(args.allowed$logical)){
     if (!is.logical(eval(parse(text = paste0("args$", args.allowed$logical[i]))))){
@@ -359,7 +362,7 @@ sweep.final_nD <- function(workdir,
 
   STOP_GO <- FALSE
   rlang::inform("________________________________________________________________________________")
-  if(interactive()){
+  if(interactive() && args$ask_confirmation){
     if (.Platform$OS.type == "windows"){
       STOP_GO <- utils::askYesNo(paste("? This sweep requires *", as.character(tot_run),
                                        "* independent runs, do you wish to carry on?"), default = TRUE)
@@ -473,7 +476,7 @@ sweep.final_nD <- function(workdir,
             data.frame(BOX_ID = name_loc_vector[1],
                        SIZE.t0 = param_space.loc[j, name_loc ])
 
-          if(is.null(FORCING_DELTA)){
+          if(is.null(FORCING_SIZE)){
             FORCING_SIZE <- FORCING_SIZE_loc
           } else {
             FORCING_SIZE <- dplyr::bind_rows(FORCING_SIZE, FORCING_SIZE_loc)
@@ -493,7 +496,7 @@ sweep.final_nD <- function(workdir,
                                              ATO = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[2],
                                              ALPHA_0 = param_space.loc[j, name_loc ])
 
-          if(is.null(FORCING_ALPHA)){
+          if(is.null(FORCING_RAYLEIGH)){
             FORCING_RAYLEIGH <- FORCING_RAYLEIGH_loc
           } else {
             FORCING_RAYLEIGH <- dplyr::bind_rows(FORCING_RAYLEIGH, FORCING_RAYLEIGH_loc)

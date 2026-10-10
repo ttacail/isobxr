@@ -288,8 +288,8 @@ plot_relaxation <- function(
       subtitle = paste0("(", run.solve$outputs$solver, " solver)")
       # subtitle = NET_COEFFS_title
     )+
-    ggplot2::geom_hline(yintercept = Ymax, linetype = 2, size = 0.5, color = "gray75")+
-    ggplot2::geom_hline(yintercept = Ymin, linetype = 2, size = 0.5, color = "gray75")+
+    ggplot2::geom_hline(yintercept = Ymax, linetype = 2, linewidth = 0.5, color = "gray75")+
+    ggplot2::geom_hline(yintercept = Ymin, linetype = 2, linewidth = 0.5, color = "gray75")+
     ggplot2::theme(plot.subtitle = ggplot2::element_text(size=7),
                    panel.grid = ggplot2::element_blank(),
                    legend.position = "right",
@@ -302,7 +302,7 @@ plot_relaxation <- function(
                           data = relax_times,
                           color = "gray40",
                           linetype = 3,
-                          size = 0.25) +
+                          linewidth = 0.25) +
     ggrepel::geom_text_repel(data = relax_times,
                              ggplot2::aes(x = relax_times,
                                           y = y,
@@ -329,7 +329,7 @@ plot_relaxation <- function(
                             data = time_landmarks,
                             color = "darkred",
                             linetype = 2,
-                            size = 0.5) +
+                            linewidth = 0.5) +
       ggrepel::geom_text_repel(data = time_landmarks,
                                ggplot2::aes(x = time_landmarks,
                                             y = Ymin,
@@ -355,7 +355,7 @@ plot_relaxation <- function(
                                 color = BOX_ID),
                             data = restime_FIN,
                             linetype = 2,
-                            size = 0.5) +
+                            linewidth = 0.5) +
       ggrepel::geom_text_repel(data = restime_FIN,
                                ggplot2::aes(x = RES_TIME,
                                             y = Ymin,

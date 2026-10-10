@@ -232,7 +232,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
                                                  y = freq.in,
                                                  color = swp.ADSR.name,
                                                  fill = swp.ADSR.name))+
-    ggplot2::geom_hline(linetype = 1, size = .25,
+    ggplot2::geom_hline(linetype = 1, linewidth = .25,
                         yintercept = 0)+
     ggplot2::geom_rect(ggplot2::aes(xmin = -Inf,
                                     xmax = Inf,
@@ -245,7 +245,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
     #           alpha = .25)+
     ggplot2::geom_linerange(ggplot2::aes(ymin = 0,
                                          ymax = freq.in),
-                            size = 2,
+                            linewidth = 2,
                             linetype = 1)+
     ggplot2::theme_linedraw()+
     ggplot2::theme(legend.position = "None",
@@ -429,7 +429,7 @@ plot_freq_flux <- function(DF, parameter_subsets){
                            ggplot2::aes(x = swp.flux_list_name,
                                y = freq.in,
                                label= swp.flux_list_name))+
-    ggplot2::geom_col(size = 1, alpha =.25, fill = "red")+
+    ggplot2::geom_col(linewidth = 1, alpha =.25, fill = "red")+
     ggplot2::theme_linedraw()+
     ggplot2::theme(legend.position = "None",
           # axis.title.y = ggplot2::element_blank(),
@@ -523,7 +523,7 @@ plot_freq_coeff <- function(DF, parameter_subsets){
                             ggplot2::aes(x = swp.coeff_list_name,
                                 y = freq.in,
                                 label= swp.coeff_list_name))+
-    ggplot2::geom_col(size = 1, alpha =.25, fill = "red")+
+    ggplot2::geom_col(linewidth = 1, alpha =.25, fill = "red")+
     ggplot2::theme_linedraw()+
     ggplot2::theme(legend.position = "None",
           # axis.title.y = ggplot2::element_blank(),
@@ -712,7 +712,7 @@ plot_sim_obs <- function(DF, bx.fit, fit.counts){
                        ymax = ymax,
                        color = BOX_ID),
                    linetype = 2,
-                   size = 0.25, alpha = 0.5) +
+                   linewidth = 0.25, alpha = 0.5) +
     # ggplot2::geom_jitter(data = DF[DF$in.all_fit_boxes.obs.CI == "TRUE" &
     #                         DF$in.all.subset_param == TRUE &
     #                         DF$BOX_ID %in% bx.fit$observed, ], shape = 43, size = 0.2,
@@ -726,13 +726,13 @@ plot_sim_obs <- function(DF, bx.fit, fit.counts){
     ggplot2::geom_errorbar(data = clear_subset(sim_obs.mean[sim_obs.mean$BOX_ID %in% bx.fit$observed, ]),
                   inherit.aes = F,
                   ggplot2::aes(x = X, ymin = Y.min, ymax = Y.max, color = BOX_ID),
-                  size = 1,
+                  linewidth = 1,
                   width = 0)+
 
     ggplot2::geom_errorbar(data = clear_subset(sim_obs.mean[sim_obs.mean$BOX_ID %in% bx.fit$observed, ]),
                   inherit.aes = F,
                   ggplot2::aes(x = X, y = Y.50, ymin = Y.25, ymax = Y.75, color = BOX_ID),
-                  size = 3,
+                  linewidth = 3,
                   width = 0)+
 
     ggplot2::geom_errorbarh(data = clear_subset(sim_obs.mean[sim_obs.mean$BOX_ID %in% bx.fit$observed, ]),
@@ -859,7 +859,7 @@ plot_sim_distrib <- function(DF, fit.counts, observations, bx.fit){
                                  # fill = BOX_ID
                                  # height = stat(density)
                              )) +
-    ggplot2::geom_hline(yintercept = 0, linetype = 2, color = "gray75", size = 0.5)+
+    ggplot2::geom_hline(yintercept = 0, linetype = 2, color = "gray75", linewidth = 0.5)+
     ggplot2::theme_linedraw()+
     ggplot2::geom_violin(alpha = 1,
                 fill = "gray90",
@@ -884,7 +884,7 @@ plot_sim_distrib <- function(DF, fit.counts, observations, bx.fit){
                 trim = T, adjust = .5)+
     ggplot2::geom_errorbar(data = observations, na.rm = T,
                   ggplot2::aes(x = BOX_ID, y = obs.delta, ymin = obs.delta - obs.CI, ymax = obs.delta + obs.CI),
-                  color = "red", width = 0, size = .5 )+
+                  color = "red", width = 0, linewidth = .5 )+
     ggplot2::geom_point(data = observations, na.rm = T,
                ggplot2::aes(x = BOX_ID, y = obs.delta), size = 2,
                shape = 23,
@@ -990,27 +990,27 @@ plot_LS_surfaces_ADSR <- function(DF, names.swp.ADSR){
                alpha = .1,
                cex = 0.5)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.0),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.10),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.20),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.30),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.40),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.50),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.60),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.70),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.80),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.90),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.100),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::facet_wrap(swp.ADSR.name ~ . , scales = "free_x",
                ncol = round(1.1*length(levels(DF.melt.CI.envelope$swp.ADSR.name))/2))+
     ggplot2::theme_linedraw()+
@@ -1084,45 +1084,45 @@ plot_LS_surfaces_ADSR <- function(DF, names.swp.ADSR){
                        ymax =  Y.max),
                    inherit.aes = F, alpha = .1)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.0),   #0
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.1),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.2),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.3),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.4),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.5),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.6),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.7),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.8),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.9),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.10),    #10
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.20),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.30),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.40),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.50),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.60),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.70),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.80),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.90),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(x = swp.ADSR.value, y = Y.100),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::facet_wrap(swp.ADSR.name ~ . , scales = "free_x")+
     ggplot2::theme_linedraw()+
     ggplot2::scale_y_log10()+
@@ -1267,7 +1267,7 @@ plot_LS_surfaces_lists <- function(DF, names.swp.lists){
     ggplot2::facet_wrap(names.swp.list.name ~ . , scales = "free_x")+
     ggplot2::theme_linedraw()+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.0),   #0
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.1),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.2),
@@ -1289,30 +1289,30 @@ plot_LS_surfaces_lists <- function(DF, names.swp.lists){
   # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.10),    #10
   #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
   ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.20),
-            color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+            color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.30),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.40),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.50),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.60),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.70),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.80),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     # ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.90),
     #           color = "chartreuse4", linetype = lt_loc , size = size_loc)+
     ggplot2::geom_line(data = DF.melt.CI.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.100),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_segment(inherit.aes = F,
                  data = DF.melt.CI.envelope,
                  ggplot2::aes(x = names.swp.list.ID.label,
                      xend = names.swp.list.ID.label,
                      y = .1*min(Y.min),
                      yend = Y.min),
-                 size = 5,
+                 linewidth = 5,
                  color = "darkgreen",
                  alpha = .7) +
     # ggplot2::scale_y_log10()+``
@@ -1399,52 +1399,52 @@ plot_LS_surfaces_lists <- function(DF, names.swp.lists){
     ggplot2::facet_wrap(names.swp.list.name ~ . , scales = "free_x")+
     ggplot2::theme_linedraw()+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.0),   #0
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.1),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.2),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.3),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.4),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.5),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.6),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.7),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.8),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.9),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc/2)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc/2)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.10),    #10
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.20),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.30),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.40),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.50),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.60),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.70),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.80),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.90),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_line(data = DF.melt.envelope, ggplot2::aes(group = 1, x = as.factor(names.swp.list.ID.label), y = Y.100),
-              color = "chartreuse4", linetype = lt_loc , size = size_loc)+
+              color = "chartreuse4", linetype = lt_loc , linewidth = size_loc)+
     ggplot2::geom_segment(inherit.aes = F,
                  data = DF.melt.envelope,
                  ggplot2::aes(x = names.swp.list.ID.label,
                      xend = names.swp.list.ID.label,
                      y = .1*min(Y.min),
                      yend = Y.min),
-                 size = 5,
+                 linewidth = 5,
                  color = "darkgreen",
                  alpha = .7) +
     ggplot2::geom_point(data = DF.melt.CI,

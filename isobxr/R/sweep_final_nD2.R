@@ -22,6 +22,8 @@
 #' @param save_outputs If TRUE, saves all run outputs to local working directory (workdir). \cr
 #' By default, run outputs are stored in a temporary directory and erased if not saved.
 #' Default is FALSE.
+#' @param ask_confirmation If TRUE, asks confirmation to run in interactive sessions. \cr
+#' Default is TRUE.
 #' @param mc.cores Number of cores to be used when running parallel computation. Default is 4.
 #'
 #' @return Delta values and box sizes at final state of the system, in the n-dimensions space of parameters.
@@ -56,6 +58,7 @@ sweep.final_nD.2 <- function(workdir,
                              export.data_as_csv_xlsx = FALSE, # formerly to_STD_DIGEST_CSVs
                              isobxr_master_file = "0_ISOBXR_MASTER",
                              save_outputs = FALSE, # formerly save_run_outputs
+                             ask_confirmation = TRUE,
                              mc.cores = 4
 ){
 
@@ -88,7 +91,7 @@ sweep.final_nD.2 <- function(workdir,
   args <- c(as.list(environment()))
   rm(list=ls()[ls() != "args"])
 
-  args.allowed <- list(logical = c("export.data_as_csv_xlsx"))
+  args.allowed <- list(logical = c("export.data_as_csv_xlsx", "ask_confirmation"))
 
   for (i in 1:length(args.allowed$logical)){
     if (!is.logical(eval(parse(text = paste0("args$", args.allowed$logical[i]))))){
@@ -368,7 +371,7 @@ sweep.final_nD.2 <- function(workdir,
 
   STOP_GO <- FALSE
   rlang::inform("________________________________________________________________________________")
-  if(interactive()){
+  if(interactive() && args$ask_confirmation){
     if (.Platform$OS.type == "windows"){
       STOP_GO <- utils::askYesNo(paste("? This sweep requires *", as.character(tot_run),
                                        "* independent runs, do you wish to carry on?"), default = TRUE)
@@ -506,7 +509,7 @@ sweep.final_nD.2 <- function(workdir,
                                                                            data.frame(BOX_ID = name_loc_vector[1],
                                                                                       SIZE.t0 = param_space.loc[j, name_loc ]) #################### param_space.loc j
 
-                                                                         if(is.null(FORCING_DELTA)){
+                                                                         if(is.null(FORCING_SIZE)){
                                                                            FORCING_SIZE <- FORCING_SIZE_loc
                                                                          } else {
                                                                            FORCING_SIZE <- dplyr::bind_rows(FORCING_SIZE, FORCING_SIZE_loc)
@@ -526,7 +529,7 @@ sweep.final_nD.2 <- function(workdir,
                                                                                                             ATO = unlist(strsplit(box_fluxes_loc[3], "_", fixed = T))[2],
                                                                                                             ALPHA_0 = param_space.loc[j, name_loc ]) #################### param_space.loc j
 
-                                                                         if(is.null(FORCING_ALPHA)){
+                                                                         if(is.null(FORCING_RAYLEIGH)){
                                                                            FORCING_RAYLEIGH <- FORCING_RAYLEIGH_loc
                                                                          } else {
                                                                            FORCING_RAYLEIGH <- dplyr::bind_rows(FORCING_RAYLEIGH, FORCING_RAYLEIGH_loc)
@@ -579,6 +582,16 @@ sweep.final_nD.2 <- function(workdir,
                                                                    })
                                        })
 
+    # check that every worker delivered (a failed worker would otherwise leave runs silently missing)
+    failed_workers <- vapply(results.list, function(x) is.null(x) || inherits(x, "try-error"), logical(1))
+    if (any(failed_workers)){
+      first_error <- results.list[failed_workers][[1]]
+      rlang::abort(paste0("\U2757 Chunk ", chunk.loc[, "chunk_n"], " (runs): ", sum(failed_workers), " of ",
+                          length(results.list), " parallel workers failed",
+                          if (inherits(first_error, "try-error")) paste0(" (first error: ", trimws(as.character(first_error)), ")") else " (no result returned)",
+                          ". Completed chunks are kept: run again with sweep_dir_to_complete to redo this chunk."))
+    }
+
     LOG <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T)
 
     SERIES_ID.loc <- SERIES_ID
@@ -601,6 +614,12 @@ sweep.final_nD.2 <- function(workdir,
       LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T) %>% dplyr::slice(-1)
     }
     LOG_SERIES <- LOG_SERIES[LOG_SERIES$SERIES_ID == SERIES_ID, ]
+
+    # check that every planned run of the chunk is in the log
+    if (nrow(LOG_SERIES) != nrow(param_space.loc)){
+      rlang::abort(paste0("\U2757 Chunk ", chunk.loc[, "chunk_n"], ": ", nrow(LOG_SERIES), " runs logged of ",
+                          nrow(param_space.loc), " planned. Completed chunks are kept: run again with sweep_dir_to_complete to redo this chunk."))
+    }
 
     # LOG_SERIES <- data.table::fread(to_tmpdir(paths$LOG_file), data.table = F, stringsAsFactors = T) %>% dplyr::filter(SERIES_ID == SERIES_ID)
 
@@ -718,7 +737,21 @@ sweep.final_nD.2 <- function(workdir,
                                          return(results.list.sc)
                                        })
 
+    # check that every worker delivered (a failed worker would otherwise leave runs silently missing)
+    failed_workers <- vapply(results.list, function(x) is.null(x) || inherits(x, "try-error"), logical(1))
+    if (any(failed_workers)){
+      first_error <- results.list[failed_workers][[1]]
+      rlang::abort(paste0("\U2757 Chunk ", chunk.loc[, "chunk_n"], " (results): ", sum(failed_workers), " of ",
+                          length(results.list), " parallel workers failed",
+                          if (inherits(first_error, "try-error")) paste0(" (first error: ", trimws(as.character(first_error)), ")") else " (no result returned)",
+                          ". Completed chunks are kept: run again with sweep_dir_to_complete to redo this chunk."))
+    }
+
     evD <- results.list %>% dplyr::bind_rows() %>% dplyr::arrange(RUN_n)
+    if (nrow(evD) != nrow(param_space.loc)){
+      rlang::abort(paste0("\U2757 Chunk ", chunk.loc[, "chunk_n"], ": ", nrow(evD), " results of ",
+                          nrow(param_space.loc), " planned runs. Completed chunks are kept: run again with sweep_dir_to_complete to redo this chunk."))
+    }
 
     FINnD.results.chunk <- evD
     remove(evD)

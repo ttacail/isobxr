@@ -159,13 +159,13 @@ merge_FINnD_chunks <- function(workdir,
     ggplot2::facet_wrap( . ~ variable, scales = "free_x") +
     ggplot2::theme_linedraw() +
     ggplot2::geom_line(color = "gray50", alpha = .5, linetype = 2)+
-    ggplot2::geom_linerange(ggplot2::aes(ymin = 0, ymax = sweeped_fraction_perc, color = sweeped_fraction_perc), size = 4)+
+    ggplot2::geom_linerange(ggplot2::aes(ymin = 0, ymax = sweeped_fraction_perc, color = sweeped_fraction_perc), linewidth = 4)+
     ggplot2::theme(strip.text = ggplot2::element_text(face="bold"),
                    panel.grid = ggplot2::element_blank(),
                    axis.text.x = ggplot2::element_text(hjust = 1, angle = 45),
                    legend.position = "None")+
-    ggplot2::geom_hline(yintercept = 0, linetype = 1, color = "black", size = 0.25)+
-    ggplot2::geom_hline(yintercept = 100, linetype = 1, color = "black", size = 0.25)+
+    ggplot2::geom_hline(yintercept = 0, linetype = 1, color = "black", linewidth = 0.25)+
+    ggplot2::geom_hline(yintercept = 100, linetype = 1, color = "black", linewidth = 0.25)+
     ggplot2::labs(title = "Progress of sweeps in space of parameters",
                   subtitle = paste0(dec_n(100 * nrow(pspace.merged) / nrow(pspace.all), 0), "% of space was swept and merged",
                                     " (", dec_n(nrow(pspace.merged), 0), " of ", dec_n(nrow(pspace.all),0), " sweeps)"),

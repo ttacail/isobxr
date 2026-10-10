@@ -11,6 +11,7 @@ sweep.final_nD.2(
   export.data_as_csv_xlsx = FALSE,
   isobxr_master_file = "0_ISOBXR_MASTER",
   save_outputs = FALSE,
+  ask_confirmation = TRUE,
   mc.cores = 4
 )
 }
@@ -37,6 +38,9 @@ Default is "0_ISOBXR_MASTER".}
 \item{save_outputs}{If TRUE, saves all run outputs to local working directory (workdir). \cr
 By default, run outputs are stored in a temporary directory and erased if not saved.
 Default is FALSE.}
+
+\item{ask_confirmation}{If TRUE, asks confirmation to run in interactive sessions. \cr
+Default is TRUE.}
 
 \item{mc.cores}{Number of cores to be used when running parallel computation. Default is 4.}
 }

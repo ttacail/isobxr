@@ -236,7 +236,7 @@ plot_scenario <- function(workdir,
   if (show.run_separations){
     for (k in 1:nrow(evD_zones)){
       evD_plot <- evD_plot +
-        ggplot2::geom_vline(xintercept = evD_zones[k, "Time_plot"] ,  linetype = 2, size = 0.25)+
+        ggplot2::geom_vline(xintercept = evD_zones[k, "Time_plot"] ,  linetype = 2, linewidth = 0.25)+
         ggplot2::annotate(geom = "text", x = evD_zones[k, "Time_plot"], y = Ymax_zoom + 0.05*Ymax_zoom,
                           label = evD_zones[k, "RUN_n"], hjust = -0.5)
     }
@@ -295,7 +295,7 @@ plot_scenario <- function(workdir,
                                             y = obs.delta,
                                             ymin = obs.delta - obs.CI,
                                             ymax = obs.delta + obs.CI),
-                               size = .25,
+                               linewidth = .25,
                                width = 0)
 
       Ymin_zoom <- min(Ymin_zoom, observations$obs.delta, na.rm = T)
@@ -362,7 +362,7 @@ plot_scenario <- function(workdir,
   if (show.run_separations){
     for (k in 1:nrow(evS_zones)){
       evS_plot_facet <- evS_plot_facet +
-        ggplot2::geom_vline(xintercept = evS_zones[k, "Time_plot"] ,  linetype = 2, size = 0.25)
+        ggplot2::geom_vline(xintercept = evS_zones[k, "Time_plot"] ,  linetype = 2, linewidth = 0.25)
     }
   }
 

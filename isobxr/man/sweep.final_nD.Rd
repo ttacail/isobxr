@@ -10,7 +10,8 @@ sweep.final_nD(
   sweep_dir_to_complete = NULL,
   export.data_as_csv_xlsx = FALSE,
   isobxr_master_file = "0_ISOBXR_MASTER",
-  save_outputs = FALSE
+  save_outputs = FALSE,
+  ask_confirmation = TRUE
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ Default is "0_ISOBXR_MASTER".}
 \item{save_outputs}{If TRUE, saves all run outputs to local working directory (workdir). \cr
 By default, run outputs are stored in a temporary directory and erased if not saved.
 Default is FALSE.}
+
+\item{ask_confirmation}{If TRUE, asks confirmation to run in interactive sessions. \cr
+Default is TRUE.}
 }
 \value{
 Delta values and box sizes at final state of the system, in the n-dimensions space of parameters.
