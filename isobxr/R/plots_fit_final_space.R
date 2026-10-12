@@ -282,7 +282,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
                        xmin = swp.05,
                        xmax = swp.95,
                        color = swp.ADSR.name),
-                   size = 1,
+                   linewidth = 1,
                    alpha = 1,
                    height = 0)+
     ggplot2::geom_errorbarh(data = stats.molten.DF.CI_fitted,
@@ -291,7 +291,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
                        xmin = swp.25,
                        xmax = swp.75,
                        color = swp.ADSR.name),
-                   size = 3,
+                   linewidth = 3,
                    alpha = 1,
                    height = 0)+
     ggplot2::geom_point(data = stats.molten.DF.CI_fitted,
@@ -306,7 +306,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
                        xmin = swp.mean-.5*swp.2sd,
                        xmax = swp.mean+.5*swp.2sd,
                        color = swp.ADSR.name),
-                   size = 1,
+                   linewidth = 1,
                    alpha = 1,
                    height = 0)+
     ggplot2::geom_errorbarh(data = stats.molten.DF.CI_fitted,
@@ -315,7 +315,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
                        xmin = swp.mean-swp.2se,
                        xmax = swp.mean+swp.2se,
                        color = swp.ADSR.name),
-                   size = 3,
+                   linewidth = 3,
                    alpha = 1,
                    height = 0)+
     ggplot2::geom_point(data = stats.molten.DF.CI_fitted,
@@ -738,7 +738,7 @@ plot_sim_obs <- function(DF, bx.fit, fit.counts){
     ggplot2::geom_errorbarh(data = clear_subset(sim_obs.mean[sim_obs.mean$BOX_ID %in% bx.fit$observed, ]),
                    inherit.aes = F,
                    ggplot2::aes( y = Y.50, xmin = X - X.CI, xmax = X + X.CI, color = BOX_ID),
-                   size = 1, na.rm = T,
+                   linewidth = 1, na.rm = T,
                    height = 0)+
     ggplot2::geom_point(data = clear_subset(sim_obs.mean[sim_obs.mean$BOX_ID %in% bx.fit$observed, ]),
                inherit.aes = F,
@@ -866,7 +866,7 @@ plot_sim_distrib <- function(DF, fit.counts, observations, bx.fit){
                 draw_quantiles = c(0.5),
                 scale = "width",
                 color = "black",
-                size = 0.25,
+                linewidth = 0.25,
                 trim = T,
                 adjust = .5) +
     # ggplot2::geom_jitter(data = DF[DF$in.all_fit_boxes.obs.CI == "TRUE" & DF$in.all.subset_param == TRUE, ],
@@ -878,7 +878,7 @@ plot_sim_distrib <- function(DF, fit.counts, observations, bx.fit){
                 # alpha = 0.5,
                 draw_quantiles = c(0.5),
                 scale = "width",
-                size = .25,
+                linewidth = .25,
                 color = "blue",
                 alpha = 0.15,
                 trim = T, adjust = .5)+
@@ -1608,7 +1608,7 @@ plot_correlogram_all_CIfit <- function(DF, names.swp.ADSR){
       # )+
       ggplot2::geom_bin2d()+
       ggplot2::stat_smooth(method = "loess", se = F, formula = "y ~ x",
-                  size = .5,
+                  linewidth = .5,
                   ggplot2::aes(alpha =   abs(spear.rho))
       )+
       ggplot2::labs(title = "Full correlogram",
