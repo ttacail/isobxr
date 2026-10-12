@@ -20,6 +20,7 @@
 #' \item \strong{obs.CI.def} definition of confidence interval, e.g., 95% ci
 #' \item \strong{obs.file} name of data source file
 #' }
+#' Each box should appear only once for a given delta.ref.
 #' @param sweep_space_digest_folders Name of sweep.final_nD digest directory. \cr
 #' Should start with "4_FINnD" and end with "_digest"
 #' @param fit_name Name given to specific fit. If NULL,
@@ -27,7 +28,7 @@
 #' @param output_dir Destination directory for fit outputs. If NULL, outputs are stored in
 #' sweep_space_digest_folders directory. Default is NULL.
 #' @param delta_reference_box BOX ID of reference box, used to calculate difference
-#' between any box delta and reference box delta. Default is NaN. \cr
+#' between any box delta and reference box delta. Default is NaN (no reference box). \cr
 #' delta_reference_box should match at least one of the values declared
 #' in the delta.ref column of observation csv file.
 #' @param excluded_boxes list of boxes to exclude from fit. Default is NULL.
@@ -43,19 +44,24 @@
 #' and fitted simulations together with observed ranges. \cr
 #' Default is FALSE.
 #' @param parameter_subsets List of limits vectors for parameters to subset before fit. \cr
+#' Only the runs within all subsets are used to search for the runs fitting the observations. \cr
 #' For instance: list(swp.A.A_B = c(1, 1.00001))
-#' to subset the swept fractionation factor from box A to B between 1 and 1.00001.
+#' to subset the swept fractionation factor from box A to B between 1 and 1.00001 (limits included). \cr
+#' For lists of fluxes or coefficients, give the names of the lists to keep,
+#' e.g., list(swp.flux_list_name = c("flux_1", "flux_2")).
 #' @param custom_expressions Vector of expressions to add to the list of fitted parameters. \cr
 #' For instance: c("m0.A/f.A_B") to add the ratios of mass of A over A to B flux
-#' to the list of parameters.
-#' @param save_outputs If TRUE, saves all run outputs to local working directory (workdir). \cr
-#' By default, run outputs are stored in a temporary directory and erased if not saved.
+#' to the list of parameters. They can be used in parameter_subsets as "custom.<expression>".
+#' @param save_outputs If TRUE, saves the pdf report and the xlsx data report in output_dir. \cr
+#' If FALSE, plots are printed in the R session and the data report is returned. \cr
 #' Default is FALSE.
-#' @param export_fit_data If TRUE, exports fitted data as csv and rds files.
+#' @param export_fit_data If TRUE (and save_outputs is TRUE), also saves the data report
+#' and the fitted runs as an RDS file. Default is FALSE.
 #' @param custom.n_bins number of bins for custom variables in frequency distributions plots.
 #' Default is NULL.
 #'
-#' @return A observation fit graphical report, in R session or exported as pdf, and a data report as R list or xlsx if required.
+#' @return If save_outputs is FALSE, the data report (list).
+#' Otherwise NULL, the reports being saved in output_dir.
 #'
 #' @export
 fit.final_space <- function(workdir,
@@ -75,63 +81,8 @@ fit.final_space <- function(workdir,
                             export_fit_data = FALSE,
                             custom.n_bins = NULL){
 
-  # # ###### 0. clear workspace ######
-  # if(!is.null(dev.list())) dev.off()
-  # ## Clear console
-  # ## cat("\014")
-  # ## Clean workspace
-  # rm(list=ls())
-  # gc()
-  #
-  # # # ###### 0b. debug arguments ######
-  # fit_name = NULL
-  # output_dir = NULL
-  # delta_reference_box = NaN
-  # excluded_boxes = NULL
-  # print_correlogram = FALSE
-  # print_lda = FALSE
-  # print_LS_surfaces = FALSE
-  # parameter_subsets = NULL
-  # custom_expressions = NULL
-  # save_outputs = FALSE
-  # export_fit_data = FALSE
-  #
-  # workdir <- workdir_ABCD <- "/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/1_isobxr_V2/1_ABCD_dev"
-  # obs_file_name = "observations_SWEEP_FINnD_demo_true_final.csv"
-  # sweep_space_digest_folders = "4_FINnD_0_SWEEP_FINnD_demo_001_000_digest"
-  # fit_name = NULL
-  # output_dir = NULL
-  # delta_reference_box = NaN
-  # excluded_boxes = c("SINK")
-  # print_correlogram = TRUE
-  # print_lda = FALSE
-  # print_LS_surfaces = TRUE
-  # parameter_subsets = NULL
-  # custom_expressions = NULL
-  # save_outputs = FALSE
-  # export_fit_data = FALSE
-  #
-  #
-  # workdir = "/Users/sz18642/OneDrive - University of Bristol/CGL_Ca_Gives_Life/Projets/ENos dCa/0_ENOS_boxmod/3_ENOS_R/2_models/2_sweep_FINnD_human_NIR_3"
-  # obs_file_name = "observations_SWEEP_FINnD_demo_true_final.csv"
-  # sweep_space_digest_folders = "4_FINnD_0_SWEEP_FINnD_001_000_digest"
-  # # fit_name = NULL,
-  # # output_dir = NULL,
-  # delta_reference_box = "DIET"
-  # excluded_boxes = c("WASTE", "DIET", "FEC", "GIT", "ITG", "KDN", "PLAp", "rBNE", "ST")
-  # print_correlogram = FALSE
-  # # print_lda = FALSE,
-  # # print_LS_surfaces = TRUE,
-  # parameter_subsets =  list(swp.R.KDN_UR.PLAf_KDN.KDN_UR = c(0.99972, 0.99974))
-  # custom_expressions = c("a.KDN_UR", "100*f.KDN_UR/f.PLAf_KDN")
-  # save_outputs = TRUE
-  # # export_fit_data = FALSE
-
   ###### 1. initiate ######
-  tictoc::tic("1. initiate")
-  # source("/Users/sz18642/OneDrive - University of Bristol/5_isobxr/dev_ongoing/0_sweep_space_functions/fit_sweep_space_plot_fns.R")
-
-  # store arguments
+  ##### _ a. store and rename arguments ######
   arguments <- c(as.list(environment())) %>%
     t() %>%
     as.data.frame() %>%
@@ -144,7 +95,6 @@ fit.final_space <- function(workdir,
   arguments <- arguments[,c("argument", "value")]
   rownames(arguments) <- seq(1,nrow(arguments),1)
 
-  # rename arguments
   bx.excluded <- excluded_boxes
   dir.output <- output_dir
   dir.sweep_space_digest <- sweep_space_digest_folders
@@ -157,16 +107,9 @@ fit.final_space <- function(workdir,
 
   if(is.null(dir.output)) dir.output <- dir.sweep_space_digest
 
-  SERIES_RUN_ID <- sim.delta <- min.obs.delta <-  max.obs.delta <- in.obs.CI <-
-    in.boxes_to_fit <-  BOX_ID <- CI_fitted.boxes.n <- CI_fitted.boxes.IDs <-
-    in.all.subset_param <-  in.all_fit_boxes.obs.CI <-  obs.delta <-  delta.def <-
-    obs.CI <- sim_obs.abs_offset <- NULL
-
-  # turn custom_expressions strings into relation calls
-  custom.calculate <- function(df, col_name, expr){
-    col_name <- paste0("custom.", col_name )
-    df %>% dplyr::mutate({{col_name}} := rlang::eval_tidy(dplyr::enquo(expr), df))
-  }
+  SERIES_RUN_ID <- sim.delta <- in.boxes_to_fit <- BOX_ID <- CI_fitted.boxes.n <-
+    CI_fitted.boxes.IDs <- in.all.subset_param <- in.all_fit_boxes.obs.CI <- obs.delta <-
+    delta.def <- obs.CI <- sim_obs.abs_offset <- sq_offset <- NULL
 
   ##### _ b. set wd  ######
   dir.old <- getwd()
@@ -174,10 +117,13 @@ fit.final_space <- function(workdir,
   setwd(dir.workdir)
 
   ##### _ c. argument checkup ######
-  if (length(delta.ref) >1){rlang::abort("delta.ref length should be one.")}
+  if (length(delta.ref) != 1) rlang::abort("delta_reference_box length should be one.")
+  use_delta.ref <- !(is.numeric(delta.ref) && is.nan(delta.ref))
+  if (use_delta.ref && !is.character(delta.ref)){
+    rlang::abort("delta_reference_box should be a box name (string) or NaN.")
+  }
 
-  ##### _ d. define output paths ######
-
+  ##### _ d. define output name ######
   if(is.null(file.output)){
     file.output <- paste0("CI_fit_",
                           Sys.time() %>%
@@ -187,265 +133,235 @@ fit.final_space <- function(workdir,
     )
   }
 
-  ##### 2. import / format data #####
-  elapsed.1 <- tictoc::toc(quiet = T)
-  tictoc::tic("2a")
-
-  ##### _ a. import observations for delta.ref######
-  observations <- data.table::fread(file = file.observations, stringsAsFactors = T, data.table = F)
+  ###### 2. import observations ######
+  observations <- data.table::fread(file = file.observations, data.table = FALSE)
   names.obs <- c("BOX_ID", "delta.def", "delta.ref", "obs.delta", "obs.CI", "obs.CI.def", "obs.file")
-  if(!all(names(observations) %in% names.obs)){
-    rlang::abort(paste0("Headers in observations file do not contain expected names: ",
+  if(!all(names.obs %in% names(observations))){
+    rlang::abort(paste0("Headers in observations file should include: ",
                         paste(names.obs, collapse = ", ")))
   }
-  observations <- observations[observations$delta.ref == as.character(delta.ref), ]
+  observations <- observations[, names.obs]
+  observations$BOX_ID <- as.character(observations$BOX_ID)
+  observations$delta.ref <- as.character(observations$delta.ref)
+
+  # observations for the given reference box ("NaN" when no reference box)
+  observations <- observations[which(observations$delta.ref == as.character(delta.ref)), ]
   if (nrow(observations) == 0){
-    rlang::abort(paste("observations file is empty for given delta.ref: " , delta.ref))
+    rlang::abort(paste("observations file is empty for given delta_reference_box:", delta.ref))
   }
-  names(observations)[names(observations) %in% c("AV")] <- c("obs.delta")
-  remove(file.observations)
+  rownames(observations) <- NULL
 
-  elapsed.2a <- tictoc::toc(quiet = T)
-  tictoc::tic("2b")
+  # each box should appear only once for the given reference box
+  bx.obs.duplicated <- unique(observations$BOX_ID[duplicated(observations$BOX_ID)])
+  if (length(bx.obs.duplicated) > 0){
+    rlang::abort(paste0("The following boxes appear more than once in the observations file for delta.ref ",
+                        delta.ref, ": ", paste(bx.obs.duplicated, collapse = ", "), "\n",
+                        "Keep one row per box for a given delta.ref."))
+  }
 
-  ##### _ b. import sweep_space sims ######
-  # optional for later release: merging multiple sweeped spaces.
+  ###### 3. import sweep space ######
+  ##### _ a. digest files ######
+  # optional for later release: merging multiple swept spaces.
   # would require verification of compatibility
   # (same system, same sets of parameters, only different resolutions and ranges)
-  # for (j in 1:length(dir.sweep_space_digest)){ # later release possible
-
-  j <- 1
-  dir.sweep_space_digest.loc <- dir.sweep_space_digest[j]
-  if (!dir.exists(dir.sweep_space_digest.loc)) rlang::abort("dir.sweep_space_digest.loc not found.")
-
-  if(stringr::str_ends(dir.sweep_space_digest.loc, pattern = "0_digest")){
-    file.sweep_std <- normalizePath(paste0(dir.sweep_space_digest.loc, "/",
-                                           list.files(dir.sweep_space_digest.loc,
-                                                      pattern = "*_merged_results.RDS")))
-    file.log <- normalizePath(paste0(dir.sweep_space_digest.loc, "/",
-                                     list.files(dir.sweep_space_digest.loc,
-                                                pattern = "*_merged_LOG.csv")))
-    file.sweep_space <- normalizePath(paste0(dir.sweep_space_digest.loc, "/",
-                                             list.files(dir.sweep_space_digest.loc,
-                                                        pattern = "*_merged_param_space.RDS")))
-  } else {
-    rlang::abort(paste(dir.sweep_space_digest.loc, "directory does not exist."))
+  dir.sweep_space_digest.loc <- dir.sweep_space_digest[1]
+  if (!dir.exists(dir.sweep_space_digest.loc)){
+    rlang::abort(paste(dir.sweep_space_digest.loc, "directory not found."))
   }
+  if (!stringr::str_ends(dir.sweep_space_digest.loc, pattern = "0_digest")){
+    rlang::abort(paste(dir.sweep_space_digest.loc, "should be a sweep.final_nD digest directory (ending with 0_digest)."))
+  }
+  digest_file <- function(pattern){
+    f <- list.files(dir.sweep_space_digest.loc, pattern = pattern)
+    if (length(f) != 1) rlang::abort(paste0("Expected one ", pattern, " file in ", dir.sweep_space_digest.loc,
+                                            ", found ", length(f), "."))
+    normalizePath(file.path(dir.sweep_space_digest.loc, f))
+  }
+  file.sweep_std   <- digest_file("_merged_results\\.RDS$")
+  file.log         <- digest_file("_merged_LOG\\.csv$")
+  file.sweep_space <- digest_file("_merged_param_space\\.RDS$")
 
-  DF.loc <- readRDS(file = file.sweep_std)
-  DF.loc[sapply(DF.loc, is.character)] <-
-    parallel::mclapply(DF.loc[sapply(DF.loc, is.character)], as.factor) ## para ####
-  sweeped_space <- readRDS(file = file.sweep_space)
-  names(sweeped_space) <- paste0("swp.", names(sweeped_space))
-  DF.loc <- cbind(DF.loc, sweeped_space)
-
-  LOG_SERIES <- data.table::fread(file.log, nrows = 1)
-  bx.sim.all <- unlist(stringr::str_split(LOG_SERIES[1,"BOXES_ID_list"], pattern = "_"))
-  bx.sim.infinite <- unlist(stringr::str_split(LOG_SERIES[1,"INFINITE_BOXES_list"], pattern = "_"))
+  ##### _ b. boxes of the simulated system ######
+  LOG_SERIES <- data.table::fread(file.log, nrows = 1, data.table = FALSE)
+  split_boxes <- function(x) unlist(stringr::str_split(x, pattern = "_"))
+  bx.sim.all <- split_boxes(LOG_SERIES[1, "BOXES_ID_list"])
+  bx.sim.infinite <- split_boxes(LOG_SERIES[1, "INFINITE_BOXES_list"])
   bx.sim.finite <- bx.sim.all[!bx.sim.all %in% bx.sim.infinite]
-  bx.sim.disconnected <- unlist(stringr::str_split(LOG_SERIES[1,"DISCONNECTED_BOXES"], pattern = "_"))
+  bx.sim.disconnected <- split_boxes(LOG_SERIES[1, "DISCONNECTED_BOXES"])
   bx.sim.connected_finite <- bx.sim.finite[!bx.sim.finite %in% bx.sim.disconnected]
   bx.sim <- list(all = bx.sim.all,
                  infinite = bx.sim.infinite,
                  finite = bx.sim.finite,
                  disconnected = bx.sim.disconnected,
                  connected.finite = bx.sim.connected_finite)
-  remove(LOG_SERIES,
+  remove(LOG_SERIES, split_boxes,
          bx.sim.all, bx.sim.infinite, bx.sim.finite,
          bx.sim.disconnected, bx.sim.connected_finite)
 
-  DF.loc <- clear_subset(DF.loc)
-  DF.loc.vert <- DF.loc %>%
-    reshape2::melt(id = names(DF.loc)[!names(DF.loc) %in% bx.sim$all ],
-                   variable.name = "BOX_ID",
-                   value.name = "sim.delta")
-  DF.loc.vert$delta.ref <- as.character("NaN")
-
-  # too long # simplify or PAR #####
-  elapsed.1 <- tictoc::toc(quiet = T)
-  tictoc::tic("2. import / format data")
-  if (!is.null(delta.ref) & !is.na(delta.ref) & !is.nan(delta.ref)){
-
-    if (!is.character(delta.ref)) rlang::abort("delta.ref should be a string.")
-
-    NORM.DF.loc <- DF.loc
-    NORM.DF.loc[, bx.sim$all] <- DF.loc[, bx.sim$all] - DF.loc[ , delta.ref]
-    NORM.DF.loc.vert <- NORM.DF.loc %>%
-      reshape2::melt(id = names(NORM.DF.loc)[!names(NORM.DF.loc) %in% bx.sim$all ],
-                     variable.name = "BOX_ID",
-                     value.name = "sim.delta")
-    NORM.DF.loc.vert$delta.ref <- delta.ref
-    # following is commented because
-    # it exhausts memory in large sweeps,
-    # and delta.ref DF is the only one required after if different from NaN.
-    # DF.loc.vert <- dplyr::bind_rows(DF.loc.vert, NORM.DF.loc.vert)
-    DF.loc.vert <- NORM.DF.loc.vert
-    remove(NORM.DF.loc, NORM.DF.loc.vert)
+  if (use_delta.ref && !delta.ref %in% bx.sim$all){
+    rlang::abort(paste0("delta_reference_box ", delta.ref, " is not a box of the simulated system."))
+  }
+  bx.obs.not_simulated <- observations$BOX_ID[!observations$BOX_ID %in% bx.sim$all]
+  if (length(bx.obs.not_simulated) > 0){
+    rlang::inform(paste0("\U2757 The following observed boxes are not in the simulated system and are ignored: ",
+                         paste(bx.obs.not_simulated, collapse = ", ")))
   }
 
-  # if (j == 1){
-  DF <- DF.loc.vert
-  # } else {
-  #   DF <- dplyr::bind_rows(DF, DF.loc.vert)
-  # }
-  remove(j, DF.loc, DF.loc.vert, sweeped_space,
-         file.log, file.sweep_space, file.sweep_std,
-         dir.sweep_space_digest.loc)
-  # }
-  elapsed.2b <- tictoc::toc(quiet = T)
-  tictoc::tic("2dc")
-  ##### _ d. keep existing BOXES & matching delta.ref ######
-  # too long # simplify or PAR #####
-  # DF <- clear_subset(DF[DF$BOX_ID %in% bx.sim$all & DF$delta.ref == delta.ref ,]) # REDUNDANT delta.ref filter
-  DF <- clear_subset(DF[DF$BOX_ID %in% bx.sim$all ,])
+  ##### _ c. results and swept parameters (one row per run) ######
+  DF_wide <- readRDS(file = file.sweep_std)
+  attributes(DF_wide)$out.attrs <- NULL
+  sweeped_space <- readRDS(file = file.sweep_space)
+  attributes(sweeped_space)$out.attrs <- NULL
+  sweeped_space <- as.data.frame(sweeped_space)
+  names(sweeped_space) <- paste0("swp.", names(sweeped_space))
+  # swept quantitative parameters (A, D, S, R) and lists of fluxes and coefficients
+  keep_swp <- grep("^swp\\.(A|D|S|R)\\.|^swp\\.(flux_list_name|coeff_list_name)",
+                   names(sweeped_space), value = TRUE)
+  DF_wide <- cbind(as.data.frame(DF_wide), sweeped_space[, keep_swp, drop = FALSE])
+  remove(sweeped_space)
+  data.table::setDT(DF_wide)
+  for (nm in names(DF_wide)[vapply(DF_wide, is.character, logical(1))]){
+    data.table::set(DF_wide, j = nm, value = as.factor(DF_wide[[nm]]))
+  }
   quiet(gc())
 
-  ##### _ c. run custom calculations ######
+  ##### _ d. custom expressions ######
   if (!is.null(custom_expressions)){
-    for (i in 1:length(custom_expressions)){
-      DF <- custom.calculate(df = DF,
-                             col_name = custom_expressions[i],
-                             eval(parse(text=custom_expressions[i])))
+    data.table::setalloccol(DF_wide)
+    for (expr in custom_expressions){
+      data.table::set(DF_wide, j = paste0("custom.", expr),
+                      value = eval(parse(text = expr), envir = DF_wide, enclos = parent.frame()))
     }
   }
 
-  remove(custom.calculate, custom_expressions)
-  # DF <- DF %>% dplyr::mutate(dplyr::across(tidyselect::where(is.character), factor))
-  DF <- DF %>% unclass() %>% as.data.frame(stringsAsFactors = TRUE)
-
-  elapsed.2dc <- tictoc::toc(quiet = T)
-  tictoc::tic("2f")
-  ##### _ f. subset parameters ######
-  names.parameter_subsets <- names(parameter_subsets)
-
-  if (!is.null(parameter_subsets)){ # too long # simplify or PAR #####
-    for (i in 1:length(parameter_subsets)){
-      name.parameter_subsets.loc <- names.parameter_subsets[i]
-      parameter_subsets.loc <- parameter_subsets[[i]]
-      if (name.parameter_subsets.loc %in% names(DF)){
-        DF$subset_param <- DF[ , name.parameter_subsets.loc]
-        DF$subset_param.in_range <- FALSE
-        colname_subset_param.in_range <- paste0("in.subset.", name.parameter_subsets.loc)
-        names(DF)[names(DF) == "subset_param.in_range"] <- colname_subset_param.in_range
-        if (is.character(parameter_subsets.loc)){
-          if (nrow(DF[DF$subset_param %in% parameter_subsets.loc, ]) == 0){
-            rlang::abort(paste0("Subset for ", name.parameter_subsets.loc, " is out of bound."))
-          } else {
-            DF[DF$subset_param %in% parameter_subsets.loc, colname_subset_param.in_range] <- TRUE
-          }
-        } else if (is.double(parameter_subsets.loc)){
-          if (nrow(DF[DF$subset_param > min(parameter_subsets.loc) & DF$subset_param < max(parameter_subsets.loc),]) == 0){
-            rlang::abort(paste0("Subset for ", name.parameter_subsets.loc, " is out of bound."))
-          } else {
-            DF[DF$subset_param >= min(parameter_subsets.loc) & DF$subset_param <= max(parameter_subsets.loc),
-               colname_subset_param.in_range] <- TRUE
-          }
-        }
-        DF <- DF[,!names(DF) %in% c("subset_param")]
-      } else {
-        rlang::abort(paste("The ", names(parameter_subsets.loc),
-                           " parameter_subsets name was not found in current swept space."))
-      }
-    }
-    remove(parameter_subsets.loc, name.parameter_subsets.loc,
-           # names.parameter_subsets,
-           colname_subset_param.in_range)
+  ##### _ e. delta values relative to reference box ######
+  bx.measure <- names(DF_wide)[names(DF_wide) %in% bx.sim$all]
+  if (use_delta.ref){
+    ref_delta <- data.table::copy(DF_wide[[delta.ref]])
+    for (bx in bx.measure) data.table::set(DF_wide, j = bx, value = DF_wide[[bx]] - ref_delta)
+    remove(ref_delta)
   }
 
-  DF$in.all.subset_param <- FALSE
-  in.all.subset_param.SERIES_RUN_ID <- DF %>%
-    dplyr::filter(dplyr::if_all(dplyr::starts_with("in.subset."), ~ .x == TRUE)) %>%
-    dplyr::select(SERIES_RUN_ID) %>%
-    as.vector() %>%
-    unlist() %>%
-    as.character()
-
-  if (nrow(DF[DF$SERIES_RUN_ID %in% in.all.subset_param.SERIES_RUN_ID, ]) == 0){
-    rlang::abort("No intersection between parameter subsets within CI fitted runs. \n Redefine parameter_subsets.")
-  } else {
-    DF[DF$SERIES_RUN_ID %in% in.all.subset_param.SERIES_RUN_ID, "in.all.subset_param"] <- TRUE
-  }
-
-  remove(in.all.subset_param.SERIES_RUN_ID)
+  ##### _ f. one row per run and box ######
+  id_cols <- c("SERIES_RUN_ID", keep_swp, names(DF_wide)[startsWith(names(DF_wide), "custom.")])
+  DF <- data.table::melt(DF_wide,
+                         id.vars = id_cols,
+                         measure.vars = bx.measure,
+                         variable.name = "BOX_ID",
+                         value.name = "sim.delta",
+                         variable.factor = TRUE)
+  remove(DF_wide, id_cols, bx.measure, keep_swp)
   quiet(gc())
+  data.table::set(DF, j = "delta.ref", value = as.character(delta.ref))
 
-  elapsed.2f <- tictoc::toc(quiet = T)
-  # tictoc::tic("2f")
-  ##### _ g. merge sim and obs DFs ######
-  if (is.nan(delta.ref)){
-    DF$delta.ref <- "NaN"
-    observations$delta.ref <- "NaN"
+  # add observations (one row per box, see 2.)
+  obs_rows <- match(as.character(DF$BOX_ID), observations$BOX_ID)
+  for (col in c("delta.def", "obs.delta", "obs.CI", "obs.CI.def", "obs.file")){
+    data.table::set(DF, j = col, value = observations[[col]][obs_rows])
   }
-  DF <- dplyr::full_join(DF, observations, by = c("delta.ref", "BOX_ID"))
-  remove(delta.ref)
+  remove(obs_rows)
 
-  ##### _ h. define in_out boxes to fit ######
-  DF$in.boxes_to_fit <- FALSE
-  DF[!(DF$BOX_ID %in% bx.excluded), "in.boxes_to_fit"] <- TRUE
-  # DF %>% group_by(BOX_ID, in.boxes_to_fit) %>% count() %>%  arrange(in.boxes_to_fit) # check
-
-  bx.targetted_initial <- bx.targetted <- DF[DF$in.boxes_to_fit == TRUE, "BOX_ID"] %>%
+  ###### 4. targeted boxes ######
+  data.table::set(DF, j = "in.boxes_to_fit", value = !(as.character(DF$BOX_ID) %in% bx.excluded))
+  bx.targetted_initial <- bx.targetted <- DF$BOX_ID[DF$in.boxes_to_fit] %>%
     unique() %>%
     as.character() %>%
     sort()
-
   bx.observed <- observations[!(is.na(observations$obs.delta) & is.na(observations$obs.CI)), "BOX_ID"] %>%
     unique() %>%
     as.character() %>%
     sort()
-
   bx.targetted_obs <- bx.targetted[bx.targetted %in% bx.observed]
   bx.targetted_no_obs <- bx.targetted[!bx.targetted %in% bx.observed]
-
-  if (length(bx.targetted_no_obs != 0)){
+  if (length(bx.targetted_no_obs) != 0){
     rlang::inform(paste0("\U2757 The following boxes are targetted for CI-fit but observation is missing. ", "\n",
                          "   They will be removed from targetted boxes.", "\n   ",
                          paste(bx.targetted_no_obs, collapse = ", ")))
     bx.targetted <- bx.targetted_obs
-    DF[(DF$BOX_ID %in% bx.targetted_no_obs), "in.boxes_to_fit"] <- FALSE
+    data.table::set(DF, i = which(as.character(DF$BOX_ID) %in% bx.targetted_no_obs),
+                    j = "in.boxes_to_fit", value = FALSE)
   }
-
+  if (length(bx.targetted) == 0) rlang::abort("No box to fit (all boxes are excluded or not observed).")
   bx.not_targetted <- bx.sim$all[!bx.sim$all %in% bx.targetted]
-
   bx.fit <- list(observed = bx.observed,
                  targetted = bx.targetted,
                  targetted_initial = bx.targetted_initial,
                  targetted_obs = bx.targetted_obs,
                  targetted_no_obs = bx.targetted_no_obs,
                  not_targetted = bx.not_targetted)
-
   remove(bx.targetted,
          bx.targetted_initial,
          bx.targetted_obs,
          bx.targetted_no_obs,
          bx.not_targetted)
 
-  ##### _ i. obs.CI fit ######
-  DF$min.obs.delta <- DF$obs.delta-DF$obs.CI
-  DF$max.obs.delta <- DF$obs.delta+DF$obs.CI
-  DF <- DF %>% dplyr::mutate(in.obs.CI = sim.delta >= min.obs.delta & sim.delta <= max.obs.delta) %>% as.data.frame()
-  SERIES_RUN_ID.in <- DF %>%
-    dplyr::filter(in.obs.CI == TRUE) %>%
-    dplyr::filter(in.boxes_to_fit == TRUE) %>%
+  ###### 5. parameter subsets ######
+  if (!is.null(parameter_subsets)){
+    if (is.null(names(parameter_subsets)) || any(names(parameter_subsets) == "")){
+      rlang::abort("parameter_subsets should be a named list.")
+    }
+    in.all.subset <- rep(TRUE, nrow(DF))
+    for (name.subset in names(parameter_subsets)){
+      if (!name.subset %in% names(DF)){
+        rlang::abort(paste0("The ", name.subset,
+                            " parameter_subsets name was not found in current swept space (swp.) or custom expressions (custom.)."))
+      }
+      limits <- parameter_subsets[[name.subset]]
+      values <- DF[[name.subset]]
+      if (is.character(limits)){
+        in.subset <- as.character(values) %in% limits
+      } else if (is.numeric(limits)){
+        in.subset <- !is.na(values) & values >= min(limits) & values <= max(limits)
+      } else {
+        rlang::abort(paste0("Subset for ", name.subset, " should be a numerical or character vector."))
+      }
+      if (!any(in.subset)) rlang::abort(paste0("Subset for ", name.subset, " is out of bound."))
+      data.table::set(DF, j = paste0("in.subset.", name.subset), value = in.subset)
+      in.all.subset <- in.all.subset & in.subset
+    }
+    if (!any(in.all.subset)){
+      rlang::abort("No run lies within all parameter subsets. \n Redefine parameter_subsets.")
+    }
+    data.table::set(DF, j = "in.all.subset_param", value = in.all.subset)
+    remove(in.all.subset, in.subset, limits, values, name.subset)
+  } else {
+    data.table::set(DF, j = "in.all.subset_param", value = TRUE)
+  }
+  quiet(gc())
+
+  ###### 6. CI fit ######
+  ##### _ a. runs within observed confidence intervals ######
+  data.table::set(DF, j = "min.obs.delta", value = DF$obs.delta - DF$obs.CI)
+  data.table::set(DF, j = "max.obs.delta", value = DF$obs.delta + DF$obs.CI)
+  data.table::set(DF, j = "in.obs.CI", value = DF$sim.delta >= DF$min.obs.delta & DF$sim.delta <= DF$max.obs.delta)
+
+  # only the runs within all parameter subsets are used to search for fitted runs
+  rows.in <- which(DF$in.obs.CI & DF$in.boxes_to_fit & DF$in.all.subset_param)
+  SERIES_RUN_ID.in <- data.frame(SERIES_RUN_ID = DF$SERIES_RUN_ID[rows.in],
+                                 BOX_ID = DF$BOX_ID[rows.in]) %>%
     dplyr::group_by(SERIES_RUN_ID) %>%
     dplyr::summarise(CI_fitted.boxes.n = dplyr::n(),
                      CI_fitted.boxes.IDs = paste(sort(as.character(unique(BOX_ID))), collapse = ", "),
-                     .groups = "drop_last") %>%
+                     .groups = "drop") %>%
     as.data.frame()
+  remove(rows.in)
+  if (nrow(SERIES_RUN_ID.in) == 0){
+    rlang::abort("No run within the parameter subsets falls within the observed confidence interval of any targetted box.")
+  }
   SERIES_RUN_ID.in <- SERIES_RUN_ID.in[order(SERIES_RUN_ID.in$CI_fitted.boxes.n, decreasing = T),]
-  SERIES_RUN_ID.all <- DF %>% dplyr::count(SERIES_RUN_ID)
-  CI_fits.box_combinations <- SERIES_RUN_ID.in %>% dplyr::count(CI_fitted.boxes.n, CI_fitted.boxes.IDs) %>% dplyr::arrange(-CI_fitted.boxes.n)
-  CI_fits.box_combinations$index <- rownames(CI_fits.box_combinations)
+  CI_fits.box_combinations <- SERIES_RUN_ID.in %>%
+    dplyr::count(CI_fitted.boxes.n, CI_fitted.boxes.IDs) %>%
+    dplyr::arrange(-CI_fitted.boxes.n)
 
-  if (max(CI_fits.box_combinations$CI_fitted.boxes.n) == length(as.character(unique(DF[DF$in.boxes_to_fit == TRUE, "BOX_ID"])))){
-    bx.fit$CI_fit.successful <-  sort(as.character(unique(DF[DF$in.boxes_to_fit == TRUE, "BOX_ID"])))
-    report.CIfit <- paste0("CI-Fitted: ", paste(bx.fit$CI_fit.successful, collapse = ", "))
+  ##### _ b. fitted boxes and fitted runs ######
+  if (max(SERIES_RUN_ID.in$CI_fitted.boxes.n) == length(bx.fit$targetted)){
+    bx.fit$CI_fit.successful <- bx.fit$targetted
     SERIES_RUN_ID.in.all_boxes_in <-
-      as.character(SERIES_RUN_ID.in[SERIES_RUN_ID.in$CI_fitted.boxes.n ==
-                                      max(SERIES_RUN_ID.in$CI_fitted.boxes.n, na.rm = T),
+      as.character(SERIES_RUN_ID.in[SERIES_RUN_ID.in$CI_fitted.boxes.n == length(bx.fit$targetted),
                                     "SERIES_RUN_ID"])
     bx.CIfit_selected <- NULL
   } else {
+    print(CI_fits.box_combinations)
     bx.CIfit_selected <-
       utils::select.list(choices= CI_fits.box_combinations$CI_fitted.boxes.IDs,
                          preselect = 1,
@@ -455,105 +371,43 @@ fit.final_space <- function(workdir,
                                        "Only the combinations below simultaneously fall within observed confidence intervals.", "\n",
                                        "Run a new CI-fit with an updated list of boxes to be excluded from fit (excluded_boxes)", "\n",
                                        "or select the combination to be CI-fitted: ", sep = ""))
-    bx.fit$CI_fit.successful <-  unlist(stringr::str_split(bx.CIfit_selected, pattern = ", "))
+    if (identical(bx.CIfit_selected, "")) rlang::abort("No combination of boxes selected.")
+    bx.fit$CI_fit.successful <- unlist(stringr::str_split(bx.CIfit_selected, pattern = ", "))
     SERIES_RUN_ID.in.all_boxes_in <-
       as.character(SERIES_RUN_ID.in[SERIES_RUN_ID.in$CI_fitted.boxes.IDs == bx.CIfit_selected, "SERIES_RUN_ID"])
-    report.CIfit <- paste0("CI-Fitted: ", bx.CIfit_selected)
   }
-
   bx.fit$CI_fit.failed <- bx.fit$targetted[!bx.fit$targetted %in% bx.fit$CI_fit.successful]
-  DF$in.all_fit_boxes.obs.CI <- FALSE
-  DF[DF$SERIES_RUN_ID %in% SERIES_RUN_ID.in.all_boxes_in, "in.all_fit_boxes.obs.CI"] <- TRUE
-  n_CI_fitted_runs <- length(SERIES_RUN_ID.in.all_boxes_in)
+  data.table::set(DF, j = "in.all_fit_boxes.obs.CI",
+                  value = as.character(DF$SERIES_RUN_ID) %in% SERIES_RUN_ID.in.all_boxes_in)
+  remove(CI_fits.box_combinations, SERIES_RUN_ID.in, SERIES_RUN_ID.in.all_boxes_in)
+  quiet(gc())
 
-  gc()
-
+  ##### _ c. counts ######
+  runs_with <- function(rows) length(unique(DF$SERIES_RUN_ID[rows]))
   fit.counts <- NULL
+  fit.counts$sims.all <- runs_with(seq_len(nrow(DF)))
+  fit.counts$sims.in.param_subsets <- runs_with(which(DF$in.all.subset_param))
+  fit.counts$sims.in.CIfit <- runs_with(which(DF$in.all_fit_boxes.obs.CI))
+  fit.counts$sims.in.CIfit.param_subsets <- runs_with(which(DF$in.all_fit_boxes.obs.CI & DF$in.all.subset_param))
+  fit.counts$sim_delta.fitted_boxes <- sum(DF$in.all_fit_boxes.obs.CI & DF$in.all.subset_param &
+                                             as.character(DF$BOX_ID) %in% bx.fit$CI_fit.successful)
+  remove(runs_with)
 
-  fit.counts$sims.all <- DF %>% dplyr::count(SERIES_RUN_ID) %>% nrow()
-    # dplyr::select(SERIES_RUN_ID) %>%
-    # unique() %>%
-    # nrow()
-
-  fit.counts$sims.in.param_subsets <- DF %>%
-    dplyr::filter(in.all.subset_param == TRUE) %>%
-    dplyr::count(SERIES_RUN_ID) %>% nrow()
-    # dplyr::select(SERIES_RUN_ID) %>%
-    # unique() %>%
-    # nrow()
-
-  fit.counts$sims.in.CIfit = DF %>%
-    dplyr::filter(in.all_fit_boxes.obs.CI == TRUE) %>% dplyr::count(SERIES_RUN_ID) %>% nrow()
-    # dplyr::select(SERIES_RUN_ID) %>%
-    # unique() %>%
-    # nrow()
-
-  fit.counts$sims.in.CIfit.param_subsets = DF %>%
-    dplyr::filter(in.all_fit_boxes.obs.CI == TRUE,
-                  in.all.subset_param == TRUE) %>% dplyr::count(SERIES_RUN_ID) %>% nrow()
-    # dplyr::select(SERIES_RUN_ID) %>%
-    # unique() %>%
-    # nrow()
-
-  fit.counts$sim_delta.fitted_boxes = DF %>%
-    dplyr::filter(in.all_fit_boxes.obs.CI == TRUE,
-                  in.all.subset_param == TRUE,
-                  BOX_ID %in% bx.fit$CI_fit.successful
-    ) %>% dplyr::count() %>% as.numeric()
-
-  # fit.counts <- list(sims.all =
-  #                      DF %>%
-  #                      dplyr::select(SERIES_RUN_ID) %>%
-  #                      unique() %>%
-  #                      nrow() ,
-  #
-  #                    sims.in.param_subsets = DF %>%
-  #                      dplyr::filter(in.all.subset_param == TRUE) %>%
-  #                      dplyr::select(SERIES_RUN_ID) %>%
-  #                      unique() %>%
-  #                      nrow() ,
-  #
-  #                    sims.in.CIfit = DF %>%
-  #                      dplyr::filter(in.all_fit_boxes.obs.CI == TRUE) %>%
-  #                      dplyr::select(SERIES_RUN_ID) %>%
-  #                      unique() %>%
-  #                      nrow() ,
-  #
-  #                    sims.in.CIfit.param_subsets = DF %>%
-  #                      dplyr::filter(in.all_fit_boxes.obs.CI == TRUE,
-  #                                    in.all.subset_param == TRUE) %>%
-  #                      dplyr::select(SERIES_RUN_ID) %>%
-  #                      unique() %>%
-  #                      nrow() ,
-  #
-  #                    sim_delta.fitted_boxes = DF %>%
-  #                      dplyr::filter(in.all_fit_boxes.obs.CI == TRUE,
-  #                                    in.all.subset_param == TRUE,
-  #                                    BOX_ID %in% bx.fit$CI_fit.successful
-  #                      ) %>% dplyr::count() %>% as.numeric()
-  # )
-
-  remove(CI_fits.box_combinations, SERIES_RUN_ID.all, SERIES_RUN_ID.in, SERIES_RUN_ID.in.all_boxes_in)
-  quiet(gc())
-
-  #   DF %>%
-  #     group_by(SERIES_RUN_ID, in.all_fit_boxes.obs.CI) %>%
-  #     count() %>%
-  #     group_by(in.all_fit_boxes.obs.CI) %>%
-  #     count()
-
-  ##### _ j. calculate SSR: sum of squared residuals ######
-  # does this belong here really?  / shouldn't we only calculate SSR for CI-fitted? or on contrary all targetted_box?
-  DF_fitness_stats <- DF[DF$BOX_ID %in% bx.fit$CI_fit.successful, ] %>%
+  ##### _ d. sum of squared residuals of fitted boxes (all runs) ######
+  rows.fitted_boxes <- which(as.character(DF$BOX_ID) %in% bx.fit$CI_fit.successful)
+  DF_fitness_stats <- data.frame(SERIES_RUN_ID = DF$SERIES_RUN_ID[rows.fitted_boxes],
+                                 sq_offset = (DF$sim.delta[rows.fitted_boxes] - DF$obs.delta[rows.fitted_boxes])**2) %>%
     dplyr::group_by(SERIES_RUN_ID) %>%
-    dplyr::summarise(SSR = sum((sim.delta-obs.delta)**2), .groups = "drop_last") %>%
+    dplyr::summarise(SSR = sum(sq_offset), .groups = "drop") %>%
     as.data.frame()
-
-  DF <- dplyr::full_join(DF, DF_fitness_stats, by = "SERIES_RUN_ID")
-  remove(DF_fitness_stats)
+  data.table::set(DF, j = "SSR",
+                  value = DF_fitness_stats$SSR[match(as.character(DF$SERIES_RUN_ID),
+                                                     as.character(DF_fitness_stats$SERIES_RUN_ID))])
+  remove(DF_fitness_stats, rows.fitted_boxes)
+  data.table::setDF(DF)
   quiet(gc())
 
-  ##### _ k. read swp parameter names ######
+  ###### 7. plots ######
   sweep_headers <- names(DF)[stringr::str_starts(names(DF), pattern = "swp.")]
   names.swp.ADSR <- c(sweep_headers[stringr::str_starts(sweep_headers, pattern = "swp.A.")],
                       sweep_headers[stringr::str_starts(sweep_headers, pattern = "swp.D.")],
@@ -566,9 +420,9 @@ fit.final_space <- function(workdir,
                        names.swp.coeff_list_name)
   remove(sweep_headers)
 
-  ############################################################ PROGRESS #####
-  ##### 3. analyse fitted parameter frequencies #####
-  ##### _ a. fitted quantitative parameters frequencies #####
+  # columns present in DF among the ones needed by a plot
+  DF_cols <- function(cols) DF[, names(DF)[names(DF) %in% cols], drop = FALSE]
+
   if (length(names.swp.ADSR) != 0){
     plot.freq_ADSR <- plot_freq_ADSR(DF = DF,
                                      names.swp.ADSR = names.swp.ADSR,
@@ -576,22 +430,21 @@ fit.final_space <- function(workdir,
                                      custom.n_bins = custom.n_bins)
   }
 
-  ##### _ b. plot flux series CI fit frequencies ####
-
   if (length(names.swp.flux_list_name) != 0){
-    plot.freq_flux <- plot_freq_flux(DF = DF,
+    plot.freq_flux <- plot_freq_flux(DF = DF_cols(c("swp.flux_list_name", "in.subset.swp.flux_list_name",
+                                                    "in.all.subset_param", "in.all_fit_boxes.obs.CI")),
                                      parameter_subsets = parameter_subsets)
   }
 
-  ##### _ c. plot coeff series CI fit frequencies ####
   if (length(names.swp.coeff_list_name) != 0){
-    plot.freq_coeff <- plot_freq_coeff(DF = DF,
+    plot.freq_coeff <- plot_freq_coeff(DF = DF_cols(c("swp.coeff_list_name", "in.subset.swp.coeff_list_name",
+                                                      "in.all.subset_param", "in.all_fit_boxes.obs.CI")),
                                        parameter_subsets = parameter_subsets)
   }
 
-  ##### 4. plot fitted simulations against observations ####
-
-  plot.sim_obs <- plot_sim_obs(DF, bx.fit, fit.counts)
+  plot.sim_obs <- plot_sim_obs(DF_cols(c("in.all_fit_boxes.obs.CI", "in.all.subset_param", "SERIES_RUN_ID",
+                                         "BOX_ID", "in.boxes_to_fit", "obs.delta", "obs.CI", "sim.delta")),
+                               bx.fit, fit.counts)
   quiet(gc())
 
   if (print_density_distributions){
@@ -599,33 +452,22 @@ fit.final_space <- function(workdir,
     quiet(gc())
   }
 
-  #### 5. analyse least squares surfaces ####
   if (print_LS_surfaces){
-    #### _ a. plot qp least squares surfaces   ####
     if (length(names.swp.ADSR) != 0) plots.LS_surfaces_ADSR <- plot_LS_surfaces_ADSR(DF, names.swp.ADSR)
-    #### _ b. plot surface lists least square  ####
     if (length(names.swp.lists) != 0)  plots.LS_surfaces_lists <- plot_LS_surfaces_lists(DF, names.swp.lists)
   }
 
-  #### 6. Analyse structure of fitted quantitative parameters ####
   if(length(names.swp.ADSR)>0 & print_correlogram){
-    # #### _ a. correlogram for least squares surfaces only MUTED ####
-    # plot.correlogram.CI_fit.LS <- plot_correlogram_LS_surfaces(DF, names.swp.ADSR)
-    #### _ b. correlogram over full CI-fit ####
     plot.correlogram.CI_fit.all <- plot_correlogram_all_CIfit(DF, names.swp.ADSR)
   }
 
-  #### _ c. lda analysis ####
   if (print_lda) plot.lda <- plot_lda(DF, names.swp.ADSR)
 
-  #### 7. final report #####
+  ###### 8. data report ######
   n_digits <- 3
-
-  #### _ a. prepare data report #####
-
-  #### ___ i. report sim_obs ####
-  report.sim_obs <- DF[DF$in.all_fit_boxes.obs.CI == "TRUE" &
-                         DF$in.all.subset_param == TRUE, ] %>%
+  report.sim_obs <- DF_cols(c("BOX_ID", "in.boxes_to_fit", "in.all_fit_boxes.obs.CI", "in.all.subset_param",
+                              "delta.def", "delta.ref", "obs.delta", "obs.CI", "sim.delta")) %>%
+    dplyr::filter(in.all_fit_boxes.obs.CI == TRUE & in.all.subset_param == TRUE) %>%
     dplyr::group_by(BOX_ID,
                     in.boxes_to_fit) %>%
     dplyr::summarise(fitted.boxes = unique(in.boxes_to_fit),
@@ -648,14 +490,13 @@ fit.final_space <- function(workdir,
     as.data.frame() %>%
     dplyr::arrange(sim_obs.abs_offset)
 
+  # fitted.boxes: TRUE (fitted), FALSE (targetted, not fitted), NA (not targetted)
   report.sim_obs$fitted.boxes <- NA
   report.sim_obs[report.sim_obs$BOX_ID %in% bx.fit$CI_fit.successful, "fitted.boxes"] <- TRUE
   report.sim_obs[report.sim_obs$BOX_ID %in% bx.fit$CI_fit.failed, "fitted.boxes"] <- FALSE
-
   report.sim_obs$sim.2se <- dec_n(report.sim_obs$sim.2sd/sqrt(report.sim_obs$sim.n),n_digits)
   report.sim_obs$sim.2sd <- dec_n(report.sim_obs$sim.2sd,n_digits)
 
-  #### ___ ii. report param distributions ####
   data.report <- list(arguments = arguments,
                       sim_vs_obs = cbind(fit_name = file.output, report.sim_obs))
 
@@ -675,32 +516,28 @@ fit.final_space <- function(workdir,
                      list(CoeffLists_FitFreqs = cbind(fit_name = file.output, plot.freq_coeff$freqs)))
   }
 
-  #### _ b. print / export #####
-  #### ___ i. export data_report ####
-  if (save_outputs & !dir.exists(dir.output)) dir.create(dir.output)
+  ###### 9. save / print ######
   if (save_outputs){
+    if (!dir.exists(dir.output)) dir.create(dir.output, recursive = TRUE)
     writexl::write_xlsx(data.report, paste0(dir.output, "/", file.output, "_data_report.xlsx"))
+    if (export_fit_data){
+      data.report$fitted_data <- cbind(fit_name = file.output,
+                                       DF[DF$in.all_fit_boxes.obs.CI == TRUE & DF$in.all.subset_param == TRUE, ])
+      saveRDS(data.report,
+              paste0(dir.output, "/", file.output, "_CI_fit_data.RDS"))
+      data.report$fitted_data <- NULL
+    }
+  } else if (export_fit_data){
+    rlang::inform("\U2757 export_fit_data is only used when save_outputs = TRUE.")
   }
 
-  if (export_fit_data){
-    data.report$fitted_data <- cbind(fit_name = file.output,
-                                     DF[DF$in.all_fit_boxes.obs.CI == "TRUE" &  DF$in.all.subset_param == TRUE, ])
-
-
-    saveRDS(data.report,
-            paste0(dir.output, "/", file.output, "_CI_fit_data.RDS"))
-  }
-
-  #### ___ ii. export figure_report ####
   suppressWarnings({
     suppressMessages({
-
       if (save_outputs){
-        pdf(width = 21/2.54, height = 29.7/2.54,
-            file = paste0(dir.output, "/", file.output, ".pdf"))
+        grDevices::pdf(width = 21/2.54, height = 29.7/2.54,
+                       file = paste0(dir.output, "/", file.output, ".pdf"))
       }
 
-      #### ____ p1 : sim_obs ####
       if (is.null(bx.CIfit_selected)){
         message_fit <- paste("\n", "Observation-Simulation fit", "\n", "\n",
                              "All targeted boxes successfully CI-fitted", "\n")
@@ -715,9 +552,7 @@ fit.final_space <- function(workdir,
                                                     gp = grid::gpar(fontface = "bold", col = message_color)),
                               plot.sim_obs)
 
-      #### ____ p2 : frequency plots ####
       page_title <- "Frequency plots"
-
       if (all(c("plot.freq_coeff", "plot.freq_flux", "plot.freq_ADSR") %in% ls())){
         gridExtra::grid.arrange(top = grid::textGrob( page_title , gp = grid::gpar(fontface = "bold")),
                                 gridExtra::arrangeGrob(
@@ -733,7 +568,6 @@ fit.final_space <- function(workdir,
                                   plot.freq_flux$plot,
                                   plot.freq_ADSR$plot,
                                   ncol = 1,
-                                  # labels = c("A", "B"),
                                   heights = c(1,1.3)
                                 ))
       } else if (all(c("plot.freq_coeff", "plot.freq_ADSR") %in% ls())) {
@@ -763,19 +597,14 @@ fit.final_space <- function(workdir,
                                 plot.freq_ADSR$plot)
       }
 
-      #### ____ p3 : simulation distribution plot ####
-
       if (all(c("plot.sim_distrib") %in% ls())){
         page_title <- "Distributions of simulated isotope compositions"
         gridExtra::grid.arrange(top = grid::textGrob( page_title,
                                                       gp = grid::gpar(fontface = "bold", col = message_color)),
                                 plot.sim_distrib
-                                # gridExtra::arrangeGrob(plot.sim_distrib$all,
-                                #             plot.sim_distrib$CI_fit, ncol = 1)
         )
       }
 
-      #### ____ p4a-b : qp surface plots / all and CI ####
       if (all(c("plots.LS_surfaces_lists", "plots.LS_surfaces_ADSR") %in% ls())){
         gridExtra::grid.arrange(top = grid::textGrob( "Least squares surface plots", gp = grid::gpar(fontface = "bold")),
                                 gridExtra::arrangeGrob(plots.LS_surfaces_lists$plot.surface_lists_all,
@@ -791,13 +620,6 @@ fit.final_space <- function(workdir,
                                 plots.LS_surfaces_ADSR$plot.all)
       }
 
-      #### ____ p5 : CI-fit surface correlogram / DEACTIVATED ####
-      # if (all(c("plot.correlogram.CI_fit.LS") %in% ls())){
-      #   print(plot.correlogram.CI_fit.LS +
-      #           ggplot2::labs(title = "Least square surfaces correlogram (all CI-fitted quantitative parameters)"))
-      # }
-
-      #### ____ p6a-b : correlogram / lda ####
       if (all(c("plot.correlogram.CI_fit.all") %in% ls())){
         print(plot.correlogram.CI_fit.all +
                 ggplot2::labs(title = "Full correlogram (all CI-fitted quantitative parameters)"))
@@ -810,9 +632,8 @@ fit.final_space <- function(workdir,
       }
 
       if (save_outputs){
-        dev.off()
+        grDevices::dev.off()
       }
-
     })
   })
 
@@ -822,5 +643,4 @@ fit.final_space <- function(workdir,
   if (!save_outputs){
     return(data.report)
   }
-
 }

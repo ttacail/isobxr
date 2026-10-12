@@ -40,7 +40,8 @@ Should contain the following columns: \cr
 \item \strong{obs.CI} confidence interval of delta value
 \item \strong{obs.CI.def} definition of confidence interval, e.g., 95% ci
 \item \strong{obs.file} name of data source file
-}}
+}
+Each box should appear only once for a given delta.ref.}
 
 \item{sweep_space_digest_folders}{Name of sweep.final_nD digest directory. \cr
 Should start with "4_FINnD" and end with "_digest"}
@@ -52,7 +53,7 @@ output are named after date and time of fit.}
 sweep_space_digest_folders directory. Default is NULL.}
 
 \item{delta_reference_box}{BOX ID of reference box, used to calculate difference
-between any box delta and reference box delta. Default is NaN. \cr
+between any box delta and reference box delta. Default is NaN (no reference box). \cr
 delta_reference_box should match at least one of the values declared
 in the delta.ref column of observation csv file.}
 
@@ -74,24 +75,29 @@ and fitted simulations together with observed ranges. \cr
 Default is FALSE.}
 
 \item{parameter_subsets}{List of limits vectors for parameters to subset before fit. \cr
+Only the runs within all subsets are used to search for the runs fitting the observations. \cr
 For instance: list(swp.A.A_B = c(1, 1.00001))
-to subset the swept fractionation factor from box A to B between 1 and 1.00001.}
+to subset the swept fractionation factor from box A to B between 1 and 1.00001 (limits included). \cr
+For lists of fluxes or coefficients, give the names of the lists to keep,
+e.g., list(swp.flux_list_name = c("flux_1", "flux_2")).}
 
 \item{custom_expressions}{Vector of expressions to add to the list of fitted parameters. \cr
 For instance: c("m0.A/f.A_B") to add the ratios of mass of A over A to B flux
-to the list of parameters.}
+to the list of parameters. They can be used in parameter_subsets as "custom.<expression>".}
 
-\item{save_outputs}{If TRUE, saves all run outputs to local working directory (workdir). \cr
-By default, run outputs are stored in a temporary directory and erased if not saved.
+\item{save_outputs}{If TRUE, saves the pdf report and the xlsx data report in output_dir. \cr
+If FALSE, plots are printed in the R session and the data report is returned. \cr
 Default is FALSE.}
 
-\item{export_fit_data}{If TRUE, exports fitted data as csv and rds files.}
+\item{export_fit_data}{If TRUE (and save_outputs is TRUE), also saves the data report
+and the fitted runs as an RDS file. Default is FALSE.}
 
 \item{custom.n_bins}{number of bins for custom variables in frequency distributions plots.
 Default is NULL.}
 }
 \value{
-A observation fit graphical report, in R session or exported as pdf, and a data report as R list or xlsx if required.
+If save_outputs is FALSE, the data report (list).
+Otherwise NULL, the reports being saved in output_dir.
 }
 \description{
 A function to find the combinations of values of n parameters

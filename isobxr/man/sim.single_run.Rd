@@ -184,10 +184,13 @@ Default is NULL.}
 Numeric. Forces the run number (RUN_n) instead of incrementing it automatically
 (used in parallel computation). Must fit within n_zeros_RUN_IDs digits and must not
 already exist for the same SERIES_ID in the LOG file. \cr
+When the run is part of a scenario or a sweep (COMPOSITE or EXPLORER = TRUE), the
+number is set by the calling function and the LOG file is not read. \cr
 Default is NULL.}
 }
 \value{
-A results data set as a list containing the following components:
+If return_data = TRUE, a results data set as a list containing the following components
+(otherwise, the run's LOG row, invisibly):
 \enumerate{
 \item \strong{inputs} input data:
 \enumerate{
