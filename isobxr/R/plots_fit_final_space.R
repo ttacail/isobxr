@@ -18,7 +18,7 @@ plot_freq_ADSR <- function(DF, names.swp.ADSR, parameter_subsets, custom.n_bins 
   # parameter_subsets = parameter_subsets
   # custom.n_bins = 15
 
-  . <- in.all.subset_param <- n <- swp.ADSR.value <- swp.ADSR.name <-
+  interval <- . <- in.all.subset_param <- n <- swp.ADSR.value <- swp.ADSR.name <-
     label <- swp.center <- swp.2se <- swp.mean <- swp.50 <- swp.75 <-
     swp.25 <- swp.95 <- swp.05 <- freq.in <- swp.2sd <-
     NULL

@@ -286,7 +286,7 @@ sim.single_run <-
     }
   }
 
-  Y_COORD <- X_COORD <- ORDER <- BOX_ID <- prefix <- func <- NULL
+  Y_COORD <- X_COORD <- ORDER <- BOX_ID <- prefix <- func <- RUN_n <- NULL
 
   # II. initiate ####
   # _a. set workdir ####

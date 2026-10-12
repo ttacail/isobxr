@@ -35,7 +35,7 @@ merge_FINnD_chunks <- function(workdir,
     }
   }
 
-  variable <- value <- sweeped_fraction_perc <- NULL
+  variable <- value <- sweeped_fraction_perc <- SERIES_RUN_ID <- SERIES_ID <- NULL
 
   rlang::inform(paste0("\n", "________________________________________________________________________________"))
   rlang::inform("\U0001f535 Merging the processed chunks.")

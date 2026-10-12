@@ -1,6 +1,43 @@
-# isobxr 2.0.0.9000
+# isobxr 2.1.0
 
-Current development version.
+## Bug fixes
+
+* sim.single_run(): with dplyr >= 1.1, the initial sizes and deltas could be assigned
+  to the wrong boxes in sim.scenario() runs after the first one (boxes sorted in a
+  different order). Initial state and box metadata are now matched to the box list.
+* sim.single_run(): FORCING_SIZE and FORCING_RAYLEIGH were checked against the wrong list.
+* Plot data summaries updated for dplyr >= 1.1 (multi-row summarise).
+* In the LOG, SIZE.t0 and DELTA.t0 are now listed in the order of BOXES_ID_list.
+
+## sweep.final_nD()
+
+* sweep.final_nD.2() is removed: sweep.final_nD() runs chunks in parallel
+  (mc.cores, default all cores but one; one core on Windows).
+* New ask_confirmation argument.
+* Each chunk is checked for failed workers and missing runs.
+* Each chunk's runs are appended to 1_LOG.csv instead of rewriting the whole file,
+  and the temporary LOG header is written once (fixes a possible silent loss of LOG rows).
+
+## sim.scenario(), sweep.dyn_2D()
+
+* Runs no longer read 1_LOG.csv, which makes them much faster in folders with a large LOG.
+  sim.single_run() returns its LOG row (invisibly) when return_data = FALSE.
+
+## fit.final_space()
+
+* fit.final_space_2() and fit.final_space_3() (development versions) are merged into
+  fit.final_space(), which is faster and uses less memory.
+* parameter_subsets are now applied before selecting the fitted runs: the fit searches
+  the best combination of boxes among the runs within the subsets. Numerical limits are inclusive.
+* The observation file may not list a box twice for the same delta.ref; observed boxes
+  absent from the simulated system are ignored with a message.
+* Custom expressions keep their written form in reports (e.g. custom.100*f.A_B/f.B_C).
+* The LDA page is drawn again when print_lda = TRUE.
+* export_fit_data only writes the RDS file when save_outputs = TRUE.
+
+## Dependencies
+
+* ggplot2 >= 3.4.0 (linewidth); parallel added to Imports.
 
 # isobxr 2.0.0
 

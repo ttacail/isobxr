@@ -125,6 +125,10 @@ sweep.final_nD <- function(workdir,
   # _a. locally bind variables ####
   # evD_final <- chunk_n <- n_zeros <- old.acronym <- old.prefix <- func <- NULL
   evD_final <- chunk_n <- n_zeros <- acronym <- prefix <- func <- NULL
+  sweep.session <- mc.group_by <- data <- RUN_n <- chunk_status <- n_runs <- complete.time <-
+    elapsed.all.calc.s.POSIXct <- elapsed.all.calc.s <- cumulated.all.calc.s <- predicted.cumulated.calc.s <-
+    complete.time.predicted <- cumulated.n_runs <- perc.cumulated.n_runs <- elapsed.all.per_run <-
+    min.chunk_n <- max.chunk_n <- value <- mean.elapsed.per_run <- NULL
 
   # _b. set workdir ####
   # __i. determine function mode (tuto/user) ####
