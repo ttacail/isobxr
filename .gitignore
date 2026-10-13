@@ -3,6 +3,3 @@
 .RData
 .Ruserdata
 .DS_Store
-
-# local working notes (not part of the package)
-Claude outputs/
